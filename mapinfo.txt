@@ -1,0 +1,1 @@
+include "mapinfo/xrpg.txt"

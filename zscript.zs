@@ -1,0 +1,11 @@
+version "4.3.0"
+
+#include "zscript/XRpgPlayer.zs"
+#include "zscript/XRpgClericPlayer.zs"
+#include "zscript/XRpgFighterPlayer.zs"
+#include "zscript/XRpgMagePlayer.zs"
+#include "zscript/XRpgStatusBar.zs"
+#include "zscript/ExpSquishItem.zs"
+#include "zscript/XRpgSpellItem.zs"
+#include "zscript/XRpgBaseweapons.zs"
+#include "zscript/XRpgMWeapWand.zs"
