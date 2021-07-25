@@ -2,6 +2,9 @@ const SPELLTYPE_FIRE = 1;
 const SPELLTYPE_ICE = 2;
 const SPELLTYPE_POISON = 3;
 const SPELLTYPE_DEATH = 4;
+const SPELLTYPE_LIGHTNING = 5;
+const SPELLTYPE_WATER = 6;
+const SPELLTYPE_BLOOD = 7;
 
 class XRpgSpellItem : PowerupGiver
 {
@@ -79,5 +82,16 @@ class DeathSpell : XRpgSpellItem
 		Inventory.Icon "SBS4A0";
 
         XRpgSpellItem.SpellType SPELLTYPE_DEATH;
+	}
+}
+
+class LightningSpell : XRpgSpellItem
+{
+	Default
+	{
+		Inventory.Icon "MLF2P0";
+		Scale 0.5;
+
+        XRpgSpellItem.SpellType SPELLTYPE_LIGHTNING;
 	}
 }

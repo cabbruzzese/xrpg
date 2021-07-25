@@ -73,6 +73,9 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
                 case SPELLTYPE_DEATH:
                     A_FireDeathMissile();
                     break;
+                case SPELLTYPE_LIGHTNING:
+                    A_FireLightningMissile();
+                    break;
             }
         }
 	}
@@ -137,7 +140,7 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 
     action void A_FireDeathMissile()
 	{
-        int ammoUse = 6;
+        int ammoUse = 5;
 
 		if (player == null)
 		{
@@ -153,6 +156,24 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         SpawnPlayerMissile("MageWandDeathMissile", angle);
         SpawnPlayerMissile("MageWandDeathMissile", angle + 12);
         SpawnPlayerMissile("MageWandDeathMissile", angle - 12);
+	}
+
+    action void A_FireLightningMissile()
+	{
+        int ammoUse = 5;
+
+		if (player == null)
+		{
+			return;
+		}
+
+        if (!DepleteBlueMana(ammoUse))
+        {
+            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Fire"));
+            return;
+        }
+
+        A_FireProjectile ("MageWandLightningMissile");
 	}
 }
 
@@ -214,8 +235,8 @@ class MageWandPoisonMissile : Actor
     Default
     {
         Speed 10;
-        Radius 20;
-        Height 14;
+        Radius 16;
+        Height 12;
         Damage 2;
         Projectile;
         +RIPPER
@@ -260,4 +281,79 @@ class MageWandDeathMissile : Actor
         SBFX CDEFG 4 Bright;
         Stop;
     }
+}
+
+class MageWandLightningSmoke : Actor
+{
+	Default
+	{
+	+NOBLOCKMAP +NOGRAVITY +SHADOW
+	+NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
+    Scale 0.25;
+	}
+	States
+	{
+	Spawn:
+		MLF2 O 8;
+		Stop;
+	}
+}
+class MageWandLightningMissile : FastProjectile
+{
+    Default
+    {
+        Speed 110;
+        Radius 8;
+        Height 6;
+        Damage 1;
+        Projectile;
+        +RIPPER
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+        MissileType "MageWandLightningSmoke";
+        SeeSound "MageLightningFire";
+        Obituary "$OB_MPMWEAPWAND";
+        Scale 0.25;
+    }
+    States
+    {
+    Spawn:
+        MLF2 P 1 Bright;
+        MLF2 Q 1 Bright;
+        MLF2 Q 1 Bright WandLightiningSplit;
+    Death:
+        MLF2 NO 1 Bright;
+        Stop;
+    }
+
+	action void WandLightiningSplit ()
+	{
+		if (target == null)
+		{
+			return;
+		}
+		
+		A_SplitWandLightiningFire();
+		A_SplitWandLightiningFire();
+	}
+
+    action void A_SplitWandLightiningFire()
+	{
+		if (target == null)
+		{
+			return;
+		}
+		
+        int randAngle = random(-12, 12);
+        int randPitch = random(-8, 8);
+		let mo = target.SpawnPlayerMissile ("MageWandLightningMissile", angle + randAngle);
+		if (mo != null)
+		{
+			mo.SetOrigin(Pos, false);
+			mo.target = target;
+			mo.A_SetPitch(pitch + randPitch);
+			mo.Vel.Z = Vel.Z + randPitch;
+			//mo.SetDamage(Damage);
+		}
+	}
 }
