@@ -240,9 +240,28 @@ class XRpgPlayer : PlayerPawn
         GiveXP(xp);
 	}
 
+	const MANA_MAX_MOD = 10; 
+	void GiveStartingManaByType(class<Inventory> type)
+	{
+		let ammo = Inventory(FindInventory(type));
+		if (ammo == null)
+			ammo = GiveInventoryType(type);
+
+		let maxMana = Magic * MANA_MAX_MOD;
+		ammo.MaxAmount = maxMana;
+		ammo.Amount = maxMana;
+	}
+	void GiveStartingMana()
+	{
+		GiveStartingManaByType("Mana1");
+		GiveStartingManaByType("Mana2");
+	}
+
 	override void BeginPlay()
 	{
 		GiveLevelSkill();
+		GiveStartingMana();
+		
 		Super.BeginPlay();
 	}
 }

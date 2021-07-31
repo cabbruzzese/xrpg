@@ -29,13 +29,13 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 		Goto Ready;
     AltFire:
 		MWND A 6 A_AltFireCheckSpellSelected;
-		MWND B 6 Bright Offset (0, 48) A_FireWandSpell();
+		MWND B 6 Bright Offset (0, 48) A_FireSpell();
 		MWND A 3 Offset (0, 40);
 		MWND A 3 Offset (0, 36) A_ReFire;
 		Goto Ready;
     AltHold:
         MWND A 2 A_AltHoldCheckSpellSelected;
-        MWND B 2 Bright Offset (0, 48) A_FireWandSpell();
+        MWND B 2 Bright Offset (0, 48) A_FireSpell();
 		MWND A 1 Offset (0, 36) A_ReFire;
         Goto Ready;
 	}
@@ -50,130 +50,90 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         return false;
     }
 
-    action void A_FireWandSpell()
-	{
-		if (player == null)
-			return;
-
-        let magePlayer = XRpgMagePlayer(player.mo);
-        if (magePlayer && magePlayer.ActiveSpell)
-        {
-
-            switch (magePlayer.ActiveSpell.SpellType)
-            {
-                case SPELLTYPE_FIRE:
-                    A_FireFlameMissile();
-                    break;
-                case SPELLTYPE_ICE:
-                    A_FireIceMissile();
-                    break;
-                case SPELLTYPE_POISON:
-                    A_FirePoisonMissile();
-                    break;
-                case SPELLTYPE_DEATH:
-                    A_FireDeathMissile();
-                    break;
-                case SPELLTYPE_LIGHTNING:
-                    A_FireLightningMissile();
-                    break;
-            }
-        }
-	}
-
-    action void A_FireFlameMissile()
+    override void FireFlameSpell()
 	{
         int ammoUse = 2;
 
-		if (player == null)
-		{
+		if (owner.player == null)
 			return;
-		}
 
         if (!DepleteBlueMana(ammoUse))
         {
-            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Fire"));
+            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
             return;
         }
 
-		A_FireProjectile ("MageWandFlameMissile");
+        owner.SpawnPlayerMissile("MageWandFlameMissile");
 	}
-
-    action void A_FireIceMissile()
+    
+    override void FireIceSpell()
 	{
         int ammoUse = 1;
 
-		if (player == null)
-		{
+		if (owner.player == null)
 			return;
-		}
 
         if (!DepleteBlueMana(ammoUse))
         {
-            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Fire"));
+            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
             return;
         }
 
-        Actor shard = SpawnPlayerMissile("MageWandIceMissile", angle + random(-3, 3));
+        Actor shard = owner.SpawnPlayerMissile("MageWandIceMissile", owner.angle + random(-3, 3));
         if (shard)
         {
             shard.Vel.Z = shard.Vel.Z + random(-3, 3);
         }
 	}
 
-    action void A_FirePoisonMissile()
+    override void FirePoisonSpell()
 	{
         int ammoUse = 2;
 
-		if (player == null)
-		{
+		if (owner.player == null)
 			return;
-		}
 
         if (!DepleteBlueMana(ammoUse))
         {
-            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Fire"));
+            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
             return;
         }
 
-        SpawnPlayerMissile("MageWandPoisonMissile", angle);
+        owner.SpawnPlayerMissile("MageWandPoisonMissile");
 	}
 
-    action void A_FireDeathMissile()
+    override void FireDeathSpell()
 	{
         int ammoUse = 5;
 
-		if (player == null)
-		{
+		if (owner.player == null)
 			return;
-		}
 
         if (!DepleteBlueMana(ammoUse))
         {
-            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Fire"));
+            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
             return;
         }
 
-        SpawnPlayerMissile("MageWandDeathMissile", angle);
-        SpawnPlayerMissile("MageWandDeathMissile", angle + 12);
-        SpawnPlayerMissile("MageWandDeathMissile", angle - 12);
+        owner.SpawnPlayerMissile("MageWandDeathMissile", owner.angle);
+        owner.SpawnPlayerMissile("MageWandDeathMissile", owner.angle + 12);
+        owner.SpawnPlayerMissile("MageWandDeathMissile", owner.angle - 12);
 	}
 
-    action void A_FireLightningMissile()
+    override void FireLightningSpell()
 	{
         int ammoUse = 5;
 
-		if (player == null)
-		{
+		if (owner.player == null)
 			return;
-		}
 
         if (!DepleteBlueMana(ammoUse))
         {
-            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Fire"));
+            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
             return;
         }
 
-        A_FireProjectile ("MageWandLightningMissile");
+        owner.SpawnPlayerMissile("MageWandLightningMissile");
 	}
 }
 
@@ -287,14 +247,15 @@ class MageWandLightningSmoke : Actor
 {
 	Default
 	{
-	+NOBLOCKMAP +NOGRAVITY +SHADOW
-	+NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
-    Scale 0.25;
+	    +NOBLOCKMAP +NOGRAVITY +SHADOW
+	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
+        Scale 0.2;
 	}
 	States
 	{
 	Spawn:
-		MLF2 O 8;
+		MLF2 Q 6;
+        MLF2 PON 1;
 		Stop;
 	}
 }
@@ -313,16 +274,15 @@ class MageWandLightningMissile : FastProjectile
         MissileType "MageWandLightningSmoke";
         SeeSound "MageLightningFire";
         Obituary "$OB_MPMWEAPWAND";
-        Scale 0.25;
+        Scale 0.2;
     }
     States
     {
     Spawn:
-        MLF2 P 1 Bright;
-        MLF2 Q 1 Bright;
+        MLF2 Q 2 Bright;
         MLF2 Q 1 Bright WandLightiningSplit;
     Death:
-        MLF2 NO 1 Bright;
+        MLF2 PON 1 Bright;
         Stop;
     }
 

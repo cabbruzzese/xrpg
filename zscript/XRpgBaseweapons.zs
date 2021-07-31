@@ -73,4 +73,40 @@ class XRpgMageWeapon : XRpgWeapon
 		Weapon.Kickback 150;
 		Inventory.ForbiddenTo "FighterPlayer", "ClericPlayer";
 	}
+
+    virtual void FireFlameSpell() {}
+    virtual void FireIceSpell() {}
+    virtual void FirePoisonSpell() {}
+    virtual void FireDeathSpell() {}
+    virtual void FireLightningSpell() {}
+
+    action void A_FireSpell()
+	{
+		if (player == null)
+			return;
+
+        let magePlayer = XRpgMagePlayer(player.mo);
+        if (magePlayer && magePlayer.ActiveSpell)
+        {
+
+            switch (magePlayer.ActiveSpell.SpellType)
+            {
+                case SPELLTYPE_FIRE:
+                    invoker.FireFlameSpell();
+                    break;
+                case SPELLTYPE_ICE:
+                    invoker.FireIceSpell();
+                    break;
+                case SPELLTYPE_POISON:
+                    invoker.FirePoisonSpell();
+                    break;
+                case SPELLTYPE_DEATH:
+                    invoker.FireDeathSpell();
+                    break;
+                case SPELLTYPE_LIGHTNING:
+                    invoker.FireLightningSpell();
+                    break;
+            }
+        }
+	}
 }
