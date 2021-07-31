@@ -29,8 +29,8 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 		Goto Ready;
     AltFire:
 		MWND A 6 A_AltFireCheckSpellSelected;
-		MWND B 6 Bright Offset (0, 48) A_FireSpell();
-		MWND A 3 Offset (0, 40);
+		MWND B 8 Bright Offset (0, 48) A_FireSpell();
+		MWND A 6 Offset (0, 40);
 		MWND A 3 Offset (0, 36) A_ReFire;
 		Goto Ready;
     AltHold:
@@ -52,18 +52,7 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 
     override void FireFlameSpell()
 	{
-        int ammoUse = 2;
-
-		if (owner.player == null)
-			return;
-
-        if (!DepleteBlueMana(ammoUse))
-        {
-            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
-            return;
-        }
-
-        owner.SpawnPlayerMissile("MageWandFlameMissile");
+        FireMissileSpell("MageWandFlameMissile", 2);
 	}
     
     override void FireIceSpell()
@@ -88,18 +77,17 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 
     override void FirePoisonSpell()
 	{
-        int ammoUse = 2;
+        FireMissileSpell("MageWandPoisonMissile", 2);
+	}
 
-		if (owner.player == null)
-			return;
+    override void FireSunSpell()
+	{
+        FireMissileSpell("MageWandSunMissile", 6);
+	}
 
-        if (!DepleteBlueMana(ammoUse))
-        {
-            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
-            return;
-        }
-
-        owner.SpawnPlayerMissile("MageWandPoisonMissile");
+    override void FireMoonSpell()
+	{
+        FireMissileSpell("MageWandMoonMissile", 3);
 	}
 
     override void FireDeathSpell()
@@ -122,18 +110,7 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 
     override void FireLightningSpell()
 	{
-        int ammoUse = 5;
-
-		if (owner.player == null)
-			return;
-
-        if (!DepleteBlueMana(ammoUse))
-        {
-            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
-            return;
-        }
-
-        owner.SpawnPlayerMissile("MageWandLightningMissile");
+        FireMissileSpell("MageWandLightningMissile", 5);
 	}
 }
 
@@ -212,6 +189,69 @@ class MageWandPoisonMissile : Actor
         D2FX FGHIJK 4 Bright;
     Death:
         D2FX L 4 Bright;
+        Stop;
+    }
+}
+
+class MageWandSunMissile : Actor
+{
+    Default
+    {
+        Speed 10;
+        Radius 12;
+        Height 8;
+        Damage 4;
+        Projectile;
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+        Obituary "$OB_MPMWEAPWAND";
+        Scale 2.0;
+        DamageType "Fire";
+        DeathSound "Fireball";
+    }
+    States
+    {
+    Spawn:
+        FDMB B 4 Bright Light("YellowSunSmall");
+        Loop;
+    Death:
+        FDMB B 6 Bright Light("YellowSunBig") A_Explode(50, 150);
+        FDMB C 3 Bright Light("YellowSunBigFade1");
+        FDMB C 3 Bright Light("YellowSunBigFade2");
+        FDMB D 3 Bright Light("YellowSunBigFade3");
+        FDMB D 3 Bright Light("YellowSunBigFade4");
+        FDMB E 3 Bright Light("YellowSunBigFade5");
+        Stop;
+    }
+}
+
+class MageWandMoonMissile : Actor
+{
+    Default
+    {
+        Speed 30;
+        Radius 12;
+        Height 8;
+        Damage 20;
+        Projectile;
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+        Obituary "$OB_MPMWEAPWAND";
+        Translation "Ice";
+        Scale 2.0;
+    }
+    States
+    {
+    Spawn:
+        MSP1 ABCD 4 Light("MoonSmall");
+        Loop;
+    Death:
+        RADE D 6 Light("MoonBig");
+        FDMB E 3 Light("MoonBigFade1");
+        FDMB F 3 Light("MoonBigFade2");
+        FDMB G 3 Light("MoonBigFade3");
+        FDMB H 3 Light("MoonBigFade4");
+        FDMB I 3 Light("MoonBigFade5");
         Stop;
     }
 }

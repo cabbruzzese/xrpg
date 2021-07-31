@@ -74,9 +74,29 @@ class XRpgMageWeapon : XRpgWeapon
 		Inventory.ForbiddenTo "FighterPlayer", "ClericPlayer";
 	}
 
+    bool FireMissileSpell(Class<Actor> missileType, int ammoUse)
+	{
+		if (owner.player == null)
+			return false;
+
+        if (!DepleteBlueMana(ammoUse))
+        {
+            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
+            return false;
+        }
+
+        owner.SpawnPlayerMissile(missileType);
+
+        return true;
+	}
+
     virtual void FireFlameSpell() {}
     virtual void FireIceSpell() {}
     virtual void FirePoisonSpell() {}
+
+    virtual void FireSunSpell() {}
+    virtual void FireMoonSpell() {}
+
     virtual void FireDeathSpell() {}
     virtual void FireLightningSpell() {}
 
@@ -99,6 +119,12 @@ class XRpgMageWeapon : XRpgWeapon
                     break;
                 case SPELLTYPE_POISON:
                     invoker.FirePoisonSpell();
+                    break;
+                case SPELLTYPE_SUN:
+                    invoker.FireSunSpell();
+                    break;
+                case SPELLTYPE_MOON:
+                    invoker.FireMoonSpell();
                     break;
                 case SPELLTYPE_DEATH:
                     invoker.FireDeathSpell();

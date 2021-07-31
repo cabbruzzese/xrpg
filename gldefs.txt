@@ -1,0 +1,76 @@
+pointlight YellowSunSmall {
+    color 1.0 1.0 0.8
+    size 192
+}
+
+pointlight YellowSunBig {
+    color 1.0 1.0 0.8
+    size 512
+}
+
+pointlight YellowSunBigFade1 {
+    color 1.0 1.0 0.8
+    size 256
+}
+
+pointlight YellowSunBigFade2 {
+    color 1.0 1.0 0.8
+    size 128
+}
+
+pointlight YellowSunBigFade3 {
+    color 1.0 1.0 0.8
+    size 64
+}
+
+pointlight YellowSunBigFade4 {
+    color 1.0 1.0 0.8
+    size 32
+}
+
+pointlight YellowSunBigFade4 {
+    color 1.0 1.0 0.8
+    size 16
+}
+
+pointlight MoonSmall {
+    color 1.0 1.0 0.8
+    size 128
+    subtractive 1
+}
+
+pointlight MoonBig {
+    color 1.0 1.0 0.8
+    size 256
+    subtractive 1
+}
+
+pointlight MoonBigFade1 {
+    color 1.0 1.0 0.8
+    size 128
+    subtractive 1
+}
+
+pointlight MoonBigFade2 {
+    color 1.0 1.0 0.8
+    size 64
+    subtractive 1
+}
+
+pointlight MoonBigFade3 {
+    color 1.0 1.0 0.8
+    size 32
+    subtractive 1
+}
+
+pointlight MoonBigFade4 {
+    color 1.0 1.0 0.8
+    size 16
+    subtractive 1
+}
+
+pointlight MoonBigFade4 {
+    color 1.0 1.0 0.8
+    size 8
+    subtractive 1
+}

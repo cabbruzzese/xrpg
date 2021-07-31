@@ -1,10 +1,17 @@
-const SPELLTYPE_FIRE = 1;
-const SPELLTYPE_ICE = 2;
-const SPELLTYPE_POISON = 3;
-const SPELLTYPE_DEATH = 4;
-const SPELLTYPE_LIGHTNING = 5;
-const SPELLTYPE_WATER = 6;
-const SPELLTYPE_BLOOD = 7;
+//lvl 1
+const SPELLTYPE_FIRE = 101;
+const SPELLTYPE_ICE = 102;
+const SPELLTYPE_POISON = 103;
+
+//level 2
+const SPELLTYPE_WATER = 201;
+const SPELLTYPE_SUN = 202;
+const SPELLTYPE_MOON = 203;
+
+//level 3
+const SPELLTYPE_DEATH = 301;
+const SPELLTYPE_LIGHTNING = 302;
+const SPELLTYPE_BLOOD = 303;
 
 class XRpgSpellItem : PowerupGiver
 {
@@ -75,6 +82,36 @@ class PoisonSpell : XRpgSpellItem
 	}
 }
 
+class WaterSpell : XRpgSpellItem
+{
+	Default
+	{
+		Inventory.Icon "SBS4A0";
+
+        XRpgSpellItem.SpellType SPELLTYPE_WATER;
+	}
+}
+
+class SunSpell : XRpgSpellItem
+{
+	Default
+	{
+		Inventory.Icon "FX12B1";
+
+        XRpgSpellItem.SpellType SPELLTYPE_SUN;
+	}
+}
+
+class MoonSpell : XRpgSpellItem
+{
+	Default
+	{
+		Inventory.Icon "RADEB0";
+
+        XRpgSpellItem.SpellType SPELLTYPE_MOON;
+	}
+}
+
 class DeathSpell : XRpgSpellItem
 {
 	Default
@@ -93,5 +130,15 @@ class LightningSpell : XRpgSpellItem
 		Scale 0.5;
 
         XRpgSpellItem.SpellType SPELLTYPE_LIGHTNING;
+	}
+}
+
+class BloodSpell : XRpgSpellItem
+{
+	Default
+	{
+		Inventory.Icon "SBS4A0";
+
+        XRpgSpellItem.SpellType SPELLTYPE_BLOOD;
 	}
 }

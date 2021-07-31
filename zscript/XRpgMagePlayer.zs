@@ -2,6 +2,10 @@
 const SPELL_LEVEL_FIRE = 1;
 const SPELL_LEVEL_ICE = 1;
 const SPELL_LEVEL_POISON = 1;
+
+const SPELL_LEVEL_SUN = 1;
+const SPELL_LEVEL_MOON = 1;
+
 const SPELL_LEVEL_DEATH = 1;
 const SPELL_LEVEL_LIGHTNING = 1;
 
@@ -139,6 +143,12 @@ class XRpgMagePlayer : XRpgPlayer
 			GiveSpell("IceSpell");
 		if (ExpLevel >= SPELL_LEVEL_POISON)
 			GiveSpell("PoisonSpell");
+		
+		if (ExpLevel >= SPELL_LEVEL_SUN)
+			GiveSpell("SunSpell");
+		if (ExpLevel >= SPELL_LEVEL_MOON)
+			GiveSpell("MoonSpell");
+
 		if (ExpLevel >= SPELL_LEVEL_DEATH)
 			GiveSpell("DeathSpell");
 		if (ExpLevel >= SPELL_LEVEL_LIGHTNING)
