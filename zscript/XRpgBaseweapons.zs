@@ -46,6 +46,15 @@ class XRpgWeapon : Weapon
     {
         return DepleteMana("Mana2", used);
     }
+
+    void FireSpreadMissile(Class<Actor> missileType, int angleMax, int zAngleMax)
+	{
+		Actor shard = owner.SpawnPlayerMissile(missileType, owner.angle + random(-1 * angleMax, angleMax));
+        if (shard)
+        {
+            shard.Vel.Z = shard.Vel.Z + random(-1 * zAngleMax, zAngleMax);
+        }
+	}
 }
 
 class XRpgFighterWeapon : XRpgWeapon
@@ -94,11 +103,13 @@ class XRpgMageWeapon : XRpgWeapon
     virtual void FireIceSpell() {}
     virtual void FirePoisonSpell() {}
 
+    virtual void FireWaterSpell() {}
     virtual void FireSunSpell() {}
     virtual void FireMoonSpell() {}
 
     virtual void FireDeathSpell() {}
     virtual void FireLightningSpell() {}
+    virtual void FireBloodSpell() {}
 
     action void A_FireSpell()
 	{
@@ -120,6 +131,9 @@ class XRpgMageWeapon : XRpgWeapon
                 case SPELLTYPE_POISON:
                     invoker.FirePoisonSpell();
                     break;
+                case SPELLTYPE_WATER:
+                    invoker.FireWaterSpell();
+                    break;
                 case SPELLTYPE_SUN:
                     invoker.FireSunSpell();
                     break;
@@ -131,6 +145,9 @@ class XRpgMageWeapon : XRpgWeapon
                     break;
                 case SPELLTYPE_LIGHTNING:
                     invoker.FireLightningSpell();
+                    break;
+                case SPELLTYPE_BLOOD:
+                    invoker.FireBloodSpell();
                     break;
             }
         }

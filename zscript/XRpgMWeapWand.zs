@@ -68,16 +68,33 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
             return;
         }
 
-        Actor shard = owner.SpawnPlayerMissile("MageWandIceMissile", owner.angle + random(-3, 3));
-        if (shard)
-        {
-            shard.Vel.Z = shard.Vel.Z + random(-3, 3);
-        }
+        FireSpreadMissile("MageWandIceMissile", 3, 3);
 	}
 
     override void FirePoisonSpell()
 	{
         FireMissileSpell("MageWandPoisonMissile", 2);
+	}
+
+
+    override void FireWaterSpell()
+	{
+        int ammoUse = 4;
+
+		if (owner.player == null)
+			return;
+
+        if (!DepleteBlueMana(ammoUse))
+        {
+            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
+            return;
+        }
+
+        FireSpreadMissile("MageWandWaterMissile", 6, 6);
+        FireSpreadMissile("MageWandWaterMissile", 6, 6);
+        FireSpreadMissile("MageWandWaterMissile", 6, 6);
+        FireSpreadMissile("MageWandWaterMissile", 6, 6);
+        FireSpreadMissile("MageWandWaterMissile", 6, 6);
 	}
 
     override void FireSunSpell()
@@ -189,6 +206,32 @@ class MageWandPoisonMissile : Actor
         D2FX FGHIJK 4 Bright;
     Death:
         D2FX L 4 Bright;
+        Stop;
+    }
+}
+
+class MageWandWaterMissile : Actor
+{
+    Default
+    {
+        Speed 40;
+        Radius 8;
+        Height 6;
+        Damage 2;
+        +SPAWNSOUNDSOURCE
+        Projectile;
+        -NOGRAVITY
+        Gravity 0.25;
+        Obituary "$OB_MPMWEAPWAND";
+    }
+    States
+    {
+    Spawn:
+        SPSH A 4;
+        Loop;
+    Death:
+        SPSH E 4 A_RadiusThrust(3000, 64, RTF_NOIMPACTDAMAGE);
+        SPSH GHIJK 4;
         Stop;
     }
 }

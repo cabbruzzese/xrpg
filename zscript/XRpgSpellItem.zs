@@ -86,7 +86,7 @@ class WaterSpell : XRpgSpellItem
 {
 	Default
 	{
-		Inventory.Icon "SBS4A0";
+		Inventory.Icon "SPSHG0";
 
         XRpgSpellItem.SpellType SPELLTYPE_WATER;
 	}

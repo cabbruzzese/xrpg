@@ -3,11 +3,13 @@ const SPELL_LEVEL_FIRE = 1;
 const SPELL_LEVEL_ICE = 1;
 const SPELL_LEVEL_POISON = 1;
 
+const SPELL_LEVEL_WATER = 1;
 const SPELL_LEVEL_SUN = 1;
 const SPELL_LEVEL_MOON = 1;
 
 const SPELL_LEVEL_DEATH = 1;
 const SPELL_LEVEL_LIGHTNING = 1;
+const SPELL_LEVEL_BLOOD = 1;
 
 class XRpgMagePlayer : XRpgPlayer
 {
@@ -144,6 +146,8 @@ class XRpgMagePlayer : XRpgPlayer
 		if (ExpLevel >= SPELL_LEVEL_POISON)
 			GiveSpell("PoisonSpell");
 		
+		if (ExpLevel >= SPELL_LEVEL_WATER)
+			GiveSpell("WaterSpell");
 		if (ExpLevel >= SPELL_LEVEL_SUN)
 			GiveSpell("SunSpell");
 		if (ExpLevel >= SPELL_LEVEL_MOON)
@@ -153,6 +157,8 @@ class XRpgMagePlayer : XRpgPlayer
 			GiveSpell("DeathSpell");
 		if (ExpLevel >= SPELL_LEVEL_LIGHTNING)
 			GiveSpell("LightningSpell");
+		if (ExpLevel >= SPELL_LEVEL_BLOOD)
+			GiveSpell("BloodSpell");
 	}
 }
 
