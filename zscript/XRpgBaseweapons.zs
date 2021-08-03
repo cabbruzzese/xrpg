@@ -83,18 +83,31 @@ class XRpgMageWeapon : XRpgWeapon
 		Inventory.ForbiddenTo "FighterPlayer", "ClericPlayer";
 	}
 
-    bool FireMissileSpell(Class<Actor> missileType, int ammoUse)
+    bool FireMissileSpell(Class<Actor> missileType, int blueAmmoUse = 0, int greenAmmoUse = 0, int angleMod = 0)
+	{
+		if (!AttemptFireSpell(blueAmmoUse, greenAmmoUse))
+            return false;
+
+        owner.SpawnPlayerMissile(missileType, owner.angle + angleMod);
+
+        return true;
+	}
+
+    bool AttemptFireSpell(int blueAmmoUse, int greenAmmoUse)
 	{
 		if (owner.player == null)
 			return false;
 
-        if (!DepleteBlueMana(ammoUse))
+        if (blueAmmoUse > 0 && !DepleteBlueMana(blueAmmoUse))
         {
             owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
             return false;
         }
-
-        owner.SpawnPlayerMissile(missileType);
+        if (greenAmmoUse > 0 && !DepleteGreenMana(greenAmmoUse))
+        {
+            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
+            return false;
+        }
 
         return true;
 	}

@@ -57,16 +57,8 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
     
     override void FireIceSpell()
 	{
-        int ammoUse = 1;
-
-		if (owner.player == null)
-			return;
-
-        if (!DepleteBlueMana(ammoUse))
-        {
-            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
+        if (!AttemptFireSpell(1, 0))
             return;
-        }
 
         FireSpreadMissile("MageWandIceMissile", 3, 3);
 	}
@@ -76,19 +68,10 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         FireMissileSpell("MageWandPoisonMissile", 2);
 	}
 
-
     override void FireWaterSpell()
 	{
-        int ammoUse = 4;
-
-		if (owner.player == null)
-			return;
-
-        if (!DepleteBlueMana(ammoUse))
-        {
-            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
+        if (!AttemptFireSpell(4, 0))
             return;
-        }
 
         FireSpreadMissile("MageWandWaterMissile", 6, 6);
         FireSpreadMissile("MageWandWaterMissile", 6, 6);
@@ -109,16 +92,9 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 
     override void FireDeathSpell()
 	{
-        int ammoUse = 5;
-
-		if (owner.player == null)
-			return;
-
-        if (!DepleteBlueMana(ammoUse))
-        {
-            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
+        if (!AttemptFireSpell(5, 0))
             return;
-        }
+
 
         owner.SpawnPlayerMissile("MageWandDeathMissile", owner.angle);
         owner.SpawnPlayerMissile("MageWandDeathMissile", owner.angle + 12);
@@ -128,6 +104,15 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
     override void FireLightningSpell()
 	{
         FireMissileSpell("MageWandLightningMissile", 5);
+	}
+
+    override void FireBloodSpell()
+	{
+        if (!AttemptFireSpell(5, 0))
+            return;
+
+        owner.SpawnPlayerMissile("MageWandBloodMissile", owner.angle + 8);
+        owner.SpawnPlayerMissile("MageWandBloodMissile", owner.angle - 8);
 	}
 }
 
@@ -398,5 +383,28 @@ class MageWandLightningMissile : FastProjectile
 			mo.Vel.Z = Vel.Z + randPitch;
 			//mo.SetDamage(Damage);
 		}
+	}
+}
+
+class MageWandBloodMissile : Actor
+{
+    Default
+    {
+        Speed 12;
+        Radius 8;
+        Height 6;
+        Damage 10;
+        +SPAWNSOUNDSOURCE
+        Projectile;
+        Obituary "$OB_MPMWEAPWAND";
+    }
+    States
+	{
+	Spawn:
+		ABAT ABC 4 A_SeekerMissile(20, 60, SMF_LOOK | SMF_PRECISE);
+		Loop;
+	Death:
+		BDSH ABCD 4;
+		Stop;
 	}
 }

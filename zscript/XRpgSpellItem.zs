@@ -127,7 +127,6 @@ class LightningSpell : XRpgSpellItem
 	Default
 	{
 		Inventory.Icon "MLF2P0";
-		Scale 0.5;
 
         XRpgSpellItem.SpellType SPELLTYPE_LIGHTNING;
 	}
@@ -137,7 +136,7 @@ class BloodSpell : XRpgSpellItem
 {
 	Default
 	{
-		Inventory.Icon "SBS4A0";
+		Inventory.Icon "DEMEA0";
 
         XRpgSpellItem.SpellType SPELLTYPE_BLOOD;
 	}

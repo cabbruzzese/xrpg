@@ -43,7 +43,7 @@ class XRpgMagePlayer : XRpgPlayer
 		Player.SideMove 0.875, 0.925;
 		Player.Portrait "P_MWALK1";
 		Player.WeaponSlot 1, "XRpgMWeapWand";
-		Player.WeaponSlot 2, "MWeapFrost";
+		Player.WeaponSlot 2, "XRpgMWeapFrost";
 		Player.WeaponSlot 3, "MWeapLightning";
 		Player.WeaponSlot 4, "MWeapBloodscourge";
 		Player.FlechetteType "ArtiPoisonBag2";
@@ -62,6 +62,8 @@ class XRpgMagePlayer : XRpgPlayer
 		XRpgPlayer.Strength 5;
 		XRpgPlayer.Dexterity 6;
 		XRpgPlayer.Magic 10;
+
+		Player.StartItem "XRpgMWeapFrost";
 	}
 
 	States
