@@ -116,7 +116,7 @@ class DeathSpell : XRpgSpellItem
 {
 	Default
 	{
-		Inventory.Icon "SBS4A0";
+		Inventory.Icon "CHNSG0";
 
         XRpgSpellItem.SpellType SPELLTYPE_DEATH;
 	}

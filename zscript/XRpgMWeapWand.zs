@@ -275,11 +275,11 @@ class MageWandMoonMissile : Actor
         Loop;
     Death:
         RADE D 6 Light("MoonBig");
-        FDMB E 3 Light("MoonBigFade1");
-        FDMB F 3 Light("MoonBigFade2");
-        FDMB G 3 Light("MoonBigFade3");
-        FDMB H 3 Light("MoonBigFade4");
-        FDMB I 3 Light("MoonBigFade5");
+        RADE E 3 Light("MoonBigFade1");
+        RADE F 3 Light("MoonBigFade2");
+        RADE G 3 Light("MoonBigFade3");
+        RADE H 3 Light("MoonBigFade4");
+        RADE I 3 Light("MoonBigFade5");
         Stop;
     }
 }
