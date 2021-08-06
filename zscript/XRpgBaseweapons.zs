@@ -9,7 +9,7 @@ class XRpgWeapon : Weapon
 
         let magePlayer = XRpgMagePlayer(player.mo);
         if (!magePlayer || !magePlayer.ActiveSpell)
-            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Fire"));
+            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Ready"));
 	}
 
     action void A_AltHoldCheckSpellSelected()
@@ -27,24 +27,42 @@ class XRpgWeapon : Weapon
         return false;
     }
 
-    action bool DepleteMana(class<Inventory> type, int used)
+    action bool CheckMana(class<Inventory> type, int ammoUse)
     {
-        let ammo = Inventory(FindInventory(type));
-        if (!ammo || ammo.Amount < used)
-            return false;
+        if (ammoUse == 0)
+            return true;
 
-        ammo.Amount -= used;
+        let ammo = Inventory(FindInventory(type));
+        if (!ammo || ammo.Amount < ammoUse)
+            return false;
+        
         return true;
     }
 
-    action bool DepleteBlueMana(int used)
+    action bool CheckAllMana(int blueAmmoUse, int greenAmmoUse)
     {
-        return DepleteMana("Mana1", used);
+        let blueResult = CheckMana("Mana1", blueAmmoUse);
+        let greenResult = CheckMana("Mana2", greenAmmoUse);
+        
+        return blueResult && greenResult;
     }
 
-    action bool DepleteGreenMana(int used)
+    action bool DepleteMana(class<Inventory> type, int ammoUse)
     {
-        return DepleteMana("Mana2", used);
+        let ammo = Inventory(FindInventory(type));
+        if (!ammo || ammo.Amount < ammoUse)
+            return false;
+
+        ammo.Amount -= ammoUse;
+        return true;
+    }
+
+    action bool DepleteAllMana(int blueAmmoUse, int greenAmmoUse)
+    {
+        let blueResult = DepleteMana("Mana1", blueAmmoUse);
+        let greenResult = DepleteMana("Mana2", greenAmmoUse);
+
+        return blueResult && greenResult;
     }
 
     void FireSpreadMissile(Class<Actor> missileType, int angleMax, int zAngleMax)
@@ -98,18 +116,13 @@ class XRpgMageWeapon : XRpgWeapon
 		if (owner.player == null)
 			return false;
 
-        if (blueAmmoUse > 0 && !DepleteBlueMana(blueAmmoUse))
+        if (!CheckAllMana(blueAmmoUse, greenAmmoUse))
         {
-            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
+            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Ready"));
             return false;
         }
-        if (greenAmmoUse > 0 && !DepleteGreenMana(greenAmmoUse))
-        {
-            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Fire"));
-            return false;
-        }
-
-        return true;
+        
+        return DepleteAllMana(blueAmmoUse, greenAmmoUse);
 	}
 
     virtual void FireFlameSpell() {}

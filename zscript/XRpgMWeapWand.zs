@@ -111,8 +111,8 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         if (!AttemptFireSpell(5, 0))
             return;
 
-        owner.SpawnPlayerMissile("MageWandBloodMissile", owner.angle + 8);
-        owner.SpawnPlayerMissile("MageWandBloodMissile", owner.angle - 8);
+        let mo1 = owner.SpawnPlayerMissile("MageWandBloodMissile", owner.angle + 8);
+        let mo2 = owner.SpawnPlayerMissile("MageWandBloodMissile", owner.angle - 8);
 	}
 }
 
@@ -395,6 +395,7 @@ class MageWandBloodMissile : Actor
         Height 6;
         Damage 10;
         +SPAWNSOUNDSOURCE
+        +SEEKERMISSILE
         Projectile;
         Obituary "$OB_MPMWEAPWAND";
     }

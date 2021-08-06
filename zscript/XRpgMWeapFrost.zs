@@ -165,12 +165,55 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		FireMissileSpell("MageFrostDeathMissile", 0, 8);
 	}
 
+	const FROSTLIGHTNING_DIST = 96;
+	const FROSTLIGHTNING_Q = 0.33;
+	const FROSTLIGHTNING_T = 0.66;
+	const FROSTLIGHTNING_SPEED = -90;
+	void FireLightiningStrike(double xo, double yo)
+	{
+		Vector3 spawnpos = owner.Vec2OffsetZ(xo, yo, pos.z);
+		Actor mo = Spawn("MageFrostLightningMissile", spawnpos, ALLOW_REPLACE);
+		if (!mo) return;
+		
+		double newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
+		mo.SetZ(newz);
+
+		mo.target = owner;
+		mo.Vel.X = MinVel; // Force collision detection
+		mo.Vel.Z = FROSTLIGHTNING_SPEED;
+		mo.CheckMissileSpawn (radius);
+	}
     override void FireLightningSpell()
 	{
+		if (!AttemptFireSpell(0, 6))
+            return;
+
+		FireLightiningStrike(0, FROSTLIGHTNING_DIST);
+		FireLightiningStrike(FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T);
+		FireLightiningStrike(FROSTLIGHTNING_DIST * FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q);
+
+		FireLightiningStrike(FROSTLIGHTNING_DIST, 0);
+		FireLightiningStrike(FROSTLIGHTNING_DIST * FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q);
+		FireLightiningStrike(FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T);
+
+		FireLightiningStrike(0, -FROSTLIGHTNING_DIST);
+		FireLightiningStrike(FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T);
+		FireLightiningStrike(FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q);
+
+		FireLightiningStrike(-FROSTLIGHTNING_DIST, 0);
+		FireLightiningStrike(FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q);
+		FireLightiningStrike(FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T);
+
+		owner.A_RadiusThrust(5000, 128, RTF_NOIMPACTDAMAGE);
 	}
 
     override void FireBloodSpell()
 	{
+		if (!AttemptFireSpell(0, 8))
+            return;
+
+        owner.SpawnPlayerMissile("MageFrostBloodMissile", owner.angle + 8);
+        owner.SpawnPlayerMissile("MageFrostBloodMissile", owner.angle - 8);
 	}
 }
 
@@ -251,6 +294,8 @@ class MageFrostIceMissile : FastProjectile
         Damage 0;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
+		+SKYEXPLODE
+		+NOSHIELDREFLECT
         Obituary "$OB_MPMWEAPFROST";
         DamageType "Ice";
         DeathSound "IceGuyMissileExplode";
@@ -308,7 +353,7 @@ class MageFrostPoisonMissile : Actor
         +SPAWNSOUNDSOURCE
         +ZDOOMTRANS
         SeeSound "PoisonShroomDeath";
-        Obituary "$OB_MPMWEAPWAND";
+        Obituary "$OB_MPMWEAPFROST";
     }
     States
     {
@@ -332,7 +377,7 @@ class MageFrostWaterMissile : FastProjectile
         +SPAWNSOUNDSOURCE
         -NOGRAVITY
         Gravity 0.25;
-        Obituary "$OB_MPMWEAPWAND";
+        Obituary "$OB_MPMWEAPFROST";
     }
     States
     {
@@ -356,7 +401,7 @@ class MageFrostSunMissile : Actor
         Damage 20;
         Projectile;
         +SPAWNSOUNDSOURCE
-        Obituary "$OB_MPMWEAPWAND";
+        Obituary "$OB_MPMWEAPFROST";
         Scale 4.0;
         DamageType "Fire";
         DeathSound "Fireball";
@@ -385,7 +430,7 @@ class MageFrostMoonMissile : Actor
         Height 8;
         Damage 0;
         Projectile;
-        Obituary "$OB_MPMWEAPWAND";
+        Obituary "$OB_MPMWEAPFROST";
         Translation "Ice";
         Scale 2.0;
     }
@@ -639,5 +684,87 @@ class MageFrostDeathMissile : Actor
 			invoker.Dispose();
 			return;
 		}
+	}
+}
+
+class MageFrostLightningSmoke : Actor
+{
+	Default
+	{
+	    +NOBLOCKMAP +NOGRAVITY +SHADOW
+	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
+		Scale 0.5;
+	}
+	States
+	{
+	Spawn:
+		MLFX L 12;
+		Stop;
+	}
+}
+class MageFrostLightningMissile : FastProjectile
+{
+    Default
+    {
+        Speed 120;
+        Radius 12;
+        Height 8;
+        Damage 2;
+        Projectile;
+        +RIPPER
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+        MissileType "MageFrostLightningSmoke";
+        DeathSound "MageLightningFire";
+        Obituary "$OB_MPMWEAPFROST";
+    }
+    States
+    {
+    Spawn:
+        MLFX K 2 Bright;
+		Loop;
+    Death:
+        MLFX M 2 Bright;
+        Stop;
+    }
+}
+
+class MageFrostBloodMissile : Actor
+{
+    Default
+    {
+        Speed 12;
+        Radius 16;
+        Height 12;
+        Damage 1;
+        Projectile;
+        +RIPPER
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+        +ZDOOMTRANS
+		+NOSHIELDREFLECT
+        Obituary "$OB_MPMWEAPFROST";
+    }
+    States
+    {
+    Spawn:
+        TELE CDEFGH 2 Bright;
+    Death:
+        TELE H 2 Bright;
+        Stop;
+    }
+
+	override int DoSpecialDamage(Actor targetMonster, int damage, name damagetype)
+	{
+		let playerObj = XRpgPlayer(target);
+		if (playerObj && playerObj.Health > 0)
+		{
+			if (playerObj.Health < playerObj.MaxHealth)
+			{
+				playerObj.A_SetHealth(playerObj.Health + 1);
+			}
+		}
+		
+		return Super.DoSpecialDamage(targetMonster, damage, damagetype);
 	}
 }

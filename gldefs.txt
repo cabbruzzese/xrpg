@@ -8,6 +8,11 @@ pointlight YellowSunBig {
     size 512
 }
 
+pointlight YellowSunBigFlicker {
+    color 1.0 1.0 0.8
+    size 300
+}
+
 pointlight YellowSunBigFade1 {
     color 1.0 1.0 0.8
     size 256
