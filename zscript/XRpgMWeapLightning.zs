@@ -124,6 +124,8 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
     {
         if (spellType == SPELLTYPE_POISON)
             return true;
+        if (spellType == SPELLTYPE_LIGHTNING)
+            return true;
 
         return false;
     }
@@ -165,14 +167,53 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 
     override void FireDeathSpell()
 	{
+		FireMissileSpell("MageLightningDeathMissile", 10, 10);
 	}
 
+	const STORMLIGHTNING_DIST = 96;
+	const STORMLIGHTNING_SPEED = -90;
+	const STORMLIGHTNING_THRUST = 10;
+	const STORMLIGHTNING_THRUST_MAX = 70;
+	void FireLightiningStrike()
+	{
+		let xo = random(-STORMLIGHTNING_DIST, STORMLIGHTNING_DIST);
+		let yo = random(-STORMLIGHTNING_DIST, STORMLIGHTNING_DIST);
+
+		Vector3 spawnpos = owner.Vec2OffsetZ(xo, yo, pos.z);
+		Actor mo = Spawn("MageLightningLightningMissile", spawnpos, ALLOW_REPLACE);
+		if (!mo) return;
+		
+		double newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
+		mo.SetZ(newz);
+
+		mo.target = owner;
+		mo.Vel.X = MinVel; // Force collision detection
+		mo.Vel.Z = STORMLIGHTNING_SPEED;
+		mo.CheckMissileSpawn (radius);
+	}
     override void FireLightningSpell()
 	{
+		if (!AttemptFireSpell(2, 2))
+            return;
+
+		if (owner.Vel.Z < STORMLIGHTNING_THRUST_MAX)
+		{
+			owner.Vel.Z += STORMLIGHTNING_THRUST;
+			if (owner.Vel.Z > STORMLIGHTNING_THRUST_MAX)
+				owner.Vel.Z = STORMLIGHTNING_THRUST_MAX;
+		}
+
+		FireLightiningStrike();
+		FireLightiningStrike();
 	}
 
     override void FireBloodSpell()
 	{
+		if (!AttemptFireSpell(8, 8))
+            return;
+
+		owner.SpawnPlayerMissile("MageLightningBloodMissile1", owner.angle + 9);
+        owner.SpawnPlayerMissile("MageLightningBloodMissile2", owner.angle - 9);
 	}
 }
 
@@ -618,5 +659,214 @@ class MageLightningMoonMissile : Actor
 
         if (Health < 1)
             SetStateLabel("Death");
+	}
+}
+
+class MageLightningDeathMissile : FastProjectile
+{
+    Default
+    {
+        Speed 40;
+        Radius 12;
+        Height 8;
+        Damage 10;
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+		+SKYEXPLODE
+		+NOSHIELDREFLECT
+        Obituary "$OB_MPMWEAPLIGHTNING";
+    }
+    States
+    {
+    Spawn:
+        SPIR AB 8;
+        Loop;
+    Death:
+        SPIR EFGHI 4;
+		SPIR J 4 A_RaiseDead;
+        Stop;
+    }
+
+	action void A_RaiseDead()
+	{
+		let rd = A_RadiusGive("RaiseDeadItem", 100, RGF_CORPSES);
+	}
+}
+
+class RaiseDeadItem : CustomInventory
+{
+	Default
+	{
+		+INVENTORY.UNDROPPABLE
+		+INVENTORY.UNTOSSABLE
+		+INVENTORY.AUTOACTIVATE
+		+INVENTORY.PERSISTENTPOWER
+		+INVENTORY.UNCLEARABLE
+	}
+	states
+	{
+		Use:
+			TNT1 A 0 A_GotRaiseDead;
+			stop;
+  	}
+
+	action void A_GotRaiseDead()
+	{
+		Actor mo = Spawn("XRpgSummonWraith", Pos, ALLOW_REPLACE);
+		Spawn("MinotaurSmoke", Pos, ALLOW_REPLACE);
+		A_StartSound(mo.ActiveSound, CHAN_VOICE);
+
+		Destroy();
+	}
+}
+
+class MageLightningLightningSmoke : Actor
+{
+	Default
+	{
+	    +NOBLOCKMAP +NOGRAVITY +SHADOW
+	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
+		Scale 0.75;
+	}
+	States
+	{
+	Spawn:
+		MLFX L 12;
+		Stop;
+	}
+}
+class MageLightningLightningMissile : FastProjectile
+{
+    Default
+    {
+        Speed 120;
+        Radius 12;
+        Height 8;
+        Damage 1;
+        Projectile;
+        +RIPPER
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+        MissileType "MageFrostLightningSmoke";
+        DeathSound "MageLightningFire";
+        Obituary "$OB_MPMWEAPFROST";
+		Scale 1.5;
+    }
+    States
+    {
+    Spawn:
+        MLFX K 2 Bright;
+		Loop;
+    Death:
+        MLFX M 2 Bright A_Explode(70, 200, false);
+        Stop;
+    }
+}
+
+const BLOOD_MAX_MANADRAIN = 20;
+const BLOOD_SPEED = 8;
+class MageLightningBloodMissile1 : Actor
+{
+    Default
+    {
+        Speed BLOOD_SPEED;
+        Radius 16;
+        Height 12;
+        Damage 1;
+        Projectile;
+        +RIPPER
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+        +ZDOOMTRANS
+		+NOSHIELDREFLECT
+        Obituary "$OB_MPMWEAPFROST";
+
+		Health BLOOD_MAX_MANADRAIN; //max mana restore
+
+		Scale 1.5;
+		Translation "Ice";
+		RenderStyle "Translucent";
+		Alpha 0.6;
+    }
+    States
+    {
+    Spawn:
+        FSFX DEFGHIJK 2 Bright;
+    Death:
+        FSFX L 2 Bright;
+        Stop;
+    }
+
+	override int DoSpecialDamage(Actor targetMonster, int damage, name damagetype)
+	{
+		let playerObj = XRpgPlayer(target);
+		if (playerObj && playerObj.Health > 0 && Health > 0)
+		{
+			Health--;
+
+			let ammo = Inventory(playerObj.FindInventory("Mana1"));
+
+        	if (ammo)
+			{
+				ammo.Amount += 1;
+				if (ammo.Amount > ammo.MaxAmount)
+					ammo.Amount = ammo.MaxAmount;
+
+			}
+		}
+		
+		return Super.DoSpecialDamage(targetMonster, damage, damagetype);
+	}
+}
+class MageLightningBloodMissile2 : Actor
+{
+    Default
+    {
+        Speed BLOOD_SPEED;
+        Radius 16;
+        Height 12;
+        Damage 1;
+        Projectile;
+        +RIPPER
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+        +ZDOOMTRANS
+		+NOSHIELDREFLECT
+        Obituary "$OB_MPMWEAPFROST";
+
+		Health BLOOD_MAX_MANADRAIN; //max mana restore
+		
+		Scale 1.5;
+		RenderStyle "Translucent";
+		Alpha 0.6;
+    }
+    States
+    {
+    Spawn:
+        FSFX DEFGHIJK 2 Bright;
+    Death:
+        FSFX L 2 Bright;
+        Stop;
+    }
+
+	override int DoSpecialDamage(Actor targetMonster, int damage, name damagetype)
+	{
+		let playerObj = XRpgPlayer(target);
+		if (playerObj && playerObj.Health > 0 && Health > 0)
+		{
+			Health--;
+
+			let ammo = Inventory(playerObj.FindInventory("Mana2"));
+
+        	if (ammo)
+			{
+				ammo.Amount += 1;
+				if (ammo.Amount > ammo.MaxAmount)
+					ammo.Amount = ammo.MaxAmount;
+
+			}
+		}
+		
+		return Super.DoSpecialDamage(targetMonster, damage, damagetype);
 	}
 }
