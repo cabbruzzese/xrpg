@@ -120,7 +120,7 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		}
 	}
     
-    override bool IsSpellRapidFire(int spellType)
+    bool IsSpellRapidFire(int spellType)
     {
         if (spellType == SPELLTYPE_POISON)
             return true;
@@ -130,14 +130,14 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
         return false;
     }
 
-    override void FireFlameSpell()
+    void FireFlameSpell()
 	{
         FireMissileSpell("MageLightningFlameMissile2", 4, 4);
 	}
     
-    override void FireIceSpell()
+    void FireIceSpell()
 	{
-        if (!AttemptFireSpell(3, 3))
+        if (!A_AttemptFireSpell(3, 3))
             return;
 
         owner.SpawnPlayerMissile("MageLightningIceMissile", owner.angle);
@@ -145,27 +145,27 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
         owner.SpawnPlayerMissile("MageLightningIceMissile", owner.angle - 12);
 	}
 
-    override void FirePoisonSpell()
+    void FirePoisonSpell()
 	{
         FireMissileSpell("MageLightningPoisonMissile", 2, 2);
 	}
 
-    override void FireWaterSpell()
+    void FireWaterSpell()
 	{
         FireMissileSpell("MageLightningWaterMissile", 2, 2);
 	}
 
-    override void FireSunSpell()
+    void FireSunSpell()
 	{
         FireMissileSpell("MageLightningSunMissile", 10, 10);
 	}
 
-    override void FireMoonSpell()
+    void FireMoonSpell()
 	{
         FireMissileSpell("MageLightningMoonMissile", 8, 8);
 	}
 
-    override void FireDeathSpell()
+    void FireDeathSpell()
 	{
 		FireMissileSpell("MageLightningDeathMissile", 10, 10);
 	}
@@ -191,9 +191,9 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		mo.Vel.Z = STORMLIGHTNING_SPEED;
 		mo.CheckMissileSpawn (radius);
 	}
-    override void FireLightningSpell()
+    void FireLightningSpell()
 	{
-		if (!AttemptFireSpell(2, 2))
+		if (!A_AttemptFireSpell(2, 2))
             return;
 
 		if (owner.Vel.Z < STORMLIGHTNING_THRUST_MAX)
@@ -207,9 +207,9 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		FireLightiningStrike();
 	}
 
-    override void FireBloodSpell()
+    void FireBloodSpell()
 	{
-		if (!AttemptFireSpell(8, 8))
+		if (!A_AttemptFireSpell(8, 8))
             return;
 
 		owner.SpawnPlayerMissile("MageLightningBloodMissile1", owner.angle + 9);
@@ -434,7 +434,8 @@ class MageLightningWaterSmoke : Actor
             Stop;
 	}
 }
-class MageLightningWaterDrip : Actor
+
+class MageWaterDrip : Actor
 {
 	Default
 	{
@@ -455,7 +456,7 @@ class MageLightningWaterDrip : Actor
 	States
 	{
 	Spawn:
-        SPSH AAA 4 BRIGHT;
+        SPSH A 48 BRIGHT;
     Death:
 		SPSH EFGHIJK 4 BRIGHT;
 		Stop;
@@ -498,7 +499,7 @@ class MageLightningWaterMissile : Actor
 
     void A_DripWater ()
 	{
-        Spawn("MageLightningWaterDrip", pos, ALLOW_REPLACE);
+        Spawn("MageWaterDrip", pos, ALLOW_REPLACE);
         A_RadiusThrust(2000, 32);
 	}
 }

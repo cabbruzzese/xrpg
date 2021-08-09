@@ -2,6 +2,11 @@
 // somebody wants to use these weapons with either of those games.
 class XRpgWeapon : Weapon
 {
+    action void A_SetWeapState(StateLabel stateName)
+    {
+        player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState(stateName));
+    }
+
     action void A_AltFireCheckSpellSelected()
 	{
 		if (player == null)
@@ -9,7 +14,7 @@ class XRpgWeapon : Weapon
 
         let magePlayer = XRpgMagePlayer(player.mo);
         if (!magePlayer || !magePlayer.ActiveSpell)
-            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Ready"));
+            A_SetWeapState("Ready");
 	}
 
     action void A_AltHoldCheckSpellSelected()
@@ -18,16 +23,11 @@ class XRpgWeapon : Weapon
 			return;
 
         let magePlayer = XRpgMagePlayer(player.mo);
-        if (!magePlayer || !magePlayer.ActiveSpell || !invoker.IsSpellRapidFire(magePlayer.ActiveSpell.SpellType))
-            player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("AltFire"));
+        if (!magePlayer || !magePlayer.ActiveSpell)
+            A_SetWeapState("AltFire");
 	}
 
-    virtual bool IsSpellRapidFire(int spellType)
-    {
-        return false;
-    }
-
-    action bool CheckMana(class<Inventory> type, int ammoUse)
+    action bool A_CheckMana(class<Inventory> type, int ammoUse)
     {
         if (ammoUse == 0)
             return true;
@@ -39,15 +39,15 @@ class XRpgWeapon : Weapon
         return true;
     }
 
-    action bool CheckAllMana(int blueAmmoUse, int greenAmmoUse)
+    action bool A_CheckAllMana(int blueAmmoUse, int greenAmmoUse)
     {
-        let blueResult = CheckMana("Mana1", blueAmmoUse);
-        let greenResult = CheckMana("Mana2", greenAmmoUse);
+        let blueResult = A_CheckMana("Mana1", blueAmmoUse);
+        let greenResult = A_CheckMana("Mana2", greenAmmoUse);
         
         return blueResult && greenResult;
     }
 
-    action bool DepleteMana(class<Inventory> type, int ammoUse)
+    action bool A_DepleteMana(class<Inventory> type, int ammoUse)
     {
         let ammo = Inventory(FindInventory(type));
         if (!ammo || ammo.Amount < ammoUse)
@@ -57,21 +57,57 @@ class XRpgWeapon : Weapon
         return true;
     }
 
-    action bool DepleteAllMana(int blueAmmoUse, int greenAmmoUse)
+    action bool A_DepleteAllMana(int blueAmmoUse, int greenAmmoUse)
     {
-        let blueResult = DepleteMana("Mana1", blueAmmoUse);
-        let greenResult = DepleteMana("Mana2", greenAmmoUse);
+        let blueResult = A_DepleteMana("Mana1", blueAmmoUse);
+        let greenResult = A_DepleteMana("Mana2", greenAmmoUse);
 
         return blueResult && greenResult;
     }
 
-    void FireSpreadMissile(Class<Actor> missileType, int angleMax, int zAngleMax)
+    action void A_FireSpreadMissile(Class<Actor> missileType, int angleMax, int zAngleMax, int angleMod = 0)
 	{
-		Actor shard = owner.SpawnPlayerMissile(missileType, owner.angle + random(-1 * angleMax, angleMax));
+        int angleSpread = 0;
+        int zMod = 0;
+
+        if (angleMax != 0)
+            angleSpread = random(-angleMax, angleMax);
+
+        if (zAngleMax != 0)
+            zMod = random(-zAngleMax, zAngleMax);
+        
+		Actor shard = SpawnPlayerMissile(missileType, angle + angleSpread + angleMod);
         if (shard)
         {
-            shard.Vel.Z = shard.Vel.Z + random(-1 * zAngleMax, zAngleMax);
+            shard.Vel.Z = shard.Vel.Z + zMod;
         }
+	}
+
+    void FireSpreadMissile(Class<Actor> missileType, int angleMax, int zAngleMax)
+	{
+		/*KILL ME!!!*/
+	}
+
+    action void A_FireVerticalMissile(Class<Actor> missileType, int xSpread = 0, int ySpread = 0, int zSpeed = -90, int xMod = 0, int yMod = 0)
+	{
+        int xo = 0;
+        int yo = 0;
+        if (xSpread != 0)
+		    xo = random(-xSpread, xSpread);
+        if (ySpread != 0)
+		    yo = random(-ySpread, ySpread);
+
+		Vector3 spawnpos = Vec2OffsetZ(xo + xMod, yo + yMod, pos.z);
+		Actor mo = SpawnPlayerMissile(missileType);
+		if (!mo) return;
+		
+        mo.SetOrigin(spawnpos, false);
+		double newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
+		mo.SetZ(newz);
+
+		mo.Vel.X = MinVel; // Force collision detection
+		mo.Vel.Z = zSpeed;
+		mo.CheckMissileSpawn (radius);
 	}
 }
 
@@ -103,39 +139,32 @@ class XRpgMageWeapon : XRpgWeapon
 
     bool FireMissileSpell(Class<Actor> missileType, int blueAmmoUse = 0, int greenAmmoUse = 0, int angleMod = 0)
 	{
-		if (!AttemptFireSpell(blueAmmoUse, greenAmmoUse))
+		return true; /* KILL ME */
+	}
+
+    action bool A_FireMissileSpell(Class<Actor> missileType, int blueAmmoUse = 0, int greenAmmoUse = 0, int angleMod = 0, int angleSpread = 0, int zSpread = 0)
+	{
+		if (!A_AttemptFireSpell(blueAmmoUse, greenAmmoUse))
             return false;
 
-        owner.SpawnPlayerMissile(missileType, owner.angle + angleMod);
+        A_FireSpreadMissile(missileType, angleSpread, zSpread, angleMod);
 
         return true;
 	}
 
-    bool AttemptFireSpell(int blueAmmoUse, int greenAmmoUse)
+    action bool A_AttemptFireSpell(int blueAmmoUse, int greenAmmoUse)
 	{
-		if (owner.player == null)
+		if (player == null)
 			return false;
 
-        if (!CheckAllMana(blueAmmoUse, greenAmmoUse))
+        if (!A_CheckAllMana(blueAmmoUse, greenAmmoUse))
         {
-            owner.player.SetPsprite(PSP_WEAPON, owner.player.ReadyWeapon.FindState("Ready"));
+            A_SetWeapState("Ready");
             return false;
         }
         
-        return DepleteAllMana(blueAmmoUse, greenAmmoUse);
+        return A_DepleteAllMana(blueAmmoUse, greenAmmoUse);
 	}
-
-    virtual void FireFlameSpell() {}
-    virtual void FireIceSpell() {}
-    virtual void FirePoisonSpell() {}
-
-    virtual void FireWaterSpell() {}
-    virtual void FireSunSpell() {}
-    virtual void FireMoonSpell() {}
-
-    virtual void FireDeathSpell() {}
-    virtual void FireLightningSpell() {}
-    virtual void FireBloodSpell() {}
 
     action void A_FireSpell()
 	{
@@ -149,31 +178,31 @@ class XRpgMageWeapon : XRpgWeapon
             switch (magePlayer.ActiveSpell.SpellType)
             {
                 case SPELLTYPE_FIRE:
-                    invoker.FireFlameSpell();
+                    A_SetWeapState("FlameSpell");
                     break;
                 case SPELLTYPE_ICE:
-                    invoker.FireIceSpell();
+                    A_SetWeapState("IceSpell");
                     break;
                 case SPELLTYPE_POISON:
-                    invoker.FirePoisonSpell();
+                    A_SetWeapState("PoisonSpell");
                     break;
                 case SPELLTYPE_WATER:
-                    invoker.FireWaterSpell();
+                    A_SetWeapState("WaterSpell");
                     break;
                 case SPELLTYPE_SUN:
-                    invoker.FireSunSpell();
+                    A_SetWeapState("SunSpell");
                     break;
                 case SPELLTYPE_MOON:
-                    invoker.FireMoonSpell();
+                    A_SetWeapState("MoonSpell");
                     break;
                 case SPELLTYPE_DEATH:
-                    invoker.FireDeathSpell();
+                    A_SetWeapState("DeathSpell");
                     break;
                 case SPELLTYPE_LIGHTNING:
-                    invoker.FireLightningSpell();
+                    A_SetWeapState("LightningSpell");
                     break;
                 case SPELLTYPE_BLOOD:
-                    invoker.FireBloodSpell();
+                    A_SetWeapState("BloodSpell");
                     break;
             }
         }

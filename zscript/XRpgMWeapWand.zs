@@ -29,90 +29,72 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 		Goto Ready;
     AltFire:
 		MWND A 6 A_AltFireCheckSpellSelected;
-		MWND B 8 Bright Offset (0, 48) A_FireSpell();
+		MWND B 1 Bright Offset (0, 48) A_FireSpell();
+    AltFireFinish:
 		MWND A 6 Offset (0, 40);
 		MWND A 3 Offset (0, 36) A_ReFire;
 		Goto Ready;
-    AltHold:
-        MWND A 2 A_AltHoldCheckSpellSelected;
-        MWND B 2 Bright Offset (0, 48) A_FireSpell();
+    RapidFireFinish:
 		MWND A 1 Offset (0, 36) A_ReFire;
         Goto Ready;
+    FlameSpell:
+        MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandFlameMissile", 2);
+        Goto AltFireFinish;
+    IceSpell:
+        MWND B 2 Bright Offset (0, 48) A_FireMissileSpell("MageWandIceMissile", 1, 0, 0, 3, 3);
+        Goto RapidFireFinish;
+    PoisonSpell:
+        MWND B 2 Bright Offset (0, 48) A_FireMissileSpell("MageWandPoisonMissile", 2, 0);
+        Goto RapidFireFinish;
+    WaterSpell:
+        MWND B 7 Bright Offset (0, 48) A_FireWaterSpell;
+        Goto AltFireFinish;
+    SunSpell:
+        MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandSunMissile", 6, 0);
+        Goto AltFireFinish;
+    MoonSpell:
+        MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandMoonMissile", 3, 0);
+        Goto AltFireFinish;
+    DeathSpell:
+        MWND B 7 Bright Offset (0, 48) A_FireDeathSpell;
+        Goto AltFireFinish;
+    LightningSpell:
+        MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandLightningMissile", 5);
+        Goto AltFireFinish;
+    BloodSpell:
+		MWND B 7 Bright Offset (0, 48) A_FireBloodSpell;
+        Goto AltFireFinish;
 	}
 
-    override bool IsSpellRapidFire(int spellType)
-    {
-        if (spellType == SPELLTYPE_ICE)
-            return true;
-        if (spellType == SPELLTYPE_POISON)
-            return true;
-
-        return false;
-    }
-
-    override void FireFlameSpell()
+    action void A_FireWaterSpell()
 	{
-        FireMissileSpell("MageWandFlameMissile", 2);
-	}
-    
-    override void FireIceSpell()
-	{
-        if (!AttemptFireSpell(1, 0))
+        if (!A_AttemptFireSpell(4, 0))
             return;
 
-        FireSpreadMissile("MageWandIceMissile", 3, 3);
+        A_FireSpreadMissile("MageWandWaterMissile", 6, 6);
+        A_FireSpreadMissile("MageWandWaterMissile", 6, 6);
+        A_FireSpreadMissile("MageWandWaterMissile", 6, 6);
+        A_FireSpreadMissile("MageWandWaterMissile", 6, 6);
+        A_FireSpreadMissile("MageWandWaterMissile", 6, 6);
 	}
 
-    override void FirePoisonSpell()
+    action void A_FireDeathSpell()
 	{
-        FireMissileSpell("MageWandPoisonMissile", 2);
-	}
-
-    override void FireWaterSpell()
-	{
-        if (!AttemptFireSpell(4, 0))
+        if (!A_AttemptFireSpell(5, 0))
             return;
 
-        FireSpreadMissile("MageWandWaterMissile", 6, 6);
-        FireSpreadMissile("MageWandWaterMissile", 6, 6);
-        FireSpreadMissile("MageWandWaterMissile", 6, 6);
-        FireSpreadMissile("MageWandWaterMissile", 6, 6);
-        FireSpreadMissile("MageWandWaterMissile", 6, 6);
+        SpawnPlayerMissile("MageWandDeathMissile", angle);
+        SpawnPlayerMissile("MageWandDeathMissile", angle + 12);
+        SpawnPlayerMissile("MageWandDeathMissile", angle - 12);
 	}
 
-    override void FireSunSpell()
+    action void A_FireBloodSpell()
 	{
-        FireMissileSpell("MageWandSunMissile", 6);
-	}
-
-    override void FireMoonSpell()
-	{
-        FireMissileSpell("MageWandMoonMissile", 3);
-	}
-
-    override void FireDeathSpell()
-	{
-        if (!AttemptFireSpell(5, 0))
+        if (!A_AttemptFireSpell(5, 0))
             return;
 
-
-        owner.SpawnPlayerMissile("MageWandDeathMissile", owner.angle);
-        owner.SpawnPlayerMissile("MageWandDeathMissile", owner.angle + 12);
-        owner.SpawnPlayerMissile("MageWandDeathMissile", owner.angle - 12);
-	}
-
-    override void FireLightningSpell()
-	{
-        FireMissileSpell("MageWandLightningMissile", 5);
-	}
-
-    override void FireBloodSpell()
-	{
-        if (!AttemptFireSpell(5, 0))
-            return;
-
-        let mo1 = owner.SpawnPlayerMissile("MageWandBloodMissile", owner.angle + 8);
-        let mo2 = owner.SpawnPlayerMissile("MageWandBloodMissile", owner.angle - 8);
+        SpawnPlayerMissile("MageWandBloodMissile", angle + 8);
+        SpawnPlayerMissile("MageWandBloodMissile", angle - 8);
 	}
 }
 

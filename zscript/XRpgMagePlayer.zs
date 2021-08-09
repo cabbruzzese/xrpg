@@ -45,7 +45,7 @@ class XRpgMagePlayer : XRpgPlayer
 		Player.WeaponSlot 1, "XRpgMWeapWand";
 		Player.WeaponSlot 2, "XRpgMWeapFrost";
 		Player.WeaponSlot 3, "XRpgMWeapLightning";
-		Player.WeaponSlot 4, "MWeapBloodscourge";
+		Player.WeaponSlot 4, "XRpgMWeapBloodscourge";
 		Player.FlechetteType "ArtiPoisonBag2";
 		
 		Player.ColorRange 146, 163;
@@ -65,6 +65,7 @@ class XRpgMagePlayer : XRpgPlayer
 
 		Player.StartItem "XRpgMWeapFrost";
 		Player.StartItem "XRpgMWeapLightning";
+		Player.StartItem "XRpgMWeapBloodscourge";
 	}
 
 	States

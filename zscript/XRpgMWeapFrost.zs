@@ -46,19 +46,45 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE C 4;
 		CONE D 3;
 		CONE E 5;
-		CONE F 3 A_FireSpell();
+		CONE F 1 A_FireSpell();
+	AltFireFinish:
 		CONE G 3;
 		CONE A 9;
 		CONE A 10 A_ReFire;
 		Goto Ready;
-    AltHold:
-		CONE F 1 A_AltHoldCheckSpellSelected;
-		CONE F 2 A_FireSpell();
+	RapidFireFinish:
 		CONE F 2 A_ReFire;
 		CONE G 3;
 		CONE A 9;
 		CONE A 10;
 		Goto Ready;
+	FlameSpell:
+        CONE F 2 Bright A_FireFlameSpell;
+        Goto AltFireFinish;
+    IceSpell:
+        CONE F 2 Bright A_FireMissileSpell("MageFrostIceMissile", 0, 1);
+        Goto RapidFireFinish;
+    PoisonSpell:
+        CONE F 2 Bright A_FireMissileSpell("MageFrostPoisonMissile", 0, 8);
+        Goto AltFireFinish;
+    WaterSpell:
+        CONE F 2 Bright A_FireMissileSpell("MageFrostWaterMissile", 0, 1, 0, 2, 1);
+        Goto RapidFireFinish;
+    SunSpell:
+        CONE F 2 Bright A_FireMissileSpell("MageFrostSunMissile", 0, 12);
+        Goto AltFireFinish;
+    MoonSpell:
+        CONE F 2 Bright A_FireMissileSpell("MageFrostMoonMissile", 0, 6);
+        Goto AltFireFinish;
+    DeathSpell:
+        CONE F 2 Bright A_FireMissileSpell("MageFrostDeathMissile", 0, 8);
+        Goto AltFireFinish;
+    LightningSpell:
+        CONE F 2 Bright A_FireLightningSpell;
+        Goto AltFireFinish;
+    BloodSpell:
+        CONE F 2 Bright A_FireBloodSpell;
+        Goto AltFireFinish;
 	}
 	
 	//============================================================================
@@ -112,108 +138,50 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		}
 	}
 
-	override bool IsSpellRapidFire(int spellType)
-    {
-        if (spellType == SPELLTYPE_WATER)
-            return true;
-		if (spellType == SPELLTYPE_ICE)
-			return true;
-
-        return false;
-    }
-
-    override void FireFlameSpell()
+    action void A_FireFlameSpell()
 	{
-		if (!AttemptFireSpell(0, 8))
+		if (!A_AttemptFireSpell(0, 8))
             return;
 
-        FireSpreadMissile("MageFrostFlameMissile", 9, 2);
-        FireSpreadMissile("MageFrostFlameMissile", 9, 2);
-        FireSpreadMissile("MageFrostFlameMissile", 9, 2);
-	}
-    
-    override void FireIceSpell()
-	{
-		FireMissileSpell("MageFrostIceMissile", 0, 1);
-	}
-
-    override void FirePoisonSpell()
-	{
-		FireMissileSpell("MageFrostPoisonMissile", 0, 8);
-	}
-
-    override void FireWaterSpell()
-	{
-		if (!AttemptFireSpell(0, 1))
-            return;
-
-        FireSpreadMissile("MageFrostWaterMissile", 2, 1);
-	}
-
-    override void FireSunSpell()
-	{
-		FireMissileSpell("MageFrostSunMissile", 0, 12);
-	}
-
-    override void FireMoonSpell()
-	{
-		FireMissileSpell("MageFrostMoonMissile", 0, 6);
-	}
-
-    override void FireDeathSpell()
-	{
-		FireMissileSpell("MageFrostDeathMissile", 0, 8);
+        A_FireSpreadMissile("MageFrostFlameMissile", 9, 2);
+        A_FireSpreadMissile("MageFrostFlameMissile", 9, 2);
+        A_FireSpreadMissile("MageFrostFlameMissile", 9, 2);
 	}
 
 	const FROSTLIGHTNING_DIST = 96;
 	const FROSTLIGHTNING_Q = 0.33;
 	const FROSTLIGHTNING_T = 0.66;
-	const FROSTLIGHTNING_SPEED = -90;
-	void FireLightiningStrike(double xo, double yo)
+	action void A_FireLightningSpell()
 	{
-		Vector3 spawnpos = owner.Vec2OffsetZ(xo, yo, pos.z);
-		Actor mo = Spawn("MageFrostLightningMissile", spawnpos, ALLOW_REPLACE);
-		if (!mo) return;
-		
-		double newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
-		mo.SetZ(newz);
-
-		mo.target = owner;
-		mo.Vel.X = MinVel; // Force collision detection
-		mo.Vel.Z = FROSTLIGHTNING_SPEED;
-		mo.CheckMissileSpawn (radius);
-	}
-    override void FireLightningSpell()
-	{
-		if (!AttemptFireSpell(0, 6))
+		if (!A_AttemptFireSpell(0, 6))
             return;
 
-		FireLightiningStrike(0, FROSTLIGHTNING_DIST);
-		FireLightiningStrike(FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T);
-		FireLightiningStrike(FROSTLIGHTNING_DIST * FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, 0, FROSTLIGHTNING_DIST);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q);
 
-		FireLightiningStrike(FROSTLIGHTNING_DIST, 0);
-		FireLightiningStrike(FROSTLIGHTNING_DIST * FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q);
-		FireLightiningStrike(FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST, 0);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T);
 
-		FireLightiningStrike(0, -FROSTLIGHTNING_DIST);
-		FireLightiningStrike(FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T);
-		FireLightiningStrike(FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, 0, -FROSTLIGHTNING_DIST);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q);
 
-		FireLightiningStrike(-FROSTLIGHTNING_DIST, 0);
-		FireLightiningStrike(FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q);
-		FireLightiningStrike(FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -FROSTLIGHTNING_DIST, 0);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T);
 
-		owner.A_RadiusThrust(5000, 128, RTF_NOIMPACTDAMAGE);
+		A_RadiusThrust(5000, 128, RTF_NOIMPACTDAMAGE);
 	}
 
-    override void FireBloodSpell()
+    action void A_FireBloodSpell()
 	{
-		if (!AttemptFireSpell(0, 8))
+		if (!A_AttemptFireSpell(0, 8))
             return;
 
-        owner.SpawnPlayerMissile("MageFrostBloodMissile", owner.angle + 8);
-        owner.SpawnPlayerMissile("MageFrostBloodMissile", owner.angle - 8);
+        SpawnPlayerMissile("MageFrostBloodMissile", angle + 8);
+        SpawnPlayerMissile("MageFrostBloodMissile", angle - 8);
 	}
 }
 

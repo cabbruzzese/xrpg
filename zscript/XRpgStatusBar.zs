@@ -238,10 +238,10 @@ class XRpgStatusBar : HexenStatusBar
 				else if (CPlayer.mo is "MagePlayer")
 				{
 					DrawImage("WPSLOT2", (190, 162), DI_ITEM_OFFSETS);
-					if (CheckInventory("MWeapBloodscourge")) DrawImage("WPFULL2", (190, 162), DI_ITEM_OFFSETS);
+					if (CheckInventory("XRpgMWeapBloodscourge")) DrawImage("WPFULL2", (190, 162), DI_ITEM_OFFSETS);
 					else
 					{
-						int pieces = GetWeaponPieceMask("MWeapBloodscourge");
+						int pieces = GetWeaponPieceMask("XRpgMWeapBloodscourge");
 						if (pieces & 1) DrawImage("WPIECEM1", (190, 162), DI_ITEM_OFFSETS);
 						if (pieces & 2) DrawImage("WPIECEM2", (205, 162), DI_ITEM_OFFSETS);
 						if (pieces & 4) DrawImage("WPIECEM3", (224, 162), DI_ITEM_OFFSETS);
