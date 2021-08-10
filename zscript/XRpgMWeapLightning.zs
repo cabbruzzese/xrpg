@@ -48,7 +48,8 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		Goto Ready;
     AltFire:
         MLNG DE 3 Bright A_AltFireCheckSpellSelected;
-		MLNG F 4 Bright A_FireSpell;
+		MLNG F 3 Bright A_FireSpell;
+	AltFireFinish:
 		MLNG G 4 Bright;
 		MLNG HI 3 Bright;
 		MLNG I 6 Bright Offset (0, 199);
@@ -57,10 +58,7 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		MLNG B 2 Bright Offset (0, 45);
 		MLNG B 2 Bright Offset (0, 40) A_ReFire;
 		Goto Ready;
-    AltHold:
-        MLNG F 1 Bright A_AltHoldCheckSpellSelected;
-		MLNG F 4 Bright A_FireSpell;
-		MLNG G 4 Bright;
+	RapidFireFinish:
 		MLNG H 3 Bright A_ReFire;
         MLNG I 3 Bright;
 		MLNG I 6 Bright Offset (0, 199);
@@ -69,6 +67,71 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		MLNG B 2 Bright Offset (0, 45);
 		MLNG B 2 Bright Offset (0, 40);
 		Goto Ready;
+	FlameSpell:
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningFlameMissile2", 4, 4);
+        Goto AltFireFinish;
+    IceSpell:
+		MLNG F 1 Bright A_FireIceSpell;
+        Goto AltFireFinish;
+    PoisonSpell:
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningPoisonMissile", 2, 2);
+        Goto RapidFireFinish;
+    WaterSpell:
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningWaterMissile", 2, 2);
+        Goto AltFireFinish;
+    SunSpell:
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningSunMissile", 10, 10);
+        Goto AltFireFinish;
+    MoonSpell:
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningMoonMissile", 8, 8);
+        Goto AltFireFinish;
+    DeathSpell:
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningDeathMissile", 10, 10);
+        Goto AltFireFinish;
+    LightningSpell:
+		MLNG F 1 Bright A_FireLightningSpell;
+        Goto RapidFireFinish;
+    BloodSpell:
+		MLNG F 1 Bright A_FireBloodSpell;
+        Goto AltFireFinish;
+	}
+    
+    action void A_FireIceSpell()
+	{
+        if (!A_AttemptFireSpell(3, 3))
+            return;
+
+        SpawnPlayerMissile("MageLightningIceMissile", angle);
+        SpawnPlayerMissile("MageLightningIceMissile", angle + 12);
+        SpawnPlayerMissile("MageLightningIceMissile", angle - 12);
+	}
+
+	const STORMLIGHTNING_DIST = 96;
+	const STORMLIGHTNING_THRUST = 10;
+	const STORMLIGHTNING_THRUST_MAX = 20;
+    action void A_FireLightningSpell()
+	{
+		if (!A_AttemptFireSpell(2, 2))
+            return;
+
+		if (Vel.Z < STORMLIGHTNING_THRUST_MAX)
+		{
+			Vel.Z += STORMLIGHTNING_THRUST;
+			if (Vel.Z > STORMLIGHTNING_THRUST_MAX)
+				Vel.Z = STORMLIGHTNING_THRUST_MAX;
+		}
+
+		A_FireVerticalMissile("MageLightningLightningMissile", -STORMLIGHTNING_DIST, STORMLIGHTNING_DIST);
+		A_FireVerticalMissile("MageLightningLightningMissile", -STORMLIGHTNING_DIST, STORMLIGHTNING_DIST);
+	}
+
+    action void A_FireBloodSpell()
+	{
+		if (!A_AttemptFireSpell(8, 8))
+            return;
+
+		SpawnPlayerMissile("MageLightningBloodMissile1", angle + 9);
+        SpawnPlayerMissile("MageLightningBloodMissile2", angle - 9);
 	}
 	
 	//============================================================================
@@ -118,102 +181,6 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 				weapon.DepleteAmmo (false);
 			}
 		}
-	}
-    
-    bool IsSpellRapidFire(int spellType)
-    {
-        if (spellType == SPELLTYPE_POISON)
-            return true;
-        if (spellType == SPELLTYPE_LIGHTNING)
-            return true;
-
-        return false;
-    }
-
-    void FireFlameSpell()
-	{
-        FireMissileSpell("MageLightningFlameMissile2", 4, 4);
-	}
-    
-    void FireIceSpell()
-	{
-        if (!A_AttemptFireSpell(3, 3))
-            return;
-
-        owner.SpawnPlayerMissile("MageLightningIceMissile", owner.angle);
-        owner.SpawnPlayerMissile("MageLightningIceMissile", owner.angle + 12);
-        owner.SpawnPlayerMissile("MageLightningIceMissile", owner.angle - 12);
-	}
-
-    void FirePoisonSpell()
-	{
-        FireMissileSpell("MageLightningPoisonMissile", 2, 2);
-	}
-
-    void FireWaterSpell()
-	{
-        FireMissileSpell("MageLightningWaterMissile", 2, 2);
-	}
-
-    void FireSunSpell()
-	{
-        FireMissileSpell("MageLightningSunMissile", 10, 10);
-	}
-
-    void FireMoonSpell()
-	{
-        FireMissileSpell("MageLightningMoonMissile", 8, 8);
-	}
-
-    void FireDeathSpell()
-	{
-		FireMissileSpell("MageLightningDeathMissile", 10, 10);
-	}
-
-	const STORMLIGHTNING_DIST = 96;
-	const STORMLIGHTNING_SPEED = -90;
-	const STORMLIGHTNING_THRUST = 10;
-	const STORMLIGHTNING_THRUST_MAX = 70;
-	void FireLightiningStrike()
-	{
-		let xo = random(-STORMLIGHTNING_DIST, STORMLIGHTNING_DIST);
-		let yo = random(-STORMLIGHTNING_DIST, STORMLIGHTNING_DIST);
-
-		Vector3 spawnpos = owner.Vec2OffsetZ(xo, yo, pos.z);
-		Actor mo = Spawn("MageLightningLightningMissile", spawnpos, ALLOW_REPLACE);
-		if (!mo) return;
-		
-		double newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
-		mo.SetZ(newz);
-
-		mo.target = owner;
-		mo.Vel.X = MinVel; // Force collision detection
-		mo.Vel.Z = STORMLIGHTNING_SPEED;
-		mo.CheckMissileSpawn (radius);
-	}
-    void FireLightningSpell()
-	{
-		if (!A_AttemptFireSpell(2, 2))
-            return;
-
-		if (owner.Vel.Z < STORMLIGHTNING_THRUST_MAX)
-		{
-			owner.Vel.Z += STORMLIGHTNING_THRUST;
-			if (owner.Vel.Z > STORMLIGHTNING_THRUST_MAX)
-				owner.Vel.Z = STORMLIGHTNING_THRUST_MAX;
-		}
-
-		FireLightiningStrike();
-		FireLightiningStrike();
-	}
-
-    void FireBloodSpell()
-	{
-		if (!A_AttemptFireSpell(8, 8))
-            return;
-
-		owner.SpawnPlayerMissile("MageLightningBloodMissile1", owner.angle + 9);
-        owner.SpawnPlayerMissile("MageLightningBloodMissile2", owner.angle - 9);
 	}
 }
 
@@ -713,6 +680,9 @@ class RaiseDeadItem : CustomInventory
 
 	action void A_GotRaiseDead()
 	{
+		if (bFriendly)
+			return;
+
 		Actor mo = Spawn("XRpgSummonWraith", Pos, ALLOW_REPLACE);
 		Spawn("MinotaurSmoke", Pos, ALLOW_REPLACE);
 		A_StartSound(mo.ActiveSound, CHAN_VOICE);

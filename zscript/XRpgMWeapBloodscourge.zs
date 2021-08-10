@@ -76,6 +76,8 @@ class XRpgBloodscourgeDrop : Actor replaces BloodscourgeDrop
 class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 {
 	int MStaffCount;
+
+	XRpgSummonBat Bats[3];
 	
 	Default
 	{
@@ -90,6 +92,7 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		Weapon.AmmoType1 "Mana1";
 		Weapon.AmmoType2 "Mana2";
 		+WEAPON.PRIMARY_USES_BOTH;
+		+WEAPON.ALT_AMMO_OPTIONAL;
 		+Inventory.NoAttenPickupSound
 		Inventory.PickupMessage "$TXT_WEAPON_M4";
 		Inventory.PickupSound "WeaponBuild";
@@ -120,28 +123,126 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		Goto Ready;
     AltFire:
         MSTF G 4 Offset (0, 40) A_AltFireCheckSpellSelected;
-		MSTF H 4 Bright Offset (0, 48) A_FireSpell;
+		MSTF H 3 Bright Offset (0, 48) A_FireSpell;
+	AltFireFinish:
 		MSTF H 2 Bright Offset (0, 48) A_MStaffPalette;
 		MSTF II 2 Offset (0, 48) A_MStaffPalette;
 		MSTF I 1 Offset (0, 40);
 		MSTF J 5 Offset (0, 36) A_ReFire;
 		Goto Ready;
-    AltHold:
-        MSTF G 2 Offset (0, 40) A_AltHoldCheckSpellSelected;
-		MSTF H 1 Bright Offset (0, 48) A_FireSpell;
+    RapidFireFinish:
         MSTF H 1 Bright Offset (0, 48) A_ReFire;
 		MSTF H 2 Bright Offset (0, 48) A_MStaffPalette;
 		MSTF II 2 Offset (0, 48) A_MStaffPalette;
 		MSTF I 1 Offset (0, 40);
 		MSTF J 5 Offset (0, 36);
 		Goto Ready;
-	LightningAttack:
-		MSTF HHHH 4 Bright Offset (0, 48) A_SpellFloorLightning;
-		MSTF H 4 Bright Offset (0, 48) A_MStaffPalette;
-		MSTF II 2 Offset (0, 48) A_MStaffPalette;
-		MSTF I 8 Offset (0, 40);
-		MSTF J 8 Offset (0, 36);
-		Goto Ready;
+	FlameSpell:
+		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffFlameMissile", 0, 0);
+        Goto RapidFireFinish;
+    IceSpell:
+		MSTF H 7 Bright Offset (0, 48) A_FireIceSpell;
+        Goto AltFireFinish;
+    PoisonSpell:
+		MSTF H 5 Bright Offset (0, 48) A_FirePoisonSpell;
+        Goto AltFireFinish;
+    WaterSpell:
+		MSTF H 5 Bright Offset (0, 48) A_FireWaterSpell;
+        Goto AltFireFinish;
+    SunSpell:
+		MSTF H 15 Bright Offset (0, 48) A_FireSunSpell;
+        Goto AltFireFinish;
+    MoonSpell:
+		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffMoonMissile", 0, 0);
+        Goto AltFireFinish;
+    DeathSpell:
+		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffDeathMissile2", 0, 0);
+        Goto AltFireFinish;
+    LightningSpell:
+		MSTF H 1 Bright Offset (0, 48) A_FireLightningSpell(true);
+		MSTF H 4 Bright Offset (0, 48) A_FireLightningSpell(true);
+		MSTF H 4 Bright Offset (0, 48) A_FireLightningSpell(true);
+		MSTF H 16 Bright Offset (0, 48);
+        Goto AltFireFinish;
+    BloodSpell:
+		MSTF H 1 Bright Offset (0, 48) A_FireBloodSpell;
+		MSTF H 24 Bright Offset (0, 48);
+        Goto AltFireFinish;
+	}
+
+	//Final weapon attacks are weaker but do not use ammo
+    action void A_FireIceSpell()
+	{
+        for (int i = 0; i < 4; i++)
+        {
+            A_FireSpreadMissile("MageStaffIceMissile", 10, 5);
+        }
+	}
+
+    const STAFFPOISON_DIST = 64;
+    action void A_FirePoisonSpell()
+	{
+        let xo = random(-STAFFPOISON_DIST, STAFFPOISON_DIST);
+		let yo = random(-STAFFPOISON_DIST, STAFFPOISON_DIST);
+
+		Vector3 spawnpos = Vec2OffsetZ(xo, yo, -64);
+        Actor mo = SpawnPlayerMissile("MageStaffPoisonMissile");
+        mo.SetOrigin(spawnpos, false);
+	}
+
+    action void A_FireWaterSpell()
+	{
+        for (int i = 0; i < 3; i++)
+        {
+            A_FireSpreadMissile("MageStaffWaterMissile", 6, 2);
+        }
+	}
+
+    const STAFFSUN_ZSPEED = 0.5;
+    const STAFFSUN_ZOFFSET = 0;
+    action void A_FireSunSpell()
+	{
+        Actor mo = SpawnPlayerMissile("MageStaffSunMissile");
+        mo.Vel.Z = STAFFSUN_ZSPEED;
+        mo.SetOrigin((mo.Pos.X, mo.Pos.Y, Pos.Z + STAFFSUN_ZOFFSET), false);
+	}
+
+	const STAFFLIGHTNINGCHARGE_THRUST = 12;
+	action void A_FireLightningSpell(bool isFiring)
+	{
+		if (isFiring)
+			A_FireVerticalMissile("MageStaffLightningMissile", 2, 2);
+		
+		Thrust(STAFFLIGHTNINGCHARGE_THRUST, angle);
+	}
+
+	const SUMMONBAT_DIST = 100.0;
+	const SUMMONBAT_HEIGHTMOD = 20.0;
+	action void A_AddBatToList(XRpgSummonBat batObj)
+	{
+		XRpgSummonBat bat0 = batObj;
+		XRpgSummonBat bat1 = invoker.Bats[0];
+		XRpgSummonBat bat2 = invoker.Bats[1];
+		XRpgSummonBat bat3 = invoker.Bats[2];
+
+		if (bat3 != null)
+			bat3.Destroy();
+
+		invoker.Bats[0] = bat0;
+		invoker.Bats[1] = bat1;
+		invoker.Bats[2] = bat2;
+	}
+	action void A_FireBloodSpell()
+	{
+		XRpgSummonBat mo = XRpgSummonBat(Spawn("XRpgSummonBat"));
+		if (!mo)
+			return;
+
+		Vector3 dir = (AngleToVector(angle, cos(pitch)), -sin(pitch));
+		let forwardDir = (dir.X * SUMMONBAT_DIST, dir.Y * SUMMONBAT_DIST, dir.Z * SUMMONBAT_DIST);
+		mo.SetOrigin((Pos.X + forwardDir.X, Pos.Y + forwardDir.Y, Pos.Z + forwardDir.Z + SUMMONBAT_HEIGHTMOD), false);
+
+		A_AddBatToList(mo);
 	}
 	
 	//============================================================================
@@ -235,88 +336,6 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 	{
 		if (invoker.MStaffCount > 0) invoker.MStaffCount--;
 	}
-
-    bool IsSpellRapidFire(int spellType)
-    {
-        if (spellType == SPELLTYPE_FIRE)
-            return true;
-
-        return false;
-    }
-
-    //Final weapon attacks are weaker but do not use ammo
-    void FireFlameSpell()
-	{
-        FireMissileSpell("MageStaffFlameMissile", 0, 0);
-	}
-    
-    void FireIceSpell()
-	{
-        for (int i = 0; i < 4; i++)
-        {
-            FireSpreadMissile("MageStaffIceMissile", 10, 5);
-        }
-	}
-
-    const STAFFPOISON_DIST = 64;
-    void FirePoisonSpell()
-	{
-        let xo = random(-STAFFPOISON_DIST, STAFFPOISON_DIST);
-		let yo = random(-STAFFPOISON_DIST, STAFFPOISON_DIST);
-
-		Vector3 spawnpos = owner.Vec2OffsetZ(xo, yo, -64);
-        Actor mo = owner.SpawnPlayerMissile("MageStaffPoisonMissile");
-        mo.SetOrigin(spawnpos, false);
-	}
-
-    void FireWaterSpell()
-	{
-        for (int i = 0; i < 3; i++)
-        {
-            FireSpreadMissile("MageStaffWaterMissile", 6, 2);
-        }
-	}
-
-    const STAFFSUN_ZSPEED = 0.5;
-    const STAFFSUN_ZOFFSET = 0;
-    void FireSunSpell()
-	{
-        Actor mo = owner.SpawnPlayerMissile("MageStaffSunMissile");
-        mo.Vel.Z = STAFFSUN_ZSPEED;
-        mo.SetOrigin((mo.Pos.X, mo.Pos.Y, owner.Pos.Z + STAFFSUN_ZOFFSET), false);
-	}
-
-    void FireMoonSpell()
-	{
-        FireMissileSpell("MageStaffMoonMissile", 0, 0);
-	}
-
-    void FireDeathSpell()
-	{
-        
-	}
-
-	action void A_SpellFloorLightning()
-	{
-		console.printf("Self: " .. GetClassName());
-		//console.printf("Owner: " .. owner.GetClassName());
-		console.printf("Invoker: " .. invoker.GetClassName());
-		console.printf("player name: " .. player.GetUserName());
-		Thrust(15, angle);
-		A_FireVerticalMissile("MageStaffLightningMissile", 2, 2);
-	}
-    void FireLightningSpell()
-	{
-		console.printf("Self: " .. GetClassName());
-		console.printf("Owner: " .. owner.GetClassName());
-		//console.printf("Invoker: " .. invoker.GetClassName());
-		//console.printf("player mo: " .. player.mo.GetClassName());
-		owner.SetStateLabel("LightningAttack");
-	}
-
-    void FireBloodSpell()
-	{
-	}
 }
 
 class MageStaffFlameMissile : Actor
@@ -326,12 +345,13 @@ class MageStaffFlameMissile : Actor
         Speed 14;
         Radius 12;
         Height 8;
-        Damage 2;
+        Damage 4;
         Projectile;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
         +ZDOOMTRANS
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
+		DamageType "Fire";
 
         RenderStyle "Translucent";
         Alpha 0.7;
@@ -558,4 +578,152 @@ class MageStaffLightningMissile : FastProjectile
         MLFX M 2 Bright A_Explode(20, 120, false);
         Stop;
     }
+}
+
+const DEATHFLOOR_RADIUS = 80;
+const DEATHFLOOR_RADIUSDAMAGE = 10;
+//CPS3A0
+class MageStaffDeathMissile1 : Actor
+{
+	Default
+	{
+		Radius 10;
+		Height 6;
+		Speed 20;
+		FastSpeed 26;
+		Damage 3;
+		Projectile;
+		-ACTIVATEIMPACT
+		-ACTIVATEPCROSS
+		+ZDOOMTRANS
+		RenderStyle "Add";
+		Obituary "$OB_MPMWEAPLIGHTNING";
+	}
+	States
+	{
+	Spawn:
+		FX12 AB 6 Bright;
+		Loop;
+	Death:
+		FX12 CDEFGH 5 Bright;
+		Stop;
+	}
+}
+
+class MageStaffDeathMissile2 : MageStaffDeathMissile1
+{
+	Default
+	{
+		Radius 5;
+		Height 12;
+		Speed 4;
+		FastSpeed 20;
+		Damage 0;
+		+FLOORHUGGER
+		+YFLIP
+		RenderStyle "None";
+		
+		+RIPPER
+	}
+	
+	states
+	{
+	Spawn:
+		TNT1 AAAAA 16 Bright A_SpellFloorFire;
+		Stop;
+	Death:
+		Stop;
+	}
+	
+	//----------------------------------------------------------------------------
+	//
+	// PROC A_SpellFloorFire
+	//
+	//----------------------------------------------------------------------------
+
+	void A_SpellFloorFire()
+	{
+		SetZ(floorz);
+		MageStaffDeathMissile3 mo = MageStaffDeathMissile3(Spawn("MageStaffDeathMissile3", Vec2OffsetZ(0, 0, floorz), ALLOW_REPLACE));
+		if (mo != null)
+		{
+			mo.target = target;
+			mo.Vel.X = MinVel; // Force block checking
+			mo.CheckMissileSpawn (radius);
+			mo.SetOrigin((mo.Pos.X, mo.Pos.Y, mo.Pos.Z), false);
+		}
+	}
+}
+
+class MageStaffDeathMissile3 : Actor
+{
+	Default
+	{
+		Radius 8;
+		Height 60;
+		Speed 0;
+		Damage 0;
+
+		+FLOORCLIP
+		+NOGRAVITY
+		+DROPOFF
+		+FLOAT
+		+YFLIP
+
+		-SHOOTABLE
+		-SOLID
+		+DONTMORPH
+		+DONTBLAST
+		+SPECIALFLOORCLIP
+		+STAYMORPHED
+		+INVISIBLE
+
+		//RenderStyle "Add";
+	}
+	States
+	{
+	Spawn:
+		CPS3 A 1 BRIGHT A_WraithInit;
+		CPS3 A 1 BRIGHT A_InitRise;
+		CPS3 AAAAAA 3 BRIGHT A_RiseFromGround(10);
+	Death:
+		CPS3 A 4 BRIGHT SpellFloorFireExplode;
+		CPS3 AAAAAA 3 BRIGHT A_RiseFromGround(-10);
+		Stop;
+	}
+
+	void A_WraithInit()
+	{
+		AddZ(60);
+
+		// [RH] Make sure the wraith didn't go into the ceiling
+		if (pos.z + height > ceilingz)
+		{
+			SetZ(ceilingz - Height);
+		}
+
+		WeaveIndexZ = 0;			// index into floatbob
+	}
+
+	action void A_InitRise()
+	{
+		bInvisible = false;
+		bDontBlast = false;
+		Floorclip = Height;
+	}
+
+	action void A_RiseFromGround(int riseDist)
+	{
+		if (riseDist > 0)
+			RaiseMobj (riseDist);
+		else 
+			SinkMobj (-riseDist);
+
+		SpawnDirt (radius);
+	}
+
+	action void SpellFloorFireExplode()
+	{
+		A_Explode(FLAMEFLOOR_RADIUSDAMAGE, FLAMEFLOOR_RADIUS, 0);
+	}
 }

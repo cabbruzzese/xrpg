@@ -1,4 +1,3 @@
-
 const WRAITH_LIFE_MAX = 1024;
 class XRpgSummonWraith : Wraith
 {

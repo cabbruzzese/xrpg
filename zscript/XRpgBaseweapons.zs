@@ -17,16 +17,6 @@ class XRpgWeapon : Weapon
             A_SetWeapState("Ready");
 	}
 
-    action void A_AltHoldCheckSpellSelected()
-	{
-		if (player == null)
-			return;
-
-        let magePlayer = XRpgMagePlayer(player.mo);
-        if (!magePlayer || !magePlayer.ActiveSpell)
-            A_SetWeapState("AltFire");
-	}
-
     action bool A_CheckMana(class<Inventory> type, int ammoUse)
     {
         if (ammoUse == 0)
@@ -83,11 +73,6 @@ class XRpgWeapon : Weapon
         }
 	}
 
-    void FireSpreadMissile(Class<Actor> missileType, int angleMax, int zAngleMax)
-	{
-		/*KILL ME!!!*/
-	}
-
     action void A_FireVerticalMissile(Class<Actor> missileType, int xSpread = 0, int ySpread = 0, int zSpeed = -90, int xMod = 0, int yMod = 0)
 	{
         int xo = 0;
@@ -106,6 +91,7 @@ class XRpgWeapon : Weapon
 		mo.SetZ(newz);
 
 		mo.Vel.X = MinVel; // Force collision detection
+        mo.Vel.Y = MinVel; // Force collision detection
 		mo.Vel.Z = zSpeed;
 		mo.CheckMissileSpawn (radius);
 	}
@@ -135,11 +121,6 @@ class XRpgMageWeapon : XRpgWeapon
 	{
 		Weapon.Kickback 150;
 		Inventory.ForbiddenTo "FighterPlayer", "ClericPlayer";
-	}
-
-    bool FireMissileSpell(Class<Actor> missileType, int blueAmmoUse = 0, int greenAmmoUse = 0, int angleMod = 0)
-	{
-		return true; /* KILL ME */
 	}
 
     action bool A_FireMissileSpell(Class<Actor> missileType, int blueAmmoUse = 0, int greenAmmoUse = 0, int angleMod = 0, int angleSpread = 0, int zSpread = 0)
