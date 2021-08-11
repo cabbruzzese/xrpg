@@ -250,10 +250,10 @@ class XRpgStatusBar : HexenStatusBar
 				else
 				{
 					DrawImage("WPSLOT0", (190, 162), DI_ITEM_OFFSETS);
-					if (CheckInventory("FWeapQuietus")) DrawImage("WPFULL0", (190, 162), DI_ITEM_OFFSETS);
+					if (CheckInventory("XRpgFWeapQuietus")) DrawImage("WPFULL0", (190, 162), DI_ITEM_OFFSETS);
 					else
 					{
-						int pieces = GetWeaponPieceMask("FWeapQuietus");
+						int pieces = GetWeaponPieceMask("XRpgFWeapQuietus");
 						if (pieces & 1) DrawImage("WPIECEF1", (190, 162), DI_ITEM_OFFSETS);
 						if (pieces & 2) DrawImage("WPIECEF2", (225, 162), DI_ITEM_OFFSETS);
 						if (pieces & 4) DrawImage("WPIECEF3", (234, 162), DI_ITEM_OFFSETS);

@@ -38,8 +38,8 @@ class XRpgPlayer : PlayerPawn
 		if (stat <= 10)
 			return stat * 0.1;
 		
-		//Remaining scales at 5% increments. 30 = double damage
-		return 1 + ((stat - 10) * 0.05);
+		//Remaining scales at 3.4% increments. 40 = double damage
+		return 1 + ((stat - 10) * 0.034);
 	}
 	
 	int GetModDamage(int damage, int stat, int scaled)
@@ -96,6 +96,11 @@ class XRpgPlayer : PlayerPawn
 		SetProjectileDamage(proj, Magic);
 	}
 	
+	void UpdateLevelStats()
+	{
+
+	}
+
 	int CalcXPNeeded()
 	{
 		return ExpLevel * XPMULTI;
@@ -220,6 +225,7 @@ class XRpgPlayer : PlayerPawn
 		GainLevelMana();
 			
 		DoLevelGainBlend();
+		UpdateLevelStats();
 	}
 
     void DoXPHit(Actor xpSource, int damage, name damagetype)

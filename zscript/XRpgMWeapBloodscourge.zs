@@ -1,12 +1,12 @@
 // Mage Weapon Piece --------------------------------------------------------
 
-class XRpgMageWeaponPiece : WeaponPiece replaces MWeaponPiece1
+class XRpgMageWeaponPiece : WeaponPiece replaces MageWeaponPiece
 {
 	Default
 	{
 		Inventory.PickupSound "misc/w_pkup";
 		Inventory.PickupMessage "$TXT_BLOODSCOURGE_PIECE";
-		Inventory.ForbiddenTo "FighterPlayer", "ClericPlayer";
+		Inventory.ForbiddenTo "XRpgFighterPlayer", "XRpgClericPlayer";
 		WeaponPiece.Weapon "XRpgMWeapBloodscourge";
 		+FLOATBOB
 	}
@@ -68,7 +68,7 @@ class XRpgBloodscourgeDrop : Actor replaces BloodscourgeDrop
 	{
 	Spawn:
 		TNT1 A 1;
-		TNT1 A 1 A_DropWeaponPieces("MWeaponPiece1", "MWeaponPiece2", "MWeaponPiece3");
+		TNT1 A 1 A_DropWeaponPieces("XRpgMWeaponPiece1", "XRpgMWeaponPiece2", "XRpgMWeaponPiece3");
 		Stop;
 	}
 }
@@ -581,7 +581,7 @@ class MageStaffLightningMissile : FastProjectile
 }
 
 const DEATHFLOOR_RADIUS = 80;
-const DEATHFLOOR_RADIUSDAMAGE = 10;
+const DEATHFLOOR_RADIUSDAMAGE = 20;
 //CPS3A0
 class MageStaffDeathMissile1 : Actor
 {
@@ -655,6 +655,7 @@ class MageStaffDeathMissile2 : MageStaffDeathMissile1
 	}
 }
 
+const STAFFDEATH_RISE_DIST = 6;
 class MageStaffDeathMissile3 : Actor
 {
 	Default
@@ -685,10 +686,10 @@ class MageStaffDeathMissile3 : Actor
 	Spawn:
 		CPS3 A 1 BRIGHT A_WraithInit;
 		CPS3 A 1 BRIGHT A_InitRise;
-		CPS3 AAAAAA 3 BRIGHT A_RiseFromGround(10);
+		CPS3 AAAAAA 3 BRIGHT A_RiseFromGround(STAFFDEATH_RISE_DIST);
 	Death:
 		CPS3 A 4 BRIGHT SpellFloorFireExplode;
-		CPS3 AAAAAA 3 BRIGHT A_RiseFromGround(-10);
+		CPS3 AAAAAA 3 BRIGHT A_RiseFromGround(-STAFFDEATH_RISE_DIST);
 		Stop;
 	}
 
@@ -710,6 +711,9 @@ class MageStaffDeathMissile3 : Actor
 		bInvisible = false;
 		bDontBlast = false;
 		Floorclip = Height;
+
+		if (random(0, 1) == 1)
+			bXFlip = true;
 	}
 
 	action void A_RiseFromGround(int riseDist)

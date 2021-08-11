@@ -2,6 +2,16 @@
 // somebody wants to use these weapons with either of those games.
 class XRpgWeapon : Weapon
 {
+    action void A_Mirror()
+    {
+        A_OverlayFlags(1,PSPF_FLIP|PSPF_MIRROR,true);
+    }
+
+    action void A_RestoreMirror()
+    {
+        A_OverlayFlags(1,PSPF_FLIP|PSPF_MIRROR,false);
+    }
+
     action void A_SetWeapState(StateLabel stateName)
     {
         player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState(stateName));
@@ -102,7 +112,7 @@ class XRpgFighterWeapon : XRpgWeapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.ForbiddenTo "ClericPlayer", "MagePlayer";
+		Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer";
 	}
 }
 
@@ -111,7 +121,7 @@ class XRpgClericWeapon : XRpgWeapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.ForbiddenTo "FighterPlayer", "MagePlayer";
+		Inventory.ForbiddenTo "XRpgFighterPlayer", "XRpgMagePlayer";
 	}
 }
 
@@ -120,7 +130,7 @@ class XRpgMageWeapon : XRpgWeapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.ForbiddenTo "FighterPlayer", "ClericPlayer";
+		Inventory.ForbiddenTo "XRpgFighterPlayer", "XRpgClericPlayer";
 	}
 
     action bool A_FireMissileSpell(Class<Actor> missileType, int blueAmmoUse = 0, int greenAmmoUse = 0, int angleMod = 0, int angleSpread = 0, int zSpread = 0)

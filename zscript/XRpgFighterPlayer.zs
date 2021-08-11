@@ -22,14 +22,14 @@ class XRpgFighterPlayer : XRpgPlayer
 		Player.ScoreIcon "FITEFACE";
 		Player.HealRadiusType "Armor";
 		Player.Hexenarmor 15, 25, 20, 15, 5;
-		Player.StartItem "FWeapFist";
+		Player.StartItem "XRpgFWeapFist";
 		Player.ForwardMove 1.08, 1.2;
 		Player.SideMove 1.125, 1.475;
 		Player.Portrait "P_FWALK1";
-		Player.WeaponSlot 1, "FWeapFist";
-		Player.WeaponSlot 2, "FWeapAxe";
-		Player.WeaponSlot 3, "FWeapHammer";
-		Player.WeaponSlot 4, "FWeapQuietus";
+		Player.WeaponSlot 1, "XRpgFWeapFist";
+		Player.WeaponSlot 2, "XRpgFWeapAxe";
+		Player.WeaponSlot 3, "XRpgFWeapHammer";
+		Player.WeaponSlot 4, "XRpgFWeapQuietus";
 		
 		Player.ColorRange 246, 254;
 		Player.Colorset		0, "$TXT_COLOR_GOLD",		246, 254,    253;
