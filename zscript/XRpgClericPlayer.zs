@@ -23,7 +23,7 @@ class XRpgClericPlayer : XRpgPlayer
 		Player.ScoreIcon "CLERFACE";
 		Player.InvulnerabilityMode "Ghost";
 		Player.HealRadiusType "Health";
-		Player.Hexenarmor 10, 10, 25, 5, 20;
+		Player.Hexenarmor 0, 10, 25, 5, 20;
 		Player.StartItem "CWeapMace";
 		Player.Portrait "P_CWALK1";
 		Player.WeaponSlot 1, "CWeapMace";
@@ -44,7 +44,7 @@ class XRpgClericPlayer : XRpgPlayer
 
         Player.StartItem "ExpSquishItem";
 		XRpgPlayer.Strength 7;
-		XRpgPlayer.Dexterity 7;
+		XRpgPlayer.Dexterity 8;
 		XRpgPlayer.Magic 7;
 	}
 	

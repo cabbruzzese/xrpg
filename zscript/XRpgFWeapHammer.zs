@@ -65,6 +65,11 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		}
 
 		int damage = random[HammerAtk](60, 123);
+
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (xrpgPlayer != null)
+			damage = xrpgPlayer.GetDamageForMelee(damage);
+
 		for (int i = 0; i < 16; i++)
 		{
 			for (int j = 1; j >= -1; j -= 2)

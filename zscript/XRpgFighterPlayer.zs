@@ -21,7 +21,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		Player.SoundClass "fighter";
 		Player.ScoreIcon "FITEFACE";
 		Player.HealRadiusType "Armor";
-		Player.Hexenarmor 15, 25, 20, 15, 5;
+		Player.Hexenarmor 0, 25, 20, 15, 5;
 		Player.StartItem "XRpgFWeapFist";
 		Player.ForwardMove 1.08, 1.2;
 		Player.SideMove 1.125, 1.475;
@@ -43,8 +43,10 @@ class XRpgFighterPlayer : XRpgPlayer
 
         Player.StartItem "ExpSquishItem";
 		XRpgPlayer.Strength 10;
-		XRpgPlayer.Dexterity 10;
-		XRpgPlayer.Magic 1;
+		XRpgPlayer.Dexterity 8;
+		XRpgPlayer.Magic 4;
+
+		Player.StartItem "XRpgFWeapAxe";
 	}
 	
 	States

@@ -33,7 +33,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXE A 1 A_FAxeCheckReady;
 		Loop;
 	Fire:
-		FAXE B 4 Offset (15, 32) A_FAxeCheckAtk;
+		FAXE B 4 Offset (15, 32) A_FAxeCheckAtk(0);
 		FAXE C 3 Offset (15, 32);
 		FAXE D 2 Offset (15, 32);
 		FAXE D 1 Offset (-5, 70) A_FAxeAttack;
@@ -73,6 +73,34 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXE A 1 Offset (0, 36);
 		FAXE A 1;
 		Goto ReadyGlow;
+	AltFire:
+		FAXE B 4 Offset (15, 32) A_FAxeCheckAtk(1);
+		FAXE C 3 Offset (15, 32);
+		FAXE D 2 Offset (15, 32);
+		FAXE D 1 Offset (-5, 70);
+		FAXE D 2 Offset (-25, 90);
+		TNT1 A 1 Offset (15, 32) A_FireWindAxe(0);
+		TNT1 A 2 Offset (10, 54);
+	WindAxeWait:
+		TNT1 A 4 Offset (10, 150) A_WindAxeFinish;
+		Loop;
+	WindAxeFinish:
+		FAXE A 1 Offset (0, 60);
+		FAXE A 1 Offset (0, 52);
+		FAXE A 1 Offset (0, 44);
+		FAXE A 1 Offset (0, 36);
+		FAXE A 1;
+		Goto Ready;
+	
+	AltFireGlow:
+		FAXE N 4 Offset (15, 32);
+		FAXE O 3 Offset (15, 32);
+		FAXE P 2 Offset (15, 32);
+		FAXE P 1 Offset (-5, 70);
+		FAXE P 2 Offset (-25, 90);
+		TNT1 A 1 Offset (15, 32) A_FireWindAxe(1);
+		TNT1 A 2 Offset (10, 54);
+		Goto WindAxeWait;
 	}
 	
 	override State GetUpState ()
@@ -195,7 +223,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 	//
 	//============================================================================
 
-	action void A_FAxeCheckAtk()
+	action void A_FAxeCheckAtk(int throwing)
 	{
 		if (player == null)
 		{
@@ -204,7 +232,10 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		Weapon w = player.ReadyWeapon;
 		if (w.Ammo1 && w.Ammo1.Amount > 0)
 		{
-			player.SetPsprite(PSP_WEAPON, w.FindState("FireGlow"));
+			if (throwing)
+				A_SetWeapState("AltFireGlow");
+			else
+				A_SetWeapState("FireGlow");
 		}
 	}
 
@@ -239,6 +270,11 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		{
 			pufftype = "AxePuff";
 		}
+
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (xrpgPlayer != null)
+			damage = xrpgPlayer.GetDamageForMelee(damage);
+
 		for (int i = 0; i < 16; i++)
 		{
 			for (int j = 1; j >= -1; j -= 2)
@@ -274,5 +310,187 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 
 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
 		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', pufftype, true);
+	}
+
+	action void A_FireWindAxe(int powered)
+	{
+		if (player == null)
+		{
+			return;
+		}
+		
+		Weapon weapon = player.ReadyWeapon;
+		if (weapon != null && powered)
+		{
+			if (!weapon.DepleteAmmo (false))
+				return;
+		}
+		
+		let tracker = WindAxeTracker(FindInventory("WindAxeTracker"));
+		if (tracker && tracker.WindAxe1)
+			return;
+
+		Actor windAxe;
+		if (powered)
+			windAxe = Actor(SpawnPlayerMissile ("WindAxeMissilePower", angle));
+		else
+			windAxe = Actor(SpawnPlayerMissile ("WindAxeMissile", angle));
+			
+		if (tracker == null)
+			tracker = WindAxeTracker(GiveInventoryType("WindAxeTracker"));
+		
+		tracker.WindAxe1 = windAxe;
+	}
+
+	action void A_WindAxeFinish()
+	{
+		if (player == null)
+		{
+			return;
+		}
+		
+		let tracker = WindAxeTracker(FindInventory("WindAxeTracker"));
+		if (!tracker)
+			return;
+
+		if (!tracker.WindAxe1)
+		{
+			A_SetWeapState("WindAxeFinish");
+		}
+	}
+}
+
+const WINDAXE_HEALTH_MAX = 12;
+const WINDAXE_HEALTH_STOP = 10;
+const WINDAXE_HEALTH_RETURN = 2;
+const WINDAXE_VEL_PERCENT = 0.33;
+const WINDAXE_TARGETZ_OFFSET = 15;
+const WINDAXE_SPEED = 40;
+
+class WindAxeMissile : Actor
+{
+	Default
+	{
+		Radius 10;
+		Height 6;
+		Speed WINDAXE_SPEED;
+		Damage 1;
+		Health WINDAXE_HEALTH_MAX;
+		Projectile;
+		+RIPPER
+		+ZDOOMTRANS
+		//DeathSound "weapons/macebounce";
+		Obituary "$OB_MPFWEAPAXE";
+		Scale 1.5;
+		+BOUNCEONFLOORS
+		+BOUNCEONCEILINGS
+		+USEBOUNCESTATE
+		+BOUNCEONWALLS
+		+CANBOUNCEWATER
+	}
+
+	States
+	{
+	Spawn:
+		THAX AB 4 A_MoveWindAxe(0);
+		Loop;
+	Bounce:
+		THAX A 1 A_WindAxeImpact;
+		Goto Spawn;
+	Death:
+		THAX A 1;
+		Goto Spawn;
+	}
+	
+	//Bounce
+	void A_WindAxeImpact()
+	{
+		//A_StartSound ("weapons/macebounce", CHAN_BODY);
+		A_SetSpeed(0);
+		A_ChangeVelocity(0,0,0, CVF_REPLACE);
+	}
+	
+	override void Die(Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath)
+	{
+		A_WindAxeImpact();
+	}
+	
+	action void A_MoveWindAxe(int powered)
+	{
+		if (target == null || target.health <= 0)
+		{ // Shooter is dead or nonexistent
+			A_RemoveWindAxe();
+			return;
+		}
+		
+		Health--;
+		if (Health < 1)
+		{
+			A_RemoveWindAxe();
+			return;
+		}
+		
+		let targetZ = target.Pos.Z + WINDAXE_TARGETZ_OFFSET;
+
+		if (Health <= WINDAXE_HEALTH_RETURN)
+		{
+			let vecOffset = (target.Pos.X - Pos.X, target.Pos.Y - Pos.Y);
+			let ang = Vectorangle(vecOffset.x, vecOffset.y);
+			A_SetAngle(ang);
+			
+			let dist = Distance2D(target);
+			let vel = dist * WINDAXE_VEL_PERCENT;
+			let aPitch = Vectorangle(dist, Pos.Z - targetZ);
+			
+			Vel3DFromAngle(vel, angle, aPitch);
+		}
+		else if (Health <= WINDAXE_HEALTH_STOP)
+		{
+			A_SetSpeed(0);
+			A_ChangeVelocity(0,0,0, CVF_REPLACE);
+		}
+	}
+	
+	action void A_RemoveWindAxe()
+	{
+		WindAxeTracker tracker;
+		
+		if (target != null && target.health > 0)
+			tracker = WindAxeTracker(target.FindInventory("WindAxeTracker"));
+			
+		if (tracker)
+			tracker.WindAxe1 = null;
+
+		Destroy();
+	}
+}
+
+class WindAxeTracker : Inventory
+{
+	Actor WindAxe1;
+	
+	Default
+	{
+		+INVENTORY.UNDROPPABLE
+	}
+}
+class WindAxeMissilePower : WindAxeMissile
+{
+	Default
+	{
+		Damage 3;
+	}
+
+	States
+	{
+	Spawn:
+		THAX CD 4 A_MoveWindAxe(0);
+		Loop;
+	Bounce:
+		THAX C 1 A_WindAxeImpact;
+		Goto Spawn;
+	Death:
+		THAX C 1;
+		Goto Spawn;
 	}
 }

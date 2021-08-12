@@ -74,7 +74,7 @@ class XRpgQuietusDrop : Actor replaces QuietusDrop
 }
 
 // The Fighter's Sword (Quietus) --------------------------------------------
-
+const SWORD_RANGE = 1.5 * DEFMELEERANGE;
 class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 {
 	Default
@@ -113,7 +113,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 	Fire:
 		FSRD DE 3 Bright Offset (5, 36);
 		FSRD F 2 Bright Offset (5, 36);
-		FSRD G 3 Bright Offset (5, 36) A_FSwordAttack;
+		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwing;
 		FSRD H 2 Bright Offset (5, 36);
 		FSRD I 2 Bright Offset (5, 36);
 		FSRD I 10 Bright Offset (5, 150);
@@ -150,5 +150,71 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		SpawnPlayerMissile ("FSwordMissile", Angle - (45./8),0, 0,   5);
 		SpawnPlayerMissile ("FSwordMissile", Angle - (45./4),0, 0,  10);
 		A_StartSound ("FighterSwordFire", CHAN_WEAPON);
+	}
+
+	action void A_FSwordAttackSwing()
+	{
+		FTranslatedLineTarget t;
+
+		if (player == null)
+		{
+			return;
+		}
+
+		int damage = random(90, 140);
+
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (xrpgPlayer != null)
+			damage = xrpgPlayer.GetDamageForMelee(damage);
+
+		for (int i = 0; i < 16; i++)
+		{
+			for (int j = 1; j >= -1; j -= 2)
+			{
+				double ang = angle + j*i*(45. / 32);
+				double slope = AimLineAttack(ang, SWORD_RANGE, t, 0., ALF_CHECK3D);
+				if (t.linetarget != null)
+				{
+					LineAttack(ang, SWORD_RANGE, slope, damage, 'Melee', "SwordPuff", true, t);
+					if (t.linetarget != null)
+					{
+						AdjustPlayerAngle(t);
+						if (t.linetarget.bIsMonster || t.linetarget.player)
+						{
+							t.linetarget.Thrust(10, t.attackAngleFromSource);
+						}
+						weaponspecial = false;
+						return;
+					}
+				}
+			}
+		}
+		// didn't find any targets in meleerange, so set to throw out a hammer
+		double slope = AimLineAttack (angle, SWORD_RANGE, null, 0., ALF_CHECK3D);
+		weaponspecial = (LineAttack (angle, SWORD_RANGE, slope, damage, 'Melee', "SwordPuff", true) == null);
+
+		if (weaponspecial)
+			A_FSwordAttack();
+	}
+}
+
+class SwordPuff : Actor
+{
+	Default
+	{
+		+NOBLOCKMAP +NOGRAVITY
+		+PUFFONACTORS
+		RenderStyle "Translucent";
+		Alpha 0.6;
+		VSpeed 0.8;
+		SeeSound "FighterHammerHitThing";
+		AttackSound "FighterHammerHitWall";
+		ActiveSound "FighterHammerMiss";
+	}
+	States
+	{
+	Spawn:
+		FSFX DEFGHIJKLM 3;
+		Stop;
 	}
 }

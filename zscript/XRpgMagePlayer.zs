@@ -32,7 +32,7 @@ class XRpgMagePlayer : XRpgPlayer
 		Player.ScoreIcon "MAGEFACE";
 		Player.InvulnerabilityMode "Reflective";
 		Player.HealRadiusType "Mana";
-		Player.Hexenarmor 5, 5, 15, 10, 25;
+		Player.Hexenarmor 0, 5, 15, 10, 25;
 		Player.StartItem "XRpgMWeapWand";
 		Player.ForwardMove 0.88, 0.92;
 		Player.SideMove 0.875, 0.925;
@@ -55,8 +55,8 @@ class XRpgMagePlayer : XRpgPlayer
 
         Player.StartItem "ExpSquishItem";
 		XRpgPlayer.Strength 5;
-		XRpgPlayer.Dexterity 6;
-		XRpgPlayer.Magic 10;
+		XRpgPlayer.Dexterity 5;
+		XRpgPlayer.Magic 12;
 
 		//Player.StartItem "XRpgMWeapFrost";
 		//Player.StartItem "XRpgMWeapLightning";

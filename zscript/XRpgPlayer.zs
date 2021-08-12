@@ -2,6 +2,7 @@ const MAXXPHIT = 75;
 const XPMULTI = 1000;
 const HEALTHBASE = 100;
 const STATNUM = 4;
+const MAX_LEVEL_ARMOR = 50;
 
 class XRpgPlayer : PlayerPawn
 {
@@ -11,6 +12,7 @@ class XRpgPlayer : PlayerPawn
 	int strength;
 	int dexterity;
 	int magic;
+
 	property ExpLevel : expLevel;
 	property Exp : exp;
 	property ExpNext : expNext;
@@ -98,7 +100,15 @@ class XRpgPlayer : PlayerPawn
 	
 	void UpdateLevelStats()
 	{
-
+		int armorMod = dexterity / 2;
+		if (armorMod < 0)
+			armorMod = 0;
+		if (armorMod > MAX_LEVEL_ARMOR)
+			armorMod = MAX_LEVEL_ARMOR;
+		
+		let hArmor = HexenArmor(FindInventory("HexenArmor"));
+		if (hArmor)
+			hArmor.Slots[4] = armorMod;
 	}
 
 	int CalcXPNeeded()

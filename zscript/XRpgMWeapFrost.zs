@@ -156,21 +156,23 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		if (!A_AttemptFireSpell(0, 6))
             return;
 
+		int distQ = FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q;
+		int distT = FROSTLIGHTNING_DIST * FROSTLIGHTNING_T;
 		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, 0, FROSTLIGHTNING_DIST);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, distQ, distT);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, distT, distQ);
 
 		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST, 0);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, distT, -distQ);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, distQ, -distT);
 
 		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, 0, -FROSTLIGHTNING_DIST);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -distQ, -distT);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -distT, -distQ);
 
 		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -FROSTLIGHTNING_DIST, 0);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_T, FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST * -FROSTLIGHTNING_Q, FROSTLIGHTNING_DIST * FROSTLIGHTNING_T);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -distT, distQ);
+		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -distQ, distT);
 
 		A_RadiusThrust(5000, 128, RTF_NOIMPACTDAMAGE);
 	}
