@@ -47,6 +47,20 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1 Offset (0, 35);
 		FHMR A 1;
 		Goto Ready;
+	AltFire:
+		FHMR B 24 Offset (1, -50);
+		FHMR C 3 Offset (60, 30);
+		FHMR D 3 Offset (90, 30);
+		FHMR E 2 Offset (90, 30);
+		FHMR E 10 Offset (-5, 150) A_HammerSlam;
+		FHMR A 1 Offset (0, 60);
+		FHMR A 1 Offset (0, 55);
+		FHMR A 1 Offset (0, 50);
+		FHMR A 1 Offset (0, 45);
+		FHMR A 1 Offset (0, 40);
+		FHMR A 1 Offset (0, 35);
+		FHMR A 1;
+		Goto Ready;
 	}
 
 	//============================================================================
@@ -133,5 +147,131 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		{
 			mo.special1 = 0;
 		}
+	}
+
+	action void A_HammerSlam()
+	{
+		if (player == null)
+		{
+			return;
+		}
+
+		int damage = random(20, 50);
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (xrpgPlayer != null)
+			damage = xrpgPlayer.GetDamageForMelee(damage);
+		
+		A_Explode(damage, 100, false);
+		A_RadiusThrust(5000, 100, RTF_NOIMPACTDAMAGE);
+
+		Weapon weapon = player.ReadyWeapon;
+		if (weapon != null)
+		{
+			if (!weapon.DepleteAmmo (false, false))
+				return;
+		}
+
+		SpawnPlayerMissile("HammerFloorMissile2");
+	}
+}
+
+const HAMMERFLOOR_RADIUS = 80;
+const HAMMERFLOOR_RADIUSDAMAGE = 40;
+const HAMMERFLOOR_DAMAGE = 0;
+class HammerFloorMissile1 : Actor
+{
+	Default
+	{
+		Radius 10;
+		Height 6;
+		Speed 20;
+		FastSpeed 26;
+		Damage 3;
+		DamageType "Fire";
+		Projectile;
+		-ACTIVATEIMPACT
+		-ACTIVATEPCROSS
+		+ZDOOMTRANS
+		RenderStyle "Add";
+		Obituary "$OB_MPMWEAPLIGHTNING";
+	}
+	States
+	{
+	Spawn:
+		FX12 AB 6 Bright;
+		Loop;
+	Death:
+		FX12 CDEFGH 5 Bright;
+		Stop;
+	}
+}
+
+class HammerFloorMissile2 : HammerFloorMissile1
+{
+	Default
+	{
+		Radius 5;
+		Height 12;
+		Speed 12;
+		FastSpeed 20;
+		Damage HAMMERFLOOR_DAMAGE;
+		+FLOORHUGGER
+		RenderStyle "Add";
+		
+		+RIPPER
+	}
+	
+	states
+	{
+	Spawn:
+		FX13 AAAAAAA 3 Bright A_ShootFloorFire;
+		Stop;
+	Death:
+		FX13 I 6 BRIGHT FloorFireExplode;
+		FX13 JKLM 6 BRIGHT;
+		Stop;
+	}
+
+	void A_ShootFloorFire()
+	{
+		SetZ(floorz);
+		double x = Random2[MntrFloorFire]() / 64.;
+		double y = Random2[MntrFloorFire]() / 64.;
+		
+		HammerFloorMissile3 mo = HammerFloorMissile3(Spawn("HammerFloorMissile3", Vec2OffsetZ(x, y, floorz), ALLOW_REPLACE));
+		if (mo != null)
+		{
+			mo.target = target;
+			mo.Vel.X = MinVel; // Force block checking
+			mo.CheckMissileSpawn (radius);
+			mo.SetOrigin((mo.Pos.X, mo.Pos.Y, mo.Pos.Z + 2), false);
+			
+			mo.FloorFireExplode();
+		}
+	}
+	
+	action void FloorFireExplode()
+	{
+		A_Explode(HAMMERFLOOR_RADIUSDAMAGE, HAMMERFLOOR_RADIUS, 0);
+	}
+}
+
+class HammerFloorMissile3 : HammerFloorMissile2
+{
+	Default
+	{
+		Radius 8;
+		Height 16;
+		Speed 0;
+		Damage 0;
+	}
+	States
+	{
+	Spawn:
+		FX13 IJKLM 6 BRIGHT;
+		Stop;
+	Death:
+		FX13 M 1 BRIGHT;
+		Stop;
 	}
 }

@@ -47,6 +47,8 @@ class XRpgFighterPlayer : XRpgPlayer
 		XRpgPlayer.Magic 4;
 
 		Player.StartItem "XRpgFWeapAxe";
+		Player.StartItem "XRpgFWeapHammer";
+		Player.StartItem "XRpgFWeapQuietus";
 	}
 	
 	States
