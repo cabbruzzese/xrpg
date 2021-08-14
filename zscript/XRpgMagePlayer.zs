@@ -10,7 +10,8 @@ class XRpgMagePlayer : XRpgPlayer
 {
 	Default
 	{
-		Health 100;
+		Health 80;
+		Player.MaxHealth 80;
 		ReactionTime 0;
 		PainChance 255;
 		Radius 16;

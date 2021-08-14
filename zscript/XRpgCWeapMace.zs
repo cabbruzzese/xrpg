@@ -139,6 +139,7 @@ class SmiteningMissile : FastProjectile
         MissileType "SmiteningMissileSmoke";
         DeathSound "MageLightningFire";
         Obituary "$OB_MPCWEAPMACE";
+		DamageType "Fire";
     }
     States
     {
@@ -146,7 +147,7 @@ class SmiteningMissile : FastProjectile
         MLFX K 2 Bright;
 		Loop;
     Death:
-        MLFX M 2 Bright A_Explode(40, 100, false);
+        MLFX M 2 Bright A_Explode(20, 100, false);
         Stop;
     }
 }

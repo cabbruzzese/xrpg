@@ -9,7 +9,8 @@ class XRpgClericPlayer : XRpgPlayer
 {
 	Default
 	{
-		Health 100;
+		Health 90;
+		Player.MaxHealth 90;
 		ReactionTime 0;
 		PainChance 255;
 		Radius 16;

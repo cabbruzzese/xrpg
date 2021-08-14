@@ -255,7 +255,7 @@ class SmiteSpell : XRpgSpellItem
 	}
 }
 
-const SPELL_CLERIC_HEAL_AMOUNT = 15;
+const SPELL_CLERIC_HEAL_PERCENT = 0.25;
 class HealSpell : XRpgSpellItem
 {
 	Default
@@ -267,7 +267,7 @@ class HealSpell : XRpgSpellItem
 		XRpgSpellItem.TimerVal 0;
 		XRpgSpellItem.MaxTimer 150;
 
-		XRpgSpellItem.ManaCostBlue 10;
+		XRpgSpellItem.ManaCostBlue 8;
 	}
 
 	override bool Use (bool pickup)
@@ -288,7 +288,7 @@ class HealSpell : XRpgSpellItem
 		let xrpgPlayer = XRpgPlayer(Owner);
         if (xrpgPlayer != null)
 		{
-			int newHealth = xrpgPlayer.Health + SPELL_CLERIC_HEAL_AMOUNT;
+			int newHealth = xrpgPlayer.Health + (xrpgPlayer.MaxHealth * SPELL_CLERIC_HEAL_PERCENT);
 			if (newHealth > xrpgPlayer.MaxHealth)
 				newHealth = xrpgPlayer.MaxHealth;
 
@@ -385,7 +385,15 @@ class WrathSpell : XRpgSpellItem
 
 		if (passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
-			if (!inflictor || !inflictor.bIsMonster)
+			Actor targetMonster;
+			if (inflictor && inflictor.bIsMonster)
+				targetMonster = inflictor;
+			else if (source && source.bIsMonster)
+				targetMonster = source;
+			else if (inflictor.target && inflictor.target.bIsMonster)
+				targetMonster = inflictor.target;
+
+			if (!targetMonster)
 				return;
 
 			//Randomly smite attacker
@@ -394,7 +402,7 @@ class WrathSpell : XRpgSpellItem
 				Actor mo = Owner.SpawnPlayerMissile("SmiteningMissile");
 				if (!mo) return;
 				
-				mo.SetOrigin(inflictor.Pos, false);
+				mo.SetOrigin(targetMonster.Pos, false);
 				double newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
 				mo.SetZ(newz);
 

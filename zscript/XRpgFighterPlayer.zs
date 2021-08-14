@@ -5,6 +5,7 @@ class XRpgFighterPlayer : XRpgPlayer
 	Default
 	{
 		Health 100;
+		Player.MaxHealth 100;
 		PainChance 255;
 		Radius 16;
 		Height 64;

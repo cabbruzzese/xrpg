@@ -1,6 +1,5 @@
 const MAXXPHIT = 75;
 const XPMULTI = 1000;
-const HEALTHBASE = 100;
 const STATNUM = 4;
 const MAX_LEVEL_ARMOR = 50;
 
@@ -32,9 +31,6 @@ class XRpgPlayer : PlayerPawn
 		XRpgPlayer.Strength 1;
 		XRpgPlayer.Dexterity 1;
 		XRpgPlayer.Magic 1;
-
-		Player.MaxHealth HEALTHBASE;
-		Health HEALTHBASE;
 	}
 
 	double GetScaledMod(int stat)
