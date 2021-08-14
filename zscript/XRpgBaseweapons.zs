@@ -27,6 +27,15 @@ class XRpgWeapon : Weapon
             A_SetWeapState("Ready");
 	}
 
+    action int A_GetMana(class<Inventory> type)
+    {
+        let ammo = Inventory(FindInventory(type));
+        if (!ammo)
+            return 0;
+        
+        return ammo.Amount;
+    }
+
     action bool A_CheckMana(class<Inventory> type, int ammoUse)
     {
         if (ammoUse == 0)

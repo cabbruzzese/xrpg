@@ -75,8 +75,11 @@ class XRpgQuietusDrop : Actor replaces QuietusDrop
 
 // The Fighter's Sword (Quietus) --------------------------------------------
 const SWORD_RANGE = 1.5 * DEFMELEERANGE;
+const SWORD_CHARGE_MAX = 20;
 class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 {
+	int chargeValue;
+	property ChargeValue : chargeValue;
 	Default
 	{
 		Health 3;
@@ -94,6 +97,11 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		Inventory.PickupMessage "$TXT_WEAPON_F4";
 		Inventory.PickupSound "WeaponBuild";
 		Tag "$TAG_FWEAPQUIETUS";
+
+		+WEAPON.AMMO_OPTIONAL
+		+WEAPON.ALT_AMMO_OPTIONAL
+
+		XRpgFWeapQuietus.ChargeValue 0;
 	}
 
 	States
@@ -108,12 +116,12 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		FSRD A 1 Bright A_Lower;
 		Loop;
 	Ready:
-		FSRD AAAABBBBCCCC 1 Bright A_WeaponReady;
+		FSRD AAAABBBBCCCC 1 Bright A_FSwordWeaponReady;
 		Loop;
 	Fire:
 		FSRD DE 3 Bright Offset (5, 36);
 		FSRD F 2 Bright Offset (5, 36);
-		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwing;
+		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwing(false);
 		FSRD H 2 Bright Offset (5, 36);
 		FSRD I 2 Bright Offset (5, 36);
 		FSRD I 10 Bright Offset (5, 150);
@@ -123,6 +131,72 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		FSRD A 1 Bright Offset (5, 45);
 		FSRD B 1 Bright Offset (5, 40);
 		Goto Ready;
+	AltFire:
+	AltHold:
+		FSRD D 3 Bright Offset (5, 36) A_ChargeUp;
+		FSRD D 1 A_ReFire;
+		FSRD E 3 Bright Offset (5, 36);
+		FSRD F 2 Bright Offset (5, 36);
+		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwing(true);
+		FSRD H 2 Bright Offset (5, 36);
+		FSRD I 2 Bright Offset (5, 36);
+		FSRD I 10 Bright Offset (5, 150);
+		FSRD A 1 Bright Offset (5, 60);
+		FSRD B 1 Bright Offset (5, 55);
+		FSRD C 1 Bright Offset (5, 50);
+		FSRD A 1 Bright Offset (5, 45);
+		FSRD B 1 Bright Offset (5, 40);
+		Goto Ready;
+
+	}
+
+	action void A_ChargeUp()
+	{
+		invoker.ChargeValue++;
+		if (invoker.chargeValue > SWORD_CHARGE_MAX)
+			invoker.chargeValue = SWORD_CHARGE_MAX;
+	}
+	
+	action void A_FSwordWeaponReady()
+	{
+		invoker.ChargeValue = 0;
+		A_WeaponReady();
+	}
+
+	action void A_FSwordChargeAttack()
+	{
+		if (player == null)
+		{
+			return;
+		}
+
+		int manaCost = (2 + (invoker.ChargeValue / 5)) * 2;
+
+		int mana1Amount = A_GetMana("Mana1");
+		int mana2Amount = A_GetMana("Mana2");
+
+		//mana depleted, exit
+		if (mana1Amount == 0 || mana2Amount == 0)
+			return;
+
+		//level set to mana ammount
+		if (manaCost > mana1Amount)
+			manaCost = mana1Amount;
+		if (manaCost > mana2Amount)
+			manaCost = mana2Amount;
+
+		int missileDamage = manaCost + 2;
+
+		if (!A_CheckAllMana(manaCost, manaCost))
+			return;
+
+		A_DepleteAllMana(manaCost, manaCost);
+
+		let mo = SpawnPlayerMissile ("SwordCutMissile");
+		if (mo)
+		{
+			mo.SetDamage(missileDamage);
+		}
 	}
 	
 	//============================================================================
@@ -141,7 +215,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
 		{
-			if (!weapon.DepleteAmmo (weapon.bAltFire))
+			if (!weapon.DepleteAmmo (weapon.bAltFire, false))
 				return;
 		}
 		SpawnPlayerMissile ("FSwordMissile", Angle + (45./4),0, 0, -10);
@@ -152,7 +226,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		A_StartSound ("FighterSwordFire", CHAN_WEAPON);
 	}
 
-	action void A_FSwordAttackSwing()
+	action void A_FSwordAttackSwing(bool charged)
 	{
 		FTranslatedLineTarget t;
 
@@ -162,6 +236,13 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		}
 
 		int damage = random(90, 140);
+
+		if (charged)
+		{
+			let chargeDamage = invoker.ChargeValue * 10;
+			if (chargeDamage > damage)
+				damage = chargeDamage;
+		}
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
@@ -189,12 +270,26 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 				}
 			}
 		}
-		// didn't find any targets in meleerange, so set to throw out a hammer
+		// didn't find any targets in meleerange, so set to throw out a missile
 		double slope = AimLineAttack (angle, SWORD_RANGE, null, 0., ALF_CHECK3D);
 		weaponspecial = (LineAttack (angle, SWORD_RANGE, slope, damage, 'Melee', "SwordPuff", true) == null);
 
+		// Don't spawn a missile if the player doesn't have enough mana
+		if (player.ReadyWeapon == null ||
+			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
+				Weapon.AltFire : Weapon.PrimaryFire, false, true))
+		{ 
+			if (!charged)
+				weaponspecial = false;
+		}
+
 		if (weaponspecial)
-			A_FSwordAttack();
+		{
+			if (charged)
+				A_FSwordChargeAttack();
+			else
+				A_FSwordAttack();
+		}
 	}
 }
 
@@ -210,6 +305,7 @@ class SwordPuff : Actor
 		SeeSound "FighterHammerHitThing";
 		AttackSound "FighterHammerHitWall";
 		ActiveSound "FighterHammerMiss";
+		Scale 0.5;
 	}
 	States
 	{
@@ -217,4 +313,50 @@ class SwordPuff : Actor
 		FSFX DEFGHIJKLM 3;
 		Stop;
 	}
+}
+
+class SwordCutMissileSmoke : Actor
+{
+	Default
+	{
+	    +NOBLOCKMAP +NOGRAVITY +SHADOW
+	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
+        Scale 0.75;
+
+		RenderStyle "Translucent";
+	}
+	States
+	{
+	Spawn:
+		FSFX NOPQRSTUVW 2;
+		Stop;
+	}
+}
+class SwordCutMissile : FastProjectile
+{
+    Default
+    {
+        Speed 90;
+        Radius 16;
+        Height 12;
+        Damage 2;
+        Projectile;
+        +RIPPER
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+        +ZDOOMTRANS
+        Obituary "$OB_MPFWEAPQUIETUS";
+		MissileType "SwordCutMissileSmoke";
+
+		RenderStyle "Translucent";
+    }
+    States
+    {
+    Spawn:
+        FSFX N 4 Bright;
+		Loop;
+    Death:
+        FSFX O 4 Bright;
+        Stop;
+    }
 }
