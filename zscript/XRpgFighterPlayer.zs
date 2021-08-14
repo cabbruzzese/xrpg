@@ -46,9 +46,9 @@ class XRpgFighterPlayer : XRpgPlayer
 		XRpgPlayer.Dexterity 8;
 		XRpgPlayer.Magic 4;
 
-		Player.StartItem "XRpgFWeapAxe";
-		Player.StartItem "XRpgFWeapHammer";
-		Player.StartItem "XRpgFWeapQuietus";
+		//Player.StartItem "XRpgFWeapAxe";
+		//Player.StartItem "XRpgFWeapHammer";
+		//Player.StartItem "XRpgFWeapQuietus";
 	}
 	
 	States

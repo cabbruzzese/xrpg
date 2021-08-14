@@ -30,7 +30,7 @@ gameinfo
 	statusbarclass = "XRpgStatusBar"
 	intermissionmusic = "hub"
 	intermissioncounter = false
-	weaponslot = 1, "XRpgFWeapFist", "CWeapMace", "XRpgMWeapWand"
+	weaponslot = 1, "XRpgFWeapFist", "XRpgCWeapMace", "XRpgMWeapWand"
 	weaponslot = 2, "XRpgFWeapAxe", "CWeapStaff", "XRpgMWeapFrost"
 	weaponslot = 3, "XRpgFWeapHammer", "CWeapFlame", "XRpgMWeapLightning"
 	weaponslot = 4, "XRpgFWeapQuietus", "CWeapWraithverge", "XRpgMWeapBloodscourge"

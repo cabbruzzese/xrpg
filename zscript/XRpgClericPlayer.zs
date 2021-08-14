@@ -1,4 +1,9 @@
 // The cleric ---------------------------------------------------------------
+const SPELL_LEVEL_CLERIC_SMITE = 1;
+const SPELL_LEVEL_CLERIC_HEAL = 1;
+const SPELL_LEVEL_CLERIC_PROTECT = 1;
+const SPELL_LEVEL_CLERIC_WRATH = 1;
+const SPELL_LEVEL_CLERIC_DIVINE = 1;
 
 class XRpgClericPlayer : XRpgPlayer
 {
@@ -24,9 +29,9 @@ class XRpgClericPlayer : XRpgPlayer
 		Player.InvulnerabilityMode "Ghost";
 		Player.HealRadiusType "Health";
 		Player.Hexenarmor 0, 10, 25, 5, 20;
-		Player.StartItem "CWeapMace";
+		Player.StartItem "XRpgCWeapMace";
 		Player.Portrait "P_CWALK1";
-		Player.WeaponSlot 1, "CWeapMace";
+		Player.WeaponSlot 1, "XRpgCWeapMace";
 		Player.WeaponSlot 2, "CWeapStaff";
 		Player.WeaponSlot 3, "CWeapFlame";
 		Player.WeaponSlot 4, "CWeapWraithverge";
@@ -111,6 +116,28 @@ class XRpgClericPlayer : XRpgPlayer
 	override void BasicStatIncrease()
 	{
 		Dexterity += 1;
+	}
+
+	void GiveSpell(class<Inventory> itemtype)
+	{
+		let spell = GiveInventoryType(itemtype);
+
+		if (spell)
+			A_Print(spell.PickupMessage());
+	}
+
+	override void GiveLevelSkill()
+	{
+		if (ExpLevel >= SPELL_LEVEL_CLERIC_SMITE)
+			GiveSpell("SmiteSpell");
+		if (ExpLevel >= SPELL_LEVEL_CLERIC_HEAL)
+			GiveSpell("HealSpell");
+		if (ExpLevel >= SPELL_LEVEL_CLERIC_PROTECT)
+			GiveSpell("ProtectSpell");
+		if (ExpLevel >= SPELL_LEVEL_CLERIC_WRATH)
+			GiveSpell("WrathSpell");
+		if (ExpLevel >= SPELL_LEVEL_CLERIC_DIVINE)
+			GiveSpell("DivineSpell");
 	}
 }
 		

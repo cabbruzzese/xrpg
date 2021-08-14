@@ -8,9 +8,6 @@ const SPELL_LEVEL_GRANT = 5;
 
 class XRpgMagePlayer : XRpgPlayer
 {
-	XRpgSpellItem activeSpell;
-	property ActiveSpell : activeSpell;
-
 	Default
 	{
 		Health 100;

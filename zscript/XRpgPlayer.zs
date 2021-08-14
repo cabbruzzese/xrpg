@@ -12,6 +12,8 @@ class XRpgPlayer : PlayerPawn
 	int strength;
 	int dexterity;
 	int magic;
+	XRpgSpellItem activeSpell;
+
 
 	property ExpLevel : expLevel;
 	property Exp : exp;
@@ -19,6 +21,7 @@ class XRpgPlayer : PlayerPawn
 	property Strength : strength;
 	property Dexterity : dexterity;
 	property Magic : magic;
+	property ActiveSpell : activeSpell;
 
 	Default
 	{

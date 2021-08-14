@@ -92,6 +92,21 @@ class XRpgWeapon : Weapon
         }
 	}
 
+    action void A_FireVerticalMissilePos(Class<Actor> missileType, int xPos, int yPos, int zPos, int zSpeed = -90)
+    {
+		Actor mo = SpawnPlayerMissile(missileType);
+		if (!mo) return;
+		
+        mo.SetOrigin((xPos, yPos, zPos), false);
+		double newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
+		mo.SetZ(newz);
+
+		mo.Vel.X = MinVel; // Force collision detection
+        mo.Vel.Y = MinVel; // Force collision detection
+		mo.Vel.Z = zSpeed;
+		mo.CheckMissileSpawn (radius);
+    }
+
     action void A_FireVerticalMissile(Class<Actor> missileType, int xSpread = 0, int ySpread = 0, int zSpeed = -90, int xMod = 0, int yMod = 0)
 	{
         int xo = 0;
@@ -102,17 +117,8 @@ class XRpgWeapon : Weapon
 		    yo = random(-ySpread, ySpread);
 
 		Vector3 spawnpos = Vec2OffsetZ(xo + xMod, yo + yMod, pos.z);
-		Actor mo = SpawnPlayerMissile(missileType);
-		if (!mo) return;
 		
-        mo.SetOrigin(spawnpos, false);
-		double newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
-		mo.SetZ(newz);
-
-		mo.Vel.X = MinVel; // Force collision detection
-        mo.Vel.Y = MinVel; // Force collision detection
-		mo.Vel.Z = zSpeed;
-		mo.CheckMissileSpawn (radius);
+        A_FireVerticalMissilePos(missileType, spawnpos.X, spawnpos.Y, spawnpos.Z, zSpeed);
 	}
 }
 
