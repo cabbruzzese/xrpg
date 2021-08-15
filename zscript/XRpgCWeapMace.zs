@@ -120,17 +120,10 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 
 	action void A_CastSmite(Actor lineTarget)
 	{
-		if (!player)
-			return;
-		
-		let clericPlayer = XRpgClericPlayer(player.mo);
-        if (!clericPlayer 
-			|| !clericPlayer.ActiveSpell 
-			|| clericPlayer.ActiveSpell.SpellType != SPELLTYPE_CLERIC_SMITE 
-			|| clericPlayer.ActiveSpell.TimerVal < 1)
+		if (!A_IsSmite())
 			return;
 
-		A_FireVerticalMissilePos("SmiteningMissile", lineTarget.Pos.X, lineTarget.Pos.Y, lineTarget.Pos.Z);
+		A_FireVerticalMissilePos("SmiteningMissile", lineTarget.Pos.X, lineTarget.Pos.Y, lineTarget.Pos.Z, false);
 	}
 }
 

@@ -33,9 +33,9 @@ class XRpgClericPlayer : XRpgPlayer
 		Player.StartItem "XRpgCWeapMace";
 		Player.Portrait "P_CWALK1";
 		Player.WeaponSlot 1, "XRpgCWeapMace";
-		Player.WeaponSlot 2, "CWeapStaff";
-		Player.WeaponSlot 3, "CWeapFlame";
-		Player.WeaponSlot 4, "CWeapWraithverge";
+		Player.WeaponSlot 2, "XRpgCWeapStaff";
+		Player.WeaponSlot 3, "XRpgCWeapFlame";
+		Player.WeaponSlot 4, "XRpgCWeapWraithverge";
 		Player.FlechetteType "ArtiPoisonBag1";
 		
 		Player.ColorRange 146, 163;
@@ -52,6 +52,10 @@ class XRpgClericPlayer : XRpgPlayer
 		XRpgPlayer.Strength 7;
 		XRpgPlayer.Dexterity 8;
 		XRpgPlayer.Magic 7;
+
+		Player.StartItem "XRpgCWeapStaff";
+		Player.StartItem "XRpgCWeapFlame";
+		Player.StartItem "XRpgCWeapWraithverge";
 	}
 	
 	States

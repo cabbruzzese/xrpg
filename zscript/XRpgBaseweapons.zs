@@ -92,22 +92,30 @@ class XRpgWeapon : Weapon
         }
 	}
 
-    action void A_FireVerticalMissilePos(Class<Actor> missileType, int xPos, int yPos, int zPos, int zSpeed = -90)
+    action Actor A_FireVerticalMissilePos(Class<Actor> missileType, int xPos, int yPos, int zPos, int zSpeed = -90, bool isFloor = false)
     {
 		Actor mo = SpawnPlayerMissile(missileType);
-		if (!mo) return;
+		if (!mo) return null;
 		
         mo.SetOrigin((xPos, yPos, zPos), false);
-		double newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
+
+        double newz;
+        if (isFloor)
+            newz = mo.CurSector.NextLowestFloorAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) + mo.height;
+        else
+		    newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
+        
 		mo.SetZ(newz);
 
 		mo.Vel.X = MinVel; // Force collision detection
         mo.Vel.Y = MinVel; // Force collision detection
 		mo.Vel.Z = zSpeed;
 		mo.CheckMissileSpawn (radius);
+
+        return mo;
     }
 
-    action void A_FireVerticalMissile(Class<Actor> missileType, int xSpread = 0, int ySpread = 0, int zSpeed = -90, int xMod = 0, int yMod = 0)
+    action Actor A_FireVerticalMissile(Class<Actor> missileType, int xSpread = 0, int ySpread = 0, int zSpeed = -90, int xMod = 0, int yMod = 0)
 	{
         int xo = 0;
         int yo = 0;
@@ -118,7 +126,9 @@ class XRpgWeapon : Weapon
 
 		Vector3 spawnpos = Vec2OffsetZ(xo + xMod, yo + yMod, pos.z);
 		
-        A_FireVerticalMissilePos(missileType, spawnpos.X, spawnpos.Y, spawnpos.Z, zSpeed);
+        let mo = A_FireVerticalMissilePos(missileType, spawnpos.X, spawnpos.Y, spawnpos.Z, zSpeed, false);
+
+        return mo;
 	}
 }
 
@@ -137,6 +147,21 @@ class XRpgClericWeapon : XRpgWeapon
 	{
 		Weapon.Kickback 150;
 		Inventory.ForbiddenTo "XRpgFighterPlayer", "XRpgMagePlayer";
+	}
+
+    action bool A_IsSmite()
+	{
+		if (!player)
+			return false;
+		
+		let clericPlayer = XRpgClericPlayer(player.mo);
+        if (!clericPlayer 
+			|| !clericPlayer.ActiveSpell 
+			|| clericPlayer.ActiveSpell.SpellType != SPELLTYPE_CLERIC_SMITE 
+			|| clericPlayer.ActiveSpell.TimerVal < 1)
+			return false;
+
+        return true;
 	}
 }
 

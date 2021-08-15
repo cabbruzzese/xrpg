@@ -226,10 +226,10 @@ class XRpgStatusBar : HexenStatusBar
 				if (CPlayer.mo is "ClericPlayer")
 				{
 					DrawImage("WPSLOT1", (190, 162), DI_ITEM_OFFSETS);
-					if (CheckInventory("CWeapWraithverge")) DrawImage("WPFULL1", (190, 162), DI_ITEM_OFFSETS);
+					if (CheckInventory("XRpgCWeapWraithverge")) DrawImage("WPFULL1", (190, 162), DI_ITEM_OFFSETS);
 					else
 					{
-						int pieces = GetWeaponPieceMask("CWeapWraithverge");
+						int pieces = GetWeaponPieceMask("XRpgCWeapWraithverge");
 						if (pieces & 1) DrawImage("WPIECEC1", (190, 162), DI_ITEM_OFFSETS);
 						if (pieces & 2) DrawImage("WPIECEC2", (212, 162), DI_ITEM_OFFSETS);
 						if (pieces & 4) DrawImage("WPIECEC3", (225, 162), DI_ITEM_OFFSETS);
