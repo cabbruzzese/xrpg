@@ -1,9 +1,9 @@
 // The cleric ---------------------------------------------------------------
-const SPELL_LEVEL_CLERIC_SMITE = 1;
-const SPELL_LEVEL_CLERIC_HEAL = 1;
-const SPELL_LEVEL_CLERIC_PROTECT = 1;
-const SPELL_LEVEL_CLERIC_WRATH = 1;
-const SPELL_LEVEL_CLERIC_DIVINE = 1;
+const SPELL_LEVEL_CLERIC_SMITE = 3;
+const SPELL_LEVEL_CLERIC_HEAL = 7;
+const SPELL_LEVEL_CLERIC_PROTECT = 12;
+const SPELL_LEVEL_CLERIC_WRATH = 17;
+const SPELL_LEVEL_CLERIC_DIVINE = 22;
 
 class XRpgClericPlayer : XRpgPlayer
 {

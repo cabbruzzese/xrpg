@@ -437,7 +437,7 @@ class DivineSpell : XRpgSpellItem
         if (!xrpgPlayer)
 			return;
 
-		//Restore half health
+		//Restore most health
 		if (xrpgPlayer.Health < xrpgPlayer.MaxHealth * SPELL_CLERIC_DIVINE_HEALPERCENT)
 			xrpgPlayer.A_SetHealth(xrpgPlayer.MaxHealth * SPELL_CLERIC_DIVINE_HEALPERCENT);
 
