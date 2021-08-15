@@ -324,6 +324,7 @@ class SwordCutMissileSmoke : Actor
         Scale 0.75;
 
 		RenderStyle "Translucent";
+		Alpha 0.6;
 	}
 	States
 	{
@@ -349,6 +350,7 @@ class SwordCutMissile : FastProjectile
 		MissileType "SwordCutMissileSmoke";
 
 		RenderStyle "Translucent";
+		Alpha 0.6;
     }
     States
     {

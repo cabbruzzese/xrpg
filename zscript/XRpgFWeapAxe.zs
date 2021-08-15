@@ -379,7 +379,6 @@ class WindAxeMissile : Actor
 		Projectile;
 		+RIPPER
 		+ZDOOMTRANS
-		//DeathSound "weapons/macebounce";
 		Obituary "$OB_MPFWEAPAXE";
 		Scale 1.5;
 		+BOUNCEONFLOORS

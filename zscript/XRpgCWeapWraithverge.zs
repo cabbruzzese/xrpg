@@ -91,10 +91,13 @@ class XRpgCWeapWraithverge : XRpgClericWeapon replaces CWeapWraithverge
 		Weapon.AmmoGive2 20;
 		Weapon.KickBack 150;
 		Weapon.AmmoType1 "Mana1";
-		Weapon.AmmoType2 "Mana2";
+		Weapon.AmmoType2 "Mana2";		
 		Inventory.PickupMessage "$TXT_WEAPON_C4";
 		Tag "$TAG_CWEAPWRAITHVERGE";
 		Inventory.PickupSound "WeaponBuild";
+
+		+WEAPON.AMMO_OPTIONAL
+		+WEAPON.ALT_AMMO_OPTIONAL
 	}
 
 
@@ -113,12 +116,21 @@ class XRpgCWeapWraithverge : XRpgClericWeapon replaces CWeapWraithverge
 		CHLY A 1 A_Lower;
 		Loop;
 	Fire:
-		CHLY AB 1 Bright Offset (0, 40);
+		CHLY A 1 Bright Offset (0, 40) A_CheckAmmo;
+		CHLY B 1 Bright Offset (0, 40);
 		CHLY CD 2 Bright Offset (0, 43);
 		CHLY E 2 Bright Offset (0, 45);
 		CHLY F 6 Bright Offset (0, 48) A_CHolyAttack;
 		CHLY GG 2 Bright Offset (0, 40) A_CHolyPalette;
 		CHLY G 2 Offset (0, 36) A_CHolyPalette;
+		Goto Ready;
+	AltFire:
+		CHLY AB 1 Bright Offset (0, 40);
+		CHLY CD 2 Bright Offset (0, 43);
+		CHLY E 2 Bright Offset (0, 45);
+		CHLY F 6 Bright Offset (0, 48) A_GhostarangAttack;
+		CHLY GG 2 Bright Offset (0, 40) A_CHolyPalette;
+		CHLY G 8 Offset (0, 36);
 		Goto Ready;
 	}
 
@@ -141,6 +153,15 @@ class XRpgCWeapWraithverge : XRpgClericWeapon replaces CWeapWraithverge
 		}
 	}
 
+	action void A_CheckAmmo()
+	{
+		// Don't spawn a hammer if the player doesn't have enough mana
+		if (player.ReadyWeapon == null ||
+			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
+				Weapon.AltFire : Weapon.PrimaryFire, false, true))
+				A_SetWeapState("AltFire");
+		
+	}
 	//============================================================================
 	//
 	// A_CHolyAttack
@@ -158,13 +179,20 @@ class XRpgCWeapWraithverge : XRpgClericWeapon replaces CWeapWraithverge
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
 		{
-			if (!weapon.DepleteAmmo (weapon.bAltFire))
+			if (!weapon.DepleteAmmo (weapon.bAltFire, false))
 				return;
 		}
 		Actor missile = SpawnPlayerMissile ("HolyMissile", angle, pLineTarget:t);
 		if (missile != null && !t.unlinked)
 		{
 			missile.tracer = t.linetarget;
+		}
+
+		if (A_IsSmite())
+		{
+			Actor(SpawnPlayerMissile ("GhostarangMissile", angle));
+			Actor(SpawnPlayerMissile ("GhostarangMissile", angle - 6));
+			Actor(SpawnPlayerMissile ("GhostarangMissile", angle + 6));
 		}
 
 		invoker.CHolyCount = 3;
@@ -180,5 +208,106 @@ class XRpgCWeapWraithverge : XRpgClericWeapon replaces CWeapWraithverge
 	action void A_CHolyPalette()
 	{
 		if (invoker.CHolyCount > 0) invoker.CHolyCount--;
+	}
+
+	action void A_GhostarangAttack()
+	{
+		if (player == null)
+		{
+			return;
+		}
+		
+		SpawnPlayerMissile ("GhostarangMissile", angle);
+			
+		if (A_IsSmite())
+		{
+			Actor(SpawnPlayerMissile ("GhostarangMissile", angle - 6));
+			Actor(SpawnPlayerMissile ("GhostarangMissile", angle + 6));
+		}
+
+		A_StartSound ("HolySymbolFire", CHAN_WEAPON);
+	}
+}
+
+const GHOSTARANG_HEALTH_MAX = 8;
+const GHOSTARANG_HEALTH_STOP = 6;
+const GHOSTARANG_TARGETZ_OFFSET = 15;
+const GHOSTARANG_SPEED = 80;
+
+class GhostarangMissile : Actor
+{
+	Default
+	{
+		Radius 10;
+		Height 6;
+		Speed GHOSTARANG_SPEED;
+		Damage 8;
+		Health GHOSTARANG_HEALTH_MAX;
+		Projectile;
+		+RIPPER
+		+ZDOOMTRANS
+		Obituary "$OB_MPCWEAPWRAITHVERGE";
+		Scale 1.5;
+		+BOUNCEONFLOORS
+		+BOUNCEONCEILINGS
+		+USEBOUNCESTATE
+		+BOUNCEONWALLS
+		+CANBOUNCEWATER
+
+		RenderStyle "Translucent";
+		Alpha 0.6;
+	}
+
+	States
+	{
+	Spawn:
+		SPIR AB 4 A_MoveGhostarang(0);
+		Loop;
+	Bounce:
+		SPIR A 1 A_GhostarangImpact;
+		Goto Spawn;
+	Death:
+		SPIR A 1;
+		Goto Spawn;
+	EndGhost:
+		SPIR EFGHI 4;
+		Stop;
+	}
+	
+	//Bounce
+	void A_GhostarangImpact()
+	{
+		//A_StartSound ("weapons/macebounce", CHAN_BODY);
+		A_SetSpeed(0);
+		A_ChangeVelocity(0,0,0, CVF_REPLACE);
+	}
+	
+	override void Die(Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath)
+	{
+		A_GhostarangImpact();
+	}
+	
+	action void A_MoveGhostarang(int powered)
+	{
+		if (target == null || target.health <= 0)
+		{ // Shooter is dead or nonexistent
+			SetStateLabel("EndGhost");
+			return;
+		}
+		
+		Health--;
+		if (Health < 1)
+		{
+			SetStateLabel("EndGhost");
+			return;
+		}
+		
+		let targetZ = target.Pos.Z + GHOSTARANG_TARGETZ_OFFSET;
+
+		if (Health <= GHOSTARANG_HEALTH_STOP)
+		{
+			A_SetSpeed(0);
+			A_ChangeVelocity(0,0,0, CVF_REPLACE);
+		}
 	}
 }

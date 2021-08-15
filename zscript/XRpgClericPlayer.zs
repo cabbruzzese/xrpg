@@ -53,9 +53,9 @@ class XRpgClericPlayer : XRpgPlayer
 		XRpgPlayer.Dexterity 8;
 		XRpgPlayer.Magic 7;
 
-		Player.StartItem "XRpgCWeapStaff";
-		Player.StartItem "XRpgCWeapFlame";
-		Player.StartItem "XRpgCWeapWraithverge";
+		//Player.StartItem "XRpgCWeapStaff";
+		//Player.StartItem "XRpgCWeapFlame";
+		//Player.StartItem "XRpgCWeapWraithverge";
 	}
 	
 	States
