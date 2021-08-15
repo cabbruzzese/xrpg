@@ -76,7 +76,12 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 			if (!weapon.DepleteAmmo (weapon.bAltFire))
 				return;
 		}
-		SpawnPlayerMissile ("CFlameMissile");
+		let mo = SpawnPlayerMissile ("CFlameMissile");
+		if (mo && A_IsSmite())
+		{
+			mo.Scale = (2.0, 2.0);
+			mo.SetDamage(mo.damage * 2.0);
+		}
 		A_StartSound ("ClericFlameFire", CHAN_WEAPON);
 	}
 
@@ -122,7 +127,14 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 		if (puffObj)
 		{
 			let mo = A_FireVerticalMissilePos("FlameVilePuffBoom", puffObj.Pos.X, puffObj.Pos.Y, puffObj.Pos.Z + 2, 0, true);
+
+			if (mo && A_IsSmite())
+			{
+				mo.A_SetHealth(2);
+			}
 		}
+
+		A_StartSound ("ClericFlameFire", CHAN_WEAPON);
 	}
 }
 
@@ -140,7 +152,7 @@ class FlameVilePuff : Actor
 	States
 	{
 	Spawn:
-		CFCF ABC 2;
+		CFCF ABCDEFGHIJKLMNOP 2;
 		Stop;
 	}
 }
@@ -163,6 +175,8 @@ class FlameVilePuffBoom : Actor
 		VSpeed 0;
 		Scale 2.0;
 		DamageType "Fire";
+
+		Health 1;
 	}
 	States
 	{
@@ -178,25 +192,28 @@ class FlameVilePuffBoom : Actor
 
 		A_Explode(25, 100, false);
 
-		Actor mo = target.SpawnPlayerMissile("FlameVileLava");
-		if (!mo)
-			return;
-		
-		let xo = random(-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
-		let yo = random(-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
-        mo.SetOrigin((Pos.X + xo, Pos.Y + yo, Pos.Z), false);
+		for (int i = 0; i < Health; i++)
+		{
+			Actor mo = target.SpawnPlayerMissile("FlameVileLava");
+			if (!mo)
+				return;
+			
+			let xo = random(-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
+			let yo = random(-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
+			mo.SetOrigin((Pos.X + xo, Pos.Y + yo, Pos.Z), false);
 
-        double newz = mo.CurSector.NextLowestFloorAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) + mo.height;
-        
-		mo.SetZ(newz);
+			double newz = mo.CurSector.NextLowestFloorAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) + mo.height;
+			
+			mo.SetZ(newz);
 
-		let xVel = random(-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
-		let yVel = random(-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
-		mo.Vel.X = xVel;
-        mo.Vel.Y = yVel;
-		let vSpeed = random(FLAME_VILE_VSPEED_MIN, FLAME_VILE_VSPEED_MAX);
-		mo.Vel.Z = vSpeed;
-		mo.CheckMissileSpawn (radius);
+			let xVel = random(-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
+			let yVel = random(-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
+			mo.Vel.X = xVel;
+			mo.Vel.Y = yVel;
+			let vSpeed = random(FLAME_VILE_VSPEED_MIN, FLAME_VILE_VSPEED_MAX);
+			mo.Vel.Z = vSpeed;
+			mo.CheckMissileSpawn (radius);
+		}
 	}
 }
 
@@ -218,7 +235,6 @@ class FlameVileLava : Actor
 		+NOBLOCKMAP +MISSILE +DROPOFF
 		+NOTELEPORT
 		-NOGRAVITY
-
     }
     States
     {
