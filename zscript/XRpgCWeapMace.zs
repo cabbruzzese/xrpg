@@ -30,12 +30,29 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 		CMCE C 1 Offset (8, 45);
 		CMCE D 1 Offset (8, 45);
 		CMCE E 1 Offset (8, 45);
-		CMCE E 1 Offset (-11, 58) A_CMaceAttack;
+		CMCE E 1 Offset (-11, 58) A_CMaceAttack(false);
 		CMCE F 1 Offset (8, 45);
 		CMCE F 2 Offset (-8, 74);
 		CMCE F 1 Offset (-20, 96);
 		CMCE F 8 Offset (-33, 160);
 		CMCE A 2 Offset (8, 75) A_ReFire;
+		CMCE A 1 Offset (8, 65);
+		CMCE A 2 Offset (8, 60);
+		CMCE A 1 Offset (8, 55);
+		CMCE A 2 Offset (8, 50);
+		CMCE A 1 Offset (8, 45);
+		Goto Ready;
+	AltFire:
+		CMCE C 2 Offset (160, 80);
+		CMCE C 2 Offset (120, 85);
+		CMCE C 2 Offset (80, 90);
+		CMCE D 2 Offset (40, 95);
+		CMCE D 2 Offset (1, 100) A_CMaceAttack(true);
+		CMCE E 2 Offset (-40, 105);
+		CMCE E 2 Offset (-80, 110);
+		CMCE F 2 Offset (-120, 115);
+		CMCE F 12 Offset (-160, 120);
+		CMCE A 2 Offset (8, 75);
 		CMCE A 1 Offset (8, 65);
 		CMCE A 2 Offset (8, 60);
 		CMCE A 1 Offset (8, 55);
@@ -50,7 +67,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 	//
 	//===========================================================================
 
-	action void A_CMaceAttack()
+	action void A_CMaceAttack(bool swing)
 	{
 		FTranslatedLineTarget t;
 
@@ -60,6 +77,9 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 		}
 
 		int damage = random[MaceAtk](25, 40);
+
+		if (swing)
+			damage += 15;
 
         let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
@@ -80,6 +100,11 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 
 						//Cast Smite
 						A_CastSmite(t.linetarget);
+
+						if (swing && (t.linetarget.bIsMonster || t.linetarget.player))
+						{
+							t.linetarget.Thrust(20, t.attackAngleFromSource);
+						}
 
 						return;
 					}

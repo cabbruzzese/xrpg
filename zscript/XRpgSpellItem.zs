@@ -265,7 +265,7 @@ class HealSpell : XRpgSpellItem
         XRpgSpellItem.SpellType SPELLTYPE_CLERIC_HEAL;
 
 		XRpgSpellItem.TimerVal 0;
-		XRpgSpellItem.MaxTimer 150;
+		XRpgSpellItem.MaxTimer 100;
 
 		XRpgSpellItem.ManaCostBlue 8;
 	}
