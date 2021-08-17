@@ -43,10 +43,10 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		Goto Ready;
 	AltFire:
 		CONE B 3 A_AltFireCheckSpellSelected;
-		CONE C 4;
+		CONE C 1 A_FireSpell();
 		CONE D 3;
 		CONE E 5;
-		CONE F 1 A_FireSpell();
+		CONE F 1;
 	AltFireFinish:
 		CONE G 3;
 		CONE A 9;
@@ -59,31 +59,58 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE A 10;
 		Goto Ready;
 	FlameSpell:
-        CONE F 2 Bright A_FireFlameSpell;
+		CONE C 3;
+		CONE D 3;
+		CONE E 5;
+        CONE F 3 Bright A_FireFlameSpell;
         Goto AltFireFinish;
     IceSpell:
+		CONE C 1;
+		CONE D 2;
+		CONE E 2;
         CONE F 2 Bright A_FireMissileSpell("MageFrostIceMissile", 0, 1);
         Goto RapidFireFinish;
     PoisonSpell:
-        CONE F 2 Bright A_FireMissileSpell("MageFrostPoisonMissile", 0, 8);
+		CONE C 3;
+		CONE D 3;
+		CONE E 5;
+        CONE F 3 Bright A_FireMissileSpell("MageFrostPoisonMissile", 0, 8);
         Goto AltFireFinish;
     WaterSpell:
-        CONE F 2 Bright A_FireMissileSpell("MageFrostWaterMissile", 0, 1, 0, 2, 1);
+		CONE C 2;
+		CONE D 2;
+		CONE E 2;
+        CONE F 3 Bright A_FireMissileSpell("MageFrostWaterMissile", 0, 1, 0, 2, 1);
         Goto RapidFireFinish;
     SunSpell:
-        CONE F 2 Bright A_FireMissileSpell("MageFrostSunMissile", 0, 12);
+		CONE C 3;
+		CONE D 3;
+		CONE E 5;
+        CONE F 3 Bright A_FireMissileSpell("MageFrostSunMissile", 0, 12);
         Goto AltFireFinish;
     MoonSpell:
-        CONE F 2 Bright A_FireMissileSpell("MageFrostMoonMissile", 0, 6);
+		CONE C 3;
+		CONE D 3;
+		CONE E 5;
+        CONE F 3 Bright A_FireMissileSpell("MageFrostMoonMissile", 0, 6);
         Goto AltFireFinish;
     DeathSpell:
-        CONE F 2 Bright A_FireMissileSpell("MageFrostDeathMissile", 0, 8);
+		CONE C 3;
+		CONE D 3;
+		CONE E 5;
+        CONE F 3 Bright A_FireMissileSpell("MageFrostDeathMissile", 0, 8);
         Goto AltFireFinish;
     LightningSpell:
-        CONE F 2 Bright A_FireLightningSpell;
+		CONE C 3;
+		CONE D 3;
+		CONE E 5;
+        CONE F 3 Bright A_FireLightningSpell;
         Goto AltFireFinish;
     BloodSpell:
-        CONE F 2 Bright A_FireBloodSpell;
+		CONE C 3;
+		CONE D 3;
+		CONE E 5;
+        CONE F 3 Bright A_FireBloodSpell;
         Goto AltFireFinish;
 	}
 	
@@ -146,6 +173,8 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
         A_FireSpreadMissile("MageFrostFlameMissile", 9, 2);
         A_FireSpreadMissile("MageFrostFlameMissile", 9, 2);
         A_FireSpreadMissile("MageFrostFlameMissile", 9, 2);
+
+		A_StartSound ("FireDemonAttack", CHAN_BODY);
 	}
 
 	const FROSTLIGHTNING_DIST = 96;
@@ -253,7 +282,7 @@ class MageFrostFlameMissile : Actor
 const ICESTORM_SPREAD = 72;
 const ICESTORM_ZSPEED = -30;
 const ICESTORM_ZSPEED_MOD = 10;
-const ICESTORM_NUM = 8;
+const ICESTORM_NUM = 12;
 class MageFrostIceMissile : FastProjectile
 {
     Default

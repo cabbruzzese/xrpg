@@ -289,12 +289,6 @@ class HealSpell : XRpgSpellItem
 		let xrpgPlayer = XRpgPlayer(Owner);
         if (xrpgPlayer != null)
 		{
-			/*int newHealth = xrpgPlayer.Health + (xrpgPlayer.MaxHealth * SPELL_CLERIC_HEAL_PERCENT);
-			if (newHealth > xrpgPlayer.MaxHealth)
-				newHealth = xrpgPlayer.MaxHealth;
-
-			xrpgPlayer.A_SetHealth(newHealth);*/
-
 			xrpgPlayer.A_RadiusGive("Health", 512, RGF_PLAYERS | RGF_GIVESELF, xrpgPlayer.Magic * SPELL_CLERIC_HEALOTHER_MOD);
 		}
 

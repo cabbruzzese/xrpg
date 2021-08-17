@@ -28,7 +28,7 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 		MWND A 3 Offset (0, 36) A_ReFire;
 		Goto Ready;
     AltFire:
-		MWND A 6 A_AltFireCheckSpellSelected;
+		MWND A 1 A_AltFireCheckSpellSelected;
 		MWND B 1 Bright Offset (0, 48) A_FireSpell();
     AltFireFinish:
 		MWND A 6 Offset (0, 40);
@@ -38,30 +38,39 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 		MWND A 1 Offset (0, 36) A_ReFire;
         Goto Ready;
     FlameSpell:
+        MWND A 5;
         MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandFlameMissile", 2);
         Goto AltFireFinish;
     IceSpell:
+        MWND A 3;
         MWND B 2 Bright Offset (0, 48) A_FireMissileSpell("MageWandIceMissile", 1, 0, 0, 3, 3);
         Goto RapidFireFinish;
     PoisonSpell:
+        MWND A 3;
         MWND B 2 Bright Offset (0, 48) A_FireMissileSpell("MageWandPoisonMissile", 2, 0);
         Goto RapidFireFinish;
     WaterSpell:
+        MWND A 5;
         MWND B 7 Bright Offset (0, 48) A_FireWaterSpell;
         Goto AltFireFinish;
     SunSpell:
+        MWND A 5;
         MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandSunMissile", 6, 0);
         Goto AltFireFinish;
     MoonSpell:
+        MWND A 5;
         MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandMoonMissile", 3, 0);
         Goto AltFireFinish;
     DeathSpell:
+        MWND A 5;
         MWND B 7 Bright Offset (0, 48) A_FireDeathSpell;
         Goto AltFireFinish;
     LightningSpell:
+        MWND A 5;
         MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandLightningMissile", 5);
         Goto AltFireFinish;
     BloodSpell:
+        MWND A 5;
 		MWND B 7 Bright Offset (0, 48) A_FireBloodSpell;
         Goto AltFireFinish;
 	}
@@ -105,13 +114,14 @@ class MageWandFlameMissile : FastProjectile
         Speed 60;
         Radius 12;
         Height 8;
-        Damage 4;
+        Damage 6;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
         Obituary "$OB_MPMWEAPWAND";
         Scale 0.75;
         DamageType "Fire";
         DeathSound "Fireball";
+        SeeSound "FireDemonAttack";
     }
     States
     {
@@ -119,7 +129,7 @@ class MageWandFlameMissile : FastProjectile
         DMFX ABD 4 Bright;
         Loop;
     Death:
-        DMFX D 4 A_Explode(40, 100);
+        DMFX D 4 A_Explode(50, 100);
         DMFX EFGH 4 Bright;
         Stop;
     }
