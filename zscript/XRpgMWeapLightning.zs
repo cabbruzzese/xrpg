@@ -104,6 +104,8 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
         SpawnPlayerMissile("MageLightningIceMissile", angle);
         SpawnPlayerMissile("MageLightningIceMissile", angle + 12);
         SpawnPlayerMissile("MageLightningIceMissile", angle - 12);
+
+		A_StartSound ("IceGuyMissileExplode", CHAN_BODY);
 	}
 
 	const STORMLIGHTNING_DIST = 96;
@@ -268,6 +270,7 @@ class MageLightningFlameMissile2 : MageLightningFlameMissile1
 	action void SpellFloorFireExplode()
 	{
 		A_Explode(FLAMEFLOOR_RADIUSDAMAGE, FLAMEFLOOR_RADIUS, 0);
+		A_StartSound("Fireball", CHAN_BODY);
 	}
 }
 
@@ -449,10 +452,13 @@ class MageLightningWaterMissile : Actor
         +BOUNCEONWALLS
         +BOUNCEONFLOORS
         +BOUNCEONCEILINGS
+		+USEBOUNCESTATE
         MissileType "MageLightningWaterSmoke";
         Obituary "$OB_MPMWEAPLIGHTNING";
         Scale 3.0;
         PushFactor 10.0;
+
+		DeathSound "WaterSplash";
     }
     States
     {
@@ -462,9 +468,17 @@ class MageLightningWaterMissile : Actor
         SPSH B 4;
         SPSH CD 4;
         Stop;
+	Bounce:
+		SPSH A 1 A_WaterBounce;
+		Goto Spawn;
     }
 
-    void A_DripWater ()
+	action void A_WaterBounce()
+	{
+		A_StartSound("WaterSplash", CHAN_BODY);
+	}
+
+    action void A_DripWater ()
 	{
         Spawn("MageWaterDrip", pos, ALLOW_REPLACE);
         A_RadiusThrust(2000, 32);
@@ -487,7 +501,7 @@ class MageLightningSunMissile : Actor
         Obituary "$OB_MPMWEAPLIGHTNING";
         Scale 6.0;
         DamageType "Fire";
-        DeathSound "Fireball";
+		SeeSound "TreeExplode";
     }
     States
     {
@@ -520,7 +534,7 @@ class MageLightningSunMissile : Actor
         FDMB B 4 Light("YellowSunBigFlicker") A_SunFlicker;
         FDMB B 8 Bright Light("YellowSunBig");
     Death:
-        FDMB B 6 Bright Light("YellowSunBig") A_Explode(150, 300);
+        FDMB B 6 Bright Light("YellowSunBig") A_SunExplode;
         FDMB C 3 Bright Light("YellowSunBigFade1");
         FDMB C 3 Bright Light("YellowSunBigFade2");
         FDMB D 3 Bright Light("YellowSunBigFade3");
@@ -532,7 +546,14 @@ class MageLightningSunMissile : Actor
     action void A_SunFlicker()
     {
         A_Explode(SUN_RADIANT_DAMAGE, SUN_RADIANT_DIST, false);
+		A_StartSound("LavaSizzle", CHAN_BODY);
     }
+
+	action void A_SunExplode()
+	{
+		A_Explode(150, 300);
+		A_StartSound("Fireball", CHAN_BODY);
+	}
 }
 
 // Wand Missile -------------------------------------------------------------
@@ -580,6 +601,9 @@ class MageLightningMoonMissile : Actor
         Translation "Ice";
         Scale 4.0;
         Health 24;
+
+		SeeSound "SorcererBallWoosh";
+		DeathSound "SorcererBallExplode";
     }
     States
     {
@@ -613,6 +637,8 @@ class MageLightningMoonMissile : Actor
 
 	action void A_BigMoonPull(int doPull)
 	{
+		A_StartSound("BishopAttack", CHAN_BODY);
+
         if (doPull)
         {
     		A_RadiusThrust(-4000, 300, RTF_NOIMPACTDAMAGE & RTF_THRUSTZ);
@@ -643,6 +669,8 @@ class MageLightningDeathMissile : FastProjectile
 		+SKYEXPLODE
 		+NOSHIELDREFLECT
         Obituary "$OB_MPMWEAPLIGHTNING";
+
+		SeeSound "SpiritActive";
     }
     States
     {
@@ -810,6 +838,8 @@ class MageLightningBloodMissile2 : Actor
 		Scale 1.5;
 		RenderStyle "Translucent";
 		Alpha 0.6;
+
+		SeeSound "WraithAttack";
     }
     States
     {

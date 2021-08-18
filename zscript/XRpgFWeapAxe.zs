@@ -340,6 +340,8 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 			tracker = WindAxeTracker(GiveInventoryType("WindAxeTracker"));
 		
 		tracker.WindAxe1 = windAxe;
+
+		A_StartSound("SorcererBallWoosh", CHAN_BODY);
 	}
 
 	action void A_WindAxeFinish()

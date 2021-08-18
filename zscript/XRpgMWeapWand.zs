@@ -67,7 +67,7 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         Goto AltFireFinish;
     LightningSpell:
         MWND A 5;
-        MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandLightningMissile", 5);
+        MWND B 7 Bright Offset (0, 48) A_FireLightningSpell;
         Goto AltFireFinish;
     BloodSpell:
         MWND A 5;
@@ -96,6 +96,13 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         SpawnPlayerMissile("MageWandDeathMissile", angle + 12);
         SpawnPlayerMissile("MageWandDeathMissile", angle - 12);
 	}
+
+    action void A_FireLightningSpell()
+    {
+        A_FireMissileSpell("MageWandLightningMissile", 5);
+
+        A_StartSound("ThunderCrash", CHAN_BODY);
+    }
 
     action void A_FireBloodSpell()
 	{
@@ -200,6 +207,7 @@ class MageWandWaterMissile : Actor
         -NOGRAVITY
         Gravity 0.25;
         Obituary "$OB_MPMWEAPWAND";
+        DeathSound "WaterSplash";
     }
     States
     {
@@ -220,14 +228,14 @@ class MageWandSunMissile : Actor
         Speed 10;
         Radius 12;
         Height 8;
-        Damage 4;
+        Damage 10;
         Projectile;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
         Obituary "$OB_MPMWEAPWAND";
         Scale 2.0;
         DamageType "Fire";
-        DeathSound "Fireball";
+        SeeSound "TreeExplode";
     }
     States
     {
@@ -235,13 +243,19 @@ class MageWandSunMissile : Actor
         FDMB B 4 Bright Light("YellowSunSmall");
         Loop;
     Death:
-        FDMB B 6 Bright Light("YellowSunBig") A_Explode(50, 150);
+        FDMB B 6 Bright Light("YellowSunBig") A_SunExplode;
         FDMB C 3 Bright Light("YellowSunBigFade1");
         FDMB C 3 Bright Light("YellowSunBigFade2");
         FDMB D 3 Bright Light("YellowSunBigFade3");
         FDMB D 3 Bright Light("YellowSunBigFade4");
         FDMB E 3 Bright Light("YellowSunBigFade5");
         Stop;
+    }
+
+    action void A_SunExplode()
+    {
+        A_Explode(65, 150);
+        A_StartSound("Fireball", CHAN_BODY);
     }
 }
 
@@ -259,6 +273,9 @@ class MageWandMoonMissile : Actor
         Obituary "$OB_MPMWEAPWAND";
         Translation "Ice";
         Scale 2.0;
+
+        SeeSound "SorcererBallWoosh";
+        DeathSound "SorcererBallExplode";
     }
     States
     {
@@ -332,7 +349,6 @@ class MageWandLightningMissile : FastProjectile
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
         MissileType "MageWandLightningSmoke";
-        SeeSound "MageLightningFire";
         Obituary "$OB_MPMWEAPWAND";
         Scale 0.2;
     }
@@ -390,6 +406,9 @@ class MageWandBloodMissile : Actor
         +SEEKERMISSILE
         Projectile;
         Obituary "$OB_MPMWEAPWAND";
+
+        SeeSound "BatScream";
+        DeathSound "Drip";
     }
     States
 	{

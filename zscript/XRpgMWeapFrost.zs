@@ -77,10 +77,10 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
         CONE F 3 Bright A_FireMissileSpell("MageFrostPoisonMissile", 0, 8);
         Goto AltFireFinish;
     WaterSpell:
-		CONE C 2;
-		CONE D 2;
-		CONE E 2;
-        CONE F 3 Bright A_FireMissileSpell("MageFrostWaterMissile", 0, 1, 0, 2, 1);
+		CONE C 1;
+		CONE D 1;
+		CONE E 1;
+        CONE F 2 Bright A_FireMissileSpell("MageFrostWaterMissile", 0, 1, 0, 2, 1);
         Goto RapidFireFinish;
     SunSpell:
 		CONE C 3;
@@ -254,7 +254,7 @@ class MageFrostFlameMissile : Actor
         Stop;
     }
 
-	void A_VolcBallImpact ()
+	action void A_VolcBallImpact ()
 	{
 		if (pos.Z <= floorz)
 		{
@@ -266,7 +266,7 @@ class MageFrostFlameMissile : Actor
 	}
 
 	//Bounce
-	void A_VolcanoImpact()
+	action void A_VolcanoImpact()
 	{
 		Health--;
 		if (Health < 1)
@@ -377,6 +377,7 @@ class MageFrostWaterMissile : FastProjectile
         -NOGRAVITY
         Gravity 0.25;
         Obituary "$OB_MPMWEAPFROST";
+		DeathSound "WaterSplash";
     }
     States
     {
@@ -403,14 +404,14 @@ class MageFrostSunMissile : Actor
         Obituary "$OB_MPMWEAPFROST";
         Scale 4.0;
         DamageType "Fire";
-        DeathSound "Fireball";
+		SeeSound "TreeExplode";
     }
     States
     {
     Spawn:
         FDMB B 96 Bright Light("YellowSunBig");
     Death:
-        FDMB B 6 Bright Light("YellowSunBig") A_Explode(150, 200);
+        FDMB B 6 Bright Light("YellowSunBig") A_SunExplode;
         FDMB C 3 Bright Light("YellowSunBigFade1");
         FDMB C 3 Bright Light("YellowSunBigFade2");
         FDMB D 3 Bright Light("YellowSunBigFade3");
@@ -418,6 +419,12 @@ class MageFrostSunMissile : Actor
         FDMB E 3 Bright Light("YellowSunBigFade5");
         Stop;
     }
+
+	action void A_SunExplode()
+	{
+		A_Explode(150, 200);
+		A_StartSound("Fireball", CHAN_BODY);
+	}
 }
 
 class MageFrostMoonMissile : Actor
@@ -432,6 +439,9 @@ class MageFrostMoonMissile : Actor
         Obituary "$OB_MPMWEAPFROST";
         Translation "Ice";
         Scale 2.0;
+
+		SeeSound "SorcererBallWoosh";
+		DeathSound "SorcererBallExplode";
     }
     States
     {
@@ -601,6 +611,8 @@ class MageFrostDeathMissile : Actor
         +SPAWNSOUNDSOURCE
         Obituary "$OB_MPMWEAPFROST";
 		Health FROSTCHAIN_HEALTH;
+
+		DeathSound "Ambient12";
     }
     States
     {
@@ -743,6 +755,7 @@ class MageFrostBloodMissile : Actor
         +ZDOOMTRANS
 		+NOSHIELDREFLECT
         Obituary "$OB_MPMWEAPFROST";
+		SeeSound "WraithAttack";
     }
     States
     {

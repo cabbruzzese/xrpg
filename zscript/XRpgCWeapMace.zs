@@ -131,6 +131,7 @@ class SmiteningMissileSmoke : Actor
 {
 	Default
 	{
+		Height 16;
 	    +NOBLOCKMAP +NOGRAVITY +SHADOW
 	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
 		Scale 0.5;
@@ -156,6 +157,7 @@ class SmiteningMissile : FastProjectile
         +SPAWNSOUNDSOURCE
         MissileType "SmiteningMissileSmoke";
         DeathSound "MageLightningFire";
+		SeeSound "ThunderCrash";
         Obituary "$OB_MPCWEAPMACE";
 		DamageType "Fire";
     }

@@ -101,11 +101,18 @@ class XRpgWeapon : Weapon
 
         double newz;
         if (isFloor)
+            newz = mo.CurSector.LowestFloorAt((mo.pos.x, mo.pos.y));
+        else
+            newz = mo.CurSector.HighestCeilingAt((mo.pos.x, mo.pos.y)) - mo.Height;
+
+        /*if (isFloor)
             newz = mo.CurSector.NextLowestFloorAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) + mo.height;
         else
-		    newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;
+		    newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;*/
+
         
-		mo.SetZ(newz);
+        mo.SetOrigin((xPos, yPos, newz), false);
+		//mo.SetZ(newz);
 
 		mo.Vel.X = MinVel; // Force collision detection
         mo.Vel.Y = MinVel; // Force collision detection

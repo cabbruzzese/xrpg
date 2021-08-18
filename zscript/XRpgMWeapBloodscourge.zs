@@ -185,9 +185,10 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
         let xo = random(-STAFFPOISON_DIST, STAFFPOISON_DIST);
 		let yo = random(-STAFFPOISON_DIST, STAFFPOISON_DIST);
 
-		Vector3 spawnpos = Vec2OffsetZ(xo, yo, -64);
+		Vector3 spawnpos = (Pos.X + xo, Pos.Y + yo, Pos.Z + 16);
         Actor mo = SpawnPlayerMissile("MageStaffPoisonMissile");
-        mo.SetOrigin(spawnpos, false);
+		if (mo)
+        	mo.SetOrigin(spawnpos, false);
 	}
 
     action void A_FireWaterSpell()
@@ -241,6 +242,7 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		Vector3 dir = (AngleToVector(angle, cos(pitch)), -sin(pitch));
 		let forwardDir = (dir.X * SUMMONBAT_DIST, dir.Y * SUMMONBAT_DIST, dir.Z * SUMMONBAT_DIST);
 		mo.SetOrigin((Pos.X + forwardDir.X, Pos.Y + forwardDir.Y, Pos.Z + forwardDir.Z + SUMMONBAT_HEIGHTMOD), false);
+		A_StartSound(mo.ActiveSound, CHAN_VOICE);
 
 		A_AddBatToList(mo);
 	}
@@ -352,6 +354,7 @@ class MageStaffFlameMissile : Actor
         +ZDOOMTRANS
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
 		DamageType "Fire";
+		SeeSound "Ignite";
 
         RenderStyle "Translucent";
         Alpha 0.7;
@@ -447,8 +450,9 @@ class MageStaffWaterMissile : Actor
 		+BOUNCEONWALLS
 		+USEBOUNCESTATE
 		-NOGRAVITY
-		Health 2;
+		DeathSound "WaterSplash";
 
+		Health 2;
     }
     States
     {
@@ -472,6 +476,8 @@ class MageStaffWaterMissile : Actor
 	//Bounce
 	void A_WaterSplashImpact()
 	{
+		A_StartSound("WaterSplash", CHAN_BODY);
+
 		Health--;
 		if (Health < 1)
 		{
@@ -495,19 +501,25 @@ class MageStaffSunMissile : Actor
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
         Scale 2.0;
         DamageType "Fire";
-        DeathSound "Fireball";
+		SeeSound "TreeExplode";
     }
     States
     {
     Spawn:
         FDMB B 96 Bright Light("YellowSunSmall");
     Death:
-        FDMB B 6 Bright Light("YellowSunBig") A_Explode(50, 100, false);
+        FDMB B 6 Bright Light("YellowSunBig") A_SunExplode;
         FDMB C 3 Bright Light("YellowSunBigFade3");
         FDMB D 3 Bright Light("YellowSunBigFade4");
         FDMB E 3 Bright Light("YellowSunBigFade5");
         Stop;
     }
+
+	action void A_SunExplode()
+	{
+		A_Explode(50, 100, false);
+		A_StartSound("Fireball", CHAN_BODY);
+	}
 }
 
 class MageStaffMoonMissile : Actor
@@ -524,6 +536,9 @@ class MageStaffMoonMissile : Actor
         +SPAWNSOUNDSOURCE
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
         Translation "Ice";
+
+		SeeSound "SorcererBallWoosh";
+		DeathSound "SorcererBallExplode";
     }
     States
     {
@@ -695,6 +710,8 @@ class MageStaffDeathMissile3 : Actor
 
 	void A_WraithInit()
 	{
+		A_StartSound("ThrustSpikeRaise", CHAN_BODY);
+
 		AddZ(60);
 
 		// [RH] Make sure the wraith didn't go into the ceiling
@@ -729,5 +746,7 @@ class MageStaffDeathMissile3 : Actor
 	action void SpellFloorFireExplode()
 	{
 		A_Explode(FLAMEFLOOR_RADIUSDAMAGE, FLAMEFLOOR_RADIUS, 0);
+
+		A_StartSound("ThrustSpikeLower", CHAN_BODY);
 	}
 }

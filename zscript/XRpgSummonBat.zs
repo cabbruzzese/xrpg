@@ -23,11 +23,11 @@ class XRpgSummonBat : Actor
         +NOICEDEATH
         +FRIENDLY
 		
-        SeeSound "WraithSight";
-		AttackSound "WraithAttack";
-		PainSound "WraithPain";
-		DeathSound "WraithDeath";
-		ActiveSound "WraithActive";
+        SeeSound "BatScream";
+		AttackSound "BatScream";
+		PainSound "BatScream";
+		DeathSound "BatScream";
+		ActiveSound "BatScream";
 		HitObituary "$OB_WRAITHHIT";
 		Obituary "$OB_WRAITH";
 		Tag "$FN_WRAITH";
@@ -38,28 +38,28 @@ class XRpgSummonBat : Actor
 	States
 	{
 	Spawn:
-		ABAT ABCABC 4;
+		ABAT ABCABC 4 Bright;
 		Goto Look;
 	Look:
-		ABAT ABC 4 A_Look;
+		ABAT ABC 4 Bright A_Look;
 		Loop;
 	See:
-		ABAT ABC 4 A_BatChase;
+		ABAT ABC 4 Bright A_BatChase;
 		Loop;
 	Pain:
-		ABAT ABCAB 2;
-		ABAT C 2 A_Pain;
+		ABAT ABCAB 2 Bright;
+		ABAT C 2 Bright A_Pain;
 		Goto See;
 	Melee:
-		ABAT A 4 A_FaceTarget;
-		ABAT B 4;
-		ABAT G 4 A_CustomMeleeAttack(damage);
+		ABAT A 4 Bright A_FaceTarget;
+		ABAT B 4 Bright;
+		ABAT G 4 Bright A_CustomMeleeAttack(damage);
 		Goto See;
 	Death:
     XDeath:
 	Ice:
-		BDSH ABC 4;
-        BDSH D 4 A_BatDie();
+		BDSH ABC 4 Bright;
+        BDSH D 4 Bright A_BatDie();
 		Stop;
 	}
 	
