@@ -12,6 +12,7 @@ class XRpgPlayer : PlayerPawn
 	int dexterity;
 	int magic;
 	XRpgSpellItem activeSpell;
+	XRpgSpellItem activeSpell2;
 
 
 	property ExpLevel : expLevel;
@@ -21,6 +22,7 @@ class XRpgPlayer : PlayerPawn
 	property Dexterity : dexterity;
 	property Magic : magic;
 	property ActiveSpell : activeSpell;
+	property ActiveSpell2 : activeSpell2;
 
 	Default
 	{
@@ -55,6 +57,64 @@ class XRpgPlayer : PlayerPawn
 			return 1;
 
 		return modDamage;
+	}
+
+	bool IsSpellSlotOpen(XRpgSpellItem spellItem, bool checkTimer)
+	{
+		if (!spellItem)
+			return true;
+		
+		if (checkTimer && spellItem.TimerVal < 1)
+			return true;
+		
+		return false;
+	}
+
+	bool IsSpellSlotActive(XRpgSpellItem spellItem, int spellTypeNum, bool checkTimer)
+	{
+		if (!spellItem)
+			return false;
+
+		if (spellItem.SpellType != spellTypeNum)
+			return false;
+		
+		if (checkTimer && spellItem.TimerVal < 1)
+			return false;
+		
+		return true;
+	}
+
+	bool IsSpellActive(int spellTypeNum, bool checkTimer = false)
+	{
+		return IsSpellSlotActive(ActiveSpell, spellTypeNum, checkTimer) ||
+			IsSpellSlotActive(ActiveSpell2, spellTypeNum, checkTimer);
+	}
+
+	bool SetActiveSpell(XRpgSpellItem spellItem)
+	{
+		if (!spellItem)
+			return false;
+
+		//Just replace for basic spells
+		if (!spellItem.IsMultiSlot)
+		{
+			ActiveSpell = spellItem;
+			return true;
+		}
+
+		//Find open slot
+		if (IsSpellSlotOpen(ActiveSpell, true))
+		{
+			ActiveSpell = spellItem;
+			return true;
+		}
+		else if (IsSpellSlotOpen(ActiveSpell2, true))
+		{
+			ActiveSpell2 = spellItem;
+			return true;
+		}
+
+		return false;
 	}
 	
 	int GetDamageForMelee(int damage)

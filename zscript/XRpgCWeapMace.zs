@@ -76,7 +76,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 			return;
 		}
 
-		int damage = random[MaceAtk](25, 40);
+		int damage = random(25, 40);
 
 		if (swing)
 			damage += 15;
@@ -160,6 +160,8 @@ class SmiteningMissile : FastProjectile
 		SeeSound "ThunderCrash";
         Obituary "$OB_MPCWEAPMACE";
 		DamageType "Fire";
+
+		Health 0;
     }
     States
     {
@@ -167,7 +169,22 @@ class SmiteningMissile : FastProjectile
         MLFX K 2 Bright;
 		Loop;
     Death:
-        MLFX M 2 Bright A_Explode(20, 100, false);
+        MLFX M 2 Bright A_SmiteningExplode;
         Stop;
     }
+
+	action void A_SmiteningExplode()
+	{
+		int damage = 20;
+		int range = 90;
+
+		let xrpgPlayer = XRpgPlayer(target);
+		if (xrpgPlayer != null)
+		{
+			damage = xrpgPlayer.GetDamageForMagic(damage);
+			range += xrpgPlayer.Magic;
+		}
+		
+		A_Explode(damage, range, false);
+	}
 }

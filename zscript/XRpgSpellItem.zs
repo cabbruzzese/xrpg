@@ -27,12 +27,16 @@ class XRpgSpellItem : PowerupGiver
 	int maxTimer;
 	int manaCostBlue;
 	int manaCostGreen;
+	int magicTimerMod;
+	bool isMultiSlot;
 
     property SpellType : spellType;
 	property TimerVal : timerVal;
 	property MaxTimer : maxTimer;
 	property ManaCostBlue : manaCostBlue;
 	property ManaCostGreen : manaCostGreen;
+	property MagicTimerMod : magicTimerMod;
+	property IsMultiSlot : isMultiSlot;
 
 	Default
 	{
@@ -46,6 +50,8 @@ class XRpgSpellItem : PowerupGiver
 		XRpgSpellItem.MaxTimer 0;
 		XRpgSpellItem.ManaCostBlue 0;
 		XRpgSpellItem.ManaCostGreen 0;
+		XRpgSpellItem.MagicTimerMod 1;
+		XRpgSpellItem.IsMultiSlot false;
 	}
 
 	bool CheckMana(class<Inventory> type, int ammoUse)
@@ -99,8 +105,16 @@ class XRpgSpellItem : PowerupGiver
         if (!xrpgPlayer)
 			return false;
 
-		if (xrpgPlayer.ActiveSpell && xrpgPlayer.ActiveSpell.TimerVal > 0)
+		if (xrpgPlayer.IsSpellActive(SpellType, true))
 			return false;
+		
+		//If multislot, check if slot is open
+		if (IsMultiSlot)
+		{
+			if (!xrpgPlayer.IsSpellSlotOpen(xrpgPlayer.ActiveSpell, true) &&
+				!xrpgPlayer.IsSpellSlotOpen(xrpgPlayer.ActiveSpell2, true))
+				return false;
+		}
 
 		//If mana cost required, check if enough and spend it
 		if (ManaCostBlue > 0 || manaCostGreen > 0)
@@ -113,7 +127,20 @@ class XRpgSpellItem : PowerupGiver
 		
 		TimerVal = MaxTimer;
 
-		xrpgPlayer.ActiveSpell = self;
+		//Add magic bonus (negative or positive)
+		if (MaxTimer > 0)
+		{
+			let lowMaxMod = TimerVal / 2;
+			let highMaxMod = MaxTimer * 2;
+			TimerVal += xrpgPlayer.Magic * MagicTimerMod;
+
+			if (TimerVal < lowMaxMod)
+				TimerVal = lowMaxMod;
+			else if (TimerVal > highMaxMod)
+				TimerVal = highMaxMod;
+		}
+
+		xrpgPlayer.SetActiveSpell(self);
 
 		CastSpell();
 
@@ -130,9 +157,16 @@ class XRpgSpellItem : PowerupGiver
         let xrpgPlayer = XRpgPlayer(Owner);
         if (xrpgPlayer != null)
 		{
-			if (MaxTimer != 0 && TimerVal == 0 && xrpgPlayer.ActiveSpell == self)
+			if (MaxTimer != 0 && TimerVal == 0)
 			{
-				xrpgPlayer.ActiveSpell = null;
+				if (xrpgPlayer.ActiveSpell == self)
+				{
+					xrpgPlayer.ActiveSpell = null;
+				}
+				else if(xrpgPlayer.ActiveSpell2 == self)
+				{
+					xrpgPlayer.ActiveSpell2 = null;
+				}
 			}
 		}
 		
@@ -252,10 +286,12 @@ class SmiteSpell : XRpgSpellItem
 		XRpgSpellItem.MaxTimer 400;
 
 		XRpgSpellItem.ManaCostBlue 15;
+
+		XRpgSpellItem.MagicTimerMod 2;
+		XRpgSpellItem.IsMultiSlot true;
 	}
 }
 
-const SPELL_CLERIC_HEAL_PERCENT = 0.25;
 const SPELL_CLERIC_HEALOTHER_MOD = 2;
 class HealSpell : XRpgSpellItem
 {
@@ -269,16 +305,9 @@ class HealSpell : XRpgSpellItem
 		XRpgSpellItem.MaxTimer 100;
 
 		XRpgSpellItem.ManaCostBlue 8;
-	}
 
-	override bool Use (bool pickup)
-	{
-		//Check if player needs healed
-		let xrpgPlayer = XRpgPlayer(Owner);
-        if (!xrpgPlayer || xrpgPlayer.Health >= xrpgPlayer.MaxHealth)
-			return false;
-		
-		return Super.Use(pickup);
+		XRpgSpellItem.MagicTimerMod -1;
+		XRpgSpellItem.IsMultiSlot true;
 	}
 
 	override void CastSpell()
@@ -289,15 +318,17 @@ class HealSpell : XRpgSpellItem
 		let xrpgPlayer = XRpgPlayer(Owner);
         if (xrpgPlayer != null)
 		{
-			xrpgPlayer.A_RadiusGive("Health", 512, RGF_PLAYERS | RGF_GIVESELF, xrpgPlayer.Magic * SPELL_CLERIC_HEALOTHER_MOD);
+			int healMax = xrpgPlayer.Magic * SPELL_CLERIC_HEALOTHER_MOD;
+			int healAmount = random(xrpgPlayer.Magic, healMax);
+			xrpgPlayer.A_RadiusGive("Health", 512, RGF_PLAYERS | RGF_GIVESELF, healAmount);
 		}
 
 	}
 }
 
 const SPELL_CLERIC_PROTECT_MAX = 3;
-const SPELL_CLERIC_PROTECT_PERCENT = 0.75;
-const SPELL_CLERIC_PROTECT_BIGPERCENT = 0.25;
+const SPELL_CLERIC_PROTECT_PERCENT = 0.5;
+const SPELL_CLERIC_PROTECT_BIGPERCENT = 0.1;
 class ProtectSpell : XRpgSpellItem
 {
 	int hitCount;
@@ -316,6 +347,9 @@ class ProtectSpell : XRpgSpellItem
 
 		XRpgSpellItem.ManaCostBlue 10;
 		XRpgSpellItem.ManaCostGreen 10;
+
+		XRpgSpellItem.MagicTimerMod 2;
+		XRpgSpellItem.IsMultiSlot true;
 	}
 
 	override void CastSpell()
@@ -332,7 +366,7 @@ class ProtectSpell : XRpgSpellItem
         if (!xrpgPlayer)
 			return;
 
-		if (!xrpgPlayer.ActiveSpell || xrpgPlayer.ActiveSpell.TimerVal < 1 || xrpgPlayer.ActiveSpell.SpellType != SPELLTYPE_CLERIC_PROTECT)
+		if (!xrpgPlayer.IsSpellActive(SPELLTYPE_CLERIC_PROTECT, true))
 			return;
 		
 		if (passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
@@ -367,6 +401,9 @@ class WrathSpell : XRpgSpellItem
 
 		XRpgSpellItem.ManaCostBlue 15;
 		XRpgSpellItem.ManaCostGreen 15;
+
+		XRpgSpellItem.MagicTimerMod 3;
+		XRpgSpellItem.IsMultiSlot true;
 	}
 
 	override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
@@ -378,7 +415,7 @@ class WrathSpell : XRpgSpellItem
         if (!xrpgPlayer)
 			return;
 
-		if (!xrpgPlayer.ActiveSpell || xrpgPlayer.ActiveSpell.TimerVal < 1 || xrpgPlayer.ActiveSpell.SpellType != SPELLTYPE_CLERIC_WRATH)
+		if (!xrpgPlayer.IsSpellActive(SPELLTYPE_CLERIC_WRATH, true))
 			return;
 
 		if (passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
@@ -427,6 +464,9 @@ class DivineSpell : XRpgSpellItem
 
 		XRpgSpellItem.ManaCostBlue 25;
 		XRpgSpellItem.ManaCostGreen 25;
+
+		XRpgSpellItem.MagicTimerMod -1;
+		XRpgSpellItem.IsMultiSlot true;
 	}
 
 	override void CastSpell()

@@ -162,13 +162,10 @@ class XRpgClericWeapon : XRpgWeapon
 			return false;
 		
 		let clericPlayer = XRpgClericPlayer(player.mo);
-        if (!clericPlayer 
-			|| !clericPlayer.ActiveSpell 
-			|| clericPlayer.ActiveSpell.SpellType != SPELLTYPE_CLERIC_SMITE 
-			|| clericPlayer.ActiveSpell.TimerVal < 1)
-			return false;
-
-        return true;
+        if (!clericPlayer)
+            return false;
+        
+        return clericPlayer.IsSpellActive(SPELLTYPE_CLERIC_SMITE, true);
 	}
 }
 

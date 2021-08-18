@@ -318,6 +318,39 @@ class XRpgStatusBar : HexenStatusBar
 		DrawString(mSmallFont, statText3, (xPosStats, yPos + yStep), DI_TEXT_ALIGN_RIGHT);
 	}
 
+	protected void DrawClericSpell(XRpgSpellItem spellItem, int yOffset)
+	{
+		DrawImage("ARTIBOX", (14, 124 + yOffset), 0, HX_SHADOW);
+
+		if (spellItem)
+		{
+			DrawInventoryIcon(spellItem, (13, 109 + yOffset), DI_ITEM_CENTER, boxsize:(28, 28));
+
+			if (spellItem.TimerVal > 0)
+			{
+				let percentTimer = double(spellItem.TimerVal) / double(spellItem.MaxTimer);
+				int timerGems = 10 * percentTimer;
+
+				//draw at least one
+				if (spellItem.TimerVal > 0 && timerGems < 1)
+					timerGems = 1;
+
+				for (int i = 0; i < timerGems; i++)
+				{
+					DrawImage("INVGEMR2", (45 + (TIMERGEM_OFFSET_X * i), 124 + yOffset), 0, HX_SHADOW);
+				}
+
+				if (spellItem.SpellType == SPELLTYPE_CLERIC_PROTECT)
+				{
+					let proSpell = ProtectSpell(spellItem);
+					for (int i = 0; i < proSpell.HitCount; i++)
+					{
+						DrawImage("AGMGA0", (45 + (TIMERGEM_OFFSET_X * i), 110 + yOffset), 0, HX_SHADOW);
+					}
+				}
+			}
+		}
+	}
 	const TIMERGEM_OFFSET_X = 13;
 	protected void DrawSkillStuff()
 	{
@@ -331,36 +364,8 @@ class XRpgStatusBar : HexenStatusBar
 		let clericPlayer = XRpgClericPlayer(CPlayer.mo);
 		if (clericPlayer)
 		{
-			DrawImage("ARTIBOX", (14, 124), 0, HX_SHADOW);
-
-			if (clericPlayer.ActiveSpell)
-			{
-				DrawInventoryIcon(clericPlayer.ActiveSpell, (13, 109), DI_ITEM_CENTER, boxsize:(28, 28));
-
-				if (clericPlayer.ActiveSpell.TimerVal > 0)
-				{
-					let percentTimer = double(clericPlayer.ActiveSpell.TimerVal) / double(clericPlayer.ActiveSpell.MaxTimer);
-					int timerGems = 10 * percentTimer;
-
-					//draw at least one
-					if (clericPlayer.ActiveSpell.TimerVal > 0 && timerGems < 1)
-						timerGems = 1;
-
-					for (int i = 0; i < timerGems; i++)
-					{
-						DrawImage("INVGEMR2", (45 + (TIMERGEM_OFFSET_X * i), 124), 0, HX_SHADOW);
-					}
-
-					if (clericPlayer.ActiveSpell.SpellType == SPELLTYPE_CLERIC_PROTECT)
-					{
-						let proSpell = ProtectSpell(clericPlayer.ActiveSpell);
-						for (int i = 0; i < proSpell.HitCount; i++)
-						{
-							DrawImage("AGMGA0", (45 + (TIMERGEM_OFFSET_X * i), 110), 0, HX_SHADOW);
-						}
-					}
-				}
-			}
+			DrawClericSpell(clericPlayer.ActiveSpell, 0);
+			DrawClericSpell(clericPlayer.ActiveSpell2, -30);
 		}
 	}
 }
