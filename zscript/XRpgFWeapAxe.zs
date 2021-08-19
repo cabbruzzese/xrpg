@@ -322,8 +322,11 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null && powered)
 		{
-			if (!weapon.DepleteAmmo (false))
-				return;
+			//Costs extra mana
+			int blueManaCost = 3;
+			if (A_CheckAllMana(blueManaCost, 0))
+				A_DepleteAllMana(blueManaCost, 0);
+			weapon.DepleteAmmo(false, false);
 		}
 		
 		let tracker = WindAxeTracker(FindInventory("WindAxeTracker"));
@@ -341,7 +344,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		
 		tracker.WindAxe1 = windAxe;
 
-		A_StartSound("SorcererBallWoosh", CHAN_BODY);
+		A_StartSound("SerpentAttack", CHAN_BODY);
 	}
 
 	action void A_WindAxeFinish()

@@ -309,7 +309,7 @@ class XRpgStatusBar : HexenStatusBar
 		DrawString(mSmallFont, text2, (xPos, yPos + yStep), DI_TEXT_ALIGN_LEFT);
 		
 		let statText1 = String.Format("Strength: %s", FormatNumber(xrpgPlayer.Strength, 0));
-		let statText2 = String.Format("Speed: %s", FormatNumber(xrpgPlayer.Dexterity, 0));
+		let statText2 = String.Format("Armor: %s", FormatNumber(xrpgPlayer.Dexterity, 0));
 		let statText3 = String.Format("Magic: %s", FormatNumber(xrpgPlayer.Magic, 0));
 
 		//Stats
