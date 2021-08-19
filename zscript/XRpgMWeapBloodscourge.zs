@@ -182,8 +182,8 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
     const STAFFPOISON_DIST = 64;
     action void A_FirePoisonSpell()
 	{
-        let xo = random(-STAFFPOISON_DIST, STAFFPOISON_DIST);
-		let yo = random(-STAFFPOISON_DIST, STAFFPOISON_DIST);
+        let xo = frandom(-STAFFPOISON_DIST, STAFFPOISON_DIST);
+		let yo = frandom(-STAFFPOISON_DIST, STAFFPOISON_DIST);
 
 		Vector3 spawnpos = (Pos.X + xo, Pos.Y + yo, Pos.Z + 16);
         Actor mo = SpawnPlayerMissile("MageStaffPoisonMissile");

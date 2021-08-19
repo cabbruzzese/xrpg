@@ -312,18 +312,21 @@ class MageFrostIceMissile : FastProjectile
 
 	action void A_RainIce()
 	{
-		double xo = Random(-1 * ICESTORM_SPREAD, ICESTORM_SPREAD);
-		double yo = Random(-1 * ICESTORM_SPREAD, ICESTORM_SPREAD);
+		double xo = frandom(-ICESTORM_SPREAD, ICESTORM_SPREAD);
+		double yo = frandom(-ICESTORM_SPREAD, ICESTORM_SPREAD);
 		Vector3 spawnpos = Vec2OffsetZ(xo, yo, pos.z);
 		Actor mo = Spawn("IceShard", spawnpos, ALLOW_REPLACE);
 		if (!mo) return;
+		
+		int newDamage = mo.damage * 2;
+		mo.SetDamage(newDamage);
 		
 		double newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - (mo.height + 1);
 		mo.SetZ(newz);
 
 		mo.target = target;
 		mo.Vel.X = MinVel; // Force collision detection
-		let zMod = random(-1 * ICESTORM_ZSPEED_MOD, ICESTORM_ZSPEED_MOD);
+		let zMod = frandom(-ICESTORM_ZSPEED_MOD, ICESTORM_ZSPEED_MOD);
 		mo.Vel.Z = ICESTORM_ZSPEED + zMod;
 		mo.CheckMissileSpawn (radius);
 		mo.A_SetPitch(90);
@@ -571,8 +574,8 @@ class MageFrostChain : Actor
 
 		tracer = target;
 		
-		double xo = Random(-1 * FROSTCHAIN_SPREAD, FROSTCHAIN_SPREAD);
-		double yo = Random(-1 * FROSTCHAIN_SPREAD, FROSTCHAIN_SPREAD);
+		double xo = frandom(-FROSTCHAIN_SPREAD, FROSTCHAIN_SPREAD);
+		double yo = frandom(-FROSTCHAIN_SPREAD, FROSTCHAIN_SPREAD);
 		Vector3 spawnPos = Vec2OffsetZ(xo, yo, 0);
 
 		SetOrigin((spawnPos.X, spawnPos.Y, tracer.Pos.Z + FROSTCHAIN_HOOK_HEIGHT ), false);

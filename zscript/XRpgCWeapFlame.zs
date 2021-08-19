@@ -198,19 +198,19 @@ class FlameVilePuffBoom : Actor
 			if (!mo)
 				return;
 			
-			let xo = random(-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
-			let yo = random(-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
+			let xo = frandom(-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
+			let yo = frandom(-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
 			mo.SetOrigin((Pos.X + xo, Pos.Y + yo, Pos.Z), false);
 
 			double newz = mo.CurSector.NextLowestFloorAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) + mo.height;
 			
 			mo.SetZ(newz);
 
-			let xVel = random(-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
-			let yVel = random(-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
+			let xVel = frandom(-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
+			let yVel = frandom(-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
 			mo.Vel.X = xVel;
 			mo.Vel.Y = yVel;
-			let vSpeed = random(FLAME_VILE_VSPEED_MIN, FLAME_VILE_VSPEED_MAX);
+			let vSpeed = frandom(FLAME_VILE_VSPEED_MIN, FLAME_VILE_VSPEED_MAX);
 			mo.Vel.Z = vSpeed;
 			mo.CheckMissileSpawn (radius);
 		}

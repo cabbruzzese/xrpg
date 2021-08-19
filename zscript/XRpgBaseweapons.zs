@@ -80,10 +80,10 @@ class XRpgWeapon : Weapon
         int zMod = 0;
 
         if (angleMax != 0)
-            angleSpread = random(-angleMax, angleMax);
+            angleSpread = frandom(-angleMax, angleMax);
 
         if (zAngleMax != 0)
-            zMod = random(-zAngleMax, zAngleMax);
+            zMod = frandom(-zAngleMax, zAngleMax);
         
 		Actor shard = SpawnPlayerMissile(missileType, angle + angleSpread + angleMod);
         if (shard)
@@ -127,9 +127,9 @@ class XRpgWeapon : Weapon
         int xo = 0;
         int yo = 0;
         if (xSpread != 0)
-		    xo = random(-xSpread, xSpread);
+		    xo = frandom(-xSpread, xSpread);
         if (ySpread != 0)
-		    yo = random(-ySpread, ySpread);
+		    yo = frandom(-ySpread, ySpread);
 
 		Vector3 spawnpos = Vec2OffsetZ(xo + xMod, yo + yMod, pos.z);
 		
@@ -242,4 +242,26 @@ class XRpgMageWeapon : XRpgWeapon
             }
         }
 	}
+}
+
+class TimedActor : Actor
+{
+    int timeLimit;
+    property TimeLimit : timeLimit;
+
+    Default
+    {
+        TimedActor.TimeLimit 100;
+    }
+
+    override void Tick()
+    {
+        Super.Tick();
+
+        TimeLimit--;
+        if (TimeLimit < 1)
+        {
+            Destroy();
+        }
+    }
 }

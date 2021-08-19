@@ -432,7 +432,7 @@ class MageWaterDrip : Actor
 		Stop;
 	}	
 }
-class MageLightningWaterMissile : Actor
+class MageLightningWaterMissile : TimedActor
 {
     Default
     {
@@ -459,6 +459,8 @@ class MageLightningWaterMissile : Actor
         PushFactor 10.0;
 
 		DeathSound "WaterSplash";
+
+		TimedActor.TimeLimit 50;
     }
     States
     {
@@ -629,7 +631,7 @@ class MageLightningMoonMissile : Actor
         let mo = target.SpawnPlayerMissile("MageLightningMoonStar", angleMod);
         if (mo)
         {
-            let pitchMod = Random(-40, 40);
+            let pitchMod = frandom(-40, 40);
             mo.SetOrigin(Pos, false);
             mo.Vel.Z = pitchMod;
         }

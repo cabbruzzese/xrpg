@@ -283,11 +283,11 @@ class SmiteSpell : XRpgSpellItem
         XRpgSpellItem.SpellType SPELLTYPE_CLERIC_SMITE;
 
 		XRpgSpellItem.TimerVal 0;
-		XRpgSpellItem.MaxTimer 400;
+		XRpgSpellItem.MaxTimer 500;
 
 		XRpgSpellItem.ManaCostBlue 15;
 
-		XRpgSpellItem.MagicTimerMod 2;
+		XRpgSpellItem.MagicTimerMod 5;
 		XRpgSpellItem.IsMultiSlot true;
 	}
 }
@@ -341,14 +341,14 @@ class ProtectSpell : XRpgSpellItem
         XRpgSpellItem.SpellType SPELLTYPE_CLERIC_PROTECT;
 
 		XRpgSpellItem.TimerVal 0;
-		XRpgSpellItem.MaxTimer 500;
+		XRpgSpellItem.MaxTimer 800;
 
 		ProtectSpell.HitCount 0;
 
 		XRpgSpellItem.ManaCostBlue 10;
 		XRpgSpellItem.ManaCostGreen 10;
 
-		XRpgSpellItem.MagicTimerMod 2;
+		XRpgSpellItem.MagicTimerMod 10;
 		XRpgSpellItem.IsMultiSlot true;
 	}
 
@@ -397,12 +397,12 @@ class WrathSpell : XRpgSpellItem
         XRpgSpellItem.SpellType SPELLTYPE_CLERIC_WRATH;
 
 		XRpgSpellItem.TimerVal 0;
-		XRpgSpellItem.MaxTimer 500;
+		XRpgSpellItem.MaxTimer 800;
 
 		XRpgSpellItem.ManaCostBlue 15;
 		XRpgSpellItem.ManaCostGreen 15;
 
-		XRpgSpellItem.MagicTimerMod 3;
+		XRpgSpellItem.MagicTimerMod 5;
 		XRpgSpellItem.IsMultiSlot true;
 	}
 
@@ -502,7 +502,7 @@ class DivineSpell : XRpgSpellItem
 
 		//Add short term invul
 		let power = Powerup(Spawn ("PowerInvulnerable"));
-		power.EffectTics = 200;
+		power.EffectTics = 250;
 		/*power.bAlwaysPickup |= bAlwaysPickup;
 		power.bAdditiveTime |= bAdditiveTime;
 		power.bNoTeleportFreeze |= bNoTeleportFreeze;*/

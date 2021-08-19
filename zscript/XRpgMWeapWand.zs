@@ -38,7 +38,7 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 		MWND A 1 Offset (0, 36) A_ReFire;
         Goto Ready;
     FlameSpell:
-        MWND A 5;
+        MWND A 7;
         MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandFlameMissile", 2);
         Goto AltFireFinish;
     IceSpell:
@@ -54,20 +54,20 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         MWND B 7 Bright Offset (0, 48) A_FireWaterSpell;
         Goto AltFireFinish;
     SunSpell:
-        MWND A 5;
-        MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandSunMissile", 6, 0);
+        MWND A 7;
+        MWND B 9 Bright Offset (0, 48) A_FireMissileSpell("MageWandSunMissile", 6, 0);
         Goto AltFireFinish;
     MoonSpell:
-        MWND A 5;
-        MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandMoonMissile", 3, 0);
+        MWND A 7;
+        MWND B 9 Bright Offset (0, 48) A_FireMissileSpell("MageWandMoonMissile", 3, 0);
         Goto AltFireFinish;
     DeathSpell:
         MWND A 5;
         MWND B 7 Bright Offset (0, 48) A_FireDeathSpell;
         Goto AltFireFinish;
     LightningSpell:
-        MWND A 5;
-        MWND B 7 Bright Offset (0, 48) A_FireLightningSpell;
+        MWND A 9;
+        MWND B 11 Bright Offset (0, 48) A_FireLightningSpell;
         Goto AltFireFinish;
     BloodSpell:
         MWND A 5;
