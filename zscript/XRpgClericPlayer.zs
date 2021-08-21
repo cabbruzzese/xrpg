@@ -144,5 +144,12 @@ class XRpgClericPlayer : XRpgPlayer
 		if (ExpLevel >= SPELL_LEVEL_CLERIC_DIVINE)
 			GiveSpell("DivineSpell");
 	}
+
+	override void Regenerate ()
+	{
+		RegenerateHealth(Strength / 4);
+		RegenerateManaType("Mana1", Magic / 4);
+		RegenerateManaType("Mana2", Magic / 4);
+	}
 }
 		

@@ -1,7 +1,9 @@
-const MAXXPHIT = 75;
+const MAXXPHIT = 125;
 const XPMULTI = 1000;
 const STATNUM = 4;
-const MAX_LEVEL_ARMOR = 50;
+const MAX_LEVEL_ARMOR = 60;
+const REGENERATE_TICKS_MAX_DEFAULT = 128;
+const REGENERATE_MIN_VALUE = 15;
 
 class XRpgPlayer : PlayerPawn
 {
@@ -13,6 +15,8 @@ class XRpgPlayer : PlayerPawn
 	int magic;
 	XRpgSpellItem activeSpell;
 	XRpgSpellItem activeSpell2;
+	int regenerateTicks;
+	int regenerateTicksMax;
 
 
 	property ExpLevel : expLevel;
@@ -23,6 +27,8 @@ class XRpgPlayer : PlayerPawn
 	property Magic : magic;
 	property ActiveSpell : activeSpell;
 	property ActiveSpell2 : activeSpell2;
+	property RegenerateTicks : regenerateTicks;
+	property RegenerateTicksMax : regenerateTicksMax;
 
 	Default
 	{
@@ -33,6 +39,9 @@ class XRpgPlayer : PlayerPawn
 		XRpgPlayer.Strength 1;
 		XRpgPlayer.Dexterity 1;
 		XRpgPlayer.Magic 1;
+
+		XRpgPlayer.RegenerateTicks 0;
+		XRpgPlayer.RegenerateTicksMax REGENERATE_TICKS_MAX_DEFAULT;
 	}
 
 	double GetScaledMod(int stat)
@@ -338,5 +347,46 @@ class XRpgPlayer : PlayerPawn
 		GiveStartingMana();
 		
 		Super.BeginPlay();
+	}
+
+	void RegenerateManaType (class<Inventory> type, int max)
+	{
+		if (max < REGENERATE_MIN_VALUE)
+			max = REGENERATE_MIN_VALUE;
+		
+		let ammo = Inventory(FindInventory(type));
+		if (ammo == null)
+			return;
+
+		if (ammo.Amount < max)
+			ammo.Amount ++;
+	}
+
+	void RegenerateHealth(int max)
+	{
+		if (max < REGENERATE_MIN_VALUE)
+			max = REGENERATE_MIN_VALUE;
+		
+		if (Health < max)
+			A_SetHealth(Health + 1);
+	}
+
+	virtual void Regenerate()
+	{
+
+	}
+
+	override void Tick()
+	{
+		RegenerateTicks++;
+		if (RegenerateTicks > RegenerateTicksMax)
+		{
+			RegenerateTicks = 0;
+
+			if (Health > 0)
+				Regenerate();
+		}
+
+		Super.Tick();
 	}
 }

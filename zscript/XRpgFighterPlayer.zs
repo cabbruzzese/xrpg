@@ -116,4 +116,10 @@ class XRpgFighterPlayer : XRpgPlayer
 	{
 		Strength += 1;
 	}
+
+	override void Regenerate ()
+	{
+		int strengthRegen = Strength / 4 + REGENERATE_MIN_VALUE;
+		RegenerateHealth(strengthRegen);
+	}
 }

@@ -56,6 +56,8 @@ class XRpgMagePlayer : XRpgPlayer
 		XRpgPlayer.Dexterity 5;
 		XRpgPlayer.Magic 12;
 
+		XRpgPlayer.RegenerateTicksMax 64;
+
 		//Player.StartItem "XRpgMWeapFrost";
 		//Player.StartItem "XRpgMWeapLightning";
 		//Player.StartItem "XRpgMWeapBloodscourge";
@@ -240,6 +242,14 @@ class XRpgMagePlayer : XRpgPlayer
 		{
 			GrantRandomSpell();
 		}
+	}
+
+	override void Regenerate ()
+	{
+		int magicMax = (magic / 4) + REGENERATE_MIN_VALUE;
+		RegenerateHealth(Strength / 4);
+		RegenerateManaType("Mana1", magicMax);
+		RegenerateManaType("Mana2", magicMax);
 	}
 }
 
