@@ -691,36 +691,6 @@ class MageLightningDeathMissile : FastProjectile
 	}
 }
 
-class RaiseDeadItem : CustomInventory
-{
-	Default
-	{
-		+INVENTORY.UNDROPPABLE
-		+INVENTORY.UNTOSSABLE
-		+INVENTORY.AUTOACTIVATE
-		+INVENTORY.PERSISTENTPOWER
-		+INVENTORY.UNCLEARABLE
-	}
-	states
-	{
-		Use:
-			TNT1 A 0 A_GotRaiseDead;
-			stop;
-  	}
-
-	action void A_GotRaiseDead()
-	{
-		if (bFriendly)
-			return;
-
-		Actor mo = Spawn("XRpgSummonWraith", Pos, ALLOW_REPLACE);
-		Spawn("MinotaurSmoke", Pos, ALLOW_REPLACE);
-		A_StartSound(mo.ActiveSound, CHAN_VOICE);
-
-		Destroy();
-	}
-}
-
 class MageLightningLightningSmoke : Actor
 {
 	Default

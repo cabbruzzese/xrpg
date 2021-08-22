@@ -2,11 +2,7 @@ const BOSSTYPE_CHANCE_BRUTE = 10;
 const BOSSTYPE_CHANCE_SPECTRE = 4;
 const BOSSTYPE_CHANCE_LEADER = 2;
 
-const BOSSTYPE_SUBCHANCE_POISON = 25;
-const BOSSTYPE_SUBCHANCE_ICE = 25;
-const BOSSTYPE_SUBCHANCE_FIRE = 25;
-const BOSSTYPE_SUBCHANCE_LIGHTNING = 25;
-const BOSSTYPE_SUBCHANCE_STONE = 25;
+const BOSSTYPE_LEADER_SUB_NUM = 7;
 
 const DROP_AMMO_CHANCE = 128;
 const DROP_AMMO_CHANCE_BIG = 196;
@@ -25,7 +21,9 @@ enum ELeaderTypeFlags
 	WML_POISON = 2,
 	WML_ICE = 4,
 	WML_FIRE = 8,
-	WML_LIGHTNING = 16
+	WML_LIGHTNING = 16,
+    WML_BLOOD = 32,
+    WML_DEATH = 64
 };
 
 struct LeaderProps
@@ -59,11 +57,13 @@ class BossMaker : EventHandler
     }
 }
 
+const WMITEM_TIMEOUT_MAX = 30;
 class WanderingMonsterItem : Powerup
 {
     int baseSpeed;
 	int leaderType;
     int bossFlag;
+    int timeoutVal;
     bool isSpectreable;
 
     property BaseSpeed : baseSpeed;
@@ -83,6 +83,24 @@ class WanderingMonsterItem : Powerup
 
         WanderingMonsterItem.IsSpectreable true;
 	}
+
+    bool IsTimedOutExpired()
+    {
+        return timeoutVal == 0;
+    }
+
+    void SetTimeout()
+    {
+        timeoutVal = WMITEM_TIMEOUT_MAX;
+    }
+
+    override void Tick()
+    {
+        if (timeoutVal > 0)
+            timeoutVal--;
+        
+        Super.Tick();
+    }
 
     override bool Use(bool pickup)
     {
@@ -175,7 +193,9 @@ class WanderingMonsterItem : Powerup
     void SetBrute()
     {
         let bruteSize = frandom(1.0, 3.0);
-		float bruteScale = 0.6 + bruteSize / 3.0;
+		float bruteScale = 0.8 + bruteSize / 3.0;
+        if (bruteScale < 1.3)
+            bruteScale = 1.3;
 		
 		Owner.A_SetScale(float(bruteScale));
         Owner.A_SetHealth(Owner.Health * bruteSize);
@@ -212,6 +232,16 @@ class WanderingMonsterItem : Powerup
 			Owner.A_SetTranslation("YellowSkin");
             Owner.A_SetHealth(Owner.Health * 2);
 		}
+        else if (LeaderType & WML_BLOOD)
+        {
+			Owner.A_SetTranslation("BloodSkin");
+            Owner.A_SetHealth(Owner.Health * 2);
+        }
+        else if (LeaderType & WML_DEATH)
+        {
+			Owner.A_SetTranslation("DeathSkin");
+            Owner.A_SetHealth(Owner.Health * 2);
+        }
 		else
 		{
 			Owner.A_SetTranslation("StoneSkin");
@@ -247,22 +277,20 @@ class WanderingMonsterItem : Powerup
 		{
 			props.BossFlag |= WMF_LEADER;
 			
-			let bossMaxChance = BOSSTYPE_SUBCHANCE_POISON + 
-								BOSSTYPE_SUBCHANCE_ICE + 
-								BOSSTYPE_SUBCHANCE_FIRE +
-                                BOSSTYPE_SUBCHANCE_LIGHTNING + 
-								BOSSTYPE_SUBCHANCE_STONE;
+			let bossRoll = random(1, BOSSTYPE_LEADER_SUB_NUM);
 			
-			let bossRoll = random(1,bossMaxChance);
-			
-			if (bossRoll < BOSSTYPE_SUBCHANCE_POISON)
+			if (bossRoll == 1)
 				props.LeaderFlag = WML_POISON;
-			else if (bossRoll < BOSSTYPE_SUBCHANCE_POISON + BOSSTYPE_SUBCHANCE_ICE)
+			else if (bossRoll == 2)
 				props.LeaderFlag = WML_ICE;
-			else if (bossRoll < BOSSTYPE_SUBCHANCE_POISON + BOSSTYPE_SUBCHANCE_ICE + BOSSTYPE_SUBCHANCE_FIRE)
+			else if (bossRoll == 3)
 				props.LeaderFlag = WML_FIRE;
-			else if (bossRoll < BOSSTYPE_SUBCHANCE_POISON + BOSSTYPE_SUBCHANCE_ICE + BOSSTYPE_SUBCHANCE_FIRE + BOSSTYPE_SUBCHANCE_LIGHTNING)
+			else if (bossRoll == 4)
 				props.LeaderFlag = WML_LIGHTNING;
+			else if (bossRoll == 5)
+				props.LeaderFlag = WML_BLOOD;
+			else if (bossRoll == 6)
+				props.LeaderFlag = WML_DEATH;
 			else
 				props.LeaderFlag = WML_STONE;
 		}
@@ -272,13 +300,17 @@ class WanderingMonsterItem : Powerup
 			props.BossFlag |= WMF_SPECTRE;
 
         ApplyBossMonster(props);
-   }
+    }
 
     void DoLightningLeaderTakeDamage(int damage, Name damageType, Actor inflictor, Actor source)
     {
         //Only teleport away sometimes
         if (random(1,100) < LIGHTNINGBOSS_TELEPORT_CHANCE)
             return;
+
+        if (!IsTimedOutExpired())
+            return;
+        SetTimeout();
         
         int badPosCount = 1;
         Vector3 newPos;
@@ -306,40 +338,71 @@ class WanderingMonsterItem : Powerup
 
             Owner.TeleportMove(newPos, false);
         }
-   }
+    }
+
+    void DoDeathLeaderTakeDamage(int damage, Name damageType, Actor inflictor, Actor source)
+    {
+        //Only work on random hits
+        if (random(1,2) != 1)
+            return;
+
+        if (!IsTimedOutExpired())
+            return;
+        SetTimeout();
+
+        Owner.A_RadiusGive("RaiseWraithItem", 200, RGF_CORPSES);
+    }
+
+    void DoFireLeaderTakeDamage(int damage, Name damageType, Actor inflictor, Actor source)
+    {
+        if (!source || !source.Player)
+            return;
+
+        if (!IsTimedOutExpired())
+            return;
+        SetTimeout();
+
+        for (int i = 0; i < 6; i++)
+        {
+            let xVel = frandom(-2, 2);
+            let yVel = frandom(-2, 2);
+            let zVel = frandom(3.0, 6.0);
+
+            let xo = random(-16, 16);
+            let yo = random(-16, 16);
+
+            TossProjectile("FireLeaderLava", xo, yo, xVel, yVel, zVel, true);
+        }
+    }
+
+    void DoIceLeaderTakeDamage(int damage, Name damageType, Actor inflictor, Actor source)
+    {
+        if (!IsTimedOutExpired())
+            return;
+        SetTimeout();
+
+        for (int i = 0; i < 8; i++)
+        {
+            FireProjectile("IceGuyFX2", i*45., -0.3);
+            FireProjectile("IceGuyFX2", (i*45.) - 22.5, -0.3, 48);
+        }
+    }
 
    void DoLeaderTakeDamage(int damage, Name damageType, Actor inflictor, Actor source)
    {
        switch (LeaderType)
         {
             case WML_FIRE:
-                if (source && source.Player)
-                {
-                    for (int i = 0; i < 6; i++)
-                    {
-                        let xVel = frandom(-2, 2);
-                        let yVel = frandom(-2, 2);
-                        let zVel = frandom(3.0, 6.0);
-
-                        let xo = random(-16, 16);
-                        let yo = random(-16, 16);
-
-                        TossProjectile("FireLeaderLava", xo, yo, xVel, yVel, zVel, true);
-                    }
-                }
+                DoFireLeaderTakeDamage(damage, damageType, inflictor, source);
                 break;
             case WML_ICE:
-                if (source && source.Player)
-                {
-                    for (int i = 0; i < 8; i++)
-                    {
-                        FireProjectile("IceGuyFX2", i*45., -0.3);
-                        FireProjectile("IceGuyFX2", (i*45.) - 22.5, -0.3, 48);
-                    }
-                }
+                DoIceLeaderTakeDamage(damage, damageType, inflictor, source);
                 break;
             case WML_LIGHTNING:
                 DoLightningLeaderTakeDamage(damage, damageType, inflictor, source);
+                break;
+            case WML_DEATH:
+                DoDeathLeaderTakeDamage(damage, damageType, inflictor, source);
                 break;
         }
    }
@@ -366,6 +429,14 @@ class WanderingMonsterItem : Powerup
                     {
                         mo.target = Owner;
                     }
+                }
+                break;
+            case WML_BLOOD:
+                if (damageTarget && damageTarget.Health > 0)
+                {
+                    //Heal
+                    Owner.A_SetHealth(Owner.Health + damage);
+                    Owner.A_StartSound("WraithAttack", CHAN_BODY);
                 }
                 break;
         }
@@ -521,6 +592,10 @@ class PoisonLeaderCloud : Actor
 	{
 		if (victim.player)
 		{
+            //Only poison player if poison expired
+            if (victim.player.poisoncount >= 4)
+                return -1;
+
             damage = random[PoisonCloud](15, 30);
             // Handle passive damage modifiers (e.g. PowerProtection)
             damage = victim.GetModifiedDamage(damagetype, damage, true);
