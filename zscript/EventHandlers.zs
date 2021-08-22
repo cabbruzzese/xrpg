@@ -308,6 +308,10 @@ class WanderingMonsterItem : Powerup
         if (random(1,100) < LIGHTNINGBOSS_TELEPORT_CHANCE)
             return;
 
+        //don't teleport on death
+        if (Owner.Health - damage < 0)
+            return;
+
         if (!IsTimedOutExpired())
             return;
         SetTimeout();
@@ -331,12 +335,11 @@ class WanderingMonsterItem : Powerup
 
         if (badPosCount == 0)
         {
-            VerticleProjectile("LightningLeaderMissile", oldPos.x, oldPos.y, 0, 0, -90, false);
             let mo = Spawn("LightningLeaderFx1");
             if (mo)
                 mo.SetOrigin(oldPos + (0,0,28), false);
 
-            Owner.TeleportMove(newPos, false);
+            Owner.TeleportMove(newPos, false, true);
         }
     }
 
@@ -642,43 +645,6 @@ class PoisonLeaderCloud : Actor
 const LIGHTNINGBOSS_TELEPORT_DIST = 256;
 const LIGHTNINGBOSS_TELEPORT_FAIL_MAX = 20;
 const LIGHTNINGBOSS_TELEPORT_CHANCE = 60;
-class LightningLeaderMissile : FastProjectile
-{
-    Default
-    {
-        Speed 120;
-        Radius 12;
-        Height 2;
-        Damage 2;
-        Projectile;
-        +RIPPER
-        +CANNOTPUSH +NODAMAGETHRUST
-        +SPAWNSOUNDSOURCE
-        MissileType "SmiteningMissileSmoke";
-        DeathSound "MageLightningFire";
-		SeeSound "ThunderCrash";
-		DamageType "Fire";
-
-		Health 0;
-    }
-    States
-    {
-    Spawn:
-        MLFX K 2 Bright;
-		Loop;
-    Death:
-        MLFX M 2 Bright A_LightningLeaderMissileExplode;
-        Stop;
-    }
-
-	action void A_LightningLeaderMissileExplode()
-	{
-		int damage = 50;
-		int range = 150;
-		
-		A_Explode(damage, range, false);
-	}
-}
 class LightningLeaderFx1 : Actor
 {
     Default
@@ -687,11 +653,21 @@ class LightningLeaderFx1 : Actor
 		+NOTELEPORT
 		RenderStyle "Translucent";
 		Alpha 0.6;
+
+		SeeSound "ThunderCrash";
 	}
 	States
 	{
 	    Spawn:
-		    FAXE RSTUVWX 4 Bright;
+            FAXE R 4 Bright;
+            FAXE S 4 Bright A_LightningBurst;
+		    FAXE STUVWX 4 Bright;
 		    Stop;
+	}
+
+    action void A_LightningBurst()
+	{
+		A_Explode(50, 150, false);
+        A_RadiusThrust(3000, 150, RTF_NOIMPACTDAMAGE);
 	}
 }
