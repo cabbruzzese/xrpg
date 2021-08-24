@@ -74,7 +74,7 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireMissileSpell("MageFrostPoisonMissile", 0, 8);
+        CONE F 3 Bright A_FireMissileSpell("MageFrostPoisonMissile", 0, 6);
         Goto AltFireFinish;
     WaterSpell:
 		CONE C 1;
@@ -86,19 +86,19 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireMissileSpell("MageFrostSunMissile", 0, 12);
+        CONE F 3 Bright A_FireMissileSpell("MageFrostSunMissile", 0, 8);
         Goto AltFireFinish;
     MoonSpell:
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireMissileSpell("MageFrostMoonMissile", 0, 6);
+        CONE F 3 Bright A_FireMissileSpell("MageFrostMoonMissile", 0, 5);
         Goto AltFireFinish;
     DeathSpell:
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireMissileSpell("MageFrostDeathMissile", 0, 8);
+        CONE F 3 Bright A_FireMissileSpell("MageFrostDeathMissile", 0, 6);
         Goto AltFireFinish;
     LightningSpell:
 		CONE C 3;
@@ -167,7 +167,7 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 
     action void A_FireFlameSpell()
 	{
-		if (!A_AttemptFireSpell(0, 8))
+		if (!A_AttemptFireSpell(0, 5))
             return;
 
         A_FireSpreadMissile("MageFrostFlameMissile", 9, 2);
@@ -208,7 +208,7 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 
     action void A_FireBloodSpell()
 	{
-		if (!A_AttemptFireSpell(0, 8))
+		if (!A_AttemptFireSpell(0, 7))
             return;
 
         SpawnPlayerMissile("MageFrostBloodMissile", angle + 8);
@@ -310,11 +310,11 @@ class MageFrostIceMissile : FastProjectile
         Stop;
     }
 
-	action void A_RainIce()
+	action void A_RainIce(Vector3 rainPos)
 	{
 		double xo = frandom(-ICESTORM_SPREAD, ICESTORM_SPREAD);
 		double yo = frandom(-ICESTORM_SPREAD, ICESTORM_SPREAD);
-		Vector3 spawnpos = Vec2OffsetZ(xo, yo, pos.z);
+		Vector3 spawnpos = rainPos + (xo, yo, 0);
 		Actor mo = Spawn("IceShard", spawnpos, ALLOW_REPLACE);
 		if (!mo) return;
 		
@@ -334,9 +334,14 @@ class MageFrostIceMissile : FastProjectile
 
 	action void A_IceShower()
 	{
+		let forwardDist = ICESTORM_SPREAD / 2;
+		Vector3 dir = (AngleToVector(angle, cos(pitch)), -sin(pitch));
+		let forwardDir = (dir.X * forwardDist, dir.Y * forwardDist, dir.Z * forwardDist);
+		let rainPos = Pos + forwardDir;
+
 		for (int i = 0; i < ICESTORM_NUM; i++)
 		{
-			A_RainIce();
+			A_RainIce(rainPos);
 		}
 	}
 }

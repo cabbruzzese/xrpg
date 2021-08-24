@@ -172,10 +172,10 @@ class MageWandPoisonMissile : Actor
 {
     Default
     {
-        Speed 10;
+        Speed 12;
         Radius 16;
         Height 12;
-        Damage 2;
+        Damage 1;
         Projectile;
         +RIPPER
         +CANNOTPUSH +NODAMAGETHRUST

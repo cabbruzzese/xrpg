@@ -68,7 +68,7 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		MLNG B 2 Bright Offset (0, 40);
 		Goto Ready;
 	FlameSpell:
-		MLNG F 1 Bright A_FireMissileSpell("MageLightningFlameMissile2", 4, 4);
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningFlameMissile2", 3, 2);
         Goto AltFireFinish;
     IceSpell:
 		MLNG F 1 Bright A_FireIceSpell;
@@ -77,7 +77,7 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		MLNG F 1 Bright A_FireMissileSpell("MageLightningPoisonMissile", 2, 2);
         Goto RapidFireFinish;
     WaterSpell:
-		MLNG F 1 Bright A_FireMissileSpell("MageLightningWaterMissile", 2, 2);
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningWaterMissile", 1, 1);
         Goto AltFireFinish;
     SunSpell:
 		MLNG F 1 Bright A_FireMissileSpell("MageLightningSunMissile", 10, 10);
@@ -113,7 +113,7 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 	const STORMLIGHTNING_THRUST_MAX = 20;
     action void A_FireLightningSpell()
 	{
-		if (!A_AttemptFireSpell(2, 2))
+		if (!A_AttemptFireSpell(1, 2))
             return;
 
 		if (Vel.Z < STORMLIGHTNING_THRUST_MAX)
@@ -129,7 +129,7 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 
     action void A_FireBloodSpell()
 	{
-		if (!A_AttemptFireSpell(8, 8))
+		if (!A_AttemptFireSpell(7, 7))
             return;
 
 		SpawnPlayerMissile("MageLightningBloodMissile1", angle + 9);

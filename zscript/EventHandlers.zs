@@ -113,21 +113,7 @@ class WanderingMonsterItem : Powerup
     {
         if (BossFlag & WMF_LEADER)
         {
-            switch(LeaderType)
-            {
-                case WML_STONE:
-                    Owner.A_DropItem("Mana3", 20, DROP_AMMO_CHANCE_BIG);
-                    break;
-                case WML_FIRE:
-                    Owner.A_DropItem("Mana3", 20, DROP_AMMO_CHANCE_BIG);
-                    break;
-                case WML_ICE:
-                    Owner.A_DropItem("Mana1", 20, DROP_AMMO_CHANCE_BIG);
-                    break;
-                case WML_POISON:
-                    Owner.A_DropItem("Mana2", 20, DROP_AMMO_CHANCE_BIG);
-                    break;
-            }
+            Owner.A_DropItem("Mana3", 20, DROP_AMMO_CHANCE_BIG);
         }
         else if (BossFlag & WMF_BRUTE)
         {
