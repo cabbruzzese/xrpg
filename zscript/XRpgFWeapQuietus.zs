@@ -235,7 +235,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 			return;
 		}
 
-		int damage = random(90, 140);
+		int damage = random(1, 140);
 
 		if (charged)
 		{
@@ -246,7 +246,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
-			damage = xrpgPlayer.GetDamageForMelee(damage);
+			damage += xrpgPlayer.Strength;
 
 		for (int i = 0; i < 16; i++)
 		{

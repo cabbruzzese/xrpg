@@ -115,6 +115,12 @@ class XRpgFighterPlayer : XRpgPlayer
 	override void BasicStatIncrease()
 	{
 		Strength += 1;
+
+		//give one at random to other 2 stats
+		if (random(1,2) == 2)
+			Dexterity += 1;
+		else
+			Magic += 1;
 	}
 
 	override void Regenerate ()

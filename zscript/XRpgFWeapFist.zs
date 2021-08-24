@@ -83,7 +83,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 
             let xrpgPlayer = XRpgPlayer(player.mo);
 			if (xrpgPlayer != null)
-				damage = xrpgPlayer.GetDamageForMelee(damage);
+				damage += xrpgPlayer.Strength;
 
 			LineAttack (angle, 2*DEFMELEERANGE, slope, damage, 'Melee', pufftype, true, t);
 			if (t.linetarget != null)
@@ -115,7 +115,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 			return;
 		}
 
-		int damage = random[FighterAtk](40, 55);
+		int damage = random[FighterAtk](1, 55);
 		for (int i = 0; i < 16; i++)
 		{
 			if (TryPunch(angle + i*(45./16), damage, 2) ||
@@ -149,7 +149,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 
             let xrpgPlayer = XRpgPlayer(player.mo);
 			if (xrpgPlayer != null)
-				damage = xrpgPlayer.GetDamageForMelee(damage);
+				damage += xrpgPlayer.Strength;
 
 			LineAttack (angle, 2*DEFMELEERANGE, slope, damage, 'Melee', pufftype, true, t);
 			if (t.linetarget != null)
@@ -183,11 +183,11 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 			return;
 		}
 
-        int damage = random[FighterAtk](40, 100);
+        int damage = random[FighterAtk](1, 100);
 		for (int i = 0; i < 16; i++)
 		{
-			if (TryPunch2(angle + i*(45./16), damage, 2) ||
-				TryPunch2(angle - i*(45./16), damage, 2))
+			if (TryPunch2(angle + i*(45./16), damage, 15) ||
+				TryPunch2(angle - i*(45./16), damage, 15))
 			{ // hit something
 				return;
 			}

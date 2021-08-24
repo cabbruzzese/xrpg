@@ -254,7 +254,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 			return;
 		}
 
-		int damage = random[AxeAtk](40, 55);
+		int damage = random[AxeAtk](1, 55);
 		damage += random[AxeAtk](0, 7);
 		int power = 0;
 		Weapon weapon = player.ReadyWeapon;
@@ -273,7 +273,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
-			damage = xrpgPlayer.GetDamageForMelee(damage);
+			damage += xrpgPlayer.Strength;
 
 		for (int i = 0; i < 16; i++)
 		{

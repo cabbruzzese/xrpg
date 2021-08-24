@@ -126,6 +126,12 @@ class XRpgMagePlayer : XRpgPlayer
 	override void BasicStatIncrease()
 	{
 		Magic += 1;
+
+		//give one at random to other 2 stats
+		if (random(1,2) == 2)
+			Dexterity += 1;
+		else
+			Strength += 1;
 	}
 
 	void GiveSpell(class<Inventory> itemtype)

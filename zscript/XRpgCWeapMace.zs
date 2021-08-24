@@ -76,14 +76,14 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 			return;
 		}
 
-		int damage = random(25, 40);
-
-		if (swing)
-			damage += 15;
+		int damage = random(1, 40);
 
         let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
-			damage = xrpgPlayer.GetDamageForMelee(damage);
+			damage += xrpgPlayer.Strength;
+
+		if (swing)
+			damage *= 1.3;
 
 		for (int i = 0; i < 16; i++)
 		{

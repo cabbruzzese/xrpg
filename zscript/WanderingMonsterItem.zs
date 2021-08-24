@@ -199,7 +199,7 @@ class WanderingMonsterItem : Powerup
         else if (LeaderType & WML_BLOOD)
         {
 			Owner.A_SetTranslation("BloodSkin");
-            Owner.A_SetHealth(Owner.Health * 2);
+            Owner.A_SetHealth(Owner.Health * 3);
         }
         else if (LeaderType & WML_DEATH)
         {
@@ -212,6 +212,8 @@ class WanderingMonsterItem : Powerup
             Owner.A_SetHealth(Owner.Health * 3.5);
     		Owner.DamageMultiply += 1;
 		}
+
+        Owner.DamageMultiply += 0.5;
 	}
 
     void ApplyBossMonster(LeaderProps props)

@@ -78,11 +78,11 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 			return;
 		}
 
-		int damage = random[HammerAtk](60, 123);
+		int damage = random[HammerAtk](1, 123);
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
-			damage = xrpgPlayer.GetDamageForMelee(damage);
+			damage += xrpgPlayer.Strength;
 
 		for (int i = 0; i < 16; i++)
 		{
@@ -156,11 +156,11 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 			return;
 		}
 
-		int damage = random(20, 50);
+		int damage = random(1, 50);
 		int range = 128;
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
-			damage = xrpgPlayer.GetDamageForMelee(damage);
+			damage += xrpgPlayer.Strength;
 		
 		A_Explode(damage, range, false);
 		A_RadiusThrust(5000, range, RTF_NOIMPACTDAMAGE);

@@ -121,6 +121,12 @@ class XRpgClericPlayer : XRpgPlayer
 	override void BasicStatIncrease()
 	{
 		Dexterity += 1;
+
+		//give one at random to other 2 stats
+		if (random(1,2) == 2)
+			Strength += 1;
+		else
+			Magic += 1;
 	}
 
 	void GiveSpell(class<Inventory> itemtype)
