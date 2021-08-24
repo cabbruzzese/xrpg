@@ -48,7 +48,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1;
 		Goto Ready;
 	AltFire:
-		FHMR B 24 Offset (1, -50);
+		FHMR B 18 Offset (1, -50);
 		FHMR C 3 Offset (60, 30);
 		FHMR D 3 Offset (90, 30);
 		FHMR E 2 Offset (90, 30);
@@ -157,12 +157,13 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		}
 
 		int damage = random(20, 50);
+		int range = 128;
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
 			damage = xrpgPlayer.GetDamageForMelee(damage);
 		
-		A_Explode(damage, 100, false);
-		A_RadiusThrust(5000, 100, RTF_NOIMPACTDAMAGE);
+		A_Explode(damage, range, false);
+		A_RadiusThrust(5000, range, RTF_NOIMPACTDAMAGE);
 
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
@@ -172,6 +173,8 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		}
 
 		SpawnPlayerMissile("HammerFloorMissile2");
+
+		A_StartSound("FighterHammerHitWall", CHAN_BODY);
 	}
 }
 
@@ -224,7 +227,7 @@ class HammerFloorMissile2 : HammerFloorMissile1
 	states
 	{
 	Spawn:
-		FX13 AAAAAAA 3 Bright A_ShootFloorFire;
+		FX13 AAAAAAAAAA 3 Bright A_ShootFloorFire;
 		Stop;
 	Death:
 		FX13 I 6 BRIGHT FloorFireExplode;
@@ -253,6 +256,7 @@ class HammerFloorMissile2 : HammerFloorMissile1
 	action void FloorFireExplode()
 	{
 		A_Explode(HAMMERFLOOR_RADIUSDAMAGE, HAMMERFLOOR_RADIUS, 0);
+		A_StartSound("MaulatorMissileHit", CHAN_BODY);
 	}
 }
 
