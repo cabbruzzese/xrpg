@@ -646,7 +646,10 @@ class MageFrostDeathMissile : Actor
 	{
 		if (tracer)
 		{
-			tracer.A_SetSpeed(oldSpeed);
+			//If speed was 0 at the beginning, then something else will restore it before this one ends
+			if (oldSpeed > 0)
+				tracer.A_SetSpeed(oldSpeed);
+
 			tracer.bNOGRAVITY = false;
 		}
 

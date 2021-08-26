@@ -22,11 +22,18 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		FPCH A 1 A_WeaponReady;
 		Loop;
 	Fire:
-		FPCH B 5 Offset (5, 40);
+		FPCH B 5 Offset (5, 40) A_CheckBerserk(false);
 		FPCH C 4 Offset (5, 40);
 		FPCH D 4 Offset (5, 40) A_FPunchAttack;
 		FPCH C 4 Offset (5, 40);
 		FPCH B 5 Offset (5, 40) A_ReFire;
+		Goto Ready;
+	BerserkFire:
+		FPCH B 4 Offset (5, 40);
+		FPCH C 2 Offset (5, 40);
+		FPCH D 2 Offset (5, 40) A_FPunchAttack;
+		FPCH C 2 Offset (5, 40);
+		FPCH B 3 Offset (5, 40) A_ReFire;
 		Goto Ready;
 	Fire2:
 		FPCH DE 4 Offset (5, 40);
@@ -40,7 +47,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		Goto Ready;
     AltFire:
 		FPCH B 5 Offset (5, 40) A_ChargeForward;
-		FPCH C 4 Offset (5, 40);
+		FPCH C 4 Offset (5, 40) A_CheckBerserk(true);
 		FPCH D 4 Offset (5, 40) A_FPunchAttack2;
 		FPCH DE 4 Offset (5, 40);
 		FPCH E 1 Offset (15, 50);
@@ -51,9 +58,19 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		FPCH E 1 Offset (65, 100);
 		FPCH E 10 Offset (0, 150) A_RestoreMirror;
 		Goto Ready;
-
+	BerserkAltFire:
+		FPCH D 1 Offset (5, 40) A_FPunchAttack2;
+		FPCH DE 1 Offset (5, 40);
+		FPCH E 1 Offset (15, 50);
+		FPCH E 1 Offset (25, 60);
+		FPCH E 1 Offset (35, 70);
+		FPCH E 1 Offset (45, 80);
+		FPCH E 1 Offset (55, 90);
+		FPCH E 1 Offset (65, 100);
+		FPCH E 10 Offset (0, 150) A_RestoreMirror;
+		Goto Ready;
 	}
-	
+
 	//============================================================================
 	//
 	// TryPunch
@@ -83,7 +100,12 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 
             let xrpgPlayer = XRpgPlayer(player.mo);
 			if (xrpgPlayer != null)
+			{
 				damage += xrpgPlayer.Strength;
+
+				if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
+					damage += xrpgPlayer.Magic;
+			}
 
 			LineAttack (angle, 2*DEFMELEERANGE, slope, damage, 'Melee', pufftype, true, t);
 			if (t.linetarget != null)
@@ -93,7 +115,10 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 					(t.linetarget.Mass < 10000000 && (t.linetarget.bIsMonster)))
 				{
 					if (!t.linetarget.bDontThrust)
-						t.linetarget.Thrust(power, t.attackAngleFromSource);
+						if (!A_DoPowerHit(t.linetarget))
+							t.linetarget.Thrust(power, t.attackAngleFromSource);
+					
+					A_DoStunHit(t.linetarget);
 				}
 				AdjustPlayerAngle(t);
 				return true;
@@ -149,7 +174,12 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 
             let xrpgPlayer = XRpgPlayer(player.mo);
 			if (xrpgPlayer != null)
+			{
 				damage += xrpgPlayer.Strength;
+
+				if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
+					damage += xrpgPlayer.Magic;
+			}
 
 			LineAttack (angle, 2*DEFMELEERANGE, slope, damage, 'Melee', pufftype, true, t);
 			if (t.linetarget != null)
@@ -158,6 +188,9 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 				if (t.linetarget.player != null || 
 					(t.linetarget.Mass < 10000000 && (t.linetarget.bIsMonster)))
 				{
+					if (xrpgPlayer != null && xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
+						power += 13;
+
 					if (!t.linetarget.bDontThrust)
 						t.linetarget.Thrust(power, t.attackAngleFromSource);
 				}

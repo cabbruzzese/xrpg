@@ -129,14 +129,6 @@ class XRpgClericPlayer : XRpgPlayer
 			Magic += 1;
 	}
 
-	void GiveSpell(class<Inventory> itemtype)
-	{
-		let spell = GiveInventoryType(itemtype);
-
-		if (spell)
-			A_Print(spell.PickupMessage());
-	}
-
 	override void GiveLevelSkill()
 	{
 		if (ExpLevel >= SPELL_LEVEL_CLERIC_SMITE)

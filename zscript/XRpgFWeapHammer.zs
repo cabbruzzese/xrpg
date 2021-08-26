@@ -34,7 +34,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1 A_WeaponReady;
 		Loop;
 	Fire:
-		FHMR B 6 Offset (5, 0);
+		FHMR B 6 Offset (5, 0) A_CheckBerserk(false);
 		FHMR C 3 Offset (5, 0) A_FHammerAttack;
 		FHMR D 3 Offset (5, 0);
 		FHMR E 2 Offset (5, 0);
@@ -47,12 +47,39 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1 Offset (0, 35);
 		FHMR A 1;
 		Goto Ready;
+	BerserkFire:
+		FHMR C 3 Offset (5, 0) A_FHammerAttack;
+		FHMR D 3 Offset (5, 0);
+		FHMR E 2 Offset (5, 0);
+		FHMR E 6 Offset (5, 150) A_FHammerThrow;
+		FHMR A 1 Offset (0, 60);
+		FHMR A 1 Offset (0, 55);
+		FHMR A 1 Offset (0, 50);
+		FHMR A 1 Offset (0, 45);
+		FHMR A 1 Offset (0, 40);
+		FHMR A 1 Offset (0, 35);
+		FHMR A 1;
+		Goto Ready;
 	AltFire:
-		FHMR B 18 Offset (1, -50);
+		FHMR B 18 Offset (1, -50) A_CheckBerserk(true);
 		FHMR C 3 Offset (60, 30);
 		FHMR D 3 Offset (90, 30);
 		FHMR E 2 Offset (90, 30);
 		FHMR E 10 Offset (-5, 150) A_HammerSlam;
+		FHMR A 1 Offset (0, 60);
+		FHMR A 1 Offset (0, 55);
+		FHMR A 1 Offset (0, 50);
+		FHMR A 1 Offset (0, 45);
+		FHMR A 1 Offset (0, 40);
+		FHMR A 1 Offset (0, 35);
+		FHMR A 1;
+		Goto Ready;
+	BerserkAltFire:
+		FHMR B 11 Offset (1, -50);
+		FHMR C 1 Offset (60, 30);
+		FHMR D 1 Offset (90, 30);
+		FHMR E 1 Offset (90, 30);
+		FHMR E 6 Offset (-5, 150) A_HammerSlam;
 		FHMR A 1 Offset (0, 60);
 		FHMR A 1 Offset (0, 55);
 		FHMR A 1 Offset (0, 50);
@@ -81,8 +108,12 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		int damage = random[HammerAtk](1, 123);
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
-		if (xrpgPlayer != null)
+		{
 			damage += xrpgPlayer.Strength;
+
+			if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
+				damage += xrpgPlayer.Magic;
+		}
 
 		for (int i = 0; i < 16; i++)
 		{
@@ -98,7 +129,10 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 						AdjustPlayerAngle(t);
 						if (t.linetarget.bIsMonster || t.linetarget.player)
 						{
-							t.linetarget.Thrust(10, t.attackAngleFromSource);
+							if (!A_DoPowerHit(t.linetarget))
+								t.linetarget.Thrust(10, t.attackAngleFromSource);
+
+							A_DoStunHit(t.linetarget);
 						}
 						weaponspecial = false; // Don't throw a hammer
 						return;
@@ -156,8 +190,8 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 			return;
 		}
 
-		int damage = random(1, 50);
-		int range = 128;
+		int damage = random(1, 70);
+		int range = 150;
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
 			damage += xrpgPlayer.Strength;
@@ -165,16 +199,17 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		A_Explode(damage, range, false);
 		A_RadiusThrust(5000, range, RTF_NOIMPACTDAMAGE);
 
-		Weapon weapon = player.ReadyWeapon;
-		if (weapon != null)
-		{
-			if (!weapon.DepleteAmmo (false, false))
-				return;
-		}
-
-		SpawnPlayerMissile("HammerFloorMissile2");
-
 		A_StartSound("FighterHammerHitWall", CHAN_BODY);
+
+		Weapon w = player.ReadyWeapon;
+		if (w != null)
+		{
+			if (w.Ammo1 && w.Ammo1.Amount < 3)
+				return;
+
+			w.DepleteAmmo (false, false);
+			SpawnPlayerMissile("HammerFloorMissile2");
+		}		
 	}
 }
 

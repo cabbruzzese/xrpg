@@ -146,6 +146,76 @@ class XRpgFighterWeapon : XRpgWeapon
 		Weapon.Kickback 150;
 		Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer";
 	}
+
+    action void A_CheckBerserk(bool isAltFire)
+	{
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (!xrpgPlayer)
+			return;
+
+		if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
+		{
+			if (isAltFire)
+				A_SetWeapState("BerserkAltFire");
+			else
+				A_SetWeapState("BerserkFire");
+		}
+	}
+
+    action void A_ThrowSpark(Actor victim)
+    {
+        let xo = random(-16, 16);
+        let yo = random(-16, 16);
+        let zo = victim.Height / 2;
+        let sparkPos = victim.Pos + (xo, yo, zo);
+
+        let vx = frandom(-2.0, 2.0);
+        let vy = frandom(-2.0, 2.0);
+        let vz = frandom(2.0, 4.0);
+
+        let mo = Spawn("PowerSpark");
+        if (!mo)
+            return;
+
+        mo.target = victim;
+        mo.SetOrigin(sparkPos, false);
+        mo.A_ChangeVelocity(vx, vy, vz, CVF_REPLACE);
+    }
+
+    action bool A_DoPowerHit(Actor victim)
+    {
+        let xrpgPlayer = XRpgPlayer(player.mo);
+		if (!xrpgPlayer)
+			return false;
+
+        if (!xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
+            return false;
+
+        victim.Thrust(25, angle);
+
+        for (int i = 0; i < 8; i++)
+        {
+            A_ThrowSpark(victim);
+        }
+
+        return true;
+    }
+
+    action void A_DoStunHit(Actor victim)
+    {
+        if (!victim || !victim.bIsMonster)
+            return;
+        
+        let xrpgPlayer = XRpgPlayer(player.mo);
+		if (xrpgPlayer)
+        {
+            if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_STUN, true))
+            {
+                let mo = Spawn("StunStars");
+                mo.target = victim;
+            }
+        }
+    }
 }
 
 class XRpgClericWeapon : XRpgWeapon
@@ -264,4 +334,116 @@ class TimedActor : Actor
             Destroy();
         }
     }
+}
+
+class PowerSpark : Actor
+{
+    Default
+    {
+        Radius 5;
+		Mass 5;
+		Projectile;
+		-ACTIVATEPCROSS
+		-ACTIVATEIMPACT
+        -NOGRAVITY
+		BounceType "HexenCompat";
+		BounceFactor 0.3;
+        Scale 0.25;
+    }
+
+    States
+	{
+	Spawn:
+		SGSA FGHIJ 4;
+		SGSA FGHIJ 4;
+		SGSA FGHIJ 4;
+		Stop;
+	Death:
+		Stop;
+	}
+}
+
+const STUNSTARS_DIST = 16;
+const STUNSTARS_VDIST = 16;
+class StunStars : Bridge
+{
+    int oldSpeed;
+	Default
+	{
+		Speed 0;
+        Radius 0;
+        Height 0;
+
+		+NOBLOCKMAP +NOGRAVITY +NOCLIP +FLOAT
+		+NOTELEPORT
+        -SOLID
+		-NOLIFTDROP
+		-ACTLIKEBRIDGE
+	}
+
+	states
+	{
+	Spawn:
+    See:
+        TLGL A 2 A_BridgeInit;
+        TLGL B 2 StarsInit;
+		TLGL ABCDEABCDE 16 Bright A_CauseTargetPain;
+		Stop;
+	Death:
+		TLGL A 2;
+		TLGL A 300;
+		Stop;
+	}
+
+    void StarsInit()
+    {
+        StopTarget();
+    }
+
+    void StopTarget()
+    {
+        if (!target || !target.bIsMonster || target.Health < 1)
+            return;
+
+        oldSpeed = target.Speed;
+        target.A_SetSpeed(0);
+    }
+
+    void StartTarget()
+    {
+        if (!target || !target.bIsMonster || target.Health < 1)
+            return;
+
+        //If speed was 0 at the beginning, then something else will restore it before this one ends
+        if (oldSpeed > 0)
+            target.A_SetSpeed(oldSpeed);
+    }
+
+    action void A_CauseTargetPain()
+    {
+        if (target && target.bIsMonster && target.Health > 0)
+            target.TriggerPainChance("Melee", true);
+    }
+
+    override void Tick()
+    {
+        if (target)
+        {
+            let zo = target.Height + STUNSTARS_VDIST;
+            let newPos = target.Pos + (0,0, zo);
+            SetOrigin(newPos, true);
+        }
+
+        Super.Tick();
+
+        if (target.Health < 1)
+            Destroy();
+    }
+
+    override void OnDestroy()
+	{
+        StartTarget();
+
+		Super.OnDestroy();
+	}
 }

@@ -11,6 +11,8 @@ const LIGHTNINGBOSS_TELEPORT_DIST = 256;
 const LIGHTNINGBOSS_TELEPORT_FAIL_MAX = 20;
 const LIGHTNINGBOSS_TELEPORT_CHANCE = 60;
 
+const BOSSTYPE_CHANCE_MAX = 75;
+
 enum EWanderingMonsterFlags
 {
 	WMF_BRUTE = 1,
@@ -156,13 +158,25 @@ class WanderingMonsterItem : Powerup
 
     void SetBrute()
     {
-        let bruteSize = frandom(1.0, 3.0);
-		float bruteScale = 0.8 + bruteSize / 3.0;
-        if (bruteScale < 1.3)
-            bruteScale = 1.3;
-		
-		Owner.A_SetScale(float(bruteScale));
-        Owner.A_SetHealth(Owner.Health * bruteSize);
+        int sizeCount = 1;
+        float bruteScale = frandom(1.2, 2.0);
+
+        while(sizeCount < 6)
+        {
+            sizeCount++;
+
+            let newRadius = Owner.radius * (bruteScale / 2);
+            let newHeight = owner.height * bruteScale;
+
+            if (Owner.A_SetSize(newRadius, newHeight, true))
+            {
+		        Owner.A_SetScale(bruteScale);
+                Owner.A_SetHealth(Owner.Health * (bruteScale * 2));
+                return;
+            }
+
+            bruteScale -= 0.1;
+        }
     }
 
     void SetSpectre()
@@ -236,10 +250,12 @@ class WanderingMonsterItem : Powerup
         int playerLevel = GetMaxPlayerLevel();
         LeaderProps props;
 
-        if (random(0, 100) < BOSSTYPE_CHANCE_BRUTE + playerLevel)
+        int bruteChance = min(BOSSTYPE_CHANCE_BRUTE + playerLevel, BOSSTYPE_CHANCE_MAX);
+        if (random(0, 100) < bruteChance)
             props.BossFlag |= WMF_BRUTE;
 
-        if (random(1,100) < BOSSTYPE_CHANCE_LEADER + playerLevel)
+        int leaderChance = min(BOSSTYPE_CHANCE_LEADER + playerLevel, BOSSTYPE_CHANCE_MAX);
+        if (random(1,100) < leaderChance)
 		{
 			props.BossFlag |= WMF_LEADER;
 			
@@ -262,7 +278,8 @@ class WanderingMonsterItem : Powerup
 		}
 
         //Don't make Leader types invisible
-		if (!(props.BossFlag & WMF_LEADER) && random(1,100) < BOSSTYPE_CHANCE_SPECTRE + playerLevel)
+        int spectreChance = min(BOSSTYPE_CHANCE_SPECTRE + playerLevel, BOSSTYPE_CHANCE_MAX);
+		if (!(props.BossFlag & WMF_LEADER) && random(1,100) < spectreChance)
 			props.BossFlag |= WMF_SPECTRE;
 
         ApplyBossMonster(props);

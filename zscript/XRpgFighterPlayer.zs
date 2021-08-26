@@ -123,6 +123,35 @@ class XRpgFighterPlayer : XRpgPlayer
 			Magic += 1;
 	}
 
+	void GiveRandomSpell()
+	{
+		Array<class<Inventory> > availSpells;
+		Class<Inventory> spellTypeBag;
+
+		if (!FindInventory("BerserkSpell"))
+			availSpells.Push( ClassTypeBag("BerserkSpell") );
+		if (!FindInventory("PowerSpell"))
+			availSpells.Push( ClassTypeBag("PowerSpell") );
+		if (!FindInventory("StunSpell"))
+			availSpells.Push( ClassTypeBag("StunSpell") );
+		
+		if (availSpells.Size() > 0)
+		{
+			int selection = random(0, availSpells.Size() - 1);
+			GiveSpell(availSpells[selection]);
+		}
+	}
+
+	override void GiveLevelSkill()
+	{
+		if (ExpLevel == 10)
+			GiveRandomSpell();
+		else if (ExpLevel == 20)
+			GiveRandomSpell();
+		else if (ExpLevel == 30)
+			GiveRandomSpell();
+	}
+
 	override void Regenerate ()
 	{
 		int strengthRegen = Strength / 4 + REGENERATE_MIN_VALUE;

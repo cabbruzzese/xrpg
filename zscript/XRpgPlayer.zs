@@ -68,6 +68,20 @@ class XRpgPlayer : PlayerPawn
 		return modDamage;
 	}
 
+	Class<Inventory> ClassTypeBag(Class<Inventory> className)
+	{
+		Class<Inventory> result = classname;
+		return result;
+	}
+
+	void GiveSpell(class<Inventory> itemtype)
+	{
+		let spell = GiveInventoryType(itemtype);
+
+		if (spell)
+			A_Print(spell.PickupMessage());
+	}
+
 	bool IsSpellSlotOpen(XRpgSpellItem spellItem, bool checkTimer)
 	{
 		if (!spellItem)
@@ -124,6 +138,24 @@ class XRpgPlayer : PlayerPawn
 		}
 
 		return false;
+	}
+
+	bool RemoveActiveSpell(XRpgSpellItem spellItem)
+	{
+		bool removed = false;
+
+		if (ActiveSpell == spellItem)
+		{
+			ActiveSpell = null;
+			removed = true;
+		}
+		else if(ActiveSpell2 == spellItem)
+		{
+			ActiveSpell2 = null;
+			removed = true;
+		}
+
+		return removed;
 	}
 	
 	int GetDamageForMelee(int damage)

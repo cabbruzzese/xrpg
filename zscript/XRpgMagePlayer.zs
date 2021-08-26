@@ -134,77 +134,9 @@ class XRpgMagePlayer : XRpgPlayer
 			Strength += 1;
 	}
 
-	void GiveSpell(class<Inventory> itemtype)
-	{
-		let spell = GiveInventoryType(itemtype);
-
-		if (spell)
-			A_Print(spell.PickupMessage());
-	}
-
-	class<Inventory> GetSpellTypeByNum(int spellNum)
-	{
-		switch(spellNum)
-		{
-			case SPELLTYPE_FIRE:
-				return "FireSpell";
-			case SPELLTYPE_ICE:
-				return "IceSpell";
-			case SPELLTYPE_POISON:
-				return "PoisonSpell";
-			case SPELLTYPE_WATER:
-				return "WaterSpell";
-			case SPELLTYPE_SUN:
-				return "SunSpell";
-			case SPELLTYPE_MOON:
-				return "MoonSpell";
-			case SPELLTYPE_DEATH:
-				return "DeathSpell";
-			case SPELLTYPE_LIGHTNING:
-				return "LightningSpell";
-			case SPELLTYPE_BLOOD:
-				return "BloodSpell";
-		}
-
-		return null;
-	}
-
-	int ChooseRandomSpellNum()
-	{
-		int maxSpell = SPELLTYPE_POISON;
-		if (ExpLevel >= SPELL_LEVEL_TIER2)
-			maxSpell = SPELLTYPE_MOON;
-		if (ExpLevel >= SPELL_LEVEL_TIER3)
-			maxSpell = SPELLTYPE_BLOOD;
-		
-		return random(1, maxSpell);
-	}
-
-	Class<Inventory> ClassTypeBag(Class<Inventory> className)
-	{
-		Class<Inventory> result = classname;
-		return result;
-	}
-
 	const MAX_SPELL_GIVE_TRIES = 27;
 	void GrantRandomSpell()
 	{
-		/*int spellGiveTries = 0;
-		bool spellFound = false;
-		while (!spellFound && spellGiveTries < MAX_SPELL_GIVE_TRIES)
-		{
-			spellGiveTries++;
-			let spellNum = ChooseRandomSpellNum();
-			let spellType = GetSpellTypeByNum(spellNum);
-
-			let spellInventory = Inventory(FindInventory(spellType));
-			if (!spellInventory)
-			{
-				spellFound = true;
-				GiveSpell(SpellType);
-			}
-		}*/
-
 		Array<class<Inventory> > availSpells;
 		Class<Inventory> spellTypeBag;
 

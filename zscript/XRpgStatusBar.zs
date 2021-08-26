@@ -318,7 +318,7 @@ class XRpgStatusBar : HexenStatusBar
 		DrawString(mSmallFont, statText3, (xPosStats, yPos + yStep), DI_TEXT_ALIGN_RIGHT);
 	}
 
-	protected void DrawClericSpell(XRpgSpellItem spellItem, int yOffset)
+	protected void DrawMultiSlotSpell(XRpgSpellItem spellItem, int yOffset, string gemIcon)
 	{
 		DrawImage("ARTIBOX", (14, 124 + yOffset), 0, HX_SHADOW);
 
@@ -337,7 +337,7 @@ class XRpgStatusBar : HexenStatusBar
 
 				for (int i = 0; i < timerGems; i++)
 				{
-					DrawImage("INVGEMR2", (45 + (TIMERGEM_OFFSET_X * i), 124 + yOffset), 0, HX_SHADOW);
+					DrawImage(gemIcon, (45 + (TIMERGEM_OFFSET_X * i), 124 + yOffset), 0, HX_SHADOW);
 				}
 
 				if (spellItem.SpellType == SPELLTYPE_CLERIC_PROTECT)
@@ -364,8 +364,15 @@ class XRpgStatusBar : HexenStatusBar
 		let clericPlayer = XRpgClericPlayer(CPlayer.mo);
 		if (clericPlayer)
 		{
-			DrawClericSpell(clericPlayer.ActiveSpell, 0);
-			DrawClericSpell(clericPlayer.ActiveSpell2, -30);
+			DrawMultiSlotSpell(clericPlayer.ActiveSpell, 0, "INVGEMR2");
+			DrawMultiSlotSpell(clericPlayer.ActiveSpell2, -30, "INVGEMR2");
+		}
+
+		let fighterPlayer = XRpgFighterPlayer(CPlayer.mo);
+		if (fighterPlayer)
+		{
+			DrawMultiSlotSpell(fighterPlayer.ActiveSpell, 0, "INVGEMR2");
+			DrawMultiSlotSpell(fighterPlayer.ActiveSpell2, -30, "INVGEMR2");
 		}
 	}
 }

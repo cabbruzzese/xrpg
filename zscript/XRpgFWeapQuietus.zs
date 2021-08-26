@@ -119,12 +119,24 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		FSRD AAAABBBBCCCC 1 Bright A_FSwordWeaponReady;
 		Loop;
 	Fire:
-		FSRD DE 3 Bright Offset (5, 36);
+		FSRD DE 3 Bright Offset (5, 36) A_CheckBerserk(false);
 		FSRD F 2 Bright Offset (5, 36);
 		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwing(false);
 		FSRD H 2 Bright Offset (5, 36);
 		FSRD I 2 Bright Offset (5, 36);
 		FSRD I 10 Bright Offset (5, 150);
+		FSRD A 1 Bright Offset (5, 60);
+		FSRD B 1 Bright Offset (5, 55);
+		FSRD C 1 Bright Offset (5, 50);
+		FSRD A 1 Bright Offset (5, 45);
+		FSRD B 1 Bright Offset (5, 40);
+		Goto Ready;
+	BerserkFire:
+		FSRD F 2 Bright Offset (5, 36);
+		FSRD G 1 Bright Offset (5, 36) A_FSwordAttackSwing(false);
+		FSRD H 2 Bright Offset (5, 36);
+		FSRD I 1 Bright Offset (5, 36);
+		FSRD I 6 Bright Offset (5, 150);
 		FSRD A 1 Bright Offset (5, 60);
 		FSRD B 1 Bright Offset (5, 55);
 		FSRD C 1 Bright Offset (5, 50);
@@ -246,7 +258,12 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
+		{
 			damage += xrpgPlayer.Strength;
+
+			if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
+				damage += xrpgPlayer.Magic;
+		}
 
 		for (int i = 0; i < 16; i++)
 		{
@@ -262,7 +279,10 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 						AdjustPlayerAngle(t);
 						if (t.linetarget.bIsMonster || t.linetarget.player)
 						{
-							t.linetarget.Thrust(10, t.attackAngleFromSource);
+							if (!A_DoPowerHit(t.linetarget))
+								t.linetarget.Thrust(10, t.attackAngleFromSource);
+
+							A_DoStunHit(t.linetarget);
 						}
 						weaponspecial = false;
 						return;

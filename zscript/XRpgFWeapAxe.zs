@@ -48,6 +48,31 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXE A 1 Offset (0, 36);
 		FAXE A 1;
 		Goto Ready;
+	BerserkEndAttack:
+		FAXE D 1 Offset (-25, 90);
+		FAXE E 1 Offset (15, 32);
+		FAXE E 1 Offset (10, 54);
+		FAXE E 1 Offset (10, 150);
+		FAXE A 1 Offset (0, 60) A_ReFire;
+		FAXE A 1 Offset (0, 52);
+		FAXE A 1 Offset (0, 44);
+		FAXE A 1 Offset (0, 36);
+		FAXE A 1;
+		Goto Ready;
+	BerserkFire:
+		FAXE B 3 Offset (15, 32);
+		FAXE C 2 Offset (15, 32);
+		FAXE D 1 Offset (15, 32);
+		FAXE D 1 Offset (-5, 70) A_FAxeAttack;
+		FAXE D 1 Offset (-25, 90);
+		FAXE E 1 Offset (15, 32);
+		FAXE E 1 Offset (10, 54);
+		FAXE E 5 Offset (10, 150);
+		FAXE A 1 Offset (0, 60) A_ReFire;
+		FAXE A 1 Offset (0, 52);
+		FAXE A 1 Offset (0, 44);
+		FAXE A 1 Offset (0, 36);
+		Goto Ready;
 	SelectGlow:
 		FAXE L 1 A_FAxeCheckUpG;
 		Loop;
@@ -67,6 +92,21 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXE Q 1 Offset (15, 32);
 		FAXE Q 2 Offset (10, 54);
 		FAXE Q 7 Offset (10, 150);
+		FAXE A 1 Offset (0, 60) A_ReFire;
+		FAXE A 1 Offset (0, 52);
+		FAXE A 1 Offset (0, 44);
+		FAXE A 1 Offset (0, 36);
+		FAXE A 1;
+		Goto ReadyGlow;
+	BerserkFireGlow:
+		FAXE N 3 Offset (15, 32);
+		FAXE O 2 Offset (15, 32);
+		FAXE P 1 Offset (15, 32);
+		FAXE P 1 Offset (-5, 70) A_FAxeAttack;
+		FAXE P 1 Offset (-25, 90);
+		FAXE Q 1 Offset (15, 32);
+		FAXE Q 1 Offset (10, 54);
+		FAXE Q 5 Offset (10, 150);
 		FAXE A 1 Offset (0, 60) A_ReFire;
 		FAXE A 1 Offset (0, 52);
 		FAXE A 1 Offset (0, 44);
@@ -120,6 +160,16 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 
 	override State GetAtkState (bool hold)
 	{
+		if (Owner && Owner.player && Owner.player.mo)
+		{
+			let xrpgPlayer = XRpgPlayer(Owner.player.mo);
+
+			if (xrpgPlayer && xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
+			{
+				return Ammo1.Amount ? FindState ("BerserkFireGlow") :  FindState ("BerserkFire");
+			}
+		}
+
 		return Ammo1.Amount ? FindState ("FireGlow") :  Super.GetAtkState(hold);
 	}
 
@@ -226,9 +276,21 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 	action void A_FAxeCheckAtk(int throwing)
 	{
 		if (player == null)
-		{
 			return;
+
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (!xrpgPlayer)
+			return;
+
+		if (!throwing && xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
+		{
+			Weapon w = player.ReadyWeapon;
+			if (w.Ammo1 && w.Ammo1.Amount > 0)
+				A_SetWeapState("BerserkFireGlow");
+			else
+				A_SetWeapState("BerserkFire");
 		}
+
 		Weapon w = player.ReadyWeapon;
 		if (w.Ammo1 && w.Ammo1.Amount > 0)
 		{
@@ -273,7 +335,12 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
+		{
 			damage += xrpgPlayer.Strength;
+
+			if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
+				damage += xrpgPlayer.Magic;
+		}
 
 		for (int i = 0; i < 16; i++)
 		{
@@ -288,7 +355,10 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 					{
 						if (t.linetarget.bIsMonster || t.linetarget.player)
 						{
-							t.linetarget.Thrust(power, t.attackAngleFromSource);
+							if (!A_DoPowerHit(t.linetarget))
+								t.linetarget.Thrust(power, t.attackAngleFromSource);
+
+							A_DoStunHit(t.linetarget);
 						}
 						AdjustPlayerAngle(t);
 						
@@ -298,7 +368,10 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 							(!(weapon.bPrimary_Uses_Both) ||
 							  weapon.Ammo2 == null || weapon.Ammo2.Amount == 0))
 						{
-							player.SetPsprite(PSP_WEAPON, weapon.FindState("EndAttack"));
+							if (xrpgPlayer && xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
+								player.SetPsprite(PSP_WEAPON, weapon.FindState("BerserkEndAttack"));
+							else
+								player.SetPsprite(PSP_WEAPON, weapon.FindState("EndAttack"));
 						}
 						return;
 					}
