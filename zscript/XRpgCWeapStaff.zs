@@ -139,7 +139,7 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
 		}
 
         let isSmite = A_IsSmite();
-		Actor mo = SpawnPlayerMissile ("CStaffMissile", angle - 3.0);
+		Actor mo = SpawnPlayerMissile ("CStaffMissilePoison", angle - 3.0);
 		if (mo)
 		{
 			mo.WeaveIndexXY = 32;
@@ -149,7 +149,7 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
                 mo.SetDamage(mo.damage * 1.5);
             }
 		}
-		mo = SpawnPlayerMissile ("CStaffMissile", angle + 3.0);
+		mo = SpawnPlayerMissile ("CStaffMissilePoison", angle + 3.0);
 		if (mo)
 		{
 			mo.WeaveIndexXY = 0;
@@ -234,7 +234,44 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
 	}
 }
 
-// Serpent Staff Missile ----------------------------------------------------
+class CStaffMissilePoison : Actor
+{
+	Default
+	{
+		Speed 22;
+		Radius 12;
+		Height 10;
+		Damage 5;
+		RenderStyle "Add";
+		Projectile;
+		DeathSound "ClericCStaffExplode";
+		Obituary "$OB_MPCWEAPSTAFFR";
+
+		DamageType "Poison";
+	}
+	States
+	{
+	Spawn:
+		CSSF DDEE 1 Bright A_CStaffMissileSlither;
+		Loop;
+	Death:
+		CSSF FG 4 Bright;
+		CSSF HI 3 Bright;
+		Stop;
+	}
+	
+	override int DoSpecialDamage (Actor target, int damage, Name damagetype)
+	{
+		// Cleric Serpent Staff does poison damage
+		if (target.player)
+		{
+			target.player.PoisonPlayer (self, self.target, 20);
+			damage >>= 1;
+		}
+		return damage;
+	}
+	
+}
 
 class CStaffMissileSeeker : Actor
 {
@@ -248,6 +285,8 @@ class CStaffMissileSeeker : Actor
 		Projectile;
 		DeathSound "ClericCStaffExplode";
 		Obituary "$OB_MPCWEAPSTAFFR";
+
+		DamageType "Poison";
 
         Health 100;
 	}

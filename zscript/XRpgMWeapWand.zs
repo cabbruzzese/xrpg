@@ -183,6 +183,8 @@ class MageWandPoisonMissile : Actor
         +ZDOOMTRANS
         SeeSound "PoisonShroomDeath";
         Obituary "$OB_MPMWEAPWAND";
+
+        DamageType "Poison";
     }
     States
     {
@@ -208,6 +210,8 @@ class MageWandWaterMissile : Actor
         Gravity 0.25;
         Obituary "$OB_MPMWEAPWAND";
         DeathSound "WaterSplash";
+
+        DamageType "Water";
     }
     States
     {
@@ -308,6 +312,8 @@ class MageWandDeathMissile : Actor
         SeeSound "BishopAttack";
         Obituary "$OB_MPMWEAPWAND";
         Scale 0.5;
+
+        DamageType "Death";
     }
     States
     {
@@ -351,6 +357,8 @@ class MageWandLightningMissile : FastProjectile
         MissileType "MageWandLightningSmoke";
         Obituary "$OB_MPMWEAPWAND";
         Scale 0.2;
+
+        DamageType "Electric";
     }
     States
     {
@@ -409,6 +417,7 @@ class MageWandBloodMissile : Actor
 
         SeeSound "BatScream";
         DeathSound "Drip";
+        DamageType "Blood";
     }
     States
 	{

@@ -1,21 +1,7 @@
-const WRAITH_LIFE_MAX = 1024;
-class XRpgSummonWraith : Wraith
+class MonsterSummonWraith : Wraith
 {
-    int lifeCounter;
-
-    property lifeCounter : LifeCounter;
-
 	Default
 	{
-		Health 25;
-
-        +NOICEDEATH
-        +FRIENDLY
-        Translation "Ice";
-        RenderStyle "Translucent";
-        Alpha 0.6;
-
-        XRpgSummonWraith.LifeCounter WRAITH_LIFE_MAX;
 	}
 
     States
@@ -41,6 +27,32 @@ class XRpgSummonWraith : Wraith
 		Stop;
 	}
 
+    action void A_DestroyCorpse()
+    {
+        Destroy();
+    }
+}
+
+const WRAITH_LIFE_MAX = 1024;
+class XRpgSummonWraith : MonsterSummonWraith
+{
+    int lifeCounter;
+
+    property lifeCounter : LifeCounter;
+
+	Default
+	{
+		Health 25;
+
+        +NOICEDEATH
+        +FRIENDLY
+        Translation "Ice";
+        RenderStyle "Translucent";
+        Alpha 0.6;
+
+        XRpgSummonWraith.LifeCounter WRAITH_LIFE_MAX;
+	}
+
     override void Tick()
     {
         LifeCounter--;
@@ -50,10 +62,5 @@ class XRpgSummonWraith : Wraith
             SetStateLabel("Death");
         }
         Super.Tick();
-    }
-
-    action void A_DestroyCorpse()
-    {
-        Destroy();
     }
 }

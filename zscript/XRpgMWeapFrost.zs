@@ -361,6 +361,8 @@ class MageFrostPoisonMissile : Actor
         +ZDOOMTRANS
         SeeSound "PoisonShroomDeath";
         Obituary "$OB_MPMWEAPFROST";
+
+		DamageType "Poison";
     }
     States
     {
@@ -386,6 +388,8 @@ class MageFrostWaterMissile : FastProjectile
         Gravity 0.25;
         Obituary "$OB_MPMWEAPFROST";
 		DeathSound "WaterSplash";
+
+		DamageType "Water";
     }
     States
     {
@@ -619,6 +623,7 @@ class MageFrostDeathMissile : Actor
         +SPAWNSOUNDSOURCE
         Obituary "$OB_MPMWEAPFROST";
 		Health FROSTCHAIN_HEALTH;
+		DamageType "Death";
 
 		DeathSound "Ambient12";
     }
@@ -739,6 +744,8 @@ class MageFrostLightningMissile : FastProjectile
         MissileType "MageFrostLightningSmoke";
         DeathSound "MageLightningFire";
         Obituary "$OB_MPMWEAPFROST";
+
+		DamageType "Electric";
     }
     States
     {
@@ -767,6 +774,8 @@ class MageFrostBloodMissile : Actor
 		+NOSHIELDREFLECT
         Obituary "$OB_MPMWEAPFROST";
 		SeeSound "WraithAttack";
+
+		DamageType "Blood";
     }
     States
     {

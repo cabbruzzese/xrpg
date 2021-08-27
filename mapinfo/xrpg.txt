@@ -517,3 +517,18 @@ gamedefaults
 // There is also support for showing a clus5msg after cluster 5, but
 // since it isn't used, and it would intefere with the finale if I
 // included it here, I'm leaving out the clusterdef for cluster 5.
+
+DamageType Water
+{
+	Obituary = "%o got swept away by the water."
+}
+
+DamageType Blood
+{
+	Obituary = "%o was exsanguinated."
+}
+
+DamageType Death
+{
+	Obituary = "%o was tortured by undead horrors."
+}

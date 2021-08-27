@@ -39,6 +39,15 @@ class FireLeaderLava : Actor
 		}
 		A_Explode(10, 100, false);
 	}
+
+	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)
+	{
+		//Don't hurt friendlies
+		if (damage > 0 && victim && victim.bIsMonster && !victim.bFriendly)
+			return 0;
+
+		return super.DoSpecialDamage(victim, damage, damagetype);
+	}
 }
 
 class PoisonLeaderCloud : Actor

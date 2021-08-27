@@ -33,6 +33,6 @@ class RaiseWraithItem : RaiseDeadItem
 {
     Default
     {
-        RaiseDeadItem.SummonType "Wraith";
+        RaiseDeadItem.SummonType "MonsterSummonWraith";
     }
 }

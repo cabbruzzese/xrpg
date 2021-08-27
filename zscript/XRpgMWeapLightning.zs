@@ -377,6 +377,8 @@ class MageLightningPoisonMissile : Actor
         SeeSound "PoisonShroomDeath";
         Obituary "$OB_MPMWEAPLIGHTNING";
         Scale 2.0;
+
+		DamageType "Poison";
     }
     States
 	{
@@ -459,6 +461,7 @@ class MageLightningWaterMissile : TimedActor
         PushFactor 10.0;
 
 		DeathSound "WaterSplash";
+		DamageType "Water";
 
 		TimedActor.TimeLimit 50;
     }
@@ -671,6 +674,7 @@ class MageLightningDeathMissile : FastProjectile
 		+SKYEXPLODE
 		+NOSHIELDREFLECT
         Obituary "$OB_MPMWEAPLIGHTNING";
+		DamageType "Death";
 
 		SeeSound "SpiritActive";
     }
@@ -722,6 +726,8 @@ class MageLightningLightningMissile : FastProjectile
         DeathSound "MageLightningFire";
         Obituary "$OB_MPMWEAPFROST";
 		Scale 1.5;
+
+		DamageType "Electric";
     }
     States
     {
@@ -753,6 +759,7 @@ class MageLightningBloodMissile1 : Actor
         Obituary "$OB_MPMWEAPFROST";
 
 		Health BLOOD_MAX_MANADRAIN; //max mana restore
+		DamageType "Blood";
 
 		Scale 1.5;
 		Translation "Ice";
@@ -806,6 +813,7 @@ class MageLightningBloodMissile2 : Actor
         Obituary "$OB_MPMWEAPFROST";
 
 		Health BLOOD_MAX_MANADRAIN; //max mana restore
+		DamageType "Blood";
 		
 		Scale 1.5;
 		RenderStyle "Translucent";

@@ -171,7 +171,7 @@ class WanderingMonsterItem : Powerup
             if (Owner.A_SetSize(newRadius, newHeight, true))
             {
 		        Owner.A_SetScale(bruteScale);
-                Owner.A_SetHealth(Owner.Health * (bruteScale * 2));
+                Owner.A_SetHealth(Owner.Health * (bruteScale * 1.5));
                 return;
             }
 
@@ -374,21 +374,61 @@ class WanderingMonsterItem : Powerup
         }
     }
 
-   void DoLeaderTakeDamage(int damage, Name damageType, Actor inflictor, Actor source)
+   void DoLeaderTakeDamage(int damage, Name damageType, Actor inflictor, Actor source, out int newdamage)
    {
        switch (LeaderType)
         {
             case WML_FIRE:
                 DoFireLeaderTakeDamage(damage, damageType, inflictor, source);
+                if (damageType == 'Fire')
+                    newdamage = damage / 2;
+                else if (damageType == 'Water')
+                    newdamage = damage * 2;
                 break;
             case WML_ICE:
                 DoIceLeaderTakeDamage(damage, damageType, inflictor, source);
+                if (damageType == 'Ice' ||
+                    damageType == 'Water')
+                    newdamage = damage / 2;
+                else if (damageType == 'Fire')
+                    newdamage = damage * 2;
                 break;
             case WML_LIGHTNING:
                 DoLightningLeaderTakeDamage(damage, damageType, inflictor, source);
+                if (damageType == 'Electric')
+                    newdamage = damage / 2;
+                else if (damageType == 'Water')
+                    newdamage = damage * 2;
                 break;
             case WML_DEATH:
                 DoDeathLeaderTakeDamage(damage, damageType, inflictor, source);
+
+                if (damageType == 'Death')
+                    newdamage = damage / 2;
+                else if (damageType == 'Fire')
+                    newdamage = damage * 2;
+                break;
+            case WML_POISON:
+                if (damageType == 'Poison' ||
+                    damageType == 'PoisonCloud')
+                    newdamage = damage / 2;
+                else if (damageType == 'Water' ||
+                    damageType == 'Ice')
+                    newdamage = damage * 2;
+                break;
+            case WML_BLOOD:
+                if (damageType == 'Blood')
+                    newdamage = damage / 2;
+                else if (damageType == 'Death')
+                    newdamage = damage * 2;
+                break;
+            case WML_STONE:
+                if (damageType == 'Poison' || 
+                    damageType == 'PoisonCloud' ||
+                    damageType == 'Blood')
+                    newdamage = damage / 2;
+                else if (damageType == 'Electric')
+                    newdamage = damage * 2;
                 break;
         }
    }
@@ -435,7 +475,10 @@ class WanderingMonsterItem : Powerup
         {
             if (BossFlag & WMF_LEADER)
             {
-                DoLeaderTakeDamage(damage, damageType, inflictor, source);
+                DoLeaderTakeDamage(damage, damageType, inflictor, source, newdamage);
+
+                //if (newdamage != damage)
+                    //console.printf("Damage resisted: " .. damage .. " reduced to: " .. newdamage);
             }
         }
 

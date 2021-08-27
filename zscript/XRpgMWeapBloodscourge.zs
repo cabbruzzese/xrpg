@@ -413,6 +413,8 @@ class MageStaffPoisonMissile : Actor
         SeeSound "PoisonShroomDeath";
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
 
+		DamageType "Poison";
+
         RenderStyle "Translucent";
         Alpha 0.4;
         Scale 1.5;
@@ -453,6 +455,7 @@ class MageStaffWaterMissile : Actor
 		DeathSound "WaterSplash";
 
 		Health 2;
+		DamageType "Water";
     }
     States
     {
@@ -583,6 +586,8 @@ class MageStaffLightningMissile : FastProjectile
         DeathSound "MageLightningFire";
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
 		Scale 1.5;
+
+		DamageType "Electric";
     }
     States
     {
@@ -613,6 +618,8 @@ class MageStaffDeathMissile1 : Actor
 		+ZDOOMTRANS
 		RenderStyle "Add";
 		Obituary "$OB_MPMWEAPLIGHTNING";
+
+		DamageType "Death";
 	}
 	States
 	{
