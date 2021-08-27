@@ -22,6 +22,8 @@ class FireSpell : XRpgSpellItem
 	{
 		Inventory.Icon "DMFXB5";
 
+		Inventory.PickupMessage "$TXT_FIRESPELLPICKUP";
+
         XRpgSpellItem.SpellType SPELLTYPE_FIRE;
 	}
 }
@@ -31,6 +33,8 @@ class IceSpell : XRpgSpellItem
 	Default
 	{
 		Inventory.Icon "ICPRA0";
+
+		Inventory.PickupMessage "$TXT_ICESPELLPICKUP";
 
         XRpgSpellItem.SpellType SPELLTYPE_ICE;
 	}
@@ -42,6 +46,8 @@ class PoisonSpell : XRpgSpellItem
 	{
 		Inventory.Icon "D2FXA1";
 
+		Inventory.PickupMessage "$TXT_POISONSPELLPICKUP";
+
         XRpgSpellItem.SpellType SPELLTYPE_POISON;
 	}
 }
@@ -51,6 +57,8 @@ class WaterSpell : XRpgSpellItem
 	Default
 	{
 		Inventory.Icon "SPSHG0";
+
+		Inventory.PickupMessage "$TXT_WATERSPELLPICKUP";
 
         XRpgSpellItem.SpellType SPELLTYPE_WATER;
 	}
@@ -62,6 +70,8 @@ class SunSpell : XRpgSpellItem
 	{
 		Inventory.Icon "FX12B1";
 
+		Inventory.PickupMessage "$TXT_SUNSPELLPICKUP";
+
         XRpgSpellItem.SpellType SPELLTYPE_SUN;
 	}
 }
@@ -71,6 +81,8 @@ class MoonSpell : XRpgSpellItem
 	Default
 	{
 		Inventory.Icon "RADEB0";
+
+		Inventory.PickupMessage "$TXT_MOONSPELLPICKUP";
 
         XRpgSpellItem.SpellType SPELLTYPE_MOON;
 	}
@@ -82,6 +94,8 @@ class DeathSpell : XRpgSpellItem
 	{
 		Inventory.Icon "CHNSG0";
 
+		Inventory.PickupMessage "$TXT_DEATHSPELLPICKUP";
+
         XRpgSpellItem.SpellType SPELLTYPE_DEATH;
 	}
 }
@@ -92,6 +106,8 @@ class LightningSpell : XRpgSpellItem
 	{
 		Inventory.Icon "MLF2P0";
 
+		Inventory.PickupMessage "$TXT_LIGHTNINGSPELLPICKUP";
+
         XRpgSpellItem.SpellType SPELLTYPE_LIGHTNING;
 	}
 }
@@ -101,6 +117,8 @@ class BloodSpell : XRpgSpellItem
 	Default
 	{
 		Inventory.Icon "DEMEA0";
+
+		Inventory.PickupMessage "$TXT_BLOODSPELLPICKUP";
 
         XRpgSpellItem.SpellType SPELLTYPE_BLOOD;
 	}

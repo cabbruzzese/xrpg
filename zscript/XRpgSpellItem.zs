@@ -31,6 +31,8 @@ class XRpgSpellItem : PowerupGiver
 		Inventory.InterHubAmount 1;
 		Inventory.MaxAmount 1;
 
+		Inventory.PickupMessage "$TXT_SPELLPICKUP";
+
 		XRpgSpellItem.TimerVal 0;
 		XRpgSpellItem.MaxTimer 0;
 		XRpgSpellItem.ManaCostBlue 0;

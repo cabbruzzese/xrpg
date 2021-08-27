@@ -11,6 +11,8 @@ class BerserkSpell : XRpgSpellItem
 	{
 		Inventory.Icon "BERSA0";
 
+		Inventory.PickupMessage "$TXT_BERSERKSPELLPICKUP";
+
         XRpgSpellItem.SpellType SPELLTYPE_FIGHTER_BERSERK;
 
 		XRpgSpellItem.TimerVal 0;
@@ -30,6 +32,8 @@ class StunSpell : XRpgSpellItem
 	{
 		Inventory.Icon "STUNA0";
 
+		Inventory.PickupMessage "$TXT_STUNSPELLPICKUP";
+
         XRpgSpellItem.SpellType SPELLTYPE_FIGHTER_STUN;
 
 		XRpgSpellItem.TimerVal 0;
@@ -48,6 +52,8 @@ class PowerSpell : XRpgSpellItem
 	Default
 	{
 		Inventory.Icon "POWRA0";
+
+		Inventory.PickupMessage "$TXT_POWERSPELLPICKUP";
 
         XRpgSpellItem.SpellType SPELLTYPE_FIGHTER_POWER;
 

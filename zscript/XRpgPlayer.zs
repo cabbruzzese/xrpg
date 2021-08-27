@@ -325,6 +325,8 @@ class XRpgPlayer : PlayerPawn
 			}
 			statPoints--;
 		}
+
+		DoLevelGainBlend();
 		
 		//BasicStatIncrease to call overrides in classes
 		BasicStatIncrease();
@@ -334,7 +336,6 @@ class XRpgPlayer : PlayerPawn
 		GainLevelHealth();
 		GainLevelMana();
 			
-		DoLevelGainBlend();
 		UpdateLevelStats();
 	}
 

@@ -1,3 +1,25 @@
 [enu default]
 
 OB_FIREBOSS = "%o got burned by a fire %k.";
+
+TXT_SPELLPICKUP = "You have learned a spell";
+
+TXT_FIRESPELLPICKUP = "You have learned the Fire spell.";
+TXT_ICESPELLPICKUP = "You have learned the Ice spell.";
+TXT_POISONSPELLPICKUP = "You have learned the Poison spell.";
+TXT_WATERSPELLPICKUP = "You have learned the Water spell.";
+TXT_SUNSPELLPICKUP = "You have learned the Sun spell.";
+TXT_MOONSPELLPICKUP = "You have learned the Moon spell.";
+TXT_DEATHSPELLPICKUP = "You have learned the Death spell.";
+TXT_LIGHTNINGSPELLPICKUP = "You have learned the Lightning spell.";
+TXT_BLOODSPELLPICKUP = "You have learned the Blood spell.";
+
+TXT_SMITESPELLPICKUP = "You have been blessed with Smite.";
+TXT_HEALSPELLPICKUP = "You have been blessed with Heal.";
+TXT_PROTECTSPELLPICKUP = "You have been blessed with Protection.";
+TXT_WRATHSPELLPICKUP = "You have been blessed with Wrath.";
+TXT_DIVINESPELLPICKUP = "You have been blessed with Divine Intervention.";
+
+TXT_BERSERKSPELLPICKUP = "You have gained the Berserk skill.";
+TXT_STUNSPELLPICKUP = "You have gained the Stunning Strike skill.";
+TXT_POWERSPELLPICKUP = "You have gained the Power Strike skill.";

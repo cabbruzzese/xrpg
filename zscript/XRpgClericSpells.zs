@@ -14,6 +14,8 @@ class SmiteSpell : XRpgSpellItem
 	{
 		Inventory.Icon "SMITA0";
 
+		Inventory.PickupMessage "$TXT_SMITESPELLPICKUP";
+
         XRpgSpellItem.SpellType SPELLTYPE_CLERIC_SMITE;
 
 		XRpgSpellItem.TimerVal 0;
@@ -32,6 +34,8 @@ class HealSpell : XRpgSpellItem
 	Default
 	{
 		Inventory.Icon "TST7A0";
+
+		Inventory.PickupMessage "$TXT_HEALSPELLPICKUP";
 
         XRpgSpellItem.SpellType SPELLTYPE_CLERIC_HEAL;
 
@@ -71,6 +75,8 @@ class ProtectSpell : XRpgSpellItem
 	Default
 	{
 		Inventory.Icon "PROTA0";
+
+		Inventory.PickupMessage "$TXT_PROTECTSPELLPICKUP";
 
         XRpgSpellItem.SpellType SPELLTYPE_CLERIC_PROTECT;
 
@@ -127,6 +133,8 @@ class WrathSpell : XRpgSpellItem
 	Default
 	{
 		Inventory.Icon "WRATA0";
+
+		Inventory.PickupMessage "$TXT_WRATHSPELLPICKUP";
 
         XRpgSpellItem.SpellType SPELLTYPE_CLERIC_WRATH;
 
@@ -190,6 +198,8 @@ class DivineSpell : XRpgSpellItem
 	Default
 	{
 		Inventory.Icon "DIVIA0";
+
+		Inventory.PickupMessage "$TXT_DIVINESPELLPICKUP";
 
         XRpgSpellItem.SpellType SPELLTYPE_CLERIC_DIVINE;
 
