@@ -164,4 +164,44 @@ class LightningLeaderFx1 : Actor
 		A_Explode(50, 150, false);
         A_RadiusThrust(3000, 150, RTF_NOIMPACTDAMAGE);
 	}
+
+	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)
+	{
+		//Don't hurt friendlies
+		if (damage > 0 && victim && victim.bIsMonster && !victim.bFriendly)
+			return 0;
+
+		return super.DoSpecialDamage(victim, damage, damagetype);
+	}
+}
+
+class IceLeaderFx1 : Actor
+{
+	Default
+	{
+		Speed 10;
+		Radius 4;
+		Height 4;
+		Damage 1;
+		DamageType "Ice";
+		Gravity 0.125;
+		+NOBLOCKMAP +DROPOFF +MISSILE
+		+NOTELEPORT
+		+STRIFEDAMAGE
+	}
+	States
+	{
+	Spawn:
+		ICPR NOP 3 Bright;
+		Loop;
+	}
+
+	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)
+	{
+		//Don't hurt friendlies
+		if (damage > 0 && victim && victim.bIsMonster && !victim.bFriendly)
+			return 0;
+
+		return super.DoSpecialDamage(victim, damage, damagetype);
+	}
 }

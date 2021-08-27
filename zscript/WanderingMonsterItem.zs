@@ -1,6 +1,6 @@
 const BOSSTYPE_CHANCE_BRUTE = 10;
 const BOSSTYPE_CHANCE_SPECTRE = 4;
-const BOSSTYPE_CHANCE_LEADER = 2;
+const BOSSTYPE_CHANCE_LEADER = 99;//2;
 
 const BOSSTYPE_LEADER_SUB_NUM = 7;
 
@@ -369,8 +369,8 @@ class WanderingMonsterItem : Powerup
 
         for (int i = 0; i < 8; i++)
         {
-            FireProjectile("IceGuyFX2", i*45., -0.3);
-            FireProjectile("IceGuyFX2", (i*45.) - 22.5, -0.3, 48);
+            FireProjectile("IceLeaderFx1", i*45., -0.3);
+            FireProjectile("IceLeaderFx1", (i*45.) - 22.5, -0.3, 48);
         }
     }
 
