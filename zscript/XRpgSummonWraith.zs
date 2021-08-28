@@ -31,6 +31,16 @@ class MonsterSummonWraith : Wraith
     {
         Destroy();
     }
+
+	override int TakeSpecialDamage(Actor inflictor, Actor source, int damage, Name damagetype)
+	{
+		if (damagetype == 'Holy')
+			return damage * BOSS_DAMAGE_VULNERABILITY;
+		else if (damagetype == 'Death')
+			return damage / BOSS_DAMAGE_RESIST;
+
+		return damage;
+	}
 }
 
 const WRAITH_LIFE_MAX = 1024;

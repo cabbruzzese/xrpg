@@ -182,7 +182,7 @@ class XRpgCWeapWraithverge : XRpgClericWeapon replaces CWeapWraithverge
 			if (!weapon.DepleteAmmo (weapon.bAltFire, false))
 				return;
 		}
-		Actor missile = SpawnPlayerMissile ("HolyMissile", angle, pLineTarget:t);
+		Actor missile = SpawnPlayerMissile ("HolyMissile2", angle, pLineTarget:t);
 		if (missile != null && !t.unlinked)
 		{
 			missile.tracer = t.linetarget;
@@ -254,6 +254,8 @@ class GhostarangMissile : Actor
 		+BOUNCEONWALLS
 		+CANBOUNCEWATER
 
+		DamageType "Holy";
+
 		RenderStyle "Translucent";
 		Alpha 0.6;
 	}
@@ -309,5 +311,94 @@ class GhostarangMissile : Actor
 			A_SetSpeed(0);
 			A_ChangeVelocity(0,0,0, CVF_REPLACE);
 		}
+	}
+}
+
+class HolyMissile2 : Actor
+{
+	Default
+	{
+		Speed 30;
+		Radius 15;
+		Height 8;
+		Damage 4;
+		Projectile;
+		-ACTIVATEIMPACT -ACTIVATEPCROSS
+		+EXTREMEDEATH
+
+		DamageType "Holy";
+	}
+
+	States
+	{
+	Spawn:
+		SPIR PPPP 3 Bright A_SpawnItemEx("HolyMissilePuff");
+	Death:
+		SPIR P 1 Bright A_CHolyAttack2;
+		Stop;
+	}
+	
+	//============================================================================
+	//
+	// A_CHolyAttack2 
+	//
+	// 	Spawns the spirits
+	//============================================================================
+
+	void A_CHolyAttack2()
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			Actor mo = Spawn("HolySpirit2", Pos, ALLOW_REPLACE);
+			if (!mo)
+			{
+				continue;
+			}
+			switch (j)
+			{ // float bob index
+
+				case 0:
+					mo.WeaveIndexZ = random[HolyAtk2](0, 7); // upper-left
+					break;
+				case 1:
+					mo.WeaveIndexZ = random[HolyAtk2](32, 39); // upper-right
+					break;
+				case 2:
+					mo.WeaveIndexXY = random[HolyAtk2](32, 39); // lower-left
+					break;
+				case 3:
+					mo.WeaveIndexXY = random[HolyAtk2](32, 39);
+					mo.WeaveIndexZ = random[HolyAtk2](32, 39);
+					break;
+			}
+			mo.SetZ(pos.z);
+			mo.angle = angle + 67.5 - 45.*j;
+			mo.Thrust();
+			mo.target = target;
+			mo.args[0] = 10; // initial turn value
+			mo.args[1] = 0; // initial look angle
+			if (deathmatch)
+			{ // Ghosts last slightly less longer in DeathMatch
+				mo.health = 85;
+			}
+			if (tracer)
+			{
+				mo.tracer = tracer;
+				mo.bNoClip = true;
+				mo.bSkullFly = true;
+				mo.bMissile = false;
+			}
+			HolyTail.SpawnSpiritTail (mo);
+		}
+	}
+}
+
+// Holy Spirit --------------------------------------------------------------
+
+class HolySpirit2 : HolySpirit
+{
+	Default
+	{
+		DamageType "Holy";
 	}
 }

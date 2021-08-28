@@ -185,6 +185,6 @@ class SmiteningMissile : FastProjectile
 			range += xrpgPlayer.Magic;
 		}
 		
-		A_Explode(damage, range, 0, false, 0, 0, 10, "BulletPuff", 'Electric');
+		A_Explode(damage, range, 0, false, 0, 0, 10, "BulletPuff", 'Holy');
 	}
 }

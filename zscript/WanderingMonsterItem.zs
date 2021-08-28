@@ -13,6 +13,9 @@ const LIGHTNINGBOSS_TELEPORT_CHANCE = 60;
 
 const BOSSTYPE_CHANCE_MAX = 75;
 
+const BOSS_DAMAGE_RESIST = 4;
+const BOSS_DAMAGE_VULNERABILITY = 2;
+
 enum EWanderingMonsterFlags
 {
 	WMF_BRUTE = 1,
@@ -381,54 +384,55 @@ class WanderingMonsterItem : Powerup
             case WML_FIRE:
                 DoFireLeaderTakeDamage(damage, damageType, inflictor, source);
                 if (damageType == 'Fire')
-                    newdamage = damage / 2;
+                    newdamage = damage / BOSS_DAMAGE_RESIST;
                 else if (damageType == 'Water')
-                    newdamage = damage * 2;
+                    newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
             case WML_ICE:
                 DoIceLeaderTakeDamage(damage, damageType, inflictor, source);
                 if (damageType == 'Ice' ||
                     damageType == 'Water')
-                    newdamage = damage / 2;
+                    newdamage = damage / BOSS_DAMAGE_RESIST;
                 else if (damageType == 'Fire')
-                    newdamage = damage * 2;
+                    newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
             case WML_LIGHTNING:
                 DoLightningLeaderTakeDamage(damage, damageType, inflictor, source);
                 if (damageType == 'Electric')
-                    newdamage = damage / 2;
+                    newdamage = damage / BOSS_DAMAGE_RESIST;
                 else if (damageType == 'Water')
-                    newdamage = damage * 2;
+                    newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
             case WML_DEATH:
                 DoDeathLeaderTakeDamage(damage, damageType, inflictor, source);
 
                 if (damageType == 'Death')
-                    newdamage = damage / 2;
-                else if (damageType == 'Fire')
-                    newdamage = damage * 2;
+                    newdamage = damage / BOSS_DAMAGE_RESIST;
+                else if (damageType == 'Fire' ||
+                         damageType == 'Holy')
+                    newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
             case WML_POISON:
                 if (damageType == 'Poison' ||
                     damageType == 'PoisonCloud')
-                    newdamage = damage / 2;
+                    newdamage = damage / BOSS_DAMAGE_RESIST;
                 else if (damageType == 'Water' ||
                     damageType == 'Ice')
-                    newdamage = damage * 2;
+                    newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
             case WML_BLOOD:
                 if (damageType == 'Blood')
-                    newdamage = damage / 2;
+                    newdamage = damage / BOSS_DAMAGE_RESIST;
                 else if (damageType == 'Death')
-                    newdamage = damage * 2;
+                    newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
             case WML_STONE:
                 if (damageType == 'Poison' || 
                     damageType == 'PoisonCloud' ||
                     damageType == 'Blood')
-                    newdamage = damage / 2;
+                    newdamage = damage / BOSS_DAMAGE_RESIST;
                 else if (damageType == 'Electric')
-                    newdamage = damage * 2;
+                    newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
         }
    }

@@ -532,3 +532,8 @@ DamageType Death
 {
 	Obituary = "%o was tortured by undead horrors."
 }
+
+DamageType Holy
+{
+	Obituary = "%o looked into the divine light and melted."
+}
