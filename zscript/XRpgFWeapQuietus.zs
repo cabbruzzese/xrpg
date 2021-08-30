@@ -259,10 +259,11 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
 		{
-			damage += xrpgPlayer.Strength;
+			let statItem = xrpgPlayer.GetStats();
+			damage += statItem.Strength;
 
 			if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-				damage += xrpgPlayer.Magic;
+				damage += statItem.Magic;
 		}
 
 		for (int i = 0; i < 16; i++)

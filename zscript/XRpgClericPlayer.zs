@@ -48,10 +48,10 @@ class XRpgClericPlayer : XRpgPlayer
 		Player.ColorsetFile 6, "$TXT_COLOR_BROWN",		"TRANTBLC",  0x72;
 		Player.ColorsetFile 7, "$TXT_COLOR_PURPLE",		"TRANTBLD",  0xEE;
 
-        Player.StartItem "ExpSquishItem";
-		XRpgPlayer.Strength 7;
-		XRpgPlayer.Dexterity 8;
-		XRpgPlayer.Magic 7;
+        //Player.StartItem "ExpSquishItem";
+		XRpgPlayer.InitStrength 7;
+		XRpgPlayer.InitDexterity 8;
+		XRpgPlayer.InitMagic 7;
 
 		//Player.StartItem "XRpgCWeapStaff";
 		//Player.StartItem "XRpgCWeapFlame";
@@ -118,36 +118,36 @@ class XRpgClericPlayer : XRpgPlayer
 		Stop;
 	}
 
-	override void BasicStatIncrease()
+	override void BasicStatIncrease(PlayerLevelItem statItem)
 	{
-		Dexterity += 1;
+		statItem.Dexterity += 1;
 
 		//give one at random to other 2 stats
 		if (random(1,2) == 2)
-			Strength += 1;
+			statItem.Strength += 1;
 		else
-			Magic += 1;
+			statItem.Magic += 1;
 	}
 
-	override void GiveLevelSkill()
+	override void GiveLevelSkill(PlayerLevelItem statItem)
 	{
-		if (ExpLevel >= SPELL_LEVEL_CLERIC_SMITE)
+		if (statItem.ExpLevel >= SPELL_LEVEL_CLERIC_SMITE)
 			GiveSpell("SmiteSpell");
-		if (ExpLevel >= SPELL_LEVEL_CLERIC_HEAL)
+		if (statItem.ExpLevel >= SPELL_LEVEL_CLERIC_HEAL)
 			GiveSpell("HealSpell");
-		if (ExpLevel >= SPELL_LEVEL_CLERIC_PROTECT)
+		if (statItem.ExpLevel >= SPELL_LEVEL_CLERIC_PROTECT)
 			GiveSpell("ProtectSpell");
-		if (ExpLevel >= SPELL_LEVEL_CLERIC_WRATH)
+		if (statItem.ExpLevel >= SPELL_LEVEL_CLERIC_WRATH)
 			GiveSpell("WrathSpell");
-		if (ExpLevel >= SPELL_LEVEL_CLERIC_DIVINE)
+		if (statItem.ExpLevel >= SPELL_LEVEL_CLERIC_DIVINE)
 			GiveSpell("DivineSpell");
 	}
 
-	override void Regenerate ()
+	override void Regenerate (PlayerLevelItem statItem)
 	{
-		RegenerateHealth(Strength / 4);
-		RegenerateManaType("Mana1", Magic / 4);
-		RegenerateManaType("Mana2", Magic / 4);
+		RegenerateHealth(statItem.Strength / 4);
+		RegenerateManaType("Mana1", statItem.Magic / 4);
+		RegenerateManaType("Mana2", statItem.Magic / 4);
 	}
 }
 		

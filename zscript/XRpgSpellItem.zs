@@ -129,12 +129,10 @@ class XRpgSpellItem : PowerupGiver
 		{
 			let lowMaxMod = TimerVal / 2;
 			let highMaxMod = MaxTimer * 2;
-			TimerVal += xrpgPlayer.Magic * MagicTimerMod;
+			TimerVal += xrpgPlayer.GetMagic() * MagicTimerMod;
 
-			if (TimerVal < lowMaxMod)
-				TimerVal = lowMaxMod;
-			else if (TimerVal > highMaxMod)
-				TimerVal = highMaxMod;
+			TimerVal = Max(TimerVal, lowMaxMod);
+			TimerVal = Min(TimerVal, highMaxMod);
 		}
 
 		lifeCostTimer = 0;

@@ -301,16 +301,20 @@ class XRpgStatusBar : HexenStatusBar
 		if (!xrpgPlayer)
 			return;
 
-		let text1 = String.Format("Level: %s", FormatNumber(xrpgPlayer.ExpLevel, 0));
-		let text2 = String.Format("XP: %s / %s", FormatNumber(xrpgPlayer.Exp, 0), FormatNumber(xrpgPlayer.ExpNext, 0));
+		let statItem = xrpgPlayer.GetUIStats();
+		if (!statItem)
+			return;
+
+		let text1 = String.Format("Level: %s", FormatNumber(statItem.ExpLevel, 0));
+		let text2 = String.Format("XP: %s / %s", FormatNumber(statItem.Exp, 0), FormatNumber(statItem.ExpNext, 0));
 				
 		//Exp
 		DrawString(mSmallFont, text1, (xPos, yPos), DI_TEXT_ALIGN_LEFT);
 		DrawString(mSmallFont, text2, (xPos, yPos + yStep), DI_TEXT_ALIGN_LEFT);
 		
-		let statText1 = String.Format("Strength: %s", FormatNumber(xrpgPlayer.Strength, 0));
-		let statText2 = String.Format("Armor: %s", FormatNumber(xrpgPlayer.Dexterity, 0));
-		let statText3 = String.Format("Magic: %s", FormatNumber(xrpgPlayer.Magic, 0));
+		let statText1 = String.Format("Strength: %s", FormatNumber(statItem.Strength, 0));
+		let statText2 = String.Format("Armor: %s", FormatNumber(statItem.Dexterity, 0));
+		let statText3 = String.Format("Magic: %s", FormatNumber(statItem.Magic, 0));
 
 		//Stats
 		DrawString(mSmallFont, statText1, (xPosStats, yPos - yStep), DI_TEXT_ALIGN_RIGHT);

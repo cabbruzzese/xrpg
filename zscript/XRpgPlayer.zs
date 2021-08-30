@@ -7,24 +7,17 @@ const REGENERATE_MIN_VALUE = 15;
 
 class XRpgPlayer : PlayerPawn
 {
-	int expLevel;
-	int exp;
-	int expNext;
-	int strength;
-	int dexterity;
-	int magic;
+	int initStrength;
+	int initDexterity;
+	int initMagic;
 	XRpgSpellItem activeSpell;
 	XRpgSpellItem activeSpell2;
 	int regenerateTicks;
 	int regenerateTicksMax;
 
-
-	property ExpLevel : expLevel;
-	property Exp : exp;
-	property ExpNext : expNext;
-	property Strength : strength;
-	property Dexterity : dexterity;
-	property Magic : magic;
+	property InitStrength : initStrength;
+	property InitDexterity : initDexterity;
+	property InitMagic : initMagic;
 	property ActiveSpell : activeSpell;
 	property ActiveSpell2 : activeSpell2;
 	property RegenerateTicks : regenerateTicks;
@@ -32,14 +25,6 @@ class XRpgPlayer : PlayerPawn
 
 	Default
 	{
-		XRpgPlayer.ExpLevel 1;
-		XRpgPlayer.Exp 0;
-		XRpgPlayer.ExpNext XPMULTI;
-
-		XRpgPlayer.Strength 1;
-		XRpgPlayer.Dexterity 1;
-		XRpgPlayer.Magic 1;
-
 		XRpgPlayer.RegenerateTicks 0;
 		XRpgPlayer.RegenerateTicksMax REGENERATE_TICKS_MAX_DEFAULT;
 	}
@@ -61,11 +46,16 @@ class XRpgPlayer : PlayerPawn
 			mod = GetScaledMod(stat);
 
 		let modDamage = damage * mod;
-		
 		if (modDamage < 1)
 			return 1;
 
 		return modDamage;
+	}
+	
+	int GetDamageForMagic(int damage)
+	{
+		let statItem = GetStats();
+		return GetModDamage(damage, statItem.Magic, 1);
 	}
 
 	Class<Inventory> ClassTypeBag(Class<Inventory> className)
@@ -158,119 +148,77 @@ class XRpgPlayer : PlayerPawn
 		return removed;
 	}
 	
-	int GetDamageForMelee(int damage)
+	void UpdateLevelStats(PlayerLevelItem statItem)
 	{
-		return GetModDamage(damage, Strength, 1);
-	}
-	
-	int GetDamageForWeapon(int damage)
-	{
-		return GetModDamage(damage, Dexterity, 1);
-	}
-	
-	int GetDamageForMagic(int damage)
-	{
-		return GetModDamage(damage, Magic, 1);
-	}
-
-	void SetProjectileDamage(Actor proj, int stat)
-	{
-		if (!proj)
-			return;
-		
-		let newDamage = GetModDamage(proj.Damage, stat, 1);
-		
-		proj.SetDamage(newDamage);
-	}
-	
-	void SetProjectileDamageForMelee(Actor proj)
-	{
-		SetProjectileDamage(proj, Strength);
-	}
-
-	void SetProjectileDamageForWeapon(Actor proj)
-	{
-		SetProjectileDamage(proj, Dexterity);
-	}
-
-	void SetProjectileDamageForMagic(Actor proj)
-	{
-		SetProjectileDamage(proj, Magic);
-	}
-	
-	void UpdateLevelStats()
-	{
-		int armorMod = dexterity / 2;
-		if (armorMod < 0)
-			armorMod = 0;
-		if (armorMod > MAX_LEVEL_ARMOR)
-			armorMod = MAX_LEVEL_ARMOR;
+		//Gain 1 AC (5%) per 10 Dex
+		int armorMod = statItem.Dexterity / 2;
+		armorMod = Max(armorMod, 0);
+		armorMod = Min(armorMod, MAX_LEVEL_ARMOR);
 		
 		let hArmor = HexenArmor(FindInventory("HexenArmor"));
 		if (hArmor)
 			hArmor.Slots[4] = armorMod;
 	}
 
-	int CalcXPNeeded()
+	int CalcXPNeeded(PlayerLevelItem statItem)
 	{
-		return ExpLevel * XPMULTI;
+		return statItem.ExpLevel * XPMULTI;
 	}
 	
-	void GiveXP (int expEarned)
+	void GiveXP (PlayerLevelItem statItem, int expEarned)
 	{
-		Exp += expEarned;
+		statItem.Exp += expEarned;
 		
-		while (Exp >= ExpNext)
+		while (statItem.Exp >= statItem.ExpNext)
 		{
-			GainLevel();
+			GainLevel(statItem);
 		}
 	}
 	
-	virtual void BasicStatIncrease()
+	virtual void BasicStatIncrease(PlayerLevelItem statItem)
 	{
 	}
 
-	virtual void GiveLevelSkill()
+	virtual void GiveLevelSkill(PlayerLevelItem statItem)
 	{
 	}
 	
-	void DoLevelGainBlend()
+	void DoLevelGainBlend(PlayerLevelItem statItem)
 	{
 		let blendColor = Color(122,	122, 122, 122);
 		A_SetBlend(blendColor, 0.8, 40);
 		
-		string lvlMsg = String.Format("You are now level %d", ExpLevel);
+		string lvlMsg = String.Format("You are now level %d", statItem.ExpLevel);
 		A_Print(lvlMsg);
 	}
 	
-	void GainLevelHealth()
+	void GainLevelHealth(PlayerLevelItem statItem)
 	{
 		//health increases by random up to half Strength, min 5 (weighted for low end of flat scale)
-		int halfStrength = Strength / 2;
+		int halfStrength = statItem.Strength / 2;
 		int healthBonus = random(1, halfStrength);
-		if (healthBonus < 5)
-			healthbonus = 5;
+		healthBonus = Max(healthBonus, 5);
 
 		int newHealth = MaxHealth + healthBonus;
 		MaxHealth = newHealth;
+		statItem.MaxHealth = newHealth;
 		if (Health < MaxHealth)
 			A_SetHealth(MaxHealth);
 	}
 
-	int GetRandomManaBonus()
+	int GetRandomManaBonus(PlayerLevelItem statItem)
 	{
 		//mana increases by random up to half Magic, min 5 (weighted for low end of flat scale)
-		int halfMagic = Magic / 2;
+		int halfMagic = statItem.Magic / 2;
 		int manaBonus = random(1, halfMagic);
-		if (manaBonus < 5)
-			manaBonus = 5;
+		manaBonus = Max(manaBonus, 5);
 		
 		return manaBonus;
 	}
 
-	void GainLevelManaByType(class<Inventory> type)
+	void GainLevelManaByType(PlayerLevelItem statItem, class<Inventory> type)
 	{
-		int bonus = GetRandomManaBonus();
+		int bonus = GetRandomManaBonus(statItem);
 
 		let ammo = Inventory(FindInventory(type));
 		if (ammo == null)
@@ -288,55 +236,55 @@ class XRpgPlayer : PlayerPawn
 			ammo.Amount = ammo.MaxAmount;
 	}
 
-	void GainLevelMana()
+	void GainLevelMana(PlayerLevelItem statItem)
 	{
-		GainLevelManaByType("Mana1");
-		GainLevelManaByType("Mana2");
+		GainLevelManaByType(statItem, "Mana1");
+		GainLevelManaByType(statItem, "Mana2");
 	}
 
 	//Gain a level
-	void GainLevel()
+	void GainLevel(PlayerLevelItem statItem)
 	{
-		if (Exp < ExpNext)
+		if (statItem.Exp < statItem.ExpNext)
 			return;
 
-		ExpLevel++;
-		Exp = Exp - ExpNext;
-		ExpNext = CalcXpNeeded();
+		statItem.ExpLevel++;
+		statItem.Exp = statItem.Exp - statItem.ExpNext;
+		statItem.ExpNext = CalcXpNeeded(statItem);
 		
 		//Distribute points randomly, giving weight to highest stats
 		int statPoints = STATNUM;
 		while (statPoints > 0)
 		{
-			int statStack = Strength + Dexterity + Magic;
+			int statStack = statItem.Strength + statItem.Dexterity + statItem.Magic;
 			
 			double rand = random(1, statStack);
-			if (rand <= Strength)
+			if (rand <= statItem.Strength)
 			{
-				Strength += 1;
+				statItem.Strength += 1;
 			}
-			else if (rand <= Strength + Dexterity)
+			else if (rand <= statItem.Strength + statItem.Dexterity)
 			{
-				Dexterity += 1;
+				statItem.Dexterity += 1;
 			}
 			else
 			{
-				Magic += 1;
+				statItem.Magic += 1;
 			}
 			statPoints--;
 		}
 
-		DoLevelGainBlend();
+		DoLevelGainBlend(statItem);
 		
 		//BasicStatIncrease to call overrides in classes
-		BasicStatIncrease();
+		BasicStatIncrease(statItem);
 		//Give class specific items or skills
-		GiveLevelSkill();
+		GiveLevelSkill(statItem);
 
-		GainLevelHealth();
-		GainLevelMana();
+		GainLevelHealth(statItem);
+		GainLevelMana(statItem);
 			
-		UpdateLevelStats();
+		UpdateLevelStats(statItem);
 	}
 
     void DoXPHit(Actor xpSource, int damage, name damagetype)
@@ -350,61 +298,97 @@ class XRpgPlayer : PlayerPawn
         if (!xpSource.bISMONSTER)
             return;
 
-        int xp = damage;
-        if (xp > MAXXPHIT)
-            xp = MAXXPHIT;
+        int xp = Min(damage, MAXXPHIT);
 
-        GiveXP(xp);
+		let statItem = GetStats();
+        GiveXP(statItem, xp);
 	}
 
 	const MANA_MAX_MOD = 10; 
-	void GiveStartingManaByType(class<Inventory> type)
+	void GiveStartingManaByType(PlayerLevelItem statItem, class<Inventory> type)
 	{
 		let ammo = Inventory(FindInventory(type));
 		if (ammo == null)
 			ammo = GiveInventoryType(type);
 
-		let maxMana = Magic * MANA_MAX_MOD;
+		let maxMana = statItem.Magic * MANA_MAX_MOD;
 		ammo.MaxAmount = maxMana;
 		ammo.Amount = maxMana;
 	}
-	void GiveStartingMana()
+	void GiveStartingMana(PlayerLevelItem statItem)
 	{
-		GiveStartingManaByType("Mana1");
-		GiveStartingManaByType("Mana2");
+		GiveStartingManaByType(statItem, "Mana1");
+		GiveStartingManaByType(statItem, "Mana2");
 	}
 
 	override void BeginPlay()
 	{
-		GiveLevelSkill();
-		GiveStartingMana();
-		
 		Super.BeginPlay();
+
+		let statItem = GetStats();
+		GiveLevelSkill(statItem);
+		GiveStartingMana(statItem);
+
+		MaxHealth = statItem.MaxHealth;
+
+		let expItem = Inventory(FindInventory("ExpSquishItemGiver"));
+		if (expItem == null)
+			expItem = GiveInventoryType("ExpSquishItemGiver");
 	}
 
-	void RegenerateManaType (class<Inventory> type, int max)
+	PlayerLevelItem GetStats()
 	{
-		if (max < REGENERATE_MIN_VALUE)
-			max = REGENERATE_MIN_VALUE;
+		let lvlItem = PlayerLevelItem(FindInventory("PlayerLevelItem"));
+		if (lvlItem == null)
+		{
+			lvlItem = PlayerLevelItem(GiveInventoryType("PlayerLevelItem"));
+			lvlItem.Strength = InitStrength;
+			lvlItem.Dexterity = InitDexterity;
+			lvlItem.Magic = InitMagic;
+			lvlItem.MaxHealth = MaxHealth;
+		}
+
+		return lvlItem;
+	}
+
+	ui PlayerLevelItem GetUIStats()
+	{
+		let lvlItem = PlayerLevelItem(FindInventory("PlayerLevelItem"));
 		
+		return lvlItem;
+	}
+
+	int GetStrength()
+	{
+		let statItem = GetStats();
+		return statItem.Strength;
+	}
+
+	int GetMagic()
+	{
+		let statItem = GetStats();
+		return statItem.Magic;
+	}
+
+	void RegenerateManaType (class<Inventory> type, int regenMax)
+	{
 		let ammo = Inventory(FindInventory(type));
 		if (ammo == null)
 			return;
 
-		if (ammo.Amount < max)
+		regenMax = Max(regenMax, REGENERATE_MIN_VALUE);
+		if (ammo.Amount < regenMax)
 			ammo.Amount ++;
 	}
 
-	void RegenerateHealth(int max)
+	void RegenerateHealth(int regenMax)
 	{
-		if (max < REGENERATE_MIN_VALUE)
-			max = REGENERATE_MIN_VALUE;
-		
-		if (Health < max)
+		regenMax = Max(regenMax, REGENERATE_MIN_VALUE);
+		if (Health < regenMax)
 			A_SetHealth(Health + 1);
 	}
 
-	virtual void Regenerate()
+	virtual void Regenerate(PlayerLevelItem statItem)
 	{
 
 	}
@@ -417,9 +401,22 @@ class XRpgPlayer : PlayerPawn
 			RegenerateTicks = 0;
 
 			if (Health > 0)
-				Regenerate();
+			{
+				let statItem = GetStats();
+				Regenerate(statItem);
+			}
 		}
 
 		Super.Tick();
+	}
+
+	override void OnRespawn()
+	{
+		Super.OnRespawn();
+
+		let statItem = GetStats();
+
+		MaxHealth = statItem.MaxHealth;
+		A_SetHealth(MaxHealth);
 	}
 }

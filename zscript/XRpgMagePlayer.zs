@@ -51,10 +51,10 @@ class XRpgMagePlayer : XRpgPlayer
 		Player.ColorsetFile 6, "$TXT_COLOR_BROWN",		"TRANTBLC",  0x72;
 		Player.ColorsetFile 7, "$TXT_COLOR_PURPLE",		"TRANTBLD",  0xEE;
 
-        Player.StartItem "ExpSquishItem";
-		XRpgPlayer.Strength 5;
-		XRpgPlayer.Dexterity 5;
-		XRpgPlayer.Magic 12;
+        //Player.StartItem "ExpSquishItem";
+		XRpgPlayer.InitStrength 5;
+		XRpgPlayer.InitDexterity 5;
+		XRpgPlayer.InitMagic 12;
 
 		XRpgPlayer.RegenerateTicksMax 64;
 
@@ -123,19 +123,19 @@ class XRpgMagePlayer : XRpgPlayer
 		Stop;
 	}
 
-	override void BasicStatIncrease()
+	override void BasicStatIncrease(PlayerLevelItem statItem)
 	{
-		Magic += 1;
+		statItem.Magic += 1;
 
 		//give one at random to other 2 stats
 		if (random(1,2) == 2)
-			Dexterity += 1;
+			statItem.Dexterity += 1;
 		else
-			Strength += 1;
+			statItem.Strength += 1;
 	}
 
 	const MAX_SPELL_GIVE_TRIES = 27;
-	void GrantRandomSpell()
+	void GrantRandomSpell(int expLevel)
 	{
 		Array<class<Inventory> > availSpells;
 		Class<Inventory> spellTypeBag;
@@ -147,7 +147,7 @@ class XRpgMagePlayer : XRpgPlayer
 		if (!FindInventory("PoisonSpell"))
 			availSpells.Push( ClassTypeBag("PoisonSpell") );
 
-		if (ExpLevel >= SPELL_LEVEL_TIER2)
+		if (expLevel >= SPELL_LEVEL_TIER2)
 		{
 			if (!FindInventory("WaterSpell"))
 				availSpells.Push( ClassTypeBag("WaterSpell") );
@@ -157,7 +157,7 @@ class XRpgMagePlayer : XRpgPlayer
 				availSpells.Push( ClassTypeBag("MoonSpell") );
 		}
 
-		if (ExpLevel >= SPELL_LEVEL_TIER3)
+		if (expLevel >= SPELL_LEVEL_TIER3)
 		{
 			if (!FindInventory("DeathSpell"))
 				availSpells.Push( ClassTypeBag("DeathSpell") );
@@ -174,18 +174,18 @@ class XRpgMagePlayer : XRpgPlayer
 		}
 	}
 
-	override void GiveLevelSkill()
+	override void GiveLevelSkill(PlayerLevelItem statItem)
 	{
-		if (ExpLevel == SPELL_LEVEL_BASE || ExpLevel % SPELL_LEVEL_GRANT == 0)
+		if (statItem.ExpLevel == SPELL_LEVEL_BASE || statItem.ExpLevel % SPELL_LEVEL_GRANT == 0)
 		{
-			GrantRandomSpell();
+			GrantRandomSpell(statItem.ExpLevel);
 		}
 	}
 
-	override void Regenerate ()
+	override void Regenerate (PlayerLevelItem statItem)
 	{
-		int magicMax = (magic / 4) + REGENERATE_MIN_VALUE;
-		RegenerateHealth(Strength / 4);
+		int magicMax = (statItem.Magic / 4) + REGENERATE_MIN_VALUE;
+		RegenerateHealth(statItem.Strength / 4);
 		RegenerateManaType("Mana1", magicMax);
 		RegenerateManaType("Mana2", magicMax);
 	}

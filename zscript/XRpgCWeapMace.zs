@@ -80,7 +80,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 
         let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
-			damage += xrpgPlayer.Strength;
+			damage += xrpgPlayer.GetStrength();
 
 		if (swing)
 			damage *= 1.3;
@@ -182,7 +182,7 @@ class SmiteningMissile : FastProjectile
 		if (xrpgPlayer != null)
 		{
 			damage = xrpgPlayer.GetDamageForMagic(damage);
-			range += xrpgPlayer.Magic;
+			range += xrpgPlayer.GetMagic();
 		}
 		
 		A_Explode(damage, range, 0, false, 0, 0, 10, "BulletPuff", 'Holy');

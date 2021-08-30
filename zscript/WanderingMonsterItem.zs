@@ -124,10 +124,11 @@ class WanderingMonsterItem : Powerup
     int GetPlayerLevel(int playerNum)
     {
         let xrpgPlayer = XRpgPlayer(players[playerNum].mo);		
-		if (xrpgPlayer == null)
+		if (!xrpgPlayer)
 			return 1;
 
-        return xrpgPlayer.ExpLevel;
+        let statItem = xrpgPlayer.GetStats();
+        return statItem.ExpLevel;
     }
 
     int GetMaxPlayerLevel()

@@ -101,10 +101,11 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
             let xrpgPlayer = XRpgPlayer(player.mo);
 			if (xrpgPlayer != null)
 			{
-				damage += xrpgPlayer.Strength;
+				let statItem = xrpgPlayer.GetStats();
+				damage += statItem.Strength;
 
 				if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-					damage += xrpgPlayer.Magic;
+					damage += statItem.Magic;
 			}
 
 			LineAttack (angle, 2*DEFMELEERANGE, slope, damage, 'Melee', pufftype, true, t);
@@ -175,10 +176,11 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
             let xrpgPlayer = XRpgPlayer(player.mo);
 			if (xrpgPlayer != null)
 			{
-				damage += xrpgPlayer.Strength;
+				let statItem = xrpgPlayer.GetStats();
+				damage += statItem.Strength;
 
 				if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-					damage += xrpgPlayer.Magic;
+					damage += statItem.Magic;
 			}
 
 			LineAttack (angle, 2*DEFMELEERANGE, slope, damage, 'Melee', pufftype, true, t);

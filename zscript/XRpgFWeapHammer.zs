@@ -109,10 +109,11 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		{
-			damage += xrpgPlayer.Strength;
+			let statItem = xrpgPlayer.GetStats();
+			damage += statItem.Strength;
 
 			if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-				damage += xrpgPlayer.Magic;
+				damage += statItem.Magic;
 		}
 
 		for (int i = 0; i < 16; i++)
@@ -194,7 +195,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		int range = 150;
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
-			damage += xrpgPlayer.Strength;
+			damage += xrpgPlayer.GetStrength();
 		
 		A_Explode(damage, range, false);
 		A_RadiusThrust(5000, range, RTF_NOIMPACTDAMAGE);

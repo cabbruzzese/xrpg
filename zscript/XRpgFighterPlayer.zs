@@ -42,10 +42,10 @@ class XRpgFighterPlayer : XRpgPlayer
 		Player.ColorsetFile 6, "$TXT_COLOR_BROWN",		"TRANTBL5",  0x6F;
 		Player.ColorsetFile 7, "$TXT_COLOR_PURPLE",		"TRANTBL6",  0xEE;
 
-        Player.StartItem "ExpSquishItem";
-		XRpgPlayer.Strength 10;
-		XRpgPlayer.Dexterity 8;
-		XRpgPlayer.Magic 4;
+        //Player.StartItem "ExpSquishItem";
+		XRpgPlayer.InitStrength 10;
+		XRpgPlayer.InitDexterity 8;
+		XRpgPlayer.InitMagic 4;
 
 		//Player.StartItem "XRpgFWeapAxe";
 		//Player.StartItem "XRpgFWeapHammer";
@@ -112,15 +112,15 @@ class XRpgFighterPlayer : XRpgPlayer
 		Stop;
 	}
 
-	override void BasicStatIncrease()
+	override void BasicStatIncrease(PlayerLevelItem statItem)
 	{
-		Strength += 1;
+		statItem.Strength += 1;
 
 		//give one at random to other 2 stats
 		if (random(1,2) == 2)
-			Dexterity += 1;
+			statItem.Dexterity += 1;
 		else
-			Magic += 1;
+			statItem.Magic += 1;
 	}
 
 	void GiveRandomSpell()
@@ -142,19 +142,19 @@ class XRpgFighterPlayer : XRpgPlayer
 		}
 	}
 
-	override void GiveLevelSkill()
+	override void GiveLevelSkill(PlayerLevelItem statItem)
 	{
-		if (ExpLevel == 10)
+		if (statItem.ExpLevel == 10)
 			GiveRandomSpell();
-		else if (ExpLevel == 20)
+		else if (statItem.ExpLevel == 20)
 			GiveRandomSpell();
-		else if (ExpLevel == 30)
+		else if (statItem.ExpLevel == 30)
 			GiveRandomSpell();
 	}
 
-	override void Regenerate ()
+	override void Regenerate (PlayerLevelItem statItem)
 	{
-		int strengthRegen = Strength / 4 + REGENERATE_MIN_VALUE;
+		int strengthRegen = statItem.Strength / 4 + REGENERATE_MIN_VALUE;
 		RegenerateHealth(strengthRegen);
 	}
 }
