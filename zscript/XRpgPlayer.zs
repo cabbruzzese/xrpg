@@ -243,7 +243,7 @@ class XRpgPlayer : PlayerPawn
 	}
 
 	//Gain a level
-	void GainLevel(PlayerLevelItem statItem)
+	void GainLevel(PlayerLevelItem statItem, bool isNoBlend = false)
 	{
 		if (statItem.Exp < statItem.ExpNext)
 			return;
@@ -274,7 +274,8 @@ class XRpgPlayer : PlayerPawn
 			statPoints--;
 		}
 
-		DoLevelGainBlend(statItem);
+		if (!isNoBlend)
+			DoLevelGainBlend(statItem);
 		
 		//BasicStatIncrease to call overrides in classes
 		BasicStatIncrease(statItem);
@@ -334,6 +335,23 @@ class XRpgPlayer : PlayerPawn
 		let expItem = Inventory(FindInventory("ExpSquishItemGiver"));
 		if (expItem == null)
 			expItem = GiveInventoryType("ExpSquishItemGiver");
+
+		//Set minimum spawn level in multiplayer
+		if (multiplayer)
+		{
+			CVar minLevelSetting = CVar.FindCVar('xrpg_minlevel');
+
+        	if(minLevelSetting)
+        	{
+				while (statItem.ExpLevel < minLevelSetting.GetInt())
+				{
+					statItem.Exp = statItem.ExpNext;
+					GainLevel(statItem, true);
+
+					statItem.Exp = 0;
+				}
+			}
+		}
 	}
 
 	PlayerLevelItem GetStats()
@@ -388,10 +406,7 @@ class XRpgPlayer : PlayerPawn
 			A_SetHealth(Health + 1);
 	}
 
-	virtual void Regenerate(PlayerLevelItem statItem)
-	{
-
-	}
+	virtual void Regenerate(PlayerLevelItem statItem) { }
 
 	override void Tick()
 	{
