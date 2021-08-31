@@ -322,9 +322,9 @@ class XRpgPlayer : PlayerPawn
 		GiveStartingManaByType(statItem, "Mana2");
 	}
 
-	override void BeginPlay()
+	override void PostBeginPlay()
 	{
-		Super.BeginPlay();
+		Super.PostBeginPlay();
 
 		let statItem = GetStats();
 		GiveLevelSkill(statItem);

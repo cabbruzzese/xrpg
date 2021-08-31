@@ -9,7 +9,6 @@ const DROP_AMMO_CHANCE_BIG = 196;
 
 const LIGHTNINGBOSS_TELEPORT_DIST = 256;
 const LIGHTNINGBOSS_TELEPORT_FAIL_MAX = 20;
-const LIGHTNINGBOSS_TELEPORT_CHANCE = 60;
 
 const BOSSTYPE_CHANCE_MAX = 75;
 
@@ -291,10 +290,6 @@ class WanderingMonsterItem : Powerup
 
     void DoLightningLeaderTakeDamage(int damage, Name damageType, Actor inflictor, Actor source)
     {
-        //Only teleport away sometimes
-        if (random(1,100) < LIGHTNINGBOSS_TELEPORT_CHANCE)
-            return;
-
         //don't teleport on death
         if (Owner.Health - damage < 0)
             return;
@@ -303,30 +298,26 @@ class WanderingMonsterItem : Powerup
             return;
         SetTimeout();
         
-        int badPosCount = 1;
-        Vector3 newPos;
+        int moveTries = 0;
+        Vector2 newPos;
         let oldPos = Owner.Pos;
 
-        while (badPosCount > 0 && badPosCount < LIGHTNINGBOSS_TELEPORT_FAIL_MAX)
+        while (moveTries >= 0 && moveTries < 10)
         {
-            badPosCount++;
+            moveTries++;
+
             newPos.x = random(-LIGHTNINGBOSS_TELEPORT_DIST, LIGHTNINGBOSS_TELEPORT_DIST) + Owner.Pos.X;
             newPos.y = random(-LIGHTNINGBOSS_TELEPORT_DIST, LIGHTNINGBOSS_TELEPORT_DIST) + Owner.Pos.Y;
-            newPos.z = Owner.CurSector.LowestFloorAt((newPos.x, newPos.y)) + 1;
 
-            if (Owner.CheckMove((newPos.x, newPos.y), PCM_DROPOFF))
+            if (Owner.TryMove(newPos, 1, true))
             {
-                badPosCount = 0;
+                let mo = Spawn("LightningLeaderFx1");
+                if (mo)
+                    mo.SetOrigin(oldPos + (0,0,28), false);
+
+                //Owner.TeleportMove(newPos, false, true);
+                moveTries = -1;
             }
-        }
-
-        if (badPosCount == 0)
-        {
-            let mo = Spawn("LightningLeaderFx1");
-            if (mo)
-                mo.SetOrigin(oldPos + (0,0,28), false);
-
-            Owner.TeleportMove(newPos, false, true);
         }
     }
 
