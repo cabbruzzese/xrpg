@@ -52,7 +52,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXE D 1 Offset (-25, 90);
 		FAXE E 1 Offset (15, 32);
 		FAXE E 1 Offset (10, 54);
-		FAXE E 1 Offset (10, 150);
+		FAXE E 5 Offset (10, 150);
 		FAXE A 1 Offset (0, 60) A_ReFire;
 		FAXE A 1 Offset (0, 52);
 		FAXE A 1 Offset (0, 44);
@@ -72,6 +72,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXE A 1 Offset (0, 52);
 		FAXE A 1 Offset (0, 44);
 		FAXE A 1 Offset (0, 36);
+		FAXE A 1;
 		Goto Ready;
 	SelectGlow:
 		FAXE L 1 A_FAxeCheckUpG;

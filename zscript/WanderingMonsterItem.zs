@@ -435,7 +435,7 @@ class WanderingMonsterItem : Powerup
         if (BossFlag & WMF_BRUTE)
         {
             if (damageTarget)
-                damageTarget.Thrust(20, Owner.angle);
+                damageTarget.Thrust(15, Owner.angle);
         }
    }
 
