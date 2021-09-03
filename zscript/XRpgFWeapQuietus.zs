@@ -263,7 +263,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 			damage += statItem.Strength;
 
 			if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-				damage += statItem.Magic;
+				damage += statItem.Magic * 2;
 		}
 
 		for (int i = 0; i < 16; i++)

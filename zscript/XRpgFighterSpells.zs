@@ -21,7 +21,7 @@ class BerserkSpell : XRpgSpellItem
 		XRpgSpellItem.MagicTimerMod 0;
 		XRpgSpellItem.IsMultiSlot true;
         XRpgSpellItem.IsLifeCost true;
-        XRpgSpellItem.MaxLifeCostTimer 10;
+        XRpgSpellItem.MaxLifeCostTimer 16;
 		XRpgSpellItem.LifeCostMin FIGHTERSPELL_MINLIFE;
 	}
 }
@@ -42,7 +42,7 @@ class StunSpell : XRpgSpellItem
 		XRpgSpellItem.MagicTimerMod 0;
 		XRpgSpellItem.IsMultiSlot true;
         XRpgSpellItem.IsLifeCost true;
-        XRpgSpellItem.MaxLifeCostTimer 16;
+        XRpgSpellItem.MaxLifeCostTimer 20;
 		XRpgSpellItem.LifeCostMin FIGHTERSPELL_MINLIFE;
 	}
 }
@@ -63,7 +63,7 @@ class PowerSpell : XRpgSpellItem
 		XRpgSpellItem.MagicTimerMod 0;
 		XRpgSpellItem.IsMultiSlot true;
         XRpgSpellItem.IsLifeCost true;
-        XRpgSpellItem.MaxLifeCostTimer 16;
+        XRpgSpellItem.MaxLifeCostTimer 32;
 		XRpgSpellItem.LifeCostMin FIGHTERSPELL_MINLIFE;
 	}
 }

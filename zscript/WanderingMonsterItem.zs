@@ -457,7 +457,7 @@ class WanderingMonsterItem : Powerup
                 if (damageTarget && damageTarget.Health > 0)
                 {
                     //Heal
-                    Owner.A_SetHealth(Owner.Health + damage);
+                    Owner.A_SetHealth(Owner.Health + (damage * 2));
                     Owner.A_StartSound("WraithAttack", CHAN_BODY);
                 }
                 break;
