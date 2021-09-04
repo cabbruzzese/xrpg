@@ -1,6 +1,6 @@
 const BOSSTYPE_CHANCE_BRUTE = 10;
 const BOSSTYPE_CHANCE_SPECTRE = 4;
-const BOSSTYPE_CHANCE_LEADER = 2;
+const BOSSTYPE_CHANCE_LEADER = 99;//2;
 
 const BOSSTYPE_LEADER_SUB_NUM = 7;
 
@@ -299,8 +299,10 @@ class WanderingMonsterItem : Powerup
         SetTimeout();
         
         int moveTries = 0;
-        Vector2 newPos;
+        Vector3 newPos;
         let oldPos = Owner.Pos;
+        int newAngle = 0;
+        int newDist = 0;
 
         while (moveTries >= 0 && moveTries < 10)
         {
@@ -308,14 +310,32 @@ class WanderingMonsterItem : Powerup
 
             newPos.x = random(-LIGHTNINGBOSS_TELEPORT_DIST, LIGHTNINGBOSS_TELEPORT_DIST) + Owner.Pos.X;
             newPos.y = random(-LIGHTNINGBOSS_TELEPORT_DIST, LIGHTNINGBOSS_TELEPORT_DIST) + Owner.Pos.Y;
+            newPos.Z = Owner.Pos.Z;
 
-            if (Owner.TryMove(newPos, 1, true))
+            let vecOffset = newPos - oldPos;
+            let vecLen = vecOffset.Length();
+            let vecAngle = VectorAngle(vecOffset.x, vecOffset.y);
+            let newPitch = VectorAngle(vecLen, vecOffset.Z);
+
+            bool traceFail = Owner.LineTrace(vecAngle, vecLen, newPitch);
+
+            Owner.SetOrigin(newPos, false);
+            newPos.z = Owner.CurSector.NextLowestFloorAt(Owner.pos.x, Owner.pos.y, Owner.pos.z, Owner.pos.z, FFCF_NOPORTALS);
+
+            Owner.SetZ(newPos.z);
+
+            if (traceFail || !Owner.TestMobjLocation() || Owner.height > (Owner.ceilingz - Owner.floorz) || !Owner.CheckMove(Owner.Pos.XY))
             {
+                //Move unsuccessful, move back
+                Owner.SetOrigin(oldPos, false);
+            }
+            else
+            {
+                //Move Successful, spawn lightning and exit
                 let mo = Spawn("LightningLeaderFx1");
                 if (mo)
                     mo.SetOrigin(oldPos + (0,0,28), false);
-
-                //Owner.TeleportMove(newPos, false, true);
+                
                 moveTries = -1;
             }
         }
