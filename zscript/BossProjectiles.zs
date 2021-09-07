@@ -1,4 +1,4 @@
-class FireLeaderLava : Actor
+class FireLeaderLava : TimedActor
 {
     Default
     {
@@ -17,6 +17,8 @@ class FireLeaderLava : Actor
 		-NOGRAVITY
 
         Obituary "$OB_FIREBOSS";
+
+		TimedActor.TimeLimit 200;
     }
     States
     {

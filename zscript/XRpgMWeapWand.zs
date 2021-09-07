@@ -114,7 +114,7 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 	}
 }
 
-class MageWandFlameMissile : FastProjectile
+class MageWandFlameMissile : Actor
 {
     Default
     {
@@ -122,6 +122,7 @@ class MageWandFlameMissile : FastProjectile
         Radius 12;
         Height 8;
         Damage 6;
+        Projectile;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
         Obituary "$OB_MPMWEAPWAND";
@@ -142,7 +143,7 @@ class MageWandFlameMissile : FastProjectile
     }
 }
 
-class MageWandIceMissile : FastProjectile
+class MageWandIceMissile : Actor
 {
     Default
     {
@@ -150,6 +151,7 @@ class MageWandIceMissile : FastProjectile
         Radius 12;
         Height 8;
         Damage 4;
+        Projectile;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
         SeeSound "IceGuyMissileExplode";

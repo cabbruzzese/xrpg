@@ -371,7 +371,7 @@ class MageStaffFlameMissile : Actor
     }
 }
 
-class MageStaffIceMissile : FastProjectile
+class MageStaffIceMissile : Actor
 {
     Default
     {
@@ -381,6 +381,7 @@ class MageStaffIceMissile : FastProjectile
         Damage 1;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
+		+NOSHIELDREFLECT
         SeeSound "IceGuyMissileExplode";
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
         DamageType "Ice";

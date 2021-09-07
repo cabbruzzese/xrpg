@@ -216,7 +216,7 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 	}
 }
 
-class MageFrostFlameMissile : Actor
+class MageFrostFlameMissile : TimedActor
 {
     Default
     {
@@ -239,6 +239,7 @@ class MageFrostFlameMissile : Actor
 		-NOGRAVITY
 		Health 4;
 
+		TimedActor.TimeLimit 200;
     }
     States
     {
@@ -283,7 +284,7 @@ const ICESTORM_SPREAD = 72;
 const ICESTORM_ZSPEED = -30;
 const ICESTORM_ZSPEED_MOD = 10;
 const ICESTORM_NUM = 12;
-class MageFrostIceMissile : FastProjectile
+class MageFrostIceMissile : Actor
 {
     Default
     {
@@ -291,6 +292,7 @@ class MageFrostIceMissile : FastProjectile
         Radius 12;
         Height 8;
         Damage 0;
+		Projectile;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
 		+SKYEXPLODE

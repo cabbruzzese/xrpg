@@ -217,7 +217,7 @@ class FlameVilePuffBoom : Actor
 	}
 }
 
-class FlameVileLava : Actor
+class FlameVileLava : TimedActor
 {
     Default
     {
@@ -235,6 +235,8 @@ class FlameVileLava : Actor
 		+NOBLOCKMAP +MISSILE +DROPOFF
 		+NOTELEPORT
 		-NOGRAVITY
+
+		TimedActor.TimeLimit 200;
     }
     States
     {

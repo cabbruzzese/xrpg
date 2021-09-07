@@ -661,7 +661,7 @@ class MageLightningMoonMissile : Actor
 	}
 }
 
-class MageLightningDeathMissile : FastProjectile
+class MageLightningDeathMissile : Actor
 {
     Default
     {
@@ -669,6 +669,7 @@ class MageLightningDeathMissile : FastProjectile
         Radius 12;
         Height 8;
         Damage 10;
+		Projectile;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
 		+SKYEXPLODE
