@@ -379,6 +379,7 @@ class MageStaffIceMissile : Actor
         Radius 12;
         Height 8;
         Damage 1;
+		Projectile;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
 		+NOSHIELDREFLECT

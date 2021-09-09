@@ -488,6 +488,17 @@ class MageLightningWaterMissile : TimedActor
         Spawn("MageWaterDrip", pos, ALLOW_REPLACE);
         A_RadiusThrust(2000, 32);
 	}
+
+	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)
+	{
+		//If attack does damage and has vertical velocity, divide it by 2 to act like friction.
+		if (damage > 0 && (Vel.Z > 0.1 || Vel.Z < -0.1 ))
+		{
+			Vel.Z = Vel.Z / 2.0;
+		}
+
+		return super.DoSpecialDamage(victim, damage, damagetype);
+	}
 }
 
 const SUN_RADIANT_DAMAGE = 40;
