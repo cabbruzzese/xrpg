@@ -61,7 +61,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1;
 		Goto Ready;
 	AltFire:
-		FHMR B 18 Offset (1, -50) A_CheckBerserk(true);
+		FHMR F 18 Offset (1, -50) A_CheckBerserk(true);
 		FHMR C 3 Offset (60, 30);
 		FHMR D 3 Offset (90, 30);
 		FHMR E 2 Offset (90, 30);
@@ -75,7 +75,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1;
 		Goto Ready;
 	BerserkAltFire:
-		FHMR B 11 Offset (1, -50);
+		FHMR F 11 Offset (1, -50);
 		FHMR C 1 Offset (60, 30);
 		FHMR D 1 Offset (90, 30);
 		FHMR E 1 Offset (90, 30);
