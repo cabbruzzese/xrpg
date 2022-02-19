@@ -30,7 +30,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 		CMCE C 1 Offset (8, 45);
 		CMCE D 1 Offset (8, 45);
 		CMCE E 1 Offset (8, 45);
-		CMCE E 1 Offset (-11, 58) A_CMaceAttack(false);
+		CMCE E 1 Offset (-11, 58) A_CMaceAttack();
 		CMCE F 1 Offset (8, 45);
 		CMCE F 2 Offset (-8, 74);
 		CMCE F 1 Offset (-20, 96);
@@ -46,9 +46,11 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 		CMCE C 2 Offset (160, 80);
 		CMCE C 2 Offset (120, 85);
 		CMCE C 2 Offset (80, 90);
-		CMCE D 2 Offset (40, 95);
-		CMCE D 2 Offset (1, 100) A_CMaceAttack(true);
-		CMCE E 2 Offset (-40, 105);
+		CMCE D 2 Offset (40, 95) A_CMaceSwingAttack(true, -14);
+		CMCE D 2 Offset (10, 98) A_CMaceSwingAttack(false, -7);
+		CMCE D 2 Offset (1, 101) A_CMaceSwingAttack(false, 0);
+		CMCE D 2 Offset (-10, 104) A_CMaceSwingAttack(false, 7);
+		CMCE E 2 Offset (-40, 108) A_CMaceSwingAttack(false, 14);
 		CMCE E 2 Offset (-80, 110);
 		CMCE F 2 Offset (-120, 115);
 		CMCE F 12 Offset (-160, 120);
@@ -67,7 +69,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 	//
 	//===========================================================================
 
-	action void A_CMaceAttack(bool swing)
+	action void A_CMaceAttack()
 	{
 		FTranslatedLineTarget t;
 
@@ -81,9 +83,6 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
         let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
 			damage += xrpgPlayer.GetStrength();
-
-		if (swing)
-			damage *= 1.3;
 
 		for (int i = 0; i < 16; i++)
 		{
@@ -101,11 +100,6 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 						//Cast Smite
 						A_CastSmite(t.linetarget);
 
-						if (swing && (t.linetarget.bIsMonster || t.linetarget.player))
-						{
-							t.linetarget.Thrust(20, t.attackAngleFromSource);
-						}
-
 						return;
 					}
 				}
@@ -116,6 +110,64 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 
 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
 		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', "HammerPuff");
+	}
+
+	action void A_CMaceSwingAttack(bool isMainSwing, double angleMod)
+	{
+		FTranslatedLineTarget t;
+
+		if (player == null)
+		{
+			return;
+		}
+
+		int damage = random(1, 8);
+
+        let xrpgPlayer = XRpgPlayer(player.mo);
+		if (xrpgPlayer != null)
+			damage += (xrpgPlayer.GetStrength() * 0.5);
+
+		class<Actor> puffType = "SmallMacePuffSilent";
+		if (isMainSwing)
+		{
+			puffType = "SmallMacePuff";
+		}
+
+		if (A_IsSmite())
+		{
+			damage += xrpgPlayer.GetMagic();
+			puffType = "SmallMacePuffGlowSilent";
+
+			if (isMainSwing)
+				puffType = "SmallMacePuffGlow";
+		}
+
+		for (int i = 0; i < 16; i++)
+		{
+			for (int j = 1; j >= -1; j -= 2)
+			{
+				double ang = angle + angleMod + j*i*(45. / 16);
+				double slope = AimLineAttack(ang, 2 * DEFMELEERANGE, t, 0., ALF_CHECK3D);
+				if (t.linetarget)
+				{
+					LineAttack(ang, 2 * DEFMELEERANGE, slope, damage, 'Melee', puffType, true, t);
+					if (t.linetarget != null)
+					{
+						//AdjustPlayerAngle(t);
+
+						if (t.linetarget.bIsMonster || t.linetarget.player)
+						{
+							t.linetarget.Thrust(-1, t.attackAngleFromSource);
+						}
+
+						return;
+					}
+				}
+			}
+		}
+
+		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
+		LineAttack (angle + angleMod, DEFMELEERANGE, slope, damage, 'Melee', puffType);
 	}
 
 	action void A_CastSmite(Actor lineTarget)
@@ -186,5 +238,62 @@ class SmiteningMissile : FastProjectile
 		}
 		
 		A_Explode(damage, range, 0, false, 0, 0, 10, "BulletPuff", 'Holy');
+	}
+}
+
+class SmallMacePuffSilent : Actor
+{
+	Default
+	{
+		+NOBLOCKMAP +NOGRAVITY
+		+PUFFONACTORS
+		RenderStyle "Translucent";
+		Alpha 0.6;
+		AttackSound "FighterPunchHitWall";
+		VSpeed 1;
+	}
+	States
+	{
+	Spawn:
+		FHFX STUVW 4;
+		Stop;
+	}
+}
+
+class SmallMacePuff : SmallMacePuffSilent
+{
+	Default
+	{
+		SeeSound "FighterPunchHitThing";
+		ActiveSound "FighterPunchMiss";
+	}
+}
+
+class SmallMacePuffGlowSilent : Actor
+{
+	Default
+	{
+		+NOBLOCKMAP +NOGRAVITY
+		+PUFFONACTORS
+		+ZDOOMTRANS
+		+PUFFONACTORS
+		RenderStyle "Translucent";
+		Alpha 0.6;
+		AttackSound "FighterHammerHitWall";
+		Scale 0.5;
+	}
+	States
+	{
+	Spawn:
+		FAXE RSTUVWX 4 Bright;
+		Stop;
+	}
+}
+class SmallMacePuffGlow : SmallMacePuffGlowSilent
+{
+	Default
+	{
+		ActiveSound "FighterHammerMiss";
+		SeeSound "FighterAxeHitThing";
 	}
 }

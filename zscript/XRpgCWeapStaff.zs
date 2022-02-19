@@ -32,13 +32,9 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
 		CSSF AAAAAAA 1 A_WeaponReady;
 		CSSF A 1 A_CStaffCheckBlink;
 		Goto Ready + 2;
-	Fire:
-		CSSF A 1 Offset (0, 45) A_CStaffCheck;
-		CSSF J 1 Offset (0, 50) A_CStaffAttack;
-		CSSF J 2 Offset (0, 50);
-		CSSF J 2 Offset (0, 45);
-		CSSF A 2 Offset (0, 40);
-		CSSF A 2 Offset (0, 36);
+	AltFire:
+		CSSF K 10 Offset (0, 36) A_CDrainAttack;
+		CSSF K 2 Offset (0, 45) A_Refire;
 		Goto Ready + 2;
 	Blink:
 		CSSF BBBCCCCCBBB 1 A_WeaponReady;
@@ -46,23 +42,17 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
 	Drain:
 		CSSF K 10 Offset (0, 36);
 		Goto Ready + 2;
-    AltFire:
+    Fire:
 		CSSF A 1 Offset (0, 45);
-		CSSF J 1 Offset (0, 50) A_CStaffAttackSeek;
+		CSSF J 1 Offset (0, 50) A_CStaffAttack;
 		CSSF J 2 Offset (0, 50);
 		CSSF J 2 Offset (0, 45);
 		CSSF A 2 Offset (0, 40);
 		CSSF A 2 Offset (0, 36);
 		Goto Ready + 2;
 	}
-	
-	//============================================================================
-	//
-	// A_CStaffCheck
-	//
-	//============================================================================
 
-	action void A_CStaffCheck()
+	action void A_CDrainAttack()
 	{
 		FTranslatedLineTarget t;
 
@@ -74,10 +64,11 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
 
 		int damage = random[StaffCheck](20, 35);
 
-        if (A_IsSmite())
-        {
-            damage *= 1.5;
-        }
+		if (weapon != null)
+		{
+			if (!weapon.CheckAmmo(Weapon.PrimaryFire, true))
+				return;
+		}
 
 		int max = player.mo.GetMaxHealth();
 		for (int i = 0; i < 3; i++)
@@ -88,7 +79,7 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
 				double slope = AimLineAttack(ang, 1.5 * DEFMELEERANGE, t, 0., ALF_CHECK3D);
 				if (t.linetarget)
 				{
-					LineAttack(ang, 1.5 * DEFMELEERANGE, slope, damage, 'Melee', "CStaffPuff", false, t);
+					LineAttack(ang, 1.5 * DEFMELEERANGE, slope, damage, 'Melee', "StaffDrainPuff", false, t);
 					if (t.linetarget != null)
 					{
 						angle = t.angleFromSource;
@@ -101,21 +92,34 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
 							{
 								health = player.health = newLife;
 							}
-							if (weapon != null)
-							{
-								State newstate = weapon.FindState("Drain");
-								if (newstate != null) player.SetPsprite(PSP_WEAPON, newstate);
-							}
 						}
 						if (weapon != null)
 						{
-							weapon.DepleteAmmo(weapon.bAltFire, false);
+							weapon.DepleteAmmo (false);
 						}
 					}
 					return;
 				}
 			}
 		}
+
+		double slope = AimLineAttack (angle, 1.5 * DEFMELEERANGE, null, 0., ALF_CHECK3D);
+		weaponspecial = (LineAttack (angle, 1.5 * DEFMELEERANGE, slope, damage, 'Melee', "StaffDrainPuff", true) == null);
+
+		//If drain misses, shoot smite
+		if (weaponspecial && A_IsSmite())
+        {
+			if (weapon.DepleteAmmo (false))
+			{
+				let mo = SpawnPlayerMissile("StaffPoisonCloudMissile", angle);
+				if (mo)
+				{
+					mo.AddZ(16);
+				}
+			}
+			weapon.CheckAmmo(Weapon.PrimaryFire, true);
+			return;
+        }
 	}
 
 	//============================================================================
@@ -134,8 +138,11 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
 		{
-			if (!weapon.DepleteAmmo (weapon.bAltFire))
+			if (!weapon.DepleteAmmo (false))
+			{
+				weapon.CheckAmmo(Weapon.PrimaryFire, true);
 				return;
+			}
 		}
 
         let isSmite = A_IsSmite();
@@ -145,7 +152,6 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
 			mo.WeaveIndexXY = 32;
             if (isSmite)
             {
-                mo.Scale = (2.0, 2.0);
                 mo.SetDamage(mo.damage * 1.5);
             }
 		}
@@ -155,15 +161,29 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
 			mo.WeaveIndexXY = 0;
             if (isSmite)
             {
-                mo.Scale = (2.0, 2.0);
                 mo.SetDamage(mo.damage * 1.5);
             }
+		}
+
+		//Also shoot tracers on smite
+		if (isSmite)
+		{
+			mo = SpawnPlayerMissile ("CStaffMissileSeeker", angle - 20);
+			if (mo)
+			{
+				mo.tracer = player.mo;
+			}
+			mo = SpawnPlayerMissile ("CStaffMissileSeeker", angle + 20);
+			if (mo)
+			{
+				mo.tracer = player.mo;
+			}
 		}
 
 		A_StartSound ("ClericCStaffFire", CHAN_WEAPON);
 	}
 
-    action void A_CStaffAttackSeek()
+    /*action void A_CStaffAttackSeek()
 	{
 		if (player == null || !player.mo)
 		{
@@ -198,7 +218,7 @@ class XRpgCWeapStaff : XRpgClericWeapon replaces CWeapStaff
         }
 
 		A_StartSound ("ClericCStaffFire", CHAN_WEAPON);
-	}
+	}*/
 
 	//============================================================================
 	//
@@ -323,5 +343,118 @@ class CStaffMissileSeeker : Actor
 			damage >>= 1;
 		}
 		return damage;
+	}
+}
+
+class StaffDrainPuff : Actor
+{
+	Default
+	{
+		+NOBLOCKMAP +NOGRAVITY
+		+PUFFONACTORS
+		RenderStyle "Translucent";
+		Alpha 0.6;
+		VSpeed 0.8;
+		SeeSound "WraithAttack";
+		AttackSound "FighterHammerHitWall";
+		ActiveSound "FighterHammerMiss";
+		Scale 0.25;
+	}
+	States
+	{
+	Spawn:
+		FSFX DEFGHIJKLM 3;
+		Stop;
+	}
+}
+
+class StaffPoisonCloudSmoke : Actor
+{
+	Default
+	{
+	    +NOBLOCKMAP +NOGRAVITY +SHADOW
+	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
+		RenderStyle "Translucent";
+		Alpha 0.6;
+        Scale 0.5;
+	}
+	States
+	{
+	Spawn:
+		SGSA P 2;
+        SGSA QRST 2;
+		Stop;
+	}
+}
+class StaffPoisonCloudMissile : FastProjectile
+{
+	int branchCount;
+	property BranchCount: branchCount;
+
+    Default
+    {
+        Speed 50;
+        Radius 8;
+        Height 6;
+        Damage 3;
+        Projectile;
+        //+RIPPER
+		+DONTREFLECT
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+        MissileType "StaffPoisonCloudSmoke";
+        Obituary "$OB_MPCWEAPSTAFFM";
+		RenderStyle "Translucent";
+		Alpha 0.6;
+        Scale 0.5;
+
+		SeeSound "FighterSwordFire";
+
+		StaffPoisonCloudMissile.BranchCount 2;
+
+        DamageType "Poison";
+    }
+    States
+    {
+    Spawn:
+        SGSA P 1 Bright;
+        SGSA Q 1 Bright StaffPoisonCloudSplit;
+    Death:
+        SGSA RST 1 Bright;
+        Stop;
+    }
+
+	action void StaffPoisonCloudSplit ()
+	{
+		if (target == null)
+		{
+			return;
+		}
+		
+		A_StaffPoisonCloudFire();
+		A_StaffPoisonCloudFire();
+	}
+
+    action void A_StaffPoisonCloudFire()
+	{
+		if (target == null || invoker.BranchCount == 0)
+		{
+			return;
+		}
+		
+        int randAngle = random(-12, 12);
+        int randPitch = random(-8, 8);
+		let mo = target.SpawnPlayerMissile ("StaffPoisonCloudMissile", angle + randAngle);
+		if (mo != null)
+		{
+			mo.SetOrigin(Pos, false);
+			mo.target = target;
+			mo.A_SetPitch(pitch + randPitch);
+			mo.Vel.Z = Vel.Z + randPitch;
+
+			let poisonMissile = StaffPoisonCloudMissile(mo);
+			if (poisonMissile)
+				poisonMissile.BranchCount = invoker.BranchCount - 1;
+		}
 	}
 }

@@ -50,6 +50,10 @@ class XRpgFighterPlayer : XRpgPlayer
 		//Player.StartItem "XRpgFWeapAxe";
 		//Player.StartItem "XRpgFWeapHammer";
 		//Player.StartItem "XRpgFWeapQuietus";
+
+		//Player.StartItem "BerserkSpell";
+		//Player.StartItem "StunSpell";
+		//Player.StartItem "PowerSpell";
 	}
 	
 	States
@@ -156,5 +160,25 @@ class XRpgFighterPlayer : XRpgPlayer
 	{
 		int strengthRegen = statItem.Strength / 4 + REGENERATE_MIN_VALUE;
 		RegenerateHealth(strengthRegen);
+	}
+
+	override bool SetActiveSpell(XRpgSpellItem spellItem)
+	{
+		if (!spellItem)
+			return false;
+
+		//Find open slot
+		if (spellItem.SpellType == SPELLTYPE_FIGHTER_BERSERK)
+		{
+			ActiveSpell = spellItem;
+			return true;
+		}
+		else if (spellItem.SpellType == SPELLTYPE_FIGHTER_POWER)
+		{
+			ActiveSpell2 = spellItem;
+			return true;
+		}
+
+		return false;
 	}
 }

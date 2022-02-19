@@ -60,6 +60,9 @@ class HealSpell : XRpgSpellItem
 			int healMax = statItem.Magic * SPELL_CLERIC_HEALOTHER_MOD;
 			int healAmount = random(statItem.Magic, healMax);
 			xrpgPlayer.A_RadiusGive("Health", 512, RGF_PLAYERS | RGF_GIVESELF, healAmount);
+
+			if (xrpgPlayer.player)
+				xrpgPlayer.player.poisoncount = 0;
 		}
 
 	}
@@ -70,8 +73,6 @@ const SPELL_CLERIC_PROTECT_PERCENT = 0.5;
 const SPELL_CLERIC_PROTECT_BIGPERCENT = 0.1;
 class ProtectSpell : XRpgSpellItem
 {
-	int hitCount;
-	property HitCount : hitCount;
 
 	Default
 	{
@@ -84,13 +85,12 @@ class ProtectSpell : XRpgSpellItem
 		XRpgSpellItem.TimerVal 0;
 		XRpgSpellItem.MaxTimer 800;
 
-		ProtectSpell.HitCount 0;
-
 		XRpgSpellItem.ManaCostBlue 10;
 		XRpgSpellItem.ManaCostGreen 10;
 
 		XRpgSpellItem.MagicTimerMod 10;
 		XRpgSpellItem.IsMultiSlot true;
+		XRpgSpellItem.UseCrystals true;
 	}
 
 	override void CastSpell()

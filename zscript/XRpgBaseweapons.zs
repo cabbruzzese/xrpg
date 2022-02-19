@@ -2,6 +2,33 @@
 // somebody wants to use these weapons with either of those games.
 class XRpgWeapon : Weapon
 {
+    int chargeValue;
+    int maxCharge;
+	property ChargeValue : chargeValue;
+    property MaxCharge : maxCharge;
+
+    Default
+	{
+        XRpgWeapon.ChargeValue 0;
+        XRpgWeapon.MaxCharge 0;
+    }
+
+	action void A_ChargeUp()
+	{
+		invoker.ChargeValue++;
+		if (invoker.chargeValue > invoker.MaxCharge)
+			invoker.chargeValue = invoker.MaxCharge;
+	}
+
+    action void A_CheckMinCharge(int minCharge)
+	{
+        //If there is low charge attack
+        if (minCharge > 0 && invoker.chargeValue < minCharge)
+        {
+            A_SetWeapState("ShortChargeAttack");
+        }
+	}
+
     action void A_Mirror()
     {
         A_OverlayFlags(1,PSPF_FLIP|PSPF_MIRROR,true);
@@ -161,61 +188,6 @@ class XRpgFighterWeapon : XRpgWeapon
 				A_SetWeapState("BerserkFire");
 		}
 	}
-
-    action void A_ThrowSpark(Actor victim)
-    {
-        let xo = random(-16, 16);
-        let yo = random(-16, 16);
-        let zo = victim.Height / 2;
-        let sparkPos = victim.Pos + (xo, yo, zo);
-
-        let vx = frandom(-2.0, 2.0);
-        let vy = frandom(-2.0, 2.0);
-        let vz = frandom(2.0, 4.0);
-
-        let mo = Spawn("PowerSpark");
-        if (!mo)
-            return;
-
-        mo.target = victim;
-        mo.SetOrigin(sparkPos, false);
-        mo.A_ChangeVelocity(vx, vy, vz, CVF_REPLACE);
-    }
-
-    action bool A_DoPowerHit(Actor victim)
-    {
-        let xrpgPlayer = XRpgPlayer(player.mo);
-		if (!xrpgPlayer)
-			return false;
-
-        if (!xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-            return false;
-
-        victim.Thrust(25, angle);
-
-        for (int i = 0; i < 8; i++)
-        {
-            A_ThrowSpark(victim);
-        }
-
-        return true;
-    }
-
-    action void A_DoStunHit(Actor victim)
-    {
-        if (!victim || !victim.bIsMonster)
-            return;
-        
-        let xrpgPlayer = XRpgPlayer(player.mo);
-		if (xrpgPlayer)
-        {
-            if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_STUN, true))
-            {
-                let mo = Spawn("StunStars");
-                mo.target = victim;
-            }
-        }
-    }
 }
 
 class XRpgClericWeapon : XRpgWeapon

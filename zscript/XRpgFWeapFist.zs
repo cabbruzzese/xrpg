@@ -1,3 +1,5 @@
+const FIST_CHARGE_MAX = 20;
+
 class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 {
 	Default
@@ -8,6 +10,8 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		Weapon.KickBack 150;
 		Obituary "$OB_MPFWEAPFIST";
 		Tag "$TAG_FWEAPFIST";
+
+		XRpgWeapon.MaxCharge FIST_CHARGE_MAX;
 	}
 
 	States
@@ -46,28 +50,20 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		FPCH E 10 Offset (0, 150);
 		Goto Ready;
     AltFire:
-		FPCH B 5 Offset (5, 40) A_ChargeForward;
-		FPCH C 4 Offset (5, 40) A_CheckBerserk(true);
+	AltHold:
+		FPCH B 1 Offset (-10, 40) A_Mirror();
+		FPCH B 2 Offset (-10, 40) A_ChargeUp;
+		FPCH B 2 Offset (-10, 40) A_ReFire;
+		FPCH C 2 Offset (5, 40);
 		FPCH D 4 Offset (5, 40) A_FPunchAttack2;
-		FPCH DE 4 Offset (5, 40);
+		FPCH DE 2 Offset (5, 40);
 		FPCH E 1 Offset (15, 50);
 		FPCH E 1 Offset (25, 60);
 		FPCH E 1 Offset (35, 70);
 		FPCH E 1 Offset (45, 80);
 		FPCH E 1 Offset (55, 90);
 		FPCH E 1 Offset (65, 100);
-		FPCH E 10 Offset (0, 150) A_RestoreMirror;
-		Goto Ready;
-	BerserkAltFire:
-		FPCH D 1 Offset (5, 40) A_FPunchAttack2;
-		FPCH DE 1 Offset (5, 40);
-		FPCH E 1 Offset (15, 50);
-		FPCH E 1 Offset (25, 60);
-		FPCH E 1 Offset (35, 70);
-		FPCH E 1 Offset (45, 80);
-		FPCH E 1 Offset (55, 90);
-		FPCH E 1 Offset (65, 100);
-		FPCH E 10 Offset (0, 150) A_RestoreMirror;
+		FPCH E 2 Offset (0, 150) A_RestoreMirror;
 		Goto Ready;
 	}
 
@@ -103,9 +99,6 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 			{
 				let statItem = xrpgPlayer.GetStats();
 				damage += statItem.Strength;
-
-				if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-					damage += statItem.Magic * 2;
 			}
 
 			LineAttack (angle, 2*DEFMELEERANGE, slope, damage, 'Melee', pufftype, true, t);
@@ -116,10 +109,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 					(t.linetarget.Mass < 10000000 && (t.linetarget.bIsMonster)))
 				{
 					if (!t.linetarget.bDontThrust)
-						if (!A_DoPowerHit(t.linetarget))
-							t.linetarget.Thrust(power, t.attackAngleFromSource);
-					
-					A_DoStunHit(t.linetarget);
+						t.linetarget.Thrust(power, t.attackAngleFromSource);
 				}
 				AdjustPlayerAngle(t);
 				return true;
@@ -178,9 +168,6 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 			{
 				let statItem = xrpgPlayer.GetStats();
 				damage += statItem.Strength;
-
-				if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-					damage += statItem.Magic * 2;
 			}
 
 			LineAttack (angle, 2*DEFMELEERANGE, slope, damage, 'Melee', pufftype, true, t);
@@ -190,9 +177,6 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 				if (t.linetarget.player != null || 
 					(t.linetarget.Mass < 10000000 && (t.linetarget.bIsMonster)))
 				{
-					if (xrpgPlayer != null && xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-						power += 13;
-
 					if (!t.linetarget.bDontThrust)
 						t.linetarget.Thrust(power, t.attackAngleFromSource);
 				}
@@ -203,14 +187,6 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		return false;
 	}
 
-    action void A_ChargeForward()
-    {
-        A_Mirror();
-
-        Thrust(15, angle);
-        A_StartSound ("*fistgrunt", CHAN_VOICE);
-    }
-
     action void A_FPunchAttack2()
     {
 		if (player == null)
@@ -218,11 +194,21 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 			return;
 		}
 
-        int damage = random[FighterAtk](1, 100);
+		double damageMod = 1.0 + (double(invoker.ChargeValue) / 10);
+
+        int damage = random[FighterAtk](15, 35);
+		damage *= damageMod;
+		int power = (invoker.ChargeValue) + 5;
+
+		invoker.ChargeValue = 0;
+
+		Thrust(power / 2, angle);
+		A_StartSound ("*fistgrunt", CHAN_VOICE);
+
 		for (int i = 0; i < 16; i++)
 		{
-			if (TryPunch2(angle + i*(45./16), damage, 15) ||
-				TryPunch2(angle - i*(45./16), damage, 15))
+			if (TryPunch2(angle + i*(45./16), damage, power) ||
+				TryPunch2(angle - i*(45./16), damage, power))
 			{ // hit something
 				return;
 			}

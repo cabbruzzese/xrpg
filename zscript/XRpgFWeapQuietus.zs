@@ -78,8 +78,6 @@ const SWORD_RANGE = 1.5 * DEFMELEERANGE;
 const SWORD_CHARGE_MAX = 20;
 class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 {
-	int chargeValue;
-	property ChargeValue : chargeValue;
 	Default
 	{
 		Health 3;
@@ -101,7 +99,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		+WEAPON.AMMO_OPTIONAL
 		+WEAPON.ALT_AMMO_OPTIONAL
 
-		XRpgFWeapQuietus.ChargeValue 0;
+		XRpgWeapon.MaxCharge SWORD_CHARGE_MAX;
 	}
 
 	States
@@ -121,7 +119,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 	Fire:
 		FSRD DE 3 Bright Offset (5, 36) A_CheckBerserk(false);
 		FSRD F 2 Bright Offset (5, 36);
-		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwing(false);
+		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwingMelee();
 		FSRD H 2 Bright Offset (5, 36);
 		FSRD I 2 Bright Offset (5, 36);
 		FSRD I 10 Bright Offset (5, 150);
@@ -133,10 +131,10 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		Goto Ready;
 	BerserkFire:
 		FSRD F 2 Bright Offset (5, 36);
-		FSRD G 1 Bright Offset (5, 36) A_FSwordAttackSwing(false);
+		FSRD G 2 Bright Offset (5, 36) A_FSwordAttackSwingMelee();
 		FSRD H 2 Bright Offset (5, 36);
 		FSRD I 1 Bright Offset (5, 36);
-		FSRD I 6 Bright Offset (5, 150);
+		FSRD I 7 Bright Offset (5, 150);
 		FSRD A 1 Bright Offset (5, 60);
 		FSRD B 1 Bright Offset (5, 55);
 		FSRD C 1 Bright Offset (5, 50);
@@ -149,7 +147,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		FSRD D 1 A_ReFire;
 		FSRD E 3 Bright Offset (5, 36);
 		FSRD F 2 Bright Offset (5, 36);
-		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwing(true);
+		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwing();
 		FSRD H 2 Bright Offset (5, 36);
 		FSRD I 2 Bright Offset (5, 36);
 		FSRD I 10 Bright Offset (5, 150);
@@ -160,13 +158,6 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		FSRD B 1 Bright Offset (5, 40);
 		Goto Ready;
 
-	}
-
-	action void A_ChargeUp()
-	{
-		invoker.ChargeValue++;
-		if (invoker.chargeValue > SWORD_CHARGE_MAX)
-			invoker.chargeValue = SWORD_CHARGE_MAX;
 	}
 	
 	action void A_FSwordWeaponReady()
@@ -189,7 +180,10 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 
 		//mana depleted, exit
 		if (mana1Amount == 0 || mana2Amount == 0)
+		{
+			A_FSwordAttackSwingMelee(); //make a melee attack if out of ammo
 			return;
+		}
 
 		//level set to mana ammount
 		if (manaCost > mana1Amount)
@@ -209,6 +203,8 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		{
 			mo.SetDamage(missileDamage);
 		}
+
+		A_StartSound ("FighterSwordFire", CHAN_WEAPON);
 	}
 	
 	//============================================================================
@@ -238,7 +234,39 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		A_StartSound ("FighterSwordFire", CHAN_WEAPON);
 	}
 
-	action void A_FSwordAttackSwing(bool charged)
+	action void A_FSwordAttackSwing()
+	{
+		FTranslatedLineTarget t;
+
+		if (player == null)
+		{
+			return;
+		}
+
+		bool weaponspecial = true;
+		// Don't spawn a missile if the player doesn't have enough mana
+		if (player.ReadyWeapon == null ||
+			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
+				Weapon.AltFire : Weapon.PrimaryFire, false, true))
+		{ 
+			weaponspecial = false;
+		}
+
+		if (invoker.ChargeValue > 5)
+		{
+			A_FSwordChargeAttack();
+		}
+		else if (weaponspecial)
+		{
+			A_FSwordAttack();
+		}
+		else
+		{
+			A_FSwordAttackSwingMelee(); //make a melee attack if out of ammo
+		}
+	}
+
+	action void A_FSwordAttackSwingMelee()
 	{
 		FTranslatedLineTarget t;
 
@@ -249,21 +277,11 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 
 		int damage = random(1, 140);
 
-		if (charged)
-		{
-			let chargeDamage = invoker.ChargeValue * 10;
-			if (chargeDamage > damage)
-				damage = chargeDamage;
-		}
-
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
 		{
 			let statItem = xrpgPlayer.GetStats();
 			damage += statItem.Strength;
-
-			if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-				damage += statItem.Magic * 2;
 		}
 
 		for (int i = 0; i < 16; i++)
@@ -280,10 +298,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 						AdjustPlayerAngle(t);
 						if (t.linetarget.bIsMonster || t.linetarget.player)
 						{
-							if (!A_DoPowerHit(t.linetarget))
-								t.linetarget.Thrust(10, t.attackAngleFromSource);
-
-							A_DoStunHit(t.linetarget);
+							t.linetarget.Thrust(10, t.attackAngleFromSource);
 						}
 						weaponspecial = false;
 						return;
@@ -291,26 +306,10 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 				}
 			}
 		}
+
 		// didn't find any targets in meleerange, so set to throw out a missile
 		double slope = AimLineAttack (angle, SWORD_RANGE, null, 0., ALF_CHECK3D);
 		weaponspecial = (LineAttack (angle, SWORD_RANGE, slope, damage, 'Melee', "SwordPuff", true) == null);
-
-		// Don't spawn a missile if the player doesn't have enough mana
-		if (player.ReadyWeapon == null ||
-			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
-				Weapon.AltFire : Weapon.PrimaryFire, false, true))
-		{ 
-			if (!charged)
-				weaponspecial = false;
-		}
-
-		if (weaponspecial)
-		{
-			if (charged)
-				A_FSwordChargeAttack();
-			else
-				A_FSwordAttack();
-		}
 	}
 }
 

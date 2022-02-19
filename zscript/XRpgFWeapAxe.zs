@@ -339,9 +339,6 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		{
 			let statItem = xrpgPlayer.GetStats();
 			damage += statItem.Strength;
-
-			if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-				damage += statItem.Magic * 2;
 		}
 
 		for (int i = 0; i < 16; i++)
@@ -357,10 +354,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 					{
 						if (t.linetarget.bIsMonster || t.linetarget.player)
 						{
-							if (!A_DoPowerHit(t.linetarget))
-								t.linetarget.Thrust(power, t.attackAngleFromSource);
-
-							A_DoStunHit(t.linetarget);
+							t.linetarget.Thrust(power, t.attackAngleFromSource);
 						}
 						AdjustPlayerAngle(t);
 						
@@ -397,10 +391,6 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null && powered)
 		{
-			//Costs extra mana
-			int blueManaCost = 3;
-			if (A_CheckAllMana(blueManaCost, 0))
-				A_DepleteAllMana(blueManaCost, 0);
 			weapon.DepleteAmmo(false, false);
 		}
 		
@@ -440,12 +430,12 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 	}
 }
 
-const WINDAXE_HEALTH_MAX = 12;
-const WINDAXE_HEALTH_STOP = 10;
+const WINDAXE_HEALTH_MAX = 6;
+const WINDAXE_HEALTH_STOP = 3;
 const WINDAXE_HEALTH_RETURN = 2;
 const WINDAXE_VEL_PERCENT = 0.33;
 const WINDAXE_TARGETZ_OFFSET = 15;
-const WINDAXE_SPEED = 40;
+const WINDAXE_SPEED = 70;
 
 class WindAxeMissile : Actor
 {
@@ -454,7 +444,7 @@ class WindAxeMissile : Actor
 		Radius 10;
 		Height 6;
 		Speed WINDAXE_SPEED;
-		Damage 1;
+		Damage 2;
 		Health WINDAXE_HEALTH_MAX;
 		Projectile;
 		+RIPPER
@@ -557,7 +547,7 @@ class WindAxeMissilePower : WindAxeMissile
 {
 	Default
 	{
-		Damage 3;
+		Damage 5;
 	}
 
 	States

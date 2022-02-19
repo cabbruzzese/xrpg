@@ -11,6 +11,9 @@ class XRpgSpellItem : PowerupGiver
 	int lifeCostTimer;
 	int maxLifeCostTimer;
 	int lifeCostMin;
+	bool useCrystals;
+	int hitCount;
+	bool drawInactive;
 
     property SpellType : spellType;
 	property TimerVal : timerVal;
@@ -22,6 +25,9 @@ class XRpgSpellItem : PowerupGiver
 	property IsLifeCost : isLifeCost;
 	property MaxLifeCostTimer : maxLifeCostTimer;
 	property LifeCostMin : lifeCostMin;
+	property UseCrystals: useCrystals;
+	property HitCount : hitCount;
+	property DrawInactive : drawInactive;
 
 	Default
 	{
@@ -42,6 +48,9 @@ class XRpgSpellItem : PowerupGiver
 		XRpgSpellItem.IsLifeCost false;
 		XRpgSpellItem.MaxLifeCostTimer 0;
 		XRpgSpellItem.LifeCostMin 0;
+		XRpgSpellItem.UseCrystals false;
+		XRpgSpellItem.HitCount 0;
+		XRpgSpellItem.DrawInactive false;
 	}
 
 	bool CheckMana(class<Inventory> type, int ammoUse)

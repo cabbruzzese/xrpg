@@ -223,7 +223,7 @@ class XRpgStatusBar : HexenStatusBar
 					DrawString(mIndexFont, FormatNumber(amt1, 3), ( 92, 181), DI_TEXT_ALIGN_RIGHT);
 					DrawString(mIndexFont, FormatNumber(amt2, 3), (124, 181), DI_TEXT_ALIGN_RIGHT);
 				}
-				if (CPlayer.mo is "ClericPlayer")
+				if (CPlayer.mo is "XRpgClericPlayer")
 				{
 					DrawImage("WPSLOT1", (190, 162), DI_ITEM_OFFSETS);
 					if (CheckInventory("XRpgCWeapWraithverge")) DrawImage("WPFULL1", (190, 162), DI_ITEM_OFFSETS);
@@ -235,7 +235,7 @@ class XRpgStatusBar : HexenStatusBar
 						if (pieces & 4) DrawImage("WPIECEC3", (225, 162), DI_ITEM_OFFSETS);
 					}
 				}
-				else if (CPlayer.mo is "MagePlayer")
+				else if (CPlayer.mo is "XRpgMagePlayer")
 				{
 					DrawImage("WPSLOT2", (190, 162), DI_ITEM_OFFSETS);
 					if (CheckInventory("XRpgMWeapBloodscourge")) DrawImage("WPFULL2", (190, 162), DI_ITEM_OFFSETS);
@@ -322,18 +322,25 @@ class XRpgStatusBar : HexenStatusBar
 		DrawString(mSmallFont, statText3, (xPosStats, yPos + yStep), DI_TEXT_ALIGN_RIGHT);
 	}
 
-	protected void DrawMultiSlotSpell(XRpgSpellItem spellItem, int yOffset, string gemIcon)
+	protected void DrawMultiSlotSpell(XRpgSpellItem spellItem, int yOffset, string gemIcon, bool alwaysDrawBox = true)
 	{
-		DrawImage("ARTIBOX", (14, 124 + yOffset), 0, HX_SHADOW);
+		if (alwaysDrawBox || spellItem)
+			DrawImage("ARTIBOX", (14, 124 + yOffset), 0, HX_SHADOW);
 
 		if (spellItem)
 		{
 			DrawInventoryIcon(spellItem, (13, 109 + yOffset), DI_ITEM_CENTER, boxsize:(28, 28));
 
-			if (spellItem.TimerVal > 0)
+			if (spellItem.TimerVal > 0 || spellItem.DrawInactive)
 			{
-				let percentTimer = double(spellItem.TimerVal) / double(spellItem.MaxTimer);
-				int timerGems = 10 * percentTimer;
+				double percentTimer = 0.0;
+				int timerGems = 0;
+
+				if (spellItem.TimerVal > 0)
+				{
+					percentTimer = double(spellItem.TimerVal) / double(spellItem.MaxTimer);
+					timerGems = 10 * percentTimer;
+				}
 
 				//draw at least one
 				if (spellItem.TimerVal > 0 && timerGems < 1)
@@ -344,10 +351,9 @@ class XRpgStatusBar : HexenStatusBar
 					DrawImage(gemIcon, (45 + (TIMERGEM_OFFSET_X * i), 124 + yOffset), 0, HX_SHADOW);
 				}
 
-				if (spellItem.SpellType == SPELLTYPE_CLERIC_PROTECT)
+				if (spellItem.UseCrystals)
 				{
-					let proSpell = ProtectSpell(spellItem);
-					for (int i = 0; i < proSpell.HitCount; i++)
+					for (int i = 0; i < spellItem.HitCount; i++)
 					{
 						DrawImage("AGMGA0", (45 + (TIMERGEM_OFFSET_X * i), 110 + yOffset), 0, HX_SHADOW);
 					}
@@ -375,8 +381,8 @@ class XRpgStatusBar : HexenStatusBar
 		let fighterPlayer = XRpgFighterPlayer(CPlayer.mo);
 		if (fighterPlayer)
 		{
-			DrawMultiSlotSpell(fighterPlayer.ActiveSpell, 0, "INVGEMR2");
-			DrawMultiSlotSpell(fighterPlayer.ActiveSpell2, -30, "INVGEMR2");
+			DrawMultiSlotSpell(fighterPlayer.ActiveSpell, 0, "INVGEMR2", false);
+			DrawMultiSlotSpell(fighterPlayer.ActiveSpell2, -30, "INVGEMR2", false);
 		}
 	}
 }

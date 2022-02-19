@@ -103,7 +103,7 @@ class XRpgPlayer : PlayerPawn
 			IsSpellSlotActive(ActiveSpell2, spellTypeNum, checkTimer);
 	}
 
-	bool SetActiveSpell(XRpgSpellItem spellItem)
+	virtual bool SetActiveSpell(XRpgSpellItem spellItem)
 	{
 		if (!spellItem)
 			return false;
@@ -183,10 +183,15 @@ class XRpgPlayer : PlayerPawn
 	{
 	}
 	
+	void DoBlend(int r, int g, int b, int a, float alpha, int tics)
+	{
+		let blendColor = Color(r, g, b, a);
+		A_SetBlend(blendColor, alpha, tics);
+	}
+
 	void DoLevelGainBlend(PlayerLevelItem statItem)
 	{
-		let blendColor = Color(122,	122, 122, 122);
-		A_SetBlend(blendColor, 0.8, 40);
+		DoBlend(122, 122, 122, 122, 0.8, 40);
 		
 		string lvlMsg = String.Format("You are now level %d", statItem.ExpLevel);
 		A_Print(lvlMsg);

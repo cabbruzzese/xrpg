@@ -1,4 +1,6 @@
 // The Fighter's Hammer -----------------------------------------------------
+const HAMMER_CHARGE_MAX = 25;
+const HAMMER_CHARGE_MIN = 8;
 
 class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 {
@@ -17,6 +19,8 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		Inventory.PickupMessage "$TXT_WEAPON_F3";
 		Obituary "$OB_MPFWEAPHAMMERM";
 		Tag "$TAG_FWEAPHAMMER";
+
+		XRpgWeapon.MaxCharge HAMMER_CHARGE_MAX;
 	}
 
 	States
@@ -35,7 +39,34 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		Loop;
 	Fire:
 		FHMR B 6 Offset (5, 0) A_CheckBerserk(false);
-		FHMR C 3 Offset (5, 0) A_FHammerAttack;
+		FHMR C 3 Offset (5, 0) A_FHammerAttackMelee;
+		FHMR D 3 Offset (5, 0);
+		FHMR E 2 Offset (5, 0);
+		FHMR E 10 Offset (5, 150);
+		FHMR A 1 Offset (0, 60);
+		FHMR A 1 Offset (0, 55);
+		FHMR A 1 Offset (0, 50);
+		FHMR A 1 Offset (0, 45);
+		FHMR A 1 Offset (0, 40);
+		FHMR A 1 Offset (0, 35);
+		FHMR A 1;
+		Goto Ready;
+	BerserkFire:
+		FHMR C 3 Offset (5, 0) A_FHammerAttackMelee;
+		FHMR D 3 Offset (5, 0);
+		FHMR E 2 Offset (5, 0);
+		FHMR E 6 Offset (5, 150);
+		FHMR A 1 Offset (0, 60);
+		FHMR A 1 Offset (0, 55);
+		FHMR A 1 Offset (0, 50);
+		FHMR A 1 Offset (0, 45);
+		FHMR A 1 Offset (0, 40);
+		FHMR A 1 Offset (0, 35);
+		FHMR A 1;
+		Goto Ready;
+	ShortChargeAttack:
+		FHMR B 6 Offset (5, 1);
+		FHMR C 3 Offset (5, 0);
 		FHMR D 3 Offset (5, 0);
 		FHMR E 2 Offset (5, 0);
 		FHMR E 10 Offset (5, 150) A_FHammerThrow;
@@ -47,39 +78,15 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1 Offset (0, 35);
 		FHMR A 1;
 		Goto Ready;
-	BerserkFire:
-		FHMR C 3 Offset (5, 0) A_FHammerAttack;
-		FHMR D 3 Offset (5, 0);
-		FHMR E 2 Offset (5, 0);
-		FHMR E 6 Offset (5, 150) A_FHammerThrow;
-		FHMR A 1 Offset (0, 60);
-		FHMR A 1 Offset (0, 55);
-		FHMR A 1 Offset (0, 50);
-		FHMR A 1 Offset (0, 45);
-		FHMR A 1 Offset (0, 40);
-		FHMR A 1 Offset (0, 35);
-		FHMR A 1;
-		Goto Ready;
 	AltFire:
-		FHMR F 18 Offset (1, -50) A_CheckBerserk(true);
+	AltHold:
+		FHMR F 3 Offset (1, -40) A_ChargeUp;
+		FHMR F 1 Offset (1, -40) A_ReFire;
+		FHMR F 1 Offset (1, -40) A_CheckMinCharge(HAMMER_CHARGE_MIN);
 		FHMR C 3 Offset (60, 30);
 		FHMR D 3 Offset (90, 30);
 		FHMR E 2 Offset (90, 30);
-		FHMR E 10 Offset (-5, 150) A_HammerSlam;
-		FHMR A 1 Offset (0, 60);
-		FHMR A 1 Offset (0, 55);
-		FHMR A 1 Offset (0, 50);
-		FHMR A 1 Offset (0, 45);
-		FHMR A 1 Offset (0, 40);
-		FHMR A 1 Offset (0, 35);
-		FHMR A 1;
-		Goto Ready;
-	BerserkAltFire:
-		FHMR F 11 Offset (1, -50);
-		FHMR C 1 Offset (60, 30);
-		FHMR D 1 Offset (90, 30);
-		FHMR E 1 Offset (90, 30);
-		FHMR E 6 Offset (-5, 150) A_HammerSlam;
+		FHMR E 10 Offset (-5, 150) A_HammerSlam();
 		FHMR A 1 Offset (0, 60);
 		FHMR A 1 Offset (0, 55);
 		FHMR A 1 Offset (0, 50);
@@ -98,6 +105,17 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 
 	action void A_FHammerAttack()
 	{
+		// Don't spawn a hammer if the player doesn't have enough mana
+		if (player.ReadyWeapon == null ||
+			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
+				Weapon.AltFire : Weapon.PrimaryFire, false, true))
+		{ 
+			weaponspecial = false;
+		}
+	}
+
+	action void A_FHammerAttackMelee()
+	{
 		FTranslatedLineTarget t;
 
 		if (player == null)
@@ -111,9 +129,6 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		{
 			let statItem = xrpgPlayer.GetStats();
 			damage += statItem.Strength;
-
-			if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_POWER, true))
-				damage += statItem.Magic * 2;
 		}
 
 		for (int i = 0; i < 16; i++)
@@ -130,10 +145,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 						AdjustPlayerAngle(t);
 						if (t.linetarget.bIsMonster || t.linetarget.player)
 						{
-							if (!A_DoPowerHit(t.linetarget))
-								t.linetarget.Thrust(10, t.attackAngleFromSource);
-
-							A_DoStunHit(t.linetarget);
+							t.linetarget.Thrust(10, t.attackAngleFromSource);
 						}
 						weaponspecial = false; // Don't throw a hammer
 						return;
@@ -141,17 +153,9 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 				}
 			}
 		}
-		// didn't find any targets in meleerange, so set to throw out a hammer
+		// didn't find any targets in meleerange
 		double slope = AimLineAttack (angle, HAMMER_RANGE, null, 0., ALF_CHECK3D);
 		weaponspecial = (LineAttack (angle, HAMMER_RANGE, slope, damage, 'Melee', "HammerPuff", true) == null);
-
-		// Don't spawn a hammer if the player doesn't have enough mana
-		if (player.ReadyWeapon == null ||
-			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
-				Weapon.AltFire : Weapon.PrimaryFire, false, true))
-		{ 
-			weaponspecial = false;
-		}
 	}
 
 	//============================================================================
@@ -167,10 +171,8 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 			return;
 		}
 
-		if (!weaponspecial)
-		{
-			return;
-		}
+		invoker.ChargeValue = 0;
+
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
 		{
@@ -191,14 +193,20 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 			return;
 		}
 
+		invoker.ChargeValue = 0;
+
 		int damage = random(1, 70);
+		damage += (invoker.ChargeValue * 3);
+
 		int range = 150;
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
 			damage += xrpgPlayer.GetStrength();
 		
+		int thrustSpeed = 3500;
+		thrustSpeed += invoker.ChargeValue * 100;
 		A_Explode(damage, range, false);
-		A_RadiusThrust(5000, range, RTF_NOIMPACTDAMAGE);
+		A_RadiusThrust(thrustSpeed, range, RTF_NOIMPACTDAMAGE);
 
 		A_StartSound("FighterHammerHitWall", CHAN_BODY);
 
@@ -210,7 +218,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 
 			w.DepleteAmmo (false, false);
 			SpawnPlayerMissile("HammerFloorMissile2");
-		}		
+		}
 	}
 }
 
