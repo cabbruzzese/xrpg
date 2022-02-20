@@ -91,7 +91,7 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 	        A_StartSound ("*fistgrunt", CHAN_VOICE);
 		}
 
-		int damage = random(1, 80);
+		int damage = random(1, 40);
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer)
@@ -366,7 +366,16 @@ class BurnyFlamePuff : Actor
 	States
 	{
 	Spawn:
-		CFFX ABCDEFGHIJKLM 2 BRIGHT Light("YellowSunSmall");
+		CFFX ABCDE 2 BRIGHT Light("YellowSunSmall");
+		CFFX F 2 BRIGHT Light("YellowSunSmall") A_EndRipper;
+	Death:
+		CFFX GHIJKLM 2 BRIGHT Light("YellowSunSmall");
 		Stop;
+	}
+
+	action void A_EndRipper()
+	{
+		bRipper = false;
+		bMissile = false;
 	}
 }

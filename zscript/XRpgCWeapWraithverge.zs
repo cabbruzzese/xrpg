@@ -155,7 +155,6 @@ class XRpgCWeapWraithverge : XRpgClericWeapon replaces CWeapWraithverge
 
 	action void A_CheckAmmo()
 	{
-		// Don't spawn a hammer if the player doesn't have enough mana
 		if (player.ReadyWeapon == null ||
 			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
 				Weapon.AltFire : Weapon.PrimaryFire, false, true))
@@ -216,6 +215,9 @@ class XRpgCWeapWraithverge : XRpgClericWeapon replaces CWeapWraithverge
 		{
 			return;
 		}
+
+		if (!A_DepleteAllMana(2,2))
+			return;
 		
 		SpawnPlayerMissile ("GhostarangMissile", angle);
 			
@@ -229,10 +231,9 @@ class XRpgCWeapWraithverge : XRpgClericWeapon replaces CWeapWraithverge
 	}
 }
 
-const GHOSTARANG_HEALTH_MAX = 8;
-const GHOSTARANG_HEALTH_STOP = 6;
 const GHOSTARANG_TARGETZ_OFFSET = 15;
-const GHOSTARANG_SPEED = 80;
+const GHOSTARANG_SPEED = 50;
+const GHOSTARANG_REVIVE_HEALTH = 30;
 
 class GhostarangMissile : Actor
 {
@@ -241,18 +242,11 @@ class GhostarangMissile : Actor
 		Radius 10;
 		Height 6;
 		Speed GHOSTARANG_SPEED;
-		Damage 8;
-		Health GHOSTARANG_HEALTH_MAX;
+		Damage 16;
 		Projectile;
-		+RIPPER
 		+ZDOOMTRANS
 		Obituary "$OB_MPCWEAPWRAITHVERGE";
 		Scale 1.5;
-		+BOUNCEONFLOORS
-		+BOUNCEONCEILINGS
-		+USEBOUNCESTATE
-		+BOUNCEONWALLS
-		+CANBOUNCEWATER
 
 		DamageType "Holy";
 
@@ -265,52 +259,53 @@ class GhostarangMissile : Actor
 	Spawn:
 		SPIR AB 4 A_MoveGhostarang(0);
 		Loop;
-	Bounce:
-		SPIR A 1 A_GhostarangImpact;
-		Goto Spawn;
 	Death:
-		SPIR A 1;
-		Goto Spawn;
-	EndGhost:
-		SPIR EFGHI 4;
+		SPIR EFGHIJ 2;
 		Stop;
-	}
-	
-	//Bounce
-	void A_GhostarangImpact()
-	{
-		//A_StartSound ("weapons/macebounce", CHAN_BODY);
-		A_SetSpeed(0);
-		A_ChangeVelocity(0,0,0, CVF_REPLACE);
-	}
-	
-	override void Die(Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath)
-	{
-		A_GhostarangImpact();
 	}
 	
 	action void A_MoveGhostarang(int powered)
 	{
 		if (target == null || target.health <= 0)
 		{ // Shooter is dead or nonexistent
-			SetStateLabel("EndGhost");
+			SetStateLabel("Death");
 			return;
 		}
 		
 		Health--;
 		if (Health < 1)
 		{
-			SetStateLabel("EndGhost");
+			SetStateLabel("Death");
 			return;
 		}
 		
 		let targetZ = target.Pos.Z + GHOSTARANG_TARGETZ_OFFSET;
+	}
 
-		if (Health <= GHOSTARANG_HEALTH_STOP)
+	override int DoSpecialDamage (Actor target, int damage, Name damagetype)
+	{
+		//don't hurt friendlies
+		if (target && target.bFriendly)
+			return 0;
+			
+		//If this hit kills the monster
+		if (target.bIsMonster && target.Health > 0 && target.Health - damage < 1)
 		{
-			A_SetSpeed(0);
-			A_ChangeVelocity(0,0,0, CVF_REPLACE);
+			target.bNoIceDeath = true;
+        	target.bFriendly = true;
+			target.A_SetTranslation("SpiritSkin");
+			target.A_SetRenderStyle(1.0, STYLE_Translucent);
+            //target.SetShade("555555");
+			target.Alpha = 0.6;
+			target.A_SetHealth(GHOSTARANG_REVIVE_HEALTH);
+
+			Spawn("MinotaurSmoke", target.Pos, ALLOW_REPLACE);
+
+			SetStateLabel("Death");
+			return 0;
 		}
+
+		return damage;
 	}
 }
 

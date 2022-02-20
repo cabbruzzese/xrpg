@@ -45,8 +45,26 @@ class FireLeaderLava : TimedActor
 	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)
 	{
 		//Don't hurt friendlies
-		if (damage > 0 && victim && victim.bIsMonster && !victim.bFriendly)
-			return 0;
+		if (damage > 0 && victim)
+		{
+			//Player friendly leaders can hurt monsters, but not other player friendlies
+			if (target.bFriendly)
+			{
+				if (victim.bIsMonster && victim.bFriendly)
+					return 0;
+				
+				//friendly leaders can't hurt monsters
+				let xrpgPlayer = XRpgPlayer(victim);
+            	if (xrpgPlayer)
+					return 0;
+			}
+			else
+			{
+				//Enemy leader can't hurt other monsters, unless they are player friendly
+				if (victim.bIsMonster && !victim.bFriendly)
+					return 0;
+			}
+		}
 
 		return super.DoSpecialDamage(victim, damage, damagetype);
 	}

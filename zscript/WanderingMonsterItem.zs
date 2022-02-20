@@ -40,6 +40,7 @@ struct LeaderProps
 	int LeaderFlag;
 }
 const WMITEM_TIMEOUT_MAX = 30;
+const WMITEM_THINK_MAX = 90;
 class WanderingMonsterItem : Powerup
 {
     int baseSpeed;
@@ -47,11 +48,13 @@ class WanderingMonsterItem : Powerup
     int bossFlag;
     int timeoutVal;
     bool isSpectreable;
+    int thinkTimout;
 
     property BaseSpeed : baseSpeed;
     property LeaderType : leaderType;
     property BossFlag : bossFlag;
     property IsSpectreable : isSpectreable;
+    property ThinkTimout : thinkTimout;
 
 	Default
 	{
@@ -64,6 +67,8 @@ class WanderingMonsterItem : Powerup
         Powerup.Duration 0x7FFFFFFF;
 
         WanderingMonsterItem.IsSpectreable true;
+
+        WanderingMonsterItem.ThinkTimout 0;
 	}
 
     bool IsTimedOutExpired()
@@ -80,6 +85,16 @@ class WanderingMonsterItem : Powerup
     {
         if (timeoutVal > 0)
             timeoutVal--;
+
+        if (Owner && Owner.Health > 0)
+        {
+            ThinkTimout++;
+            if (ThinkTimout > WMITEM_THINK_MAX)
+            {
+                ThinkTimout = 0;
+                DoThink();
+            }
+        }
         
         Super.Tick();
     }
@@ -341,28 +356,17 @@ class WanderingMonsterItem : Powerup
         }
     }
 
-    void DoDeathLeaderTakeDamage(int damage, Name damageType, Actor inflictor, Actor source)
+    void DoDeathLeaderSpecial()
     {
-        //Only work on random hits
-        if (random(1,2) != 1)
+        //Friendly leaders do not raise the dead
+        if (Owner.bFriendly)
             return;
-
-        if (!IsTimedOutExpired())
-            return;
-        SetTimeout();
 
         Owner.A_RadiusGive("RaiseWraithItem", 200, RGF_CORPSES);
     }
 
-    void DoFireLeaderTakeDamage(int damage, Name damageType, Actor inflictor, Actor source)
+    void DoFireLeaderSpecial()
     {
-        if (!source || !source.Player)
-            return;
-
-        if (!IsTimedOutExpired())
-            return;
-        SetTimeout();
-
         for (int i = 0; i < 6; i++)
         {
             let xVel = frandom(-2, 2);
@@ -394,7 +398,6 @@ class WanderingMonsterItem : Powerup
        switch (LeaderType)
         {
             case WML_FIRE:
-                DoFireLeaderTakeDamage(damage, damageType, inflictor, source);
                 if (damageType == 'Fire')
                     newdamage = damage / BOSS_DAMAGE_RESIST;
                 else if (damageType == 'Water')
@@ -416,8 +419,6 @@ class WanderingMonsterItem : Powerup
                     newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
             case WML_DEATH:
-                DoDeathLeaderTakeDamage(damage, damageType, inflictor, source);
-
                 if (damageType == 'Death')
                     newdamage = damage / BOSS_DAMAGE_RESIST;
                 else if (damageType == 'Fire' ||
@@ -454,8 +455,14 @@ class WanderingMonsterItem : Powerup
        //Brutes push
         if (BossFlag & WMF_BRUTE)
         {
-            if (damageTarget)
+            if (!damageTarget)
+                return;
+            
+            let xrpgPlayer = XRpgPlayer(damageTarget);
+            if (damageTarget.bIsMonster || xrpgPlayer)
+            {
                 damageTarget.Thrust(15, Owner.angle);
+            }
         }
    }
 
@@ -510,6 +517,19 @@ class WanderingMonsterItem : Powerup
         }
 	}
 
+    void DoThink()
+    {
+        switch (LeaderType)
+        {
+            case WML_DEATH:
+                DoDeathLeaderSpecial();
+                break;
+            case WML_FIRE:
+                DoFireLeaderSpecial();
+                break;
+        }
+    }
+
     Actor VerticleProjectile(Class<Actor> projType, int xPos, int yPos, double xVel, double yVel, double zVel, bool isFloor = false)
     {
         Actor mo = Spawn(projType);
@@ -535,6 +555,7 @@ class WanderingMonsterItem : Powerup
 
         return mo;
     }
+
     Actor TossProjectile(Class<Actor> projType, int xOffset, int yOffset, double xVel, double yVel, double zVel, bool isFloor = false)
     {
         Actor mo = VerticleProjectile(projType, Owner.Pos.X + xOffset, Owner.Pos.Y + yOffset, xVel, yVel, zVel, isFloor);
