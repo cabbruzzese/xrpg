@@ -182,8 +182,8 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
     const STAFFPOISON_DIST = 64;
     action void A_FirePoisonSpell()
 	{
-        let xo = frandom(-STAFFPOISON_DIST, STAFFPOISON_DIST);
-		let yo = frandom(-STAFFPOISON_DIST, STAFFPOISON_DIST);
+        let xo = frandom[MSpellPoison4](-STAFFPOISON_DIST, STAFFPOISON_DIST);
+		let yo = frandom[MSpellPoison4](-STAFFPOISON_DIST, STAFFPOISON_DIST);
 
 		Vector3 spawnpos = (Pos.X + xo, Pos.Y + yo, Pos.Z + 16);
         Actor mo = SpawnPlayerMissile("MageStaffPoisonMissile");
@@ -738,7 +738,7 @@ class MageStaffDeathMissile3 : Actor
 		bDontBlast = false;
 		Floorclip = Height;
 
-		if (random(0, 1) == 1)
+		if (random[MSpellDeath4](0, 1) == 1)
 			bXFlip = true;
 	}
 

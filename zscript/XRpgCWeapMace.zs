@@ -78,7 +78,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 			return;
 		}
 
-		int damage = random(1, 40);
+		int damage = random[CWeapMace](1, 40);
 
         let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
@@ -121,7 +121,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 			return;
 		}
 
-		int damage = random(1, 8);
+		int damage = random[CWeapMaceSwing](1, 8);
 
         let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)

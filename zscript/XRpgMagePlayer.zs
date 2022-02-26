@@ -128,7 +128,7 @@ class XRpgMagePlayer : XRpgPlayer
 		statItem.Magic += 1;
 
 		//give one at random to other 2 stats
-		if (random(1,2) == 2)
+		if (random[MLvlStat](1,2) == 2)
 			statItem.Dexterity += 1;
 		else
 			statItem.Strength += 1;
@@ -169,7 +169,7 @@ class XRpgMagePlayer : XRpgPlayer
 
 		if (availSpells.Size() > 0)
 		{
-			int selection = random(0, availSpells.Size() - 1);
+			int selection = random[MLvlSpell](0, availSpells.Size() - 1);
 			GiveSpell(availSpells[selection]);
 		}
 	}

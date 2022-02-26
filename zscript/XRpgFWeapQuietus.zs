@@ -275,7 +275,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 			return;
 		}
 
-		int damage = random(1, 140);
+		int damage = random[FWeapHammerSlam](1, 140);
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)

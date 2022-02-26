@@ -123,7 +123,7 @@ class XRpgClericPlayer : XRpgPlayer
 		statItem.Dexterity += 1;
 
 		//give one at random to other 2 stats
-		if (random(1,2) == 2)
+		if (random[CLvlStat](1,2) == 2)
 			statItem.Strength += 1;
 		else
 			statItem.Magic += 1;

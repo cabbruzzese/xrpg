@@ -107,10 +107,10 @@ class XRpgWeapon : Weapon
         int zMod = 0;
 
         if (angleMax != 0)
-            angleSpread = frandom(-angleMax, angleMax);
+            angleSpread = frandom[BaseWeaponSpread](-angleMax, angleMax);
 
         if (zAngleMax != 0)
-            zMod = frandom(-zAngleMax, zAngleMax);
+            zMod = frandom[BaseWeaponSpread](-zAngleMax, zAngleMax);
         
 		Actor shard = SpawnPlayerMissile(missileType, angle + angleSpread + angleMod);
         if (shard)
@@ -154,9 +154,9 @@ class XRpgWeapon : Weapon
         int xo = 0;
         int yo = 0;
         if (xSpread != 0)
-		    xo = frandom(-xSpread, xSpread);
+		    xo = frandom[BaseWeaponSpread](-xSpread, xSpread);
         if (ySpread != 0)
-		    yo = frandom(-ySpread, ySpread);
+		    yo = frandom[BaseWeaponSpread](-ySpread, ySpread);
 
 		Vector3 spawnpos = Vec2OffsetZ(xo + xMod, yo + yMod, pos.z);
 		

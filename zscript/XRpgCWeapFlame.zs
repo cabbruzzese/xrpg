@@ -91,7 +91,7 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 	        A_StartSound ("*fistgrunt", CHAN_VOICE);
 		}
 
-		int damage = random(1, 40);
+		int damage = random[CWeapFlame](1, 40);
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer)
@@ -278,19 +278,19 @@ class FlameVilePuffBoom : Actor
 			if (!mo)
 				return;
 			
-			let xo = frandom(-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
-			let yo = frandom(-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
+			let xo = frandom[CWeapFlameLava](-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
+			let yo = frandom[CWeapFlameLava](-FLAME_VILE_OFFSET, FLAME_VILE_OFFSET);
 			mo.SetOrigin((Pos.X + xo, Pos.Y + yo, Pos.Z), false);
 
 			double newz = mo.CurSector.NextLowestFloorAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) + mo.height;
 			
 			mo.SetZ(newz);
 
-			let xVel = frandom(-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
-			let yVel = frandom(-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
+			let xVel = frandom[CWeapFlameLava](-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
+			let yVel = frandom[CWeapFlameLava](-FLAME_VILE_MAX_SPEED, FLAME_VILE_MAX_SPEED);
 			mo.Vel.X = xVel;
 			mo.Vel.Y = yVel;
-			let vSpeed = frandom(FLAME_VILE_VSPEED_MIN, FLAME_VILE_VSPEED_MAX);
+			let vSpeed = frandom[CWeapFlameLava](FLAME_VILE_VSPEED_MIN, FLAME_VILE_VSPEED_MAX);
 			mo.Vel.Z = vSpeed;
 			mo.CheckMissileSpawn (radius);
 		}

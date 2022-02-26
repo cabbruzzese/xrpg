@@ -312,7 +312,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		if (!w)
 			return;
 		
-		if (random(1,3) == 1)
+		if (random[FWeapAxeSound](1,3) == 1)
 			A_StartSound ("*fistgrunt", CHAN_VOICE);
 
 		bool isBeserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);

@@ -120,7 +120,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		statItem.Strength += 1;
 
 		//give one at random to other 2 stats
-		if (random(1,2) == 2)
+		if (random[FLvlStat](1,2) == 2)
 			statItem.Dexterity += 1;
 		else
 			statItem.Magic += 1;
@@ -140,7 +140,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		
 		if (availSpells.Size() > 0)
 		{
-			int selection = random(0, availSpells.Size() - 1);
+			int selection = random[FLvlSpell](0, availSpells.Size() - 1);
 			GiveSpell(availSpells[selection]);
 		}
 	}

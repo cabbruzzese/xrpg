@@ -176,7 +176,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
 		{
-			if (!weapon.DepleteAmmo (weapon.bAltFire, false))
+			if (!weapon.DepleteAmmo (false, false))
 				return;
 		}
 		Actor mo = SpawnPlayerMissile ("HammerMissile"); 
@@ -195,7 +195,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 
 		invoker.ChargeValue = 0;
 
-		int damage = random(1, 70);
+		int damage = random[FWeapHammer](1, 70);
 		damage += (invoker.ChargeValue * 3);
 
 		int range = 150;

@@ -64,6 +64,20 @@ class XRpgPlayer : PlayerPawn
 		return result;
 	}
 
+	void Heal(int amount)
+	{
+		//don't heal if dead
+		if (Health <= 0)
+			return;
+		
+		//Only heal if health is below max
+		if (Health < MaxHealth)
+		{
+			int newHealth = Min(Health + amount, MaxHealth);
+			A_SetHealth(newHealth);
+		}
+	}
+
 	void GiveSpell(class<Inventory> itemtype)
 	{
 		let spell = GiveInventoryType(itemtype);
@@ -201,7 +215,7 @@ class XRpgPlayer : PlayerPawn
 	{
 		//health increases by random up to half Strength, min 5 (weighted for low end of flat scale)
 		int halfStrength = statItem.Strength / 2;
-		int healthBonus = random(1, halfStrength);
+		int healthBonus = random[LvlHealth](1, halfStrength);
 		healthBonus = Max(healthBonus, 5);
 
 		int newHealth = MaxHealth + healthBonus;
@@ -215,7 +229,7 @@ class XRpgPlayer : PlayerPawn
 	{
 		//mana increases by random up to half Magic, min 5 (weighted for low end of flat scale)
 		int halfMagic = statItem.Magic / 2;
-		int manaBonus = random(1, halfMagic);
+		int manaBonus = random[LvlMana](1, halfMagic);
 		manaBonus = Max(manaBonus, 5);
 		
 		return manaBonus;
@@ -263,7 +277,7 @@ class XRpgPlayer : PlayerPawn
 		{
 			int statStack = statItem.Strength + statItem.Dexterity + statItem.Magic;
 			
-			double rand = random(1, statStack);
+			double rand = random[LvlStatStack](1, statStack);
 			if (rand <= statItem.Strength)
 			{
 				statItem.Strength += 1;

@@ -314,8 +314,8 @@ class MageFrostIceMissile : Actor
 
 	action void A_RainIce(Vector3 rainPos)
 	{
-		double xo = frandom(-ICESTORM_SPREAD, ICESTORM_SPREAD);
-		double yo = frandom(-ICESTORM_SPREAD, ICESTORM_SPREAD);
+		double xo = frandom[MSpellIce2](-ICESTORM_SPREAD, ICESTORM_SPREAD);
+		double yo = frandom[MSpellIce2](-ICESTORM_SPREAD, ICESTORM_SPREAD);
 		Vector3 spawnpos = rainPos + (xo, yo, 0);
 		Actor mo = Spawn("IceShard", spawnpos, ALLOW_REPLACE);
 		if (!mo) return;
@@ -328,7 +328,7 @@ class MageFrostIceMissile : Actor
 
 		mo.target = target;
 		mo.Vel.X = MinVel; // Force collision detection
-		let zMod = frandom(-ICESTORM_ZSPEED_MOD, ICESTORM_ZSPEED_MOD);
+		let zMod = frandom[MSpellIce2](-ICESTORM_ZSPEED_MOD, ICESTORM_ZSPEED_MOD);
 		mo.Vel.Z = ICESTORM_ZSPEED + zMod;
 		mo.CheckMissileSpawn (radius);
 		mo.A_SetPitch(90);
@@ -563,7 +563,7 @@ class MageFrostChain : Actor
 
 	void SetRandomHook()
 	{
-		int stateNum = random(1, 3);
+		int stateNum = random[MSpellDeath2](1, 3);
 		switch(stateNum)
 		{
 			case 1:
@@ -585,8 +585,8 @@ class MageFrostChain : Actor
 
 		tracer = target;
 		
-		double xo = frandom(-FROSTCHAIN_SPREAD, FROSTCHAIN_SPREAD);
-		double yo = frandom(-FROSTCHAIN_SPREAD, FROSTCHAIN_SPREAD);
+		double xo = frandom[MSpellDeath2](-FROSTCHAIN_SPREAD, FROSTCHAIN_SPREAD);
+		double yo = frandom[MSpellDeath2](-FROSTCHAIN_SPREAD, FROSTCHAIN_SPREAD);
 		Vector3 spawnPos = Vec2OffsetZ(xo, yo, 0);
 
 		SetOrigin((spawnPos.X, spawnPos.Y, tracer.Pos.Z + FROSTCHAIN_HOOK_HEIGHT ), false);
@@ -793,10 +793,7 @@ class MageFrostBloodMissile : Actor
 		let playerObj = XRpgPlayer(target);
 		if (playerObj && playerObj.Health > 0)
 		{
-			if (playerObj.Health < playerObj.MaxHealth)
-			{
-				playerObj.A_SetHealth(playerObj.Health + 1);
-			}
+			playerObj.Heal(1);
 		}
 		
 		return Super.DoSpecialDamage(targetMonster, damage, damagetype);

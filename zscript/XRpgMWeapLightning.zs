@@ -640,12 +640,12 @@ class MageLightningMoonMissile : Actor
 
     action void A_FireStars()
     {
-        let angleMod = Random(1, 360);
+        let angleMod = Random[MSpellMoon3](1, 360);
 
         let mo = target.SpawnPlayerMissile("MageLightningMoonStar", angleMod);
         if (mo)
         {
-            let pitchMod = frandom(-40, 40);
+            let pitchMod = frandom[MSpellMoon3](-40, 40);
             mo.SetOrigin(Pos, false);
             mo.Vel.Z = pitchMod;
         }

@@ -121,7 +121,7 @@ class WanderingMonsterItem : Powerup
             Owner.A_DropItem("Mana2", 20, DROP_AMMO_CHANCE);
         }
 
-        int randomDrop = random(0, 100);
+        int randomDrop = random[WMFDrop](0, 100);
         if (randomDrop < 50)
         {
             if (randomDrop > 25)
@@ -169,15 +169,12 @@ class WanderingMonsterItem : Powerup
         BossFlag = 0;
 		
 		Owner.A_SetRenderStyle(1.0, STYLE_Normal);
-		
-		//if (BaseSpeed != -1)
-			//Owner.A_SetSpeed(BaseSpeed);//Restore saved speed
     }
 
     void SetBrute()
     {
         int sizeCount = 1;
-        float bruteScale = frandom(1.2, 2.0);
+        float bruteScale = frandom[WMFDropScale](1.2, 2.0);
 
         while(sizeCount < 6)
         {
@@ -269,15 +266,15 @@ class WanderingMonsterItem : Powerup
         LeaderProps props;
 
         int bruteChance = min(BOSSTYPE_CHANCE_BRUTE + playerLevel, BOSSTYPE_CHANCE_MAX);
-        if (random(0, 100) < bruteChance)
+        if (random[WMFBrute](0, 100) < bruteChance)
             props.BossFlag |= WMF_BRUTE;
 
         int leaderChance = min(BOSSTYPE_CHANCE_LEADER + playerLevel, BOSSTYPE_CHANCE_MAX);
-        if (random(1,100) < leaderChance)
+        if (random[WMFLeader](1,100) < leaderChance)
 		{
 			props.BossFlag |= WMF_LEADER;
 			
-			let bossRoll = random(1, BOSSTYPE_LEADER_SUB_NUM);
+			let bossRoll = random[WMLType](1, BOSSTYPE_LEADER_SUB_NUM);
 			
 			if (bossRoll == 1)
 				props.LeaderFlag = WML_POISON;
@@ -297,7 +294,7 @@ class WanderingMonsterItem : Powerup
 
         //Don't make Leader types invisible
         int spectreChance = min(BOSSTYPE_CHANCE_SPECTRE + playerLevel, BOSSTYPE_CHANCE_MAX);
-		if (!(props.BossFlag & WMF_LEADER) && random(1,100) < spectreChance)
+		if (!(props.BossFlag & WMF_LEADER) && random[WMFSpectre](1,100) < spectreChance)
 			props.BossFlag |= WMF_SPECTRE;
 
         ApplyBossMonster(props);
@@ -323,8 +320,8 @@ class WanderingMonsterItem : Powerup
         {
             moveTries++;
 
-            newPos.x = random(-LIGHTNINGBOSS_TELEPORT_DIST, LIGHTNINGBOSS_TELEPORT_DIST) + Owner.Pos.X;
-            newPos.y = random(-LIGHTNINGBOSS_TELEPORT_DIST, LIGHTNINGBOSS_TELEPORT_DIST) + Owner.Pos.Y;
+            newPos.x = random[WMLLightningTele](-LIGHTNINGBOSS_TELEPORT_DIST, LIGHTNINGBOSS_TELEPORT_DIST) + Owner.Pos.X;
+            newPos.y = random[WMLLightningTele](-LIGHTNINGBOSS_TELEPORT_DIST, LIGHTNINGBOSS_TELEPORT_DIST) + Owner.Pos.Y;
             newPos.Z = Owner.Pos.Z;
 
             let vecOffset = newPos - oldPos;
@@ -369,12 +366,12 @@ class WanderingMonsterItem : Powerup
     {
         for (int i = 0; i < 6; i++)
         {
-            let xVel = frandom(-2, 2);
-            let yVel = frandom(-2, 2);
-            let zVel = frandom(3.0, 6.0);
+            let xVel = frandom[WMLFireBall](-2, 2);
+            let yVel = frandom[WMLFireBall](-2, 2);
+            let zVel = frandom[WMLFireBall](3.0, 6.0);
 
-            let xo = random(-16, 16);
-            let yo = random(-16, 16);
+            let xo = random[WMLFireBall](-16, 16);
+            let yo = random[WMLFireBall](-16, 16);
 
             TossProjectile("FireLeaderLava", xo, yo, xVel, yVel, zVel, true);
         }

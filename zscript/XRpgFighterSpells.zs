@@ -60,7 +60,7 @@ class BerserkSpell : FighterSpellItem
 		
 		if (passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
-			let chance = random(1, 200) - (damage / 2);
+			let chance = random[FSpellBerserk](1, 200) - (damage / 5);
 			if (chance < xrpgPlayer.GetMagic())
 			{
 				xrpgPlayer.A_Print("BERSERKER RAGE!");
@@ -68,10 +68,8 @@ class BerserkSpell : FighterSpellItem
 				Use(true);
 
 				//Restore health if low
-				int healthBoost = xrpgPlayer.GetMagic() * 3;
-				xrpgPlayer.A_SetHealth(xrpgPlayer.Health + healthBoost);
-				if (xrpgPlayer.Health > xrpgPlayer.MaxHealth)
-					xrpgPlayer.A_SetHealth(xrpgPlayer.MaxHealth);
+				int healthBoost = xrpgPlayer.GetMagic();
+				xrpgPlayer.Heal(healthBoost);
 			}
         }
 	}
@@ -111,7 +109,7 @@ class StunSpell : FighterSpellItem
 			if (!source || !source.bISMONSTER || damageType != "Melee")
 				return;
 
-			let chance = random(1, 200) - (damage / 10);
+			let chance = random[FSpellStun](1, 200) - (damage / 10);
 			if (chance < xrpgPlayer.GetMagic())
 			{
 				xrpgPlayer.A_Print("Stunning strike!");
@@ -160,14 +158,14 @@ class PowerSpell : FighterSpellItem
 
 	void ThrowSpark(Actor victim)
     {
-        let xo = random(-16, 16);
-        let yo = random(-16, 16);
+        let xo = random[FSpellPowerSpark](-16, 16);
+        let yo = random[FSpellPowerSpark](-16, 16);
         let zo = victim.Height / 2;
         let sparkPos = victim.Pos + (xo, yo, zo);
 
-        let vx = frandom(-2.0, 2.0);
-        let vy = frandom(-2.0, 2.0);
-        let vz = frandom(2.0, 4.0);
+        let vx = frandom[FSpellPowerSpark](-2.0, 2.0);
+        let vy = frandom[FSpellPowerSpark](-2.0, 2.0);
+        let vz = frandom[FSpellPowerSpark](2.0, 4.0);
 
         let mo = Spawn("PowerSpark");
         if (!mo)

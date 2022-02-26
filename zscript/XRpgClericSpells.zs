@@ -58,7 +58,7 @@ class HealSpell : XRpgSpellItem
 		{
 			let statItem = xrpgPlayer.GetStats();
 			int healMax = statItem.Magic * SPELL_CLERIC_HEALOTHER_MOD;
-			int healAmount = random(statItem.Magic, healMax);
+			int healAmount = random[CSpellHeal](statItem.Magic, healMax);
 			xrpgPlayer.A_RadiusGive("Health", 512, RGF_PLAYERS | RGF_GIVESELF, healAmount);
 
 			if (xrpgPlayer.player)
@@ -175,7 +175,7 @@ class WrathSpell : XRpgSpellItem
 				return;
 
 			//Randomly smite attacker
-			if (random(1,2) == 2)
+			if (random[CSpellSmite](1,2) == 2)
 			{
 				Actor mo = Owner.SpawnPlayerMissile("SmiteningMissile");
 				if (!mo) return;

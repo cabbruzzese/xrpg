@@ -390,8 +390,8 @@ class MageWandLightningMissile : FastProjectile
 			return;
 		}
 		
-        int randAngle = random(-12, 12);
-        int randPitch = random(-8, 8);
+        int randAngle = random[MSpellLightning1](-12, 12);
+        int randPitch = random[MSpellLightning1](-8, 8);
 		let mo = target.SpawnPlayerMissile ("MageWandLightningMissile", angle + randAngle);
 		if (mo != null)
 		{

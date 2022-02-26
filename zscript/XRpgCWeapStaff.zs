@@ -442,8 +442,8 @@ class StaffPoisonCloudMissile : FastProjectile
 			return;
 		}
 		
-        int randAngle = random(-12, 12);
-        int randPitch = random(-8, 8);
+        int randAngle = random[CWeapStaffCloud](-12, 12);
+        int randPitch = random[CWeapStaffCloud](-8, 8);
 		let mo = target.SpawnPlayerMissile ("StaffPoisonCloudMissile", angle + randAngle);
 		if (mo != null)
 		{
