@@ -42,15 +42,14 @@ class XRpgFighterPlayer : XRpgPlayer
 		Player.ColorsetFile 6, "$TXT_COLOR_BROWN",		"TRANTBL5",  0x6F;
 		Player.ColorsetFile 7, "$TXT_COLOR_PURPLE",		"TRANTBL6",  0xEE;
 
-        //Player.StartItem "ExpSquishItem";
-		XRpgPlayer.InitStrength 10;
+        XRpgPlayer.InitStrength 10;
 		XRpgPlayer.InitDexterity 8;
 		XRpgPlayer.InitMagic 4;
 
+		//NOTE: Uncomment for testing
 		//Player.StartItem "XRpgFWeapAxe";
 		//Player.StartItem "XRpgFWeapHammer";
 		//Player.StartItem "XRpgFWeapQuietus";
-
 		//Player.StartItem "BerserkSpell";
 		//Player.StartItem "StunSpell";
 		//Player.StartItem "PowerSpell";
