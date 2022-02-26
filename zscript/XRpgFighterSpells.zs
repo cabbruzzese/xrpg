@@ -64,8 +64,14 @@ class BerserkSpell : FighterSpellItem
 			if (chance < xrpgPlayer.GetMagic())
 			{
 				xrpgPlayer.A_Print("BERSERKER RAGE!");
-				xrpgPlayer.DoBlend(180, 180, 0, 0, 0.8, 160);
+				xrpgPlayer.DoBlend(180, 180, 20, 20, 0.8, 160);
 				Use(true);
+
+				//Restore health if low
+				int healthBoost = xrpgPlayer.GetMagic() * 3;
+				xrpgPlayer.A_SetHealth(xrpgPlayer.Health + healthBoost);
+				if (xrpgPlayer.Health > xrpgPlayer.MaxHealth)
+					xrpgPlayer.A_SetHealth(xrpgPlayer.MaxHealth);
 			}
         }
 	}
