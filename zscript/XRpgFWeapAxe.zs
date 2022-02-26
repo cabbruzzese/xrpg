@@ -339,7 +339,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 			return;
 		}
 
-		int damage = random[AxeAtk](1, 20);
+		int damage = random[AxeAtk](1, 15);
 		int power = 5;
 		class<Actor> pufftype;
 
@@ -354,7 +354,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		bool usemana = isGlowing && A_CheckAllMana(AXE_SWING_BLUEMANA, 0);
 		if (usemana)
 		{
-			damage += xrpgPlayer.GetMagic() * 3;
+			damage += xrpgPlayer.GetMagic();
 			power = 10;
 			pufftype = "SwingAxePuffGlow";
 		}
@@ -366,7 +366,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		
 		if (xrpgPlayer != null)
 		{
-			damage += xrpgPlayer.GetStrength() / 2.0;
+			damage += xrpgPlayer.GetStrength() / 3.0;
 		}
 
 		for (int i = 0; i < 16; i++)
