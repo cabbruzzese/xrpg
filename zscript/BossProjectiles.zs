@@ -48,7 +48,7 @@ class FireLeaderLava : TimedActor
 		if (damage > 0 && victim)
 		{
 			//Player friendly leaders can hurt monsters, but not other player friendlies
-			if (target.bFriendly)
+			if (target && target.bFriendly)
 			{
 				if (victim.bIsMonster && victim.bFriendly)
 					return 0;

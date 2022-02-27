@@ -61,7 +61,8 @@ class BerserkSpell : FighterSpellItem
 		if (passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
 			let chance = random[FSpellBerserk](1, 200) - (damage / 5);
-			if (chance < xrpgPlayer.GetMagic())
+			int magicMin = Min(50, xrpgPlayer.GetMagic());
+			if (chance < magicMin)
 			{
 				xrpgPlayer.A_Print("BERSERKER RAGE!");
 				xrpgPlayer.DoBlend(180, 180, 20, 20, 0.8, 160);
@@ -109,10 +110,11 @@ class StunSpell : FighterSpellItem
 			if (!source || !source.bISMONSTER || damageType != "Melee")
 				return;
 
-			let chance = random[FSpellStun](1, 200) - (damage / 10);
-			if (chance < xrpgPlayer.GetMagic())
+			let chance = random[FSpellStun](1, 200);
+			int magicMin = Min(50, xrpgPlayer.GetMagic());
+			if (chance < magicMin)
 			{
-				xrpgPlayer.A_Print("Stunning strike!");
+				//xrpgPlayer.A_Print("Stunning strike!");
 				xrpgPlayer.DoBlend(90, 0, 0, 180, 0.4, 60);
 				DoStunHit(xrpgPlayer, source);
 			}
