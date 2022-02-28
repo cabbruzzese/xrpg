@@ -305,8 +305,8 @@ class XRpgStatusBar : HexenStatusBar
 		if (!statItem)
 			return;
 
-		let text1 = String.Format("Level: %s", FormatNumber(statItem.ExpLevel, 0));
-		let text2 = String.Format("XP: %s / %s", FormatNumber(statItem.Exp, 0), FormatNumber(statItem.ExpNext, 0));
+		let text1 = String.Format("XP: %s / %s", FormatNumber(statItem.Exp, 0), FormatNumber(statItem.ExpNext, 0));
+		let text2 = String.Format("Level: %s", FormatNumber(statItem.ExpLevel, 0));
 				
 		//Exp
 		DrawString(mSmallFont, text1, (xPos, yPos), DI_TEXT_ALIGN_LEFT);

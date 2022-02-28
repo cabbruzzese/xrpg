@@ -25,6 +25,8 @@ class SmiteSpell : XRpgSpellItem
 
 		XRpgSpellItem.MagicTimerMod 5;
 		XRpgSpellItem.IsMultiSlot true;
+
+		XRpgSpellItem.CanRenew true;
 	}
 }
 
@@ -91,6 +93,8 @@ class ProtectSpell : XRpgSpellItem
 		XRpgSpellItem.MagicTimerMod 10;
 		XRpgSpellItem.IsMultiSlot true;
 		XRpgSpellItem.UseCrystals true;
+
+		XRpgSpellItem.CanRenew true;
 	}
 
 	override void CastSpell()
@@ -108,6 +112,9 @@ class ProtectSpell : XRpgSpellItem
 			return;
 
 		if (!xrpgPlayer.IsSpellActive(SPELLTYPE_CLERIC_PROTECT, true))
+			return;
+		
+		if (!source || !source.bIsMonster)
 			return;
 		
 		if (passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
@@ -147,6 +154,8 @@ class WrathSpell : XRpgSpellItem
 
 		XRpgSpellItem.MagicTimerMod 5;
 		XRpgSpellItem.IsMultiSlot true;
+
+		XRpgSpellItem.CanRenew true;
 	}
 
 	override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
@@ -168,7 +177,7 @@ class WrathSpell : XRpgSpellItem
 				targetMonster = inflictor;
 			else if (source && source.bIsMonster)
 				targetMonster = source;
-			else if (inflictor.target && inflictor.target.bIsMonster)
+			else if (inflictor && inflictor.target && inflictor.target.bIsMonster)
 				targetMonster = inflictor.target;
 
 			if (!targetMonster)

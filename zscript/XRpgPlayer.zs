@@ -122,6 +122,10 @@ class XRpgPlayer : PlayerPawn
 		if (!spellItem)
 			return false;
 
+		//If CanRenew, keep spell active if it is already active
+		if (spellItem.CanRenew && IsSpellActive(spellItem.SpellType, true))
+			return true;
+
 		//Just replace for basic spells
 		if (!spellItem.IsMultiSlot)
 		{
@@ -197,15 +201,14 @@ class XRpgPlayer : PlayerPawn
 	{
 	}
 	
-	void DoBlend(int r, int g, int b, int a, float alpha, int tics)
+	void DoBlend(Color color, float alpha, int tics)
 	{
-		let blendColor = Color(r, g, b, a);
-		A_SetBlend(blendColor, alpha, tics);
+		A_SetBlend(color, alpha, tics);
 	}
 
 	void DoLevelGainBlend(PlayerLevelItem statItem)
 	{
-		DoBlend(122, 122, 122, 122, 0.8, 40);
+		DoBlend("77 77 77", 0.8, 40);
 		
 		string lvlMsg = String.Format("You are now level %d", statItem.ExpLevel);
 		A_Print(lvlMsg);

@@ -193,6 +193,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 			return;
 		}
 
+		float explodeDamageMod = 1.0 + (float(invoker.ChargeValue) / float(invoker.MaxCharge));
 		invoker.ChargeValue = 0;
 
 		int damage = random[FWeapHammer](1, 70);
@@ -200,7 +201,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 
 		int range = 150;
 		let xrpgPlayer = XRpgPlayer(player.mo);
-		if (xrpgPlayer != null)
+		if (xrpgPlayer)
 			damage += xrpgPlayer.GetStrength();
 		
 		int thrustSpeed = 3500;
@@ -217,7 +218,11 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 				return;
 
 			w.DepleteAmmo (false, false);
-			SpawnPlayerMissile("HammerFloorMissile2");
+			let mo = HammerFloorMissile2(SpawnPlayerMissile("HammerFloorMissile2"));
+			if (mo)
+			{
+				mo.ExplodeDamageMod = explodeDamageMod;
+			}
 		}
 	}
 }
@@ -255,6 +260,8 @@ class HammerFloorMissile1 : Actor
 
 class HammerFloorMissile2 : HammerFloorMissile1
 {
+	float explodeDamageMod;
+	property ExplodeDamageMod : explodeDamageMod;
 	Default
 	{
 		Radius 5;
@@ -264,6 +271,8 @@ class HammerFloorMissile2 : HammerFloorMissile1
 		Damage HAMMERFLOOR_DAMAGE;
 		+FLOORHUGGER
 		RenderStyle "Add";
+
+		HammerFloorMissile2.ExplodeDamageMod 1.0;
 		
 		+RIPPER
 	}
@@ -292,6 +301,7 @@ class HammerFloorMissile2 : HammerFloorMissile1
 			mo.Vel.X = MinVel; // Force block checking
 			mo.CheckMissileSpawn (radius);
 			mo.SetOrigin((mo.Pos.X, mo.Pos.Y, mo.Pos.Z + 2), false);
+			mo.ExplodeDamageMod = ExplodeDamageMod;
 			
 			mo.FloorFireExplode();
 		}
@@ -299,7 +309,10 @@ class HammerFloorMissile2 : HammerFloorMissile1
 	
 	action void FloorFireExplode()
 	{
-		A_Explode(HAMMERFLOOR_RADIUSDAMAGE, HAMMERFLOOR_RADIUS, 0);
+		if (!invoker)
+			return;
+		int damage = HAMMERFLOOR_RADIUSDAMAGE * invoker.ExplodeDamageMod;
+		A_Explode(damage, HAMMERFLOOR_RADIUS, 0);
 		A_StartSound("MaulatorMissileHit", CHAN_BODY);
 	}
 }

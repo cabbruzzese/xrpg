@@ -14,6 +14,7 @@ class XRpgSpellItem : PowerupGiver
 	bool useCrystals;
 	int hitCount;
 	bool drawInactive;
+	bool canRenew;
 
     property SpellType : spellType;
 	property TimerVal : timerVal;
@@ -28,6 +29,7 @@ class XRpgSpellItem : PowerupGiver
 	property UseCrystals: useCrystals;
 	property HitCount : hitCount;
 	property DrawInactive : drawInactive;
+	property CanRenew : canRenew;
 
 	Default
 	{
@@ -51,6 +53,7 @@ class XRpgSpellItem : PowerupGiver
 		XRpgSpellItem.UseCrystals false;
 		XRpgSpellItem.HitCount 0;
 		XRpgSpellItem.DrawInactive false;
+		XRpgSpellItem.CanRenew false;
 	}
 
 	bool CheckMana(class<Inventory> type, int ammoUse)
@@ -94,25 +97,56 @@ class XRpgSpellItem : PowerupGiver
 	virtual void CastSpell()
 	{
 	}
+
+	//Get maximum timer with magic bonus.
+	// Bonus can increase or decrease the timer.
+	// i.e. magic decreases cooldown for cleric heal and increases timer for smite
+	int GetMaxTimerVal (XRpgPlayer xrpgPlayer)
+	{
+		if (!xrpgPlayer)
+			return 0;
+
+		int maxTimerVal = MaxTimer;
+		
+		let lowMaxMod = maxTimerVal / 2;
+		let highMaxMod = maxTimerVal * 2;
+		maxTimerVal += xrpgPlayer.GetMagic() * MagicTimerMod;
+
+		maxTimerVal = Max(maxTimerVal, lowMaxMod);
+		maxTimerVal = Min(maxTimerVal, highMaxMod);
+
+		return maxTimerVal;
+	}
 	
 	override bool Use (bool pickup)
 	{
-		if (TimerVal > 0)
+		if (TimerVal > 0 && !CanRenew)
 			return false;
 		
 		let xrpgPlayer = XRpgPlayer(Owner);
         if (!xrpgPlayer)
 			return false;
 
-		if (xrpgPlayer.IsSpellActive(SpellType, true))
+		int maxTimerVal = GetMaxTimerVal(xrpgPlayer);
+		
+		//Don't renew if timer is too high
+		if (CanRenew && TimerVal > 0 && TimerVal > (maxTimerVal / 2))
+			return false;
+
+		if (!CanRenew && xrpgPlayer.IsSpellActive(SpellType, true))
 			return false;
 		
 		//If multislot, check if slot is open
 		if (IsMultiSlot)
 		{
+			//If both are in use
 			if (!xrpgPlayer.IsSpellSlotOpen(xrpgPlayer.ActiveSpell, true) &&
 				!xrpgPlayer.IsSpellSlotOpen(xrpgPlayer.ActiveSpell2, true))
-				return false;
+			{
+				//if no slots are open or if it can be replaced, but is not even active
+				if (!CanRenew || !xrpgPlayer.IsSpellActive(SpellType, true))
+					return false;
+			}
 		}
 
 		//If mana cost required, check if enough and spend it
@@ -131,18 +165,7 @@ class XRpgSpellItem : PowerupGiver
 				return false;
 		}
 		
-		TimerVal = MaxTimer;
-
-		//Add magic bonus (negative or positive)
-		if (MaxTimer > 0)
-		{
-			let lowMaxMod = TimerVal / 2;
-			let highMaxMod = MaxTimer * 2;
-			TimerVal += xrpgPlayer.GetMagic() * MagicTimerMod;
-
-			TimerVal = Max(TimerVal, lowMaxMod);
-			TimerVal = Min(TimerVal, highMaxMod);
-		}
+		TimerVal = maxTimerVal;
 
 		lifeCostTimer = 0;
 

@@ -65,7 +65,7 @@ class BerserkSpell : FighterSpellItem
 			if (chance < magicMin)
 			{
 				xrpgPlayer.A_Print("BERSERKER RAGE!");
-				xrpgPlayer.DoBlend(180, 180, 20, 20, 0.8, 160);
+				xrpgPlayer.DoBlend("99 00 00", 0.6, 120);
 				Use(true);
 
 				//Restore health if low
@@ -115,7 +115,7 @@ class StunSpell : FighterSpellItem
 			if (chance < magicMin)
 			{
 				//xrpgPlayer.A_Print("Stunning strike!");
-				xrpgPlayer.DoBlend(90, 0, 0, 180, 0.4, 60);
+				xrpgPlayer.DoBlend("00 00 A0", 0.4, 60);
 				DoStunHit(xrpgPlayer, source);
 			}
         }
@@ -221,7 +221,7 @@ class PowerSpell : FighterSpellItem
 				let magicDamage = xrpgPlayer.GetMagic() * 4;
 				newdamage = damage + magicDamage;
 
-				xrpgPlayer.DoBlend(90, 200, 200, 0, 0.2, 20);
+				xrpgPlayer.DoBlend("55 CC CC", 0.2, 20);
 				ThrowSparks(source);
 			}
         }
