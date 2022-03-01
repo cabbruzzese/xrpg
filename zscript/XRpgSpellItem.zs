@@ -15,6 +15,7 @@ class XRpgSpellItem : PowerupGiver
 	int hitCount;
 	bool drawInactive;
 	bool canRenew;
+	int effectTimeout;
 
     property SpellType : spellType;
 	property TimerVal : timerVal;
@@ -30,6 +31,7 @@ class XRpgSpellItem : PowerupGiver
 	property HitCount : hitCount;
 	property DrawInactive : drawInactive;
 	property CanRenew : canRenew;
+	property EffectTimeout : effectTimeout;
 
 	Default
 	{
@@ -54,6 +56,7 @@ class XRpgSpellItem : PowerupGiver
 		XRpgSpellItem.HitCount 0;
 		XRpgSpellItem.DrawInactive false;
 		XRpgSpellItem.CanRenew false;
+		XRpgSpellItem.EffectTimeout 0;
 	}
 
 	bool CheckMana(class<Inventory> type, int ammoUse)
@@ -208,6 +211,9 @@ class XRpgSpellItem : PowerupGiver
 		if (TimerVal > 0)
 			TimerVal --;
 
+		if (EffectTimeout > 0)
+			EffectTimeout--;
+
 		//Remove spell if it is a timed spell
         let xrpgPlayer = XRpgPlayer(Owner);
         if (xrpgPlayer != null)
@@ -223,5 +229,15 @@ class XRpgSpellItem : PowerupGiver
 		{
 			Destroy ();
 		}
+	}
+
+	bool IsEffectTimeoutActive()
+	{
+		return EffectTimeout > 0;
+	}
+
+	void SetEffectTimeout(int ammount = 8)
+	{
+		EffectTimeout = ammount;
 	}
 }

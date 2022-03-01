@@ -408,7 +408,7 @@ class StunStars : Bridge
 
         Super.Tick();
 
-        if (target.Health < 1)
+        if (target && target.Health < 1)
             Destroy();
     }
 

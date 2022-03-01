@@ -289,7 +289,7 @@ class GhostarangMissile : Actor
 			return 0;
 			
 		//If this hit kills the monster
-		if (target.bIsMonster && target.Health > 0 && target.Health - damage < 1)
+		if (target.bIsMonster && target.Health > 0 && target.Health - damage < 1 && !target.bBoss)
 		{
 			target.bNoIceDeath = true;
         	target.bFriendly = true;

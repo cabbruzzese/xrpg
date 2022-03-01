@@ -57,6 +57,9 @@ class BerserkSpell : FighterSpellItem
 
 		if (!source || !source.bIsMonster)
 			return;
+
+		if (IsEffectTimeoutActive())
+			return;
 		
 		if (passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
@@ -72,6 +75,8 @@ class BerserkSpell : FighterSpellItem
 				int healthBoost = xrpgPlayer.GetMagic();
 				xrpgPlayer.Heal(healthBoost);
 			}
+
+			SetEffectTimeout();
         }
 	}
 }
@@ -104,10 +109,17 @@ class StunSpell : FighterSpellItem
 		let xrpgPlayer = XRpgPlayer(Owner);
         if (!xrpgPlayer)
 			return;
+		
+		if (IsEffectTimeoutActive())
+			return;
 
 		if (!passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
 			if (!source || !source.bISMONSTER || damageType != "Melee")
+				return;
+
+			//Stunning korax makes the game unbeatable
+			if (source is "Korax")
 				return;
 
 			let chance = random[FSpellStun](1, 200);
@@ -118,6 +130,8 @@ class StunSpell : FighterSpellItem
 				xrpgPlayer.DoBlend("00 00 A0", 0.4, 60);
 				DoStunHit(xrpgPlayer, source);
 			}
+
+			SetEffectTimeout();
         }
 	}
 
@@ -194,6 +208,9 @@ class PowerSpell : FighterSpellItem
 		let xrpgPlayer = XRpgFighterPlayer(Owner);
         if (!xrpgPlayer)
 			return;
+		
+		if (IsEffectTimeoutActive())
+			return;
 
 		if (!passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
@@ -224,6 +241,8 @@ class PowerSpell : FighterSpellItem
 				xrpgPlayer.DoBlend("55 CC CC", 0.2, 20);
 				ThrowSparks(source);
 			}
+
+			SetEffectTimeout();
         }
 	}
 }
