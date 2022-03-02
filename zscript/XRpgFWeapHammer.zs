@@ -38,7 +38,8 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1 A_WeaponReady;
 		Loop;
 	Fire:
-		FHMR B 6 Offset (5, 0) A_CheckBerserk(false);
+		FHMR B 2 Offset (5, 0);
+		FHMR B 4 Offset (5, 0) A_CheckBerserk(false);
 		FHMR C 3 Offset (5, 0) A_FHammerAttackMelee;
 		FHMR D 3 Offset (5, 0);
 		FHMR E 2 Offset (5, 0);

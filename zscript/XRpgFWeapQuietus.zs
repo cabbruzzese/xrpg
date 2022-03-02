@@ -117,10 +117,12 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		FSRD AAAABBBBCCCC 1 Bright A_FSwordWeaponReady;
 		Loop;
 	Fire:
-		FSRD DE 3 Bright Offset (5, 36) A_CheckBerserk(false);
-		FSRD F 2 Bright Offset (5, 36);
-		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwingMelee();
-		FSRD H 2 Bright Offset (5, 36);
+		FSRD D 3 Bright Offset (5, 36);
+	FireSwing:
+		FSRD E 3 Bright Offset (5, 36) A_CheckBerserk(false);
+		FSRD F 2 Bright Offset (5, 36) A_FSwordAttackSwingMelee(-15, -3);
+		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwingMelee(0, 0);
+		FSRD H 2 Bright Offset (5, 36) A_FSwordAttackSwingMelee(15, 3);
 		FSRD I 2 Bright Offset (5, 36);
 		FSRD I 10 Bright Offset (5, 150);
 		FSRD A 1 Bright Offset (5, 60);
@@ -130,9 +132,9 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		FSRD B 1 Bright Offset (5, 40);
 		Goto Ready;
 	BerserkFire:
-		FSRD F 2 Bright Offset (5, 36);
-		FSRD G 2 Bright Offset (5, 36) A_FSwordAttackSwingMelee();
-		FSRD H 2 Bright Offset (5, 36);
+		FSRD F 2 Bright Offset (5, 36) A_FSwordAttackSwingMelee(-15, -3);
+		FSRD G 2 Bright Offset (5, 36) A_FSwordAttackSwingMelee(0, 0);
+		FSRD H 2 Bright Offset (5, 36) A_FSwordAttackSwingMelee(15, 3);
 		FSRD I 1 Bright Offset (5, 36);
 		FSRD I 7 Bright Offset (5, 150);
 		FSRD A 1 Bright Offset (5, 60);
@@ -145,9 +147,11 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 	AltHold:
 		FSRD D 3 Bright Offset (5, 36) A_ChargeUp;
 		FSRD D 1 A_ReFire;
-		FSRD E 3 Bright Offset (5, 36);
+		FSRD E 3 Bright Offset (5, 36) A_ChargeCheckAttack;
+		Goto Fire;
+	AltFireSlash:
 		FSRD F 2 Bright Offset (5, 36);
-		FSRD G 3 Bright Offset (5, 36) A_FSwordAttackSwing();
+		FSRD G 3 Bright Offset (5, 36) A_FSwordAttack;
 		FSRD H 2 Bright Offset (5, 36);
 		FSRD I 2 Bright Offset (5, 36);
 		FSRD I 10 Bright Offset (5, 150);
@@ -157,7 +161,57 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		FSRD A 1 Bright Offset (5, 45);
 		FSRD B 1 Bright Offset (5, 40);
 		Goto Ready;
+	AltFireBeam:
+		FSRD F 2 Bright Offset (5, 36);
+		FSRD G 3 Bright Offset (5, 36) A_FSwordChargeAttack;
+		FSRD H 2 Bright Offset (5, 36);
+		FSRD I 2 Bright Offset (5, 36);
+		FSRD I 10 Bright Offset (5, 150);
+		FSRD A 1 Bright Offset (5, 60);
+		FSRD B 1 Bright Offset (5, 55);
+		FSRD C 1 Bright Offset (5, 50);
+		FSRD A 1 Bright Offset (5, 45);
+		FSRD B 1 Bright Offset (5, 40);
+		Goto Ready;
+	}
 
+	action void A_ChargeCheckAttack()
+	{
+		if (player == null)
+			return;
+
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (!xrpgPlayer)
+			return;
+
+		Weapon w = player.ReadyWeapon;
+		if (!w)
+			return;
+		
+		bool weaponspecial = true;
+		// Don't spawn a missile if the player doesn't have enough mana
+		if (player.ReadyWeapon == null ||
+			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
+				Weapon.AltFire : Weapon.PrimaryFire, false, true))
+		{ 
+			weaponspecial = false;
+		}
+
+		if (weaponspecial)
+		{
+			if (invoker.ChargeValue > 5)
+			{
+				A_SetWeapState("AltFireBeam");
+			}
+			else if (weaponspecial)
+			{
+				A_SetWeapState("AltFireSlash");
+			}
+		}
+		else
+		{
+			A_SetWeapState("FireSwing");
+		}
 	}
 	
 	action void A_FSwordWeaponReady()
@@ -181,7 +235,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		//mana depleted, exit
 		if (mana1Amount == 0 || mana2Amount == 0)
 		{
-			A_FSwordAttackSwingMelee(); //make a melee attack if out of ammo
+			A_FSwordAttackSwingMelee(0, 0); //make a melee attack if out of ammo
 			return;
 		}
 
@@ -234,7 +288,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		A_StartSound ("FighterSwordFire", CHAN_WEAPON);
 	}
 
-	action void A_FSwordAttackSwing()
+	action void A_FSwordAttackSwingMelee(int angleMod, int slopeMod)
 	{
 		FTranslatedLineTarget t;
 
@@ -243,46 +297,18 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 			return;
 		}
 
-		bool weaponspecial = true;
-		// Don't spawn a missile if the player doesn't have enough mana
-		if (player.ReadyWeapon == null ||
-			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
-				Weapon.AltFire : Weapon.PrimaryFire, false, true))
-		{ 
-			weaponspecial = false;
-		}
-
-		if (invoker.ChargeValue > 5)
-		{
-			A_FSwordChargeAttack();
-		}
-		else if (weaponspecial)
-		{
-			A_FSwordAttack();
-		}
-		else
-		{
-			A_FSwordAttackSwingMelee(); //make a melee attack if out of ammo
-		}
-	}
-
-	action void A_FSwordAttackSwingMelee()
-	{
-		FTranslatedLineTarget t;
-
-		if (player == null)
-		{
-			return;
-		}
-
-		int damage = random[FWeapHammerSlam](1, 140);
+		int damage = random[FWeapHammerSlam](1, 30);
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
 		{
-			let statItem = xrpgPlayer.GetStats();
-			damage += statItem.Strength;
+			damage += xrpgPlayer.GetStrength() / 2;
+			damage += xrpgPlayer.GetMagic() / 2;
 		}
+
+		class<Actor> pufftype = "SwordPuffSilent";
+		if (angleMod == 0)
+			pufftype = "SwordPuff"; //Only play miss sound on middle swing
 
 		for (int i = 0; i < 16; i++)
 		{
@@ -292,14 +318,11 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 				double slope = AimLineAttack(ang, SWORD_RANGE, t, 0., ALF_CHECK3D);
 				if (t.linetarget != null)
 				{
-					LineAttack(ang, SWORD_RANGE, slope, damage, 'Melee', "SwordPuff", true, t);
+					LineAttack(ang + angleMod, SWORD_RANGE, slope + slopeMod, damage, 'Melee', pufftype, true, t);
 					if (t.linetarget != null)
 					{
 						AdjustPlayerAngle(t);
-						if (t.linetarget.bIsMonster || t.linetarget.player)
-						{
-							t.linetarget.Thrust(10, t.attackAngleFromSource);
-						}
+						
 						weaponspecial = false;
 						return;
 					}
@@ -308,12 +331,12 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		}
 
 		// didn't find any targets in meleerange, so set to throw out a missile
-		double slope = AimLineAttack (angle, SWORD_RANGE, null, 0., ALF_CHECK3D);
-		weaponspecial = (LineAttack (angle, SWORD_RANGE, slope, damage, 'Melee', "SwordPuff", true) == null);
+		double slope = AimLineAttack (angle + angleMod, SWORD_RANGE, null, 0., ALF_CHECK3D);
+		weaponspecial = (LineAttack (angle + angleMod, SWORD_RANGE, slope + slopeMod, damage, 'Melee', pufftype, true) == null);
 	}
 }
 
-class SwordPuff : Actor
+class SwordPuffSilent : Actor
 {
 	Default
 	{
@@ -324,7 +347,6 @@ class SwordPuff : Actor
 		VSpeed 0.8;
 		SeeSound "FighterHammerHitThing";
 		AttackSound "FighterHammerHitWall";
-		ActiveSound "FighterHammerMiss";
 		Scale 0.5;
 	}
 	States
@@ -332,6 +354,13 @@ class SwordPuff : Actor
 	Spawn:
 		FSFX DEFGHIJKLM 3;
 		Stop;
+	}
+}
+class SwordPuff : SwordPuffSilent
+{
+	Default
+	{
+		ActiveSound "FighterHammerMiss";
 	}
 }
 

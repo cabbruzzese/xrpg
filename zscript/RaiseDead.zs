@@ -18,6 +18,10 @@ class RaiseDeadItem : Inventory
     {
         if (!Owner || Owner.bFriendly)
 			return false;
+		
+		//Don't summon dying wraiths
+		if (Owner is "Wraith")
+			return false;
 
 		Actor mo = Spawn(self.SummonType, Owner.Pos, ALLOW_REPLACE);
 		Spawn("MinotaurSmoke", Owner.Pos, ALLOW_REPLACE);
