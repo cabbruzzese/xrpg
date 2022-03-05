@@ -19,7 +19,7 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 		MWND A 1 A_Lower;
 		Loop;
 	Ready:
-		MWND A 1 A_WeaponReady;
+		MWND A 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
 		Loop;
 	Fire:
 		MWND A 6;
@@ -73,6 +73,12 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         MWND A 5;
 		MWND B 7 Bright Offset (0, 48) A_FireBloodSpell;
         Goto AltFireFinish;
+    Reload:
+		#### # 8 A_NextSpell;
+		Goto Ready;
+    Zoom:
+		#### # 8 A_PrevSpell;
+		Goto Ready;
 	}
 
     action void A_FireWaterSpell()

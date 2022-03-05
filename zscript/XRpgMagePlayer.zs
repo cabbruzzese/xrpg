@@ -138,7 +138,6 @@ class XRpgMagePlayer : XRpgPlayer
 	void GrantRandomSpell(int expLevel)
 	{
 		Array<class<Inventory> > availSpells;
-		Class<Inventory> spellTypeBag;
 
 		if (!FindInventory("FireSpell"))
 			availSpells.Push( ClassTypeBag("FireSpell") );
@@ -189,5 +188,62 @@ class XRpgMagePlayer : XRpgPlayer
 		RegenerateManaType("Mana1", magicMax);
 		RegenerateManaType("Mana2", magicMax);
 	}
+
+	XRpgSpellItem FindSpellItem(name invName)
+	{
+		let foundItem = FindInventory(invName);
+
+		return XRpgSpellItem(foundItem);
+	}
+
+	AvailableSpells GetAvailSpells()
+	{
+		AvailableSpells availSpells =  new("AvailableSpells");
+
+		XRpgSpellItem foundSpell;
+		if (foundSpell = FindSpellItem("FireSpell"))
+			availSpells.AddSpell(foundSpell);
+		if (foundSpell = FindSpellItem("IceSpell"))
+			availSpells.AddSpell(foundSpell);
+		if (foundSpell = FindSpellItem("PoisonSpell"))
+			availSpells.AddSpell(foundSpell);
+		if (foundSpell = FindSpellItem("WaterSpell"))
+			availSpells.AddSpell(foundSpell);
+		if (foundSpell = FindSpellItem("SunSpell"))
+			availSpells.AddSpell(foundSpell);
+		if (foundSpell = FindSpellItem("MoonSpell"))
+			availSpells.AddSpell(foundSpell);
+		if (foundSpell = FindSpellItem("DeathSpell"))
+			availSpells.AddSpell(foundSpell);
+		if (foundSpell = FindSpellItem("LightningSpell"))
+			availSpells.AddSpell(foundSpell);
+		if (foundSpell = FindSpellItem("BloodSpell"))
+			availSpells.AddSpell(foundSpell);
+
+		return availSpells;
+	}
 }
 
+
+
+class AvailableSpells
+{
+	XRpgSpellItem[9] spellList;
+	int arrayLen;
+
+	void AddSpell (XRpgSpellItem spellItem)
+	{
+		spellList[arrayLen] = spellItem;
+		arrayLen++;
+	}
+
+	int Size()
+	{
+		return arrayLen;
+	}
+
+	XRpgSpellItem GetItem(int itemNum)
+	{
+		return spellList[itemNum];
+	}
+}

@@ -28,7 +28,7 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE A 1 A_Lower;
 		Loop;
 	Ready:
-		CONE A 1 A_WeaponReady;
+		CONE A 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
 		Loop;
 	Fire:
 		CONE B 3;
@@ -112,6 +112,12 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE E 5;
         CONE F 3 Bright A_FireBloodSpell;
         Goto AltFireFinish;
+	Reload:
+		#### # 8 A_NextSpell;
+		Goto Ready;
+    Zoom:
+		#### # 8 A_PrevSpell;
+		Goto Ready;
 	}
 	
 	//============================================================================

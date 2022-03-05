@@ -456,4 +456,49 @@ class XRpgPlayer : PlayerPawn
 		MaxHealth = statItem.MaxHealth;
 		A_SetHealth(MaxHealth);
 	}
+
+	override void CheatGive (String name, int amount)
+	{
+		int i;
+		Class<Inventory> type;
+		let player = self.player;
+
+		if (player.mo == NULL || player.health <= 0)
+		{
+			return;
+		}
+
+		if (name ~== "spells")
+		{
+			if (self is "XRpgFighterPlayer")
+			{
+				GiveInventory("BerserkSpell", 1);
+				GiveInventory("StunSpell", 1);
+				GiveInventory("PowerSpell", 1);
+			}
+			else if (self is "XRpgClericPlayer")
+			{
+				GiveInventory("SmiteSpell", 1);
+				GiveInventory("HealSpell", 1);
+				GiveInventory("ProtectSpell", 1);
+				GiveInventory("WrathSpell", 1);
+				GiveInventory("DivineSpell", 1);
+			}
+			else if (self is "XRpgMagePlayer")
+			{
+				GiveInventory("FireSpell", 1);
+				GiveInventory("IceSpell", 1);
+				GiveInventory("PoisonSpell", 1);
+				GiveInventory("WaterSpell", 1);
+				GiveInventory("SunSpell", 1);
+				GiveInventory("MoonSpell", 1);
+				GiveInventory("DeathSpell", 1);
+				GiveInventory("LightningSpell", 1);
+				GiveInventory("BloodSpell", 1);
+			}
+			return;
+		}
+
+		Super.CheatGive(name, amount);
+	}
 }

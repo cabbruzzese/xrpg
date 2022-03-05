@@ -111,7 +111,7 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		MSTF A 1 A_Lower;
 		Loop;
 	Ready:
-		MSTF AAAAAABBBBBBCCCCCCDDDDDDEEEEEEFFFFF 1 A_WeaponReady;
+		MSTF AAAAAABBBBBBCCCCCCDDDDDDEEEEEEFFFFF 1 A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
 		Loop;
 	Fire:
 		MSTF G 4 Offset (0, 40);
@@ -168,6 +168,12 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		MSTF H 1 Bright Offset (0, 48) A_FireBloodSpell;
 		MSTF H 24 Bright Offset (0, 48);
         Goto AltFireFinish;
+	Reload:
+		#### # 8 A_NextSpell;
+		Goto Ready;
+    Zoom:
+		#### # 8 A_PrevSpell;
+		Goto Ready;
 	}
 
 	//Final weapon attacks are weaker but do not use ammo

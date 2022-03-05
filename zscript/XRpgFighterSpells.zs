@@ -126,8 +126,6 @@ class StunSpell : FighterSpellItem
 			int magicMin = Min(50, xrpgPlayer.GetMagic());
 			if (chance < magicMin)
 			{
-				//xrpgPlayer.A_Print("Stunning strike!");
-				xrpgPlayer.DoBlend("00 00 A0", 0.4, 60);
 				DoStunHit(xrpgPlayer, source);
 			}
 

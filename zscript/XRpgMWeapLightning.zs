@@ -28,12 +28,12 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		MLNG A 1 Bright A_Lower;
 		Loop;
 	Ready:
-		MLNG AAAAA 1 Bright A_WeaponReady;
+		MLNG AAAAA 1 Bright A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
 		MLNG A 1 Bright A_LightningReady;
-		MLNG BBBBBB 1 Bright A_WeaponReady;
-		MLNG CCCCC 1 Bright A_WeaponReady;
+		MLNG BBBBBB 1 Bright A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
+		MLNG CCCCC 1 Bright A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
 		MLNG C 1 Bright A_LightningReady;
-		MLNG BBBBBB 1 Bright A_WeaponReady;
+		MLNG BBBBBB 1 Bright A_WeaponReady(WRF_ALLOWRELOAD|WRF_ALLOWZOOM);
 		Loop;
 	Fire:
 		MLNG DE 3 Bright;
@@ -94,6 +94,12 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
     BloodSpell:
 		MLNG F 1 Bright A_FireBloodSpell;
         Goto AltFireFinish;
+	Reload:
+		#### # 8 Bright A_NextSpell;
+		Goto Ready;
+    Zoom:
+		#### # 8 Bright A_PrevSpell;
+		Goto Ready;
 	}
     
     action void A_FireIceSpell()

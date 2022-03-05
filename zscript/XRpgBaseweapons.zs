@@ -284,6 +284,85 @@ class XRpgMageWeapon : XRpgWeapon
             }
         }
 	}
+
+    action void A_NextSpell()
+    {
+        if (player == null)
+			return;
+
+        A_GetNextSpell();
+    }
+    action void A_PrevSpell()
+    {
+        if (player == null)
+			return;
+
+        A_GetPrevSpell();
+    }
+
+	action void A_GetNextSpell() 
+	{
+		if (!player)
+            return;
+
+        let magePlayer = XRpgMagePlayer(player.mo);
+        if (!magePlayer || !magePlayer.ActiveSpell)
+			return;
+
+		int currentSpellType = magePlayer.ActiveSpell.SpellType;
+		
+		let availSpells = magePlayer.GetAvailSpells();
+
+		if (availSpells.Size() < 2)
+		{
+			return;
+		}
+
+		int sPos = 0;
+		for (int i = 0; i < availSpells.Size(); i++)
+		{
+			if (availSpells.GetItem(i).SpellType == currentSpellType)
+				sPos = i;
+		}
+
+		sPos++;
+		if (sPos == availSpells.Size())
+			sPos = 0;
+		
+        magePlayer.SetActiveSpell(availSpells.GetItem(sPos));
+	}
+	action void A_GetPrevSpell() 
+	{
+        if (!player)
+            return;
+
+        let magePlayer = XRpgMagePlayer(player.mo);
+        if (!magePlayer || !magePlayer.ActiveSpell)
+			return;
+
+        let activeSpell = magePlayer.ActiveSpell;
+		int currentSpellType = activeSpell.SpellType;
+		
+		let availSpells = magePlayer.GetAvailSpells();
+
+		if (availSpells.Size() < 2)
+		{
+			return;
+		}
+
+		int sPos = 0;
+		for (int i = 0; i < availSpells.Size(); i++)
+		{
+			if (availSpells.GetItem(i).SpellType == currentSpellType)
+				sPos = i;
+		}
+
+		sPos--;
+		if (sPos < 0)
+			sPos = availSpells.Size() - 1;
+		
+        magePlayer.SetActiveSpell(availSpells.GetItem(sPos));
+	}
 }
 
 class TimedActor : Actor
