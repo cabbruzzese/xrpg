@@ -186,8 +186,8 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 	}
 }
 
-const FLAMEFLOOR_RADIUS = 80;
-const FLAMEFLOOR_RADIUSDAMAGE = 60;
+const FLAMEFLOOR_RADIUS = 90;
+const FLAMEFLOOR_RADIUSDAMAGE = 80;
 const FLAMEFLOOR_DAMAGE = 0;
 class MageLightningFlameMissile1 : Actor
 {
@@ -422,6 +422,7 @@ class MageWaterDrip : Actor
         +THRUACTORS;
         Gravity 0.25;
 		RenderStyle "Add";
+		DamageType "Water";
         Scale 0.5;
 	}
 
@@ -486,7 +487,7 @@ class MageLightningWaterMissile : TimedActor
     action void A_DripWater ()
 	{
         Spawn("MageWaterDrip", pos, ALLOW_REPLACE);
-        A_RadiusThrust(2000, 32);
+        A_RadiusThrust(2000, 32, RTF_NOIMPACTDAMAGE);
 	}
 
 	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)

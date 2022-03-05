@@ -29,13 +29,3 @@ AddMenuKey "Wrath Spell" "use WrathSpell"
 defaultbind KP- "use WrathSpell"
 AddMenuKey "Divine Spell" "use DivineSpell"
 defaultbind KP* "use DivineSpell"
-
-/*
-addkeysection "Simple Hexen RPG: Fighter Skills" XRpgFighterSkillsKeySection
-AddMenuKey "Berserk" "use BerserkSpell"
-defaultbind , "use BerserkSpell"
-AddMenuKey "Power Strike" "use PowerSpell"
-defaultbind . "use PowerSpell"
-AddMenuKey "Stunning Strike" "use StunSpell"
-defaultbind / "use StunSpell"
-*/

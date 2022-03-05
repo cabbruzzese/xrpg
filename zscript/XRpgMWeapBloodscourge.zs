@@ -138,7 +138,7 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		MSTF J 5 Offset (0, 36);
 		Goto Ready;
 	FlameSpell:
-		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffFlameMissile", 0, 0);
+		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffFlameMissile", 1, 1);
         Goto RapidFireFinish;
     IceSpell:
 		MSTF H 7 Bright Offset (0, 48) A_FireIceSpell;
@@ -179,16 +179,30 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
         }
 	}
 
-    const STAFFPOISON_DIST = 64;
+	action void A_FirePoisoinSpellMissile(double speedMod, int angleMod)
+	{
+		MageStaffPoisonMissile mo = MageStaffPoisonMissile(SpawnPlayerMissile("MageStaffPoisonMissile", angle + angleMod));
+		if (mo)
+		{
+			mo.AdjustSpeed(speedMod);
+		}
+	}
     action void A_FirePoisonSpell()
 	{
-        let xo = frandom[MSpellPoison4](-STAFFPOISON_DIST, STAFFPOISON_DIST);
-		let yo = frandom[MSpellPoison4](-STAFFPOISON_DIST, STAFFPOISON_DIST);
-
-		Vector3 spawnpos = (Pos.X + xo, Pos.Y + yo, Pos.Z + 16);
-        Actor mo = SpawnPlayerMissile("MageStaffPoisonMissile");
-		if (mo)
-        	mo.SetOrigin(spawnpos, false);
+		if (!A_AttemptFireSpell(9, 9))
+            return;
+		
+        A_FirePoisoinSpellMissile(1.0, 0);
+		A_FirePoisoinSpellMissile(0.8, -15);
+		A_FirePoisoinSpellMissile(0.8, 15);
+		A_FirePoisoinSpellMissile(0.6, 25);
+		A_FirePoisoinSpellMissile(0.6, -25);
+		A_FirePoisoinSpellMissile(0.6, 10);
+		A_FirePoisoinSpellMissile(0.6, -10);
+		A_FirePoisoinSpellMissile(0.4, 0);
+		A_FirePoisoinSpellMissile(0.2, 0);
+		A_FirePoisoinSpellMissile(0.1, 0);
+		A_FirePoisoinSpellMissile(0.05, 0);
 	}
 
     action void A_FireWaterSpell()
@@ -352,6 +366,7 @@ class MageStaffFlameMissile : Actor
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
         +ZDOOMTRANS
+		+RIPPER
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
 		DamageType "Fire";
 		SeeSound "Ignite";
@@ -363,8 +378,8 @@ class MageStaffFlameMissile : Actor
     States
     {
     Spawn:
-        FHFX I 6 Bright;
-        FHFX JKL 2 Bright;
+        FHFX I 8 Bright;
+        FHFX JKL 3 Bright;
     Death:
         FHFX MNOPQR 2 Bright;
         Stop;
@@ -399,15 +414,14 @@ class MageStaffIceMissile : Actor
     }
 }
 
-class MageStaffPoisonMissile : Actor
+class MageStaffPoisonMissile : StoppingProjectile
 {
-    Default
+	Default
     {
-        Speed 0;
-        Radius 16;
-        Height 12;
+        Speed 40;
+        Radius 1;
+        Height 1;
         Damage 1;
-        Projectile;
         +RIPPER
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
@@ -424,8 +438,10 @@ class MageStaffPoisonMissile : Actor
     States
     {
     Spawn:
-        PSBG EFGHI 4 Bright;
-        PSBG EFGHI 4 Bright;
+        PSBG E 4 Bright;
+        PSBG F 4 Bright A_ExpandCloud;
+		PSBG GHI 4 Bright;
+		PSBG EFGHI 4 Bright;
         PSBG EFGHI 4 Bright;
         PSBG EFGHI 4 Bright;
         PSBG EFGHI 4 Bright;
@@ -433,6 +449,12 @@ class MageStaffPoisonMissile : Actor
         PSBG D 4 Bright;
         Stop;
     }
+
+	action void A_ExpandCloud()
+	{
+		A_SetSize(16, 12, false);
+		A_StopMoving();
+	}
 }
 
 class MageStaffWaterMissile : Actor

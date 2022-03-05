@@ -114,11 +114,29 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 	}
 }
 
+class MageWandFlameMissileSmoke : Actor
+{
+	Default
+	{
+	    +NOBLOCKMAP +NOGRAVITY +SHADOW
+	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
+		RenderStyle "Translucent";
+		Alpha 0.6;
+        Scale 0.5;
+		VSpeed 1;
+	}
+	States
+	{
+	Spawn:
+		WRBL GHI 12 Bright;
+		Stop;
+	}
+}
 class MageWandFlameMissile : Actor
 {
     Default
     {
-        Speed 60;
+        Speed 50;
         Radius 12;
         Height 8;
         Damage 6;
@@ -134,7 +152,8 @@ class MageWandFlameMissile : Actor
     States
     {
     Spawn:
-        DMFX ABD 4 Bright;
+        DMFX ABCD 2 Bright A_SpawnItemEx("MageWandFlameMissileSmoke", random2[Puff]()*0.015625, random2[Puff]()*0.015625, random2[Puff]()*0.015625, 
+									0,0,0,0,SXF_ABSOLUTEPOSITION, 64);
         Loop;
     Death:
         DMFX D 4 A_Explode(50, 100);

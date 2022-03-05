@@ -49,14 +49,14 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE F 1;
 	AltFireFinish:
 		CONE G 3;
-		CONE A 9;
-		CONE A 10 A_ReFire;
+		CONE A 5;
+		CONE A 4 A_ReFire;
 		Goto Ready;
 	RapidFireFinish:
 		CONE F 2 A_ReFire;
 		CONE G 3;
-		CONE A 9;
-		CONE A 10;
+		CONE A 5;
+		CONE A 4;
 		Goto Ready;
 	FlameSpell:
 		CONE C 3;
@@ -177,7 +177,7 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		A_StartSound ("FireDemonAttack", CHAN_BODY);
 	}
 
-	const FROSTLIGHTNING_DIST = 96;
+	const FROSTLIGHTNING_DIST = 96.0;
 	const FROSTLIGHTNING_Q = 0.33;
 	const FROSTLIGHTNING_T = 0.66;
 	action void A_FireLightningSpell()
@@ -185,8 +185,8 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		if (!A_AttemptFireSpell(0, 6))
             return;
 
-		int distQ = FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q;
-		int distT = FROSTLIGHTNING_DIST * FROSTLIGHTNING_T;
+		float distQ = FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q;
+		float distT = FROSTLIGHTNING_DIST * FROSTLIGHTNING_T;
 		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, 0, FROSTLIGHTNING_DIST);
 		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, distQ, distT);
 		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, distT, distQ);
@@ -216,6 +216,24 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 	}
 }
 
+class MageFrostFlameMissileSmoke : Actor
+{
+	Default
+	{
+	    +NOBLOCKMAP +NOGRAVITY +SHADOW
+	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
+		RenderStyle "Translucent";
+		Alpha 0.4;
+        Scale 0.6;
+		VSpeed 0.4;
+	}
+	States
+	{
+	Spawn:
+		WRBL GHI 12 Bright;
+		Stop;
+	}
+}
 class MageFrostFlameMissile : TimedActor
 {
     Default
@@ -244,16 +262,25 @@ class MageFrostFlameMissile : TimedActor
     States
     {
     Spawn:
-        WRBL ABC 4 Bright;
+        WRBL AABBCC 2 Bright A_SpawnItemEx("MageFrostFlameMissileSmoke", random2[Puff]()*0.015625, random2[Puff]()*0.015625, random2[Puff]()*0.015625, 
+									0,0,0,0,SXF_ABSOLUTEPOSITION, 64);
         Loop;
 	Bounce:
 		FX18 M 1 A_VolcanoImpact;
 		Goto Spawn;
     Death:
-        WRBL D 4 Bright A_VolcBallImpact;
+        WRBL D 4 Bright A_VolcBallImpact();
         WRBL EFGHI 4 Bright;
         Stop;
     }
+
+	action void A_VolcanoExplode()
+	{
+		A_ChangeVelocity(0, 0, 0, CVF_REPLACE);
+		A_SetSpeed(0);
+		
+		A_Explode(40, 100);
+	}
 
 	action void A_VolcBallImpact ()
 	{
@@ -263,7 +290,8 @@ class MageFrostFlameMissile : TimedActor
 			Gravity = 1;
 			AddZ(28);
 		}
-		A_Explode(40, 100);
+		
+		A_VolcanoExplode();
 	}
 
 	//Bounce
@@ -280,6 +308,15 @@ class MageFrostFlameMissile : TimedActor
 	}
 }
 
+class MageFrostIceMissileShard : IceShard
+{
+	States
+	{
+	Spawn:
+		SHRU ABC 3 Bright;
+		Loop;
+	}
+}
 const ICESTORM_SPREAD = 72;
 const ICESTORM_ZSPEED = -30;
 const ICESTORM_ZSPEED_MOD = 10;
@@ -317,7 +354,7 @@ class MageFrostIceMissile : Actor
 		double xo = frandom[MSpellIce2](-ICESTORM_SPREAD, ICESTORM_SPREAD);
 		double yo = frandom[MSpellIce2](-ICESTORM_SPREAD, ICESTORM_SPREAD);
 		Vector3 spawnpos = rainPos + (xo, yo, 0);
-		Actor mo = Spawn("IceShard", spawnpos, ALLOW_REPLACE);
+		Actor mo = Spawn("MageFrostIceMissileShard", spawnpos, ALLOW_REPLACE);
 		if (!mo) return;
 		
 		int newDamage = mo.damage * 2;
@@ -377,6 +414,23 @@ class MageFrostPoisonMissile : Actor
     }
 }
 
+class MageFrostWaterMissileSmoke : Actor
+{
+	Default
+	{
+	    +NOBLOCKMAP +NOGRAVITY +SHADOW
+	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
+		RenderStyle "Translucent";
+		Alpha 0.7;
+        Scale 0.5;
+	}
+	States
+	{
+	Spawn:
+		SPSH ABCD 1;
+		Stop;
+	}
+}
 class MageFrostWaterMissile : FastProjectile
 {
     Default
@@ -384,10 +438,11 @@ class MageFrostWaterMissile : FastProjectile
         Speed 80;
         Radius 8;
         Height 6;
-        Damage 2;
+        Damage 4;
         +SPAWNSOUNDSOURCE
         -NOGRAVITY
         Gravity 0.25;
+		MissileType "MageFrostWaterMissileSmoke";
         Obituary "$OB_MPMWEAPFROST";
 		DeathSound "WaterSplash";
 
@@ -399,7 +454,7 @@ class MageFrostWaterMissile : FastProjectile
         SPSH A 4;
         Loop;
     Death:
-        SPSH B 4 A_RadiusThrust(2000, 64);
+        SPSH B 4 A_RadiusThrust(2000, 64, RTF_NOIMPACTDAMAGE);
         SPSH CD 4;
         Stop;
     }

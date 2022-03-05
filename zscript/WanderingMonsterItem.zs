@@ -306,6 +306,9 @@ class WanderingMonsterItem : Powerup
         if (Owner.Health - damage < 0)
             return;
 
+        if (damageType == "Water")
+            return;
+
         if (!IsTimedOutExpired())
             return;
         SetTimeout();
@@ -534,7 +537,7 @@ class WanderingMonsterItem : Powerup
             return null;
         
         mo.target = Owner;
-        mo.SetOrigin((xPos, yPos, mo.z), false);
+        mo.SetOrigin((xPos, yPos, mo.Pos.Z), false);
 
         double newz;
         if (isFloor)
