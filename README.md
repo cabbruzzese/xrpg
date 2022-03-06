@@ -52,9 +52,7 @@ You can customize their shortcuts in the options menu. Defaults are keypad numbe
 While active, skills and spells will be indicated on the screen. If there is a timer or cooldown, it will be displayed next to the spell.
 
 ## Fighter Skills
-The fighter's skills improve his melee attacks. They drain his stamina and quickly reduce life while active. Only 2 may be active at a time. 
-
-Skills activate for a short time, and end early if the fighter's health gets too low.
+The fighter's skills improve his melee attacks. They are passive and work automatically.
 
 There are 3 fighter skills that are learned at random every 10th level.
 
@@ -77,6 +75,8 @@ Holy Smite is learned at level 3. Spells are learned in order every 7th level.
 The mage learns elemental spells that are channeled through his magical weapons While a spell is active, using alt fire will activate the spell. Each weapon channels the elements differently.
 
 Mana used by spells depends on the weapon and spell. More powerful spells use more mana. The wand uses blue mana when casting spells. Frosh shards use green. Lightning uses both. The most powerful weapon, Bloodscourge, uses no mana. It instead provides an infinite source of magic for each spell type.
+
+**Note:** Use Zoom and Reload to quickly change spells
 
 | Element | Description | Default Key |
 |---|---|---|
