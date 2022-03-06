@@ -371,6 +371,8 @@ class MageWandLightningSmoke : Actor
 }
 class MageWandLightningMissile : FastProjectile
 {
+    int lightningCount;
+    property LightningCount:lightningCount;
     Default
     {
         Speed 110;
@@ -384,6 +386,7 @@ class MageWandLightningMissile : FastProjectile
         MissileType "MageWandLightningSmoke";
         Obituary "$OB_MPMWEAPWAND";
         Scale 0.2;
+        MageWandLightningMissile.LightningCount 3;
 
         DamageType "Electric";
     }
@@ -391,21 +394,25 @@ class MageWandLightningMissile : FastProjectile
     {
     Spawn:
         MLF2 Q 2 Bright;
-        MLF2 Q 1 Bright WandLightiningSplit;
+        MLF2 Q 1 Bright A_WandLightiningSplit;
     Death:
         MLF2 PON 1 Bright;
         Stop;
     }
 
-	action void WandLightiningSplit ()
+	action void A_WandLightiningSplit ()
 	{
 		if (target == null)
 		{
 			return;
 		}
-		
-		A_SplitWandLightiningFire();
-		A_SplitWandLightiningFire();
+
+        if (invoker.LightningCount < 1)
+            return;
+
+        invoker.LightningCount--;
+        A_SplitWandLightiningFire();
+        A_SplitWandLightiningFire();
 	}
 
     action void A_SplitWandLightiningFire()
@@ -417,14 +424,14 @@ class MageWandLightningMissile : FastProjectile
 		
         int randAngle = random[MSpellLightning1](-12, 12);
         int randPitch = random[MSpellLightning1](-8, 8);
-		let mo = target.SpawnPlayerMissile ("MageWandLightningMissile", angle + randAngle);
+		MageWandLightningMissile mo = MageWandLightningMissile(target.SpawnPlayerMissile ("MageWandLightningMissile", angle + randAngle));
 		if (mo != null)
 		{
 			mo.SetOrigin(Pos, false);
 			mo.target = target;
 			mo.A_SetPitch(pitch + randPitch);
 			mo.Vel.Z = Vel.Z + randPitch;
-			//mo.SetDamage(Damage);
+            mo.LightningCount = invoker.LightningCount;
 		}
 	}
 }

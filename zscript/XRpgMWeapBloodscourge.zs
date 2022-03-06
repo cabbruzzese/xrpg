@@ -148,19 +148,16 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		MSTF H 5 Bright Offset (0, 48) A_FireWaterSpell;
         Goto AltFireFinish;
     SunSpell:
-		MSTF H 15 Bright Offset (0, 48) A_FireSunSpell;
-        Goto AltFireFinish;
+		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffSunMissile", 3, 3);
+        Goto RapidFireFinish;
     MoonSpell:
 		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffMoonMissile", 7, 7);
         Goto AltFireFinish;
     DeathSpell:
-		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffDeathMissile2", 0, 0);
+		MSTF H 9 Bright Offset (0, 48) A_FireDeathSpell;
         Goto AltFireFinish;
     LightningSpell:
-		MSTF H 1 Bright Offset (0, 48) A_FireLightningSpell(true);
-		MSTF H 4 Bright Offset (0, 48) A_FireLightningSpell(true);
-		MSTF H 4 Bright Offset (0, 48) A_FireLightningSpell(true);
-		MSTF H 16 Bright Offset (0, 48);
+		MSTF H 9 Bright Offset (0, 48) A_FireLightningSpell();
         Goto AltFireFinish;
     BloodSpell:
 		MSTF H 1 Bright Offset (0, 48) A_FireBloodSpell;
@@ -231,30 +228,31 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		A_FirePoisoinSpellMissile(0.05, 0);
 	}
 
+	const STAFFWATER_BOLT_SPREAD_X = 12;
+	const STAFFWATER_BOLT_SPREAD_Y = 5;
     action void A_FireWaterSpell()
 	{
-        for (int i = 0; i < 3; i++)
+		if (!A_AttemptFireSpell(6, 6))
+            return;
+
+        for (int i = 0; i < 12; i++)
         {
-            A_FireSpreadMissile("MageStaffWaterMissile", 6, 2);
+            A_FireSpreadMissile("MageStaffWaterMissile", STAFFWATER_BOLT_SPREAD_X, STAFFWATER_BOLT_SPREAD_Y);
         }
 	}
 
-    const STAFFSUN_ZSPEED = 0.5;
-    const STAFFSUN_ZOFFSET = 0;
-    action void A_FireSunSpell()
+	action void A_FireDeathSpell()
 	{
-        Actor mo = SpawnPlayerMissile("MageStaffSunMissile");
-        mo.Vel.Z = STAFFSUN_ZSPEED;
-        mo.SetOrigin((mo.Pos.X, mo.Pos.Y, Pos.Z + STAFFSUN_ZOFFSET), false);
+		A_FireMissileSpell("MageStaffDeathMissile2", 3, 3);
+		A_FireMissileSpell("MageStaffDeathMissile2", 3, 3, -13);
+		A_FireMissileSpell("MageStaffDeathMissile2", 3, 3, 13);
 	}
 
-	const STAFFLIGHTNINGCHARGE_THRUST = 12;
-	action void A_FireLightningSpell(bool isFiring)
+	action void A_FireLightningSpell()
 	{
-		if (isFiring)
-			A_FireVerticalMissile("MageStaffLightningMissile", 2, 2);
-		
-		Thrust(STAFFLIGHTNINGCHARGE_THRUST, angle);
+		A_FireMissileSpell("MageWandLightningMissile", 3, 3);
+		A_FireMissileSpell("MageWandLightningMissile", 3, 3, -7);
+		A_FireMissileSpell("MageWandLightningMissile", 3, 3, 7);
 	}
 
 	const SUMMONBAT_DIST = 160.0;
@@ -502,7 +500,7 @@ class MageStaffWaterMissile : Actor
 {
     Default
     {
-        Speed 25;
+        Speed 45;
         Radius 8;
         Height 8;
         Damage 2;
@@ -559,12 +557,11 @@ class MageStaffSunMissile : Actor
 {
     Default
     {
-        Speed 0;
+        Speed 50;
         Radius 2;
         Height 2;
-        Damage 0;
+        Damage 5;
         Projectile;
-        +RIPPER
         +SPAWNSOUNDSOURCE
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
         Scale 2.0;
@@ -574,7 +571,7 @@ class MageStaffSunMissile : Actor
     States
     {
     Spawn:
-        FDMB B 96 Bright Light("YellowSunSmall");
+        FDMB B 24 Bright Light("YellowSunSmall");
     Death:
         FDMB B 6 Bright Light("YellowSunBig") A_SunExplode;
         FDMB C 3 Bright Light("YellowSunBigFade3");
@@ -585,7 +582,7 @@ class MageStaffSunMissile : Actor
 
 	action void A_SunExplode()
 	{
-		A_Explode(50, 100, false);
+		A_Explode(70, 150, false);
 		A_StartSound("Fireball", CHAN_BODY);
 	}
 }
@@ -711,7 +708,7 @@ class MageStaffDeathMissile1 : Actor
 		Height 6;
 		Speed 20;
 		FastSpeed 26;
-		Damage 3;
+		Damage 6;
 		Projectile;
 		-ACTIVATEIMPACT
 		-ACTIVATEPCROSS
@@ -738,7 +735,7 @@ class MageStaffDeathMissile2 : MageStaffDeathMissile1
 	{
 		Radius 5;
 		Height 12;
-		Speed 4;
+		Speed 7;
 		FastSpeed 20;
 		Damage 0;
 		+FLOORHUGGER
@@ -751,7 +748,7 @@ class MageStaffDeathMissile2 : MageStaffDeathMissile1
 	states
 	{
 	Spawn:
-		TNT1 AAAAA 16 Bright A_SpellFloorFire;
+		TNT1 AAAAAAAAAAAA 10 Bright A_SpellFloorFire;
 		Stop;
 	Death:
 		Stop;
