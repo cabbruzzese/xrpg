@@ -316,6 +316,11 @@ class MageFrostFlameMissile : TimedActor
 
 class MageFrostIceMissileShard : IceShard
 {
+	default
+	{
+		+DONTREFLECT
+	}
+
 	States
 	{
 	Spawn:

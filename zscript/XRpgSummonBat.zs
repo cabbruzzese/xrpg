@@ -8,13 +8,13 @@ class XRpgSummonBat : Actor
 
 	Default
 	{
-		Health 5;
+		Health 6;
 		PainChance 25;
 		Speed 17;
 		Height 8;
         Radius 10;
 		Mass 10;
-		Damage 4;
+		Damage 6;
 
 		Monster;
 		+NOGRAVITY +DROPOFF +FLOAT

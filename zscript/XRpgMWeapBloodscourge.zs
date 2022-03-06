@@ -76,8 +76,6 @@ class XRpgBloodscourgeDrop : Actor replaces BloodscourgeDrop
 class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 {
 	int MStaffCount;
-
-	XRpgSummonBat Bats[3];
 	
 	Default
 	{
@@ -153,7 +151,7 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		MSTF H 15 Bright Offset (0, 48) A_FireSunSpell;
         Goto AltFireFinish;
     MoonSpell:
-		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffMoonMissile", 0, 0);
+		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffMoonMissile", 7, 7);
         Goto AltFireFinish;
     DeathSpell:
 		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffDeathMissile2", 0, 0);
@@ -176,12 +174,34 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		Goto Ready;
 	}
 
-	//Final weapon attacks are weaker but do not use ammo
+	const ICECLOUD_SPREAD = 150;
+	const ICECLOUD_DIST = 160;
+	const ICECLOUD_HEIGHTMOD = 20.0;
+	action void A_FireIceCloud()
+	{
+		if (!player || !player.mo)
+			return;
+		
+		if (!A_AttemptFireSpell(5, 5))
+			return;
+		
+		let mo = Spawn("MageIceCloud");
+		if (!mo)
+			return;
+
+		int xMod = frandom[IceCloud](-ICECLOUD_SPREAD, ICECLOUD_SPREAD);
+		int yMod = frandom[IceCloud](-ICECLOUD_SPREAD, ICECLOUD_SPREAD);
+		int zMod = frandom[IceCloud](-ICECLOUD_SPREAD, ICECLOUD_SPREAD);
+		Vector3 dir = (AngleToVector(player.mo.angle, cos(player.mo.pitch)), -sin(player.mo.pitch));
+		let forwardDir = (dir.X * ICECLOUD_DIST, dir.Y * ICECLOUD_DIST, dir.Z * ICECLOUD_DIST);
+		mo.SetOrigin((Pos.X + forwardDir.X + xMod, Pos.Y + forwardDir.Y + yMod, Pos.Z + forwardDir.Z + zMod + ICECLOUD_HEIGHTMOD), false);
+		mo.target = player.mo;
+	}
     action void A_FireIceSpell()
 	{
         for (int i = 0; i < 4; i++)
         {
-            A_FireSpreadMissile("MageStaffIceMissile", 10, 5);
+            A_FireIceCloud();
         }
 	}
 
@@ -237,34 +257,38 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		Thrust(STAFFLIGHTNINGCHARGE_THRUST, angle);
 	}
 
-	const SUMMONBAT_DIST = 100.0;
+	const SUMMONBAT_DIST = 160.0;
+	const SUMMONBAT_SPREAD = 90.01;
 	const SUMMONBAT_HEIGHTMOD = 20.0;
-	action void A_AddBatToList(XRpgSummonBat batObj)
+	const SUMMONBAT_SWARM_SIZE = 13;
+	action void A_SummonBat()
 	{
-		XRpgSummonBat bat0 = batObj;
-		XRpgSummonBat bat1 = invoker.Bats[0];
-		XRpgSummonBat bat2 = invoker.Bats[1];
-		XRpgSummonBat bat3 = invoker.Bats[2];
-
-		if (bat3 != null)
-			bat3.Destroy();
-
-		invoker.Bats[0] = bat0;
-		invoker.Bats[1] = bat1;
-		invoker.Bats[2] = bat2;
-	}
-	action void A_FireBloodSpell()
-	{
+		if (!player || !player.mo)
+			return;
+		
+		if (!A_AttemptFireSpell(1, 1))
+			return;
+		
 		XRpgSummonBat mo = XRpgSummonBat(Spawn("XRpgSummonBat"));
 		if (!mo)
 			return;
 
-		Vector3 dir = (AngleToVector(angle, cos(pitch)), -sin(pitch));
+		int xMod = frandom[BatSpawn](-SUMMONBAT_SPREAD, SUMMONBAT_SPREAD);
+		int yMod = frandom[BatSpawn](-SUMMONBAT_SPREAD, SUMMONBAT_SPREAD);
+		int zMod = frandom[BatSpawn](-SUMMONBAT_SPREAD, SUMMONBAT_SPREAD);
+		Vector3 dir = (AngleToVector(player.mo.angle, cos(player.mo.pitch)), -sin(player.mo.pitch));
 		let forwardDir = (dir.X * SUMMONBAT_DIST, dir.Y * SUMMONBAT_DIST, dir.Z * SUMMONBAT_DIST);
-		mo.SetOrigin((Pos.X + forwardDir.X, Pos.Y + forwardDir.Y, Pos.Z + forwardDir.Z + SUMMONBAT_HEIGHTMOD), false);
+		mo.SetOrigin((Pos.X + forwardDir.X + xMod, Pos.Y + forwardDir.Y + yMod, Pos.Z + forwardDir.Z + zMod + SUMMONBAT_HEIGHTMOD), false);
 		A_StartSound(mo.ActiveSound, CHAN_VOICE);
-
-		A_AddBatToList(mo);
+		mo.A_SetAngle(player.mo.angle);
+		mo.target = player.mo;
+	}
+	action void A_FireBloodSpell()
+	{	
+		for (int i = 0; i < SUMMONBAT_SWARM_SIZE; i++)
+		{
+			A_SummonBat();
+		}
 	}
 	
 	//============================================================================
@@ -392,33 +416,44 @@ class MageStaffFlameMissile : Actor
     }
 }
 
-class MageStaffIceMissile : Actor
+class MageIceCloud : MageFrostIceMissile
 {
-    Default
+	Default
     {
-        Speed 120;
-        Radius 12;
-        Height 8;
+        Speed 0;
+        Radius 1;
+        Height 16;
         Damage 1;
-		Projectile;
+		VSpeed 8;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
-		+NOSHIELDREFLECT
+        +ZDOOMTRANS
+		-MISSILE
+		-SKYEXPLODE
+
         SeeSound "IceGuyMissileExplode";
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
-        DamageType "Ice";
-        DeathSound "IceGuyMissileExplode";
+
+		DamageType "Poison";
+		Translation "Ice";
+        RenderStyle "Translucent";
+        Alpha 0.7;
+        Scale 2.0;
     }
     States
     {
     Spawn:
-        SHRD ABC 4 Bright;
-        Loop;
+        PSBG EFG 8 Bright;
+        PSBG HI 12 Bright A_IceShower;
+		PSBG EFGHI 12 Bright A_IceShower;
+        PSBG EFGHI 12 Bright A_IceShower;
+        PSBG EFGHI 12 Bright A_IceShower;
     Death:
-        ICPR IJKLM 4 Bright;
+        PSBG D 4;
         Stop;
     }
 }
+
 
 class MageStaffPoisonMissile : StoppingProjectile
 {
@@ -567,6 +602,7 @@ class MageStaffMoonMissile : Actor
         +RIPPER;
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
+		+DONTBLAST
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
         Translation "Ice";
 
@@ -576,13 +612,47 @@ class MageStaffMoonMissile : Actor
     States
     {
     Spawn:
-        MSP1 ABCD 4 Light("MoonSmall");
+        MSP1 ABC 4 Light("MoonSmall");
+		MSP1 D 4 Light("MoonSmall") A_Blast(BF_NOIMPACTDAMAGE, 200, 120);
+		MSP1 ABC 4 Light("MoonSmall");
+		MSP1 D 4 Light("MoonSmall") A_Blast(BF_NOIMPACTDAMAGE, 200, 120);
+		MSP1 ABC 4 Light("MoonSmall");
+		MSP1 D 4 Light("MoonSmall") A_Blast(BF_NOIMPACTDAMAGE, 200, 120);
+		MSP1 ABC 4 Light("MoonSmall");
     Death:
-        RADE DE 3 Light("MoonBigFade3") A_Blast(BF_NOIMPACTDAMAGE, 255, 120);
-        RADE FG 3 Light("MoonBigFade4");
-        RADE HI 3 Light("MoonBigFade5");
+        MSP1 H 4 Light("MoonBig") A_MoonExplode(true);
+		MSP1 IJKLM 4 Light("MoonBig") A_MoonExplode(false);
+		MSP1 NOP 4 Light("MoonBig");
         Stop;
     }
+
+	action void A_FireStars()
+    {
+        let angleMod = Random[MSpellMoon3](1, 360);
+
+        let mo = target.SpawnPlayerMissile("MageLightningMoonStar", angleMod);
+        if (mo)
+        {
+            let pitchMod = frandom[MSpellMoon3](-40, 40);
+            mo.SetOrigin(Pos, false);
+            mo.Vel.Z = pitchMod;
+        }
+    }
+
+	action void A_MoonExplode(bool stopMoving)
+	{
+		if (stopMoving)
+		{
+			Speed = 0;
+			A_ChangeVelocity(0, 0, 0, CVF_REPLACE);
+		}
+		A_StartSound("BishopAttack", CHAN_BODY);
+
+        for (int i = 0; i < 10; i++)
+        {
+            A_FireStars();
+        }
+	}
 }
 
 class MageStaffLightningSmoke : Actor

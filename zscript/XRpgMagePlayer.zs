@@ -228,7 +228,7 @@ class XRpgMagePlayer : XRpgPlayer
 
 class AvailableSpells
 {
-	XRpgSpellItem[9] spellList;
+	XRpgSpellItem spellList[9];
 	int arrayLen;
 
 	void AddSpell (XRpgSpellItem spellItem)

@@ -365,28 +365,6 @@ class XRpgMageWeapon : XRpgWeapon
 	}
 }
 
-class TimedActor : Actor
-{
-    int timeLimit;
-    property TimeLimit : timeLimit;
-
-    Default
-    {
-        TimedActor.TimeLimit 100;
-    }
-
-    override void Tick()
-    {
-        Super.Tick();
-
-        TimeLimit--;
-        if (TimeLimit < 1)
-        {
-            Destroy();
-        }
-    }
-}
-
 class PowerSpark : Actor
 {
     Default
