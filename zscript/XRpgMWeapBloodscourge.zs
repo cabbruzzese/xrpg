@@ -136,7 +136,7 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		MSTF J 5 Offset (0, 36);
 		Goto Ready;
 	FlameSpell:
-		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffFlameMissile", 1, 1);
+		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffFlameMissile", 2, 2);
         Goto RapidFireFinish;
     IceSpell:
 		MSTF H 7 Bright Offset (0, 48) A_FireIceSpell;
@@ -148,10 +148,10 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		MSTF H 5 Bright Offset (0, 48) A_FireWaterSpell;
         Goto AltFireFinish;
     SunSpell:
-		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffSunMissile", 3, 3);
+		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffSunMissile", 1, 1);
         Goto RapidFireFinish;
     MoonSpell:
-		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffMoonMissile", 7, 7);
+		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffMoonMissile", 3, 3);
         Goto AltFireFinish;
     DeathSpell:
 		MSTF H 9 Bright Offset (0, 48) A_FireDeathSpell;
@@ -179,7 +179,7 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		if (!player || !player.mo)
 			return;
 		
-		if (!A_AttemptFireSpell(5, 5))
+		if (!A_AttemptFireSpell(3, 3))
 			return;
 		
 		let mo = Spawn("MageIceCloud");
@@ -619,6 +619,7 @@ class MageStaffMoonMissile : Actor
     Death:
         MSP1 H 4 Light("MoonBig") A_MoonExplode(true);
 		MSP1 IJKLM 4 Light("MoonBig") A_MoonExplode(false);
+		MSP1 HIJKLM 4 Light("MoonBig") A_MoonExplode(false);
 		MSP1 NOP 4 Light("MoonBig");
         Stop;
     }

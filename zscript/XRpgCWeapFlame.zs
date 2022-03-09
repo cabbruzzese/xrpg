@@ -80,10 +80,8 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 	{
 		FTranslatedLineTarget t;
 
-		if (player == null)
-		{
+		if (!player)
 			return;
-		}
 
 		if (isThrustPunch)
 		{

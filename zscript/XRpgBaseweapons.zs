@@ -119,9 +119,9 @@ class XRpgWeapon : Weapon
         }
 	}
 
-    action Actor A_FireVerticalMissilePos(Class<Actor> missileType, int xPos, int yPos, int zPos, int zSpeed = -90, bool isFloor = false)
+    action Actor A_FireVerticalMissilePos(Class<Actor> missileTypeName, int xPos, int yPos, int zPos, int zSpeed = -90, bool isFloor = false)
     {
-		Actor mo = SpawnPlayerMissile(missileType);
+		Actor mo = SpawnPlayerMissile(missileTypeName);
 		if (!mo) return null;
 		
         mo.SetOrigin((xPos, yPos, zPos), false);
@@ -149,7 +149,7 @@ class XRpgWeapon : Weapon
         return mo;
     }
 
-    action Actor A_FireVerticalMissile(Class<Actor> missileType, int xSpread = 0, int ySpread = 0, int zSpeed = -90, int xMod = 0, int yMod = 0)
+    action Actor A_FireVerticalMissile(Class<Actor> missileTypeName, int xSpread = 0, int ySpread = 0, int zSpeed = -90, int xMod = 0, int yMod = 0)
 	{
         int xo = 0;
         int yo = 0;
@@ -160,7 +160,7 @@ class XRpgWeapon : Weapon
 
 		Vector3 spawnpos = Vec2OffsetZ(xo + xMod, yo + yMod, pos.z);
 		
-        let mo = A_FireVerticalMissilePos(missileType, spawnpos.X, spawnpos.Y, spawnpos.Z, zSpeed, false);
+        let mo = A_FireVerticalMissilePos(missileTypeName, spawnpos.X, spawnpos.Y, spawnpos.Z, zSpeed, false);
 
         return mo;
 	}

@@ -1,7 +1,7 @@
 // The mage -----------------------------------------------------------------
 const SPELL_LEVEL_TIER1 = 1;
 const SPELL_LEVEL_TIER2 = 10;
-const SPELL_LEVEL_TIER3 = 24;
+const SPELL_LEVEL_TIER3 = 15;
 
 const SPELL_LEVEL_BASE = 2;
 const SPELL_LEVEL_GRANT = 5;
@@ -223,8 +223,6 @@ class XRpgMagePlayer : XRpgPlayer
 		return availSpells;
 	}
 }
-
-
 
 class AvailableSpells
 {

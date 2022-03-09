@@ -89,8 +89,8 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		MLNG F 1 Bright A_FireMissileSpell("MageLightningDeathMissile", 10, 10);
         Goto AltFireFinish;
     LightningSpell:
-		MLNG F 1 Bright A_FireLightningSpell;
-        Goto RapidFireFinish;
+		MLNG F 1 Bright A_FireLightningSpell();
+        Goto AltFireFinish;
     BloodSpell:
 		MLNG F 1 Bright A_FireBloodSpell;
         Goto AltFireFinish;
@@ -101,8 +101,8 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		#### # 8 Bright A_PrevSpell;
 		Goto Ready;
 	}
-    
-    action void A_FireIceSpell()
+
+	action void A_FireIceSpell()
 	{
         if (!A_AttemptFireSpell(3, 3))
             return;
@@ -114,23 +114,13 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		A_StartSound ("IceGuyMissileExplode", CHAN_BODY);
 	}
 
-	const STORMLIGHTNING_DIST = 96;
-	const STORMLIGHTNING_THRUST = 10;
-	const STORMLIGHTNING_THRUST_MAX = 20;
-    action void A_FireLightningSpell()
+	action void A_FireLightningSpell()
 	{
-		if (!A_AttemptFireSpell(1, 2))
-            return;
+		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
+		weaponspecial = (LineAttack (angle, DEFMELEERANGE, slope, 0, 'Melee', null, true) == null);
 
-		if (Vel.Z < STORMLIGHTNING_THRUST_MAX)
-		{
-			Vel.Z += STORMLIGHTNING_THRUST;
-			if (Vel.Z > STORMLIGHTNING_THRUST_MAX)
-				Vel.Z = STORMLIGHTNING_THRUST_MAX;
-		}
-
-		A_FireVerticalMissile("MageLightningLightningMissile", -STORMLIGHTNING_DIST, STORMLIGHTNING_DIST);
-		A_FireVerticalMissile("MageLightningLightningMissile", -STORMLIGHTNING_DIST, STORMLIGHTNING_DIST);
+		if (weaponSpecial)
+			A_FireMissileSpell("MageLightningLightningTele", 10, 10);
 	}
 
     action void A_FireBloodSpell()
@@ -757,6 +747,57 @@ class MageLightningLightningMissile : FastProjectile
         MLFX M 2 Bright A_Explode(70, 200, false);
         Stop;
     }
+}
+
+const STORMLIGHTNING_DIST = 64;
+const STORMLIGHTNING_ZSPEED = -90;
+class MageLightningLightningTele : Actor
+{
+    Default
+    {
+        Speed 50;
+        Radius 20;
+        Height 66;
+        Damage 0;
+        Projectile;
+        +CANNOTPUSH 
+		+NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+		+BLOCKASPLAYER
+    }
+    States
+    {
+    Spawn:
+        TNT1 AAAAA 2;
+    Death:
+		TNT1 A 2 A_TeleportOwner;
+        Stop;
+    }
+
+	action void A_TeleportOwner()
+	{
+		if (!target)
+			return;
+		
+		let xrpgPlayer = XRpgPlayer(target);
+		if (!xrpgPlayer)
+			return;
+		
+		xrpgPlayer.A_FireVerticalMissile("MageLightningLightningMissile", STORMLIGHTNING_DIST, STORMLIGHTNING_DIST, STORMLIGHTNING_ZSPEED, xrpgPlayer.Pos.X, xrpgPlayer.Pos.Y);
+		xrpgPlayer.A_FireVerticalMissile("MageLightningLightningMissile", STORMLIGHTNING_DIST, STORMLIGHTNING_DIST, STORMLIGHTNING_ZSPEED, xrpgPlayer.Pos.X, xrpgPlayer.Pos.Y);
+		xrpgPlayer.A_FireVerticalMissile("MageLightningLightningMissile", STORMLIGHTNING_DIST, STORMLIGHTNING_DIST, STORMLIGHTNING_ZSPEED, xrpgPlayer.Pos.X, xrpgPlayer.Pos.Y);
+		xrpgPlayer.A_FireVerticalMissile("MageLightningLightningMissile", STORMLIGHTNING_DIST, STORMLIGHTNING_DIST, STORMLIGHTNING_ZSPEED, xrpgPlayer.Pos.X, xrpgPlayer.Pos.Y);
+		xrpgPlayer.A_FireVerticalMissile("MageLightningLightningMissile", STORMLIGHTNING_DIST, STORMLIGHTNING_DIST, STORMLIGHTNING_ZSPEED, xrpgPlayer.Pos.X, xrpgPlayer.Pos.Y);
+		
+		let mo = Spawn("LightningLeaderFx1");
+		if (mo)
+		{
+			mo.target = target;
+			mo.SetOrigin(xrpgPlayer.Pos + (0,0,28), false);
+		}
+
+		xrpgPlayer.Teleport (Pos, xrpgPlayer.angle, TELF_KEEPVELOCITY | TELF_KEEPORIENTATION);
+	}
 }
 
 const BLOOD_MAX_MANADRAIN = 20;

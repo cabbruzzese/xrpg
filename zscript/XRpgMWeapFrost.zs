@@ -183,33 +183,16 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		A_StartSound ("FireDemonAttack", CHAN_BODY);
 	}
 
-	const FROSTLIGHTNING_DIST = 96.0;
-	const FROSTLIGHTNING_Q = 0.33;
-	const FROSTLIGHTNING_T = 0.66;
 	action void A_FireLightningSpell()
 	{
-		if (!A_AttemptFireSpell(0, 6))
+		if (!A_AttemptFireSpell(0, 3))
             return;
 
-		float distQ = FROSTLIGHTNING_DIST * FROSTLIGHTNING_Q;
-		float distT = FROSTLIGHTNING_DIST * FROSTLIGHTNING_T;
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, 0, FROSTLIGHTNING_DIST);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, distQ, distT);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, distT, distQ);
-
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, FROSTLIGHTNING_DIST, 0);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, distT, -distQ);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, distQ, -distT);
-
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, 0, -FROSTLIGHTNING_DIST);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -distQ, -distT);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -distT, -distQ);
-
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -FROSTLIGHTNING_DIST, 0);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -distT, distQ);
-		A_FireVerticalMissile("MageFrostLightningMissile", 0, 0, -90, -distQ, distT);
-
-		A_RadiusThrust(5000, 128, RTF_NOIMPACTDAMAGE);
+		let mo = SpawnPlayerMissile("MageFrostLightningMissile2");
+		if (mo)
+		{
+			mo.SetOrigin((mo.Pos.X, mo.Pos.Y, mo.Pos.Z - mo.Height), false);
+		}
 	}
 
     action void A_FireBloodSpell()
@@ -782,6 +765,92 @@ class MageFrostDeathMissile : Actor
 	}
 }
 
+
+
+const FROSTLIGHTNING_WOBBLE = 4.0;
+const FROSTLIGHTNING_DIST = 12.0;
+const FROSTLIGHTNING_ZSPEED = -90;
+class MageFrostLightningMissile1 : Actor
+{
+	Default
+	{
+		Radius 10;
+		Height 6;
+		Speed 20;
+		FastSpeed 26;
+		Damage 4;
+		DamageType "Fire";
+		Projectile;
+		-ACTIVATEIMPACT
+		-ACTIVATEPCROSS
+		+ZDOOMTRANS
+		RenderStyle "Add";
+		Obituary "$OB_MPMWEAPLIGHTNING";
+	}
+	States
+	{
+	Spawn:
+		MLF2 A 6 Bright;
+		Loop;
+	Death:
+		MLF2 BCDE 5 Bright;
+		Stop;
+	}
+}
+
+class MageFrostLightningMissile2 : MageFrostLightningMissile1
+{
+	Default
+	{
+		Radius 5;
+		Height 20;
+		Speed 20;
+		FastSpeed 20;
+		Damage FLAMEFLOOR_DAMAGE;
+		+CEILINGHUGGER
+		RenderStyle "Add";
+		
+		+RIPPER
+	}
+	
+	states
+	{
+	Spawn:
+		MLF2 AAAAAAAAAAAAAA 2 Bright A_SpellFloorFire;
+	Death:
+		MLF2 ABCDE 6 BRIGHT;
+		Stop;
+	}
+	
+	void A_SpellFloorFire()
+	{
+		//Add wobble velocity
+		Vel.X += frandom[FrostLightningWobble](-FROSTLIGHTNING_WOBBLE, FROSTLIGHTNING_WOBBLE);
+		Vel.Y += frandom[FrostLightningWobble](-FROSTLIGHTNING_WOBBLE, FROSTLIGHTNING_WOBBLE);
+
+		// Actor mo = SpawnPlayerMissile("MageFrostLightningStrike");
+		// if (!mo) return;
+
+		// double offsetX = frandom[FrostLightningWobble](-FROSTLIGHTNING_DIST, FROSTLIGHTNING_DIST);		
+		// double offsetY = frandom[FrostLightningWobble](-FROSTLIGHTNING_DIST, FROSTLIGHTNING_DIST);		
+        // double newz = mo.CurSector.HighestCeilingAt((pos.X, pos.Y));
+        // mo.SetOrigin((Pos.X + offsetX, Pos.Y + offsetY, newz), false);
+
+		// mo.Vel.X = MinVel; // Force collision detection
+        // mo.Vel.Y = MinVel; // Force collision detection
+		// mo.Vel.Z = FROSTLIGHTNING_ZSPEED;
+		// mo.CheckMissileSpawn (radius);
+
+		if (!target)
+			return;
+		let xrpgPlayer = XRpgPlayer(target);
+		if (!xrpgPlayer)
+			return;
+
+		xrpgPlayer.A_FireVerticalMissile("MageFrostLightningStrike", FROSTLIGHTNING_DIST, FROSTLIGHTNING_DIST, FROSTLIGHTNING_ZSPEED, Pos.X, Pos.Y);
+	}
+}
+
 class MageFrostLightningSmoke : Actor
 {
 	Default
@@ -797,13 +866,13 @@ class MageFrostLightningSmoke : Actor
 		Stop;
 	}
 }
-class MageFrostLightningMissile : FastProjectile
+class MageFrostLightningStrike : FastProjectile
 {
     Default
     {
         Speed 120;
         Radius 12;
-        Height 8;
+        Height 2;
         Damage 2;
         Projectile;
         +RIPPER
