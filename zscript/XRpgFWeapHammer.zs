@@ -246,7 +246,7 @@ class HammerFloorMissile1 : Actor
 		-ACTIVATEPCROSS
 		+ZDOOMTRANS
 		RenderStyle "Add";
-		Obituary "$OB_MPMWEAPLIGHTNING";
+		Obituary "$OB_MPFWEAPHAMMERM";
 	}
 	States
 	{

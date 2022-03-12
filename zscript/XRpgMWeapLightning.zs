@@ -77,7 +77,7 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		MLNG F 1 Bright A_FireMissileSpell("MageLightningPoisonMissile", 2, 2);
         Goto RapidFireFinish;
     WaterSpell:
-		MLNG F 1 Bright A_FireMissileSpell("MageLightningWaterMissile", 1, 1);
+		MLNG F 1 Bright A_FireWaterSpell;
         Goto AltFireFinish;
     SunSpell:
 		MLNG F 1 Bright A_FireMissileSpell("MageLightningSunMissile", 10, 10);
@@ -112,6 +112,18 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
         SpawnPlayerMissile("MageLightningIceMissile", angle - 12);
 
 		A_StartSound ("IceGuyMissileExplode", CHAN_BODY);
+	}
+
+	action void A_FireWaterSpell()
+	{
+        if (!A_AttemptFireSpell(6, 2))
+            return;
+
+        SpawnPlayerMissile("MageLightningWaterMissileFloor", angle);
+        SpawnPlayerMissile("MageLightningWaterMissileFloor", angle + 2);
+        SpawnPlayerMissile("MageLightningWaterMissileFloor", angle - 2);
+        SpawnPlayerMissile("MageLightningWaterMissileFloor", angle + 4);
+        SpawnPlayerMissile("MageLightningWaterMissileFloor", angle - 4);
 	}
 
 	action void A_FireLightningSpell()
@@ -386,115 +398,77 @@ class MageLightningPoisonMissile : Actor
     }
 }
 
-class MageLightningWaterSmoke : Actor
+class MageLightningWaterMissileFloorSmoke : Actor
 {
-	Default
+    Default
 	{
 	    +NOBLOCKMAP +NOGRAVITY +SHADOW
 	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
-        RenderStyle "Translucent";
-        Alpha 0.5;
+		RenderStyle "Translucent";
+		
+		Alpha 0.6;
 	}
-	States
-	{
-        Spawn:
-            SPSH ABCD 4;
-            Stop;
-	}
-}
-
-class MageWaterDrip : Actor
-{
-	Default
-	{
-		Radius 20;
-		Height 16;
-        Projectile;
-		+NOBLOCKMAP
-		+NOTELEPORT
-		+CANNOTPUSH
-		+ZDOOMTRANS
-        -NOGRAVITY
-        +THRUACTORS;
-        Gravity 0.25;
-		RenderStyle "Add";
-		DamageType "Water";
-        Scale 0.5;
-	}
-
 	States
 	{
 	Spawn:
-        SPSH A 48 BRIGHT;
-    Death:
-		SPSH EFGHIJK 4 BRIGHT;
+		WAVS C 8;
+		WAVS CBA 4;
 		Stop;
-	}	
+	}
 }
-class MageLightningWaterMissile : TimedActor
+
+class MageLightningWaterMissileFloor : TimedActor
 {
     Default
     {
-        Speed 70;
-        Radius 12;
-        Height 8;
+        Speed 15;
+        Radius 18;
+        Height 56;
         Damage 1;
         Projectile;
         +SPAWNSOUNDSOURCE
-        +EXPLOCOUNT
         +CANPUSHWALLS
         +CANUSEWALLS
         +ACTIVATEIMPACT
         -DONTTHRUST
         -CANNOTPUSH
         -NODAMAGETHRUST
-        +BOUNCEONWALLS
-        +BOUNCEONFLOORS
-        +BOUNCEONCEILINGS
-		+USEBOUNCESTATE
-        MissileType "MageLightningWaterSmoke";
+		+FLOORHUGGER
+		+STEPMISSILE
+		-DROPOFF
+		+NODROPOFF
+		+RIPPER
+
         Obituary "$OB_MPMWEAPLIGHTNING";
-        Scale 3.0;
-        PushFactor 10.0;
-
 		DeathSound "WaterSplash";
+		SeeSound "WaterSplash";
 		DamageType "Water";
-
-		TimedActor.TimeLimit 50;
+		RenderStyle "Translucent";
+		MaxDropOffHeight 56;
+		
+		Scale 1.5;
+		Alpha 0.6;
     }
     States
     {
     Spawn:
-        SPSH AAAAAAAAA 3 A_DripWater;
-    Death:
-        SPSH B 4;
-        SPSH CD 4;
+        WAVS AB 4;
+	WaveAnim:
+		WAVS CD 3 A_SpawnItemEx("MageLightningWaterMissileFloorSmoke", random2[Puff]()*0.015625, random2[Puff]()*0.015625, random2[Puff]()*0.015625, 
+									0,0,0,0,SXF_ABSOLUTEPOSITION, 64);
+		Loop;
+    Crash:
+	Death:
+        WAVS E 4 A_StopMoving;
+		WAVS EEFFA 4;
         Stop;
-	Bounce:
-		SPSH A 1 A_WaterBounce;
-		Goto Spawn;
     }
 
-	action void A_WaterBounce()
+	override int DoSpecialDamage(Actor target, int damage, name damagetype)
 	{
-		A_StartSound("WaterSplash", CHAN_BODY);
-	}
+		A_PushTarget(target);
 
-    action void A_DripWater ()
-	{
-        Spawn("MageWaterDrip", pos, ALLOW_REPLACE);
-        A_RadiusThrust(2000, 32, RTF_NOIMPACTDAMAGE);
-	}
-
-	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)
-	{
-		//If attack does damage and has vertical velocity, divide it by 2 to act like friction.
-		if (damage > 0 && (Vel.Z > 0.1 || Vel.Z < -0.1 ))
-		{
-			Vel.Z = Vel.Z / 2.0;
-		}
-
-		return super.DoSpecialDamage(victim, damage, damagetype);
+		return Super.DoSpecialDamage(target, damage, DamageType);
 	}
 }
 
@@ -733,7 +707,7 @@ class MageLightningLightningMissile : FastProjectile
         +SPAWNSOUNDSOURCE
         MissileType "MageFrostLightningSmoke";
         DeathSound "MageLightningFire";
-        Obituary "$OB_MPMWEAPFROST";
+        Obituary "$OB_MPMWEAPLIGHTNING";
 		Scale 1.5;
 
 		DamageType "Electric";
@@ -816,7 +790,7 @@ class MageLightningBloodMissile1 : Actor
         +SPAWNSOUNDSOURCE
         +ZDOOMTRANS
 		+NOSHIELDREFLECT
-        Obituary "$OB_MPMWEAPFROST";
+        Obituary "$OB_MPMWEAPLIGHTNING";
 
 		Health BLOOD_MAX_MANADRAIN; //max mana restore
 		DamageType "Blood";
@@ -870,7 +844,7 @@ class MageLightningBloodMissile2 : Actor
         +SPAWNSOUNDSOURCE
         +ZDOOMTRANS
 		+NOSHIELDREFLECT
-        Obituary "$OB_MPMWEAPFROST";
+        Obituary "$OB_MPMWEAPLIGHTNING";
 
 		Health BLOOD_MAX_MANADRAIN; //max mana restore
 		DamageType "Blood";

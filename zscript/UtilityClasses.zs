@@ -83,7 +83,7 @@ class ActorList
 	}
 }
 
-class TimedActor : Actor
+class TimedActor : StoppableActor
 {
     int timeLimit;
     property TimeLimit : timeLimit;
@@ -103,4 +103,60 @@ class TimedActor : Actor
             Destroy();
         }
     }
+}
+
+class StoppableActor : Actor
+{
+	double oldSpeed;
+	property OldSpeed : oldSpeed;
+
+    Default
+    {
+        Projectile;
+    }
+
+	action void A_PushTarget(Actor victim, double power = 30.0)
+	{
+		if (!victim)
+			return;
+
+		if (victim.bIsMonster || (victim is "PlayerPawn"))
+		{
+			victim.thrust(power, angle);
+		}
+	}
+
+	action void A_StopMoving(bool gotoDeath = false)
+	{
+		invoker.OldSpeed = invoker.Speed;
+
+		invoker.A_ChangeVelocity(0, 0, 0, CVF_REPLACE);
+		invoker.A_SetSpeed(0);
+
+		if (gotoDeath)
+			invoker.SetStateLabel("Death");
+	}
+
+	void AdjustSpeed (double speedMod)
+	{
+		Speed *= speedMod;
+		A_ChangeVelocity(Vel.X * speedMod, Vel.Y * speedMod, Vel.Z * speedMod);
+	}
+
+	action void A_RenewSpeed()
+	{
+		if (invoker.Speed > invoker.OldSpeed)
+			invoker.OldSpeed = invoker.Speed;
+
+		invoker.A_SetSpeed(invoker.OldSpeed);
+		Vector3 dir = (AngleToVector(invoker.angle, cos(invoker.pitch)), -sin(invoker.pitch));
+		Vector3 vel = (dir.X * invoker.Speed, dir.Y * invoker.Speed, dir.Z * invoker.Speed);
+		invoker.A_ChangeVelocity(vel.X, vel.Y, vel.Z, CVF_REPLACE);
+	}
+
+	action void A_RenewMissile()
+	{
+		invoker.bMissile = true;
+		A_RenewSpeed();
+	}
 }

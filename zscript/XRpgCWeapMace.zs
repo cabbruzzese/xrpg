@@ -42,18 +42,21 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 		CMCE A 2 Offset (8, 50);
 		CMCE A 1 Offset (8, 45);
 		Goto Ready;
-	AltFire:
-		CMCE C 2 Offset (160, 80);
+	GlowAltFire:
 		CMCE C 2 Offset (120, 85);
 		CMCE C 2 Offset (80, 90);
-		CMCE D 2 Offset (40, 95) A_CMaceSwingAttack(true, -14);
-		CMCE D 2 Offset (10, 98) A_CMaceSwingAttack(false, -7);
-		CMCE D 2 Offset (1, 101) A_CMaceSwingAttack(false, 0);
-		CMCE D 2 Offset (-10, 104) A_CMaceSwingAttack(false, 7);
-		CMCE E 2 Offset (-40, 108) A_CMaceSwingAttack(false, 14);
-		CMCE E 2 Offset (-80, 110);
-		CMCE F 2 Offset (-120, 115);
-		CMCE F 12 Offset (-160, 120);
+		CMCL A 4 Bright Offset (1, 101);
+		CMCL B 4 Bright Offset (1, 101);
+		CMCL C 4 Bright Offset (1, 101);
+	GlowAltHold:
+		CMCL D 4 Bright Offset (1, 101) A_CMaceSwingAttack(true, true);
+		CMCL E 4 Bright Offset (1, 101) A_CMaceSwingAttack(false, true);
+		CMCL F 4 Bright Offset (1, 101) A_CMaceSwingAttack(false, true);
+		CMCL C 2 Offset (-80, 110) A_CheckCMaceSwingFinish;
+	AltGlowFinish:
+		CMCL B 2 Offset (-120, 115);
+		CMCL A 2 Offset (-160, 120);
+		CMCE F 10 Offset (-160, 120);
 		CMCE A 2 Offset (8, 75);
 		CMCE A 1 Offset (8, 65);
 		CMCE A 2 Offset (8, 60);
@@ -61,6 +64,44 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 		CMCE A 2 Offset (8, 50);
 		CMCE A 1 Offset (8, 45);
 		Goto Ready;
+	AltHold:
+		#### # 0 Offset (160, 80) A_CheckCMaceSwingHold;
+	AltFire:
+		CMCE C 2 Offset (160, 80) A_CheckCMaceSwing;
+		CMCE C 2 Offset (120, 85);
+		CMCE C 2 Offset (80, 90);
+		CMCE D 2 Offset (40, 95) A_CMaceSwingAttack(true, false, -14);
+		CMCE D 2 Offset (1, 101) A_CMaceSwingAttack(false, false,  0);
+		CMCE E 2 Offset (-40, 108) A_CMaceSwingAttack(false, false, 14);
+		CMCE E 2 Offset (-120, 115);
+		CMCE F 10 Offset (-160, 120);
+		CMCE A 2 Offset (8, 75);
+		CMCE A 1 Offset (8, 65);
+		CMCE A 2 Offset (8, 60);
+		CMCE A 1 Offset (8, 55);
+		CMCE A 2 Offset (8, 50);
+		CMCE A 1 Offset (8, 45);
+		Goto Ready;
+	}
+
+	action void A_CheckCMaceSwing()
+	{
+		if (A_IsSmite())
+			A_SetWeapState("GlowAltFire");
+	}
+
+	action void A_CheckCMaceSwingFinish()
+	{
+		if (A_IsSmite())
+			A_Refire();
+		else
+			A_SetWeapState("AltGlowFinish");
+	}
+
+	action void A_CheckCMaceSwingHold()
+	{
+		if (A_IsSmite())
+			A_SetWeapState("GlowAltHold");
 	}
 	
 	//===========================================================================
@@ -111,35 +152,35 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
 		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', "HammerPuff");
 	}
+	
 
-	action void A_CMaceSwingAttack(bool isMainSwing, double angleMod)
+	action void A_CMaceSwingAttack(bool isMainSwing, bool isSmite, int angleMod = 0)
 	{
 		FTranslatedLineTarget t;
 
-		if (player == null)
-		{
+		if (!player)
 			return;
-		}
 
-		int damage = random[CWeapMaceSwing](1, 8);
+		int damage = random[CWeapMaceSwing](1, 16);
 
         let xrpgPlayer = XRpgPlayer(player.mo);
-		if (xrpgPlayer != null)
-			damage += (xrpgPlayer.GetStrength() * 0.5);
+		if (!xrpgPlayer)
+			return;
 
 		class<Actor> puffType = "SmallMacePuffSilent";
 		if (isMainSwing)
-		{
 			puffType = "SmallMacePuff";
-		}
 
-		if (A_IsSmite())
+		if (isSmite)
 		{
-			damage += xrpgPlayer.GetMagic();
+			damage += (xrpgPlayer.GetMagic() * 0.5);
 			puffType = "SmallMacePuffGlowSilent";
-
 			if (isMainSwing)
 				puffType = "SmallMacePuffGlow";
+		}
+		else
+		{
+			damage += (xrpgPlayer.GetStrength() * 0.5);
 		}
 
 		for (int i = 0; i < 16; i++)
@@ -153,11 +194,20 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 					LineAttack(ang, 2 * DEFMELEERANGE, slope, damage, 'Melee', puffType, true, t);
 					if (t.linetarget != null)
 					{
-						//AdjustPlayerAngle(t);
-
 						if (t.linetarget.bIsMonster || t.linetarget.player)
 						{
-							t.linetarget.Thrust(-1, t.attackAngleFromSource);
+
+							if (isSmite)
+							{
+
+								AdjustPlayerAngle(t);
+
+								Thrust(1, t.attackAngleFromSource);
+							}
+							else
+							{
+								t.linetarget.Thrust(1, t.attackAngleFromSource);
+							}
 						}
 
 						return;
@@ -166,7 +216,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 			}
 		}
 
-		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
+		double slope = AimLineAttack (angle + angleMod, DEFMELEERANGE, null, 0., ALF_CHECK3D);
 		LineAttack (angle + angleMod, DEFMELEERANGE, slope, damage, 'Melee', puffType);
 	}
 
@@ -249,7 +299,8 @@ class SmallMacePuffSilent : Actor
 		+PUFFONACTORS
 		RenderStyle "Translucent";
 		Alpha 0.6;
-		AttackSound "FighterPunchHitWall";
+		AttackSound "FighterHammerHitWall";
+		SeeSound "FighterAxeHitThing";
 		VSpeed 1;
 	}
 	States
@@ -264,8 +315,9 @@ class SmallMacePuff : SmallMacePuffSilent
 {
 	Default
 	{
-		SeeSound "FighterPunchHitThing";
-		ActiveSound "FighterPunchMiss";
+		AttackSound "FighterHammerHitWall";
+		SeeSound "FighterHammerMiss";
+		ActiveSound "FighterHammerMiss";
 	}
 }
 
@@ -279,7 +331,8 @@ class SmallMacePuffGlowSilent : Actor
 		+PUFFONACTORS
 		RenderStyle "Translucent";
 		Alpha 0.6;
-		AttackSound "FighterHammerHitWall";
+		AttackSound "MageLightningZap";
+		ActiveSound "MageLightningZap";
 		Scale 0.5;
 	}
 	States
@@ -293,7 +346,6 @@ class SmallMacePuffGlow : SmallMacePuffGlowSilent
 {
 	Default
 	{
-		ActiveSound "FighterHammerMiss";
-		SeeSound "FighterAxeHitThing";
+		SeeSound "MageLightningContinuous";
 	}
 }

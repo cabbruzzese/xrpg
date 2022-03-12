@@ -453,7 +453,7 @@ class MageIceCloud : MageFrostIceMissile
 }
 
 
-class MageStaffPoisonMissile : StoppingProjectile
+class MageStaffPoisonMissile : StoppableActor
 {
 	Default
     {
@@ -587,7 +587,7 @@ class MageStaffSunMissile : Actor
 	}
 }
 
-class MageStaffMoonMissile : Actor
+class MageStaffMoonMissile : StoppableActor
 {
     Default
     {
@@ -641,8 +641,7 @@ class MageStaffMoonMissile : Actor
 	{
 		if (stopMoving)
 		{
-			Speed = 0;
-			A_ChangeVelocity(0, 0, 0, CVF_REPLACE);
+			A_StopMoving();
 		}
 		A_StartSound("BishopAttack", CHAN_BODY);
 
@@ -715,7 +714,7 @@ class MageStaffDeathMissile1 : Actor
 		-ACTIVATEPCROSS
 		+ZDOOMTRANS
 		RenderStyle "Add";
-		Obituary "$OB_MPMWEAPLIGHTNING";
+		Obituary "$OB_MPMWEAPBLOODSCOURGE";
 
 		DamageType "Death";
 	}

@@ -476,23 +476,3 @@ class StunStars : Bridge
 		Super.OnDestroy();
 	}
 }
-
-class StoppingProjectile : Actor
-{
-    Default
-    {
-        Projectile;
-    }
-
-	action void A_StopMoving()
-	{
-		Speed = 0;
-		A_ChangeVelocity(0, 0, 0, CVF_REPLACE);
-	}
-
-	void AdjustSpeed (double speedMod)
-	{
-		Speed *= speedMod;
-		A_ChangeVelocity(Vel.X * speedMod, Vel.Y * speedMod, Vel.Z * speedMod);
-	}
-}

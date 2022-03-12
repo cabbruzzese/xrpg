@@ -80,8 +80,8 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE C 1;
 		CONE D 1;
 		CONE E 1;
-        CONE F 2 Bright A_FireMissileSpell("MageFrostWaterMissile", 0, 1, 0, 2, 1);
-        Goto RapidFireFinish;
+        CONE F 2 Bright A_FireMissileSpell("MageFrostWaterMissile", 0, 4);
+        Goto AltFireFinish;
     SunSpell:
 		CONE C 3;
 		CONE D 3;
@@ -92,7 +92,7 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireMissileSpell("MageFrostMoonMissile", 0, 5);
+        CONE F 3 Bright A_FireMissileSpell("MageFrostMoonMissile", 0, 4);
         Goto AltFireFinish;
     DeathSpell:
 		CONE C 3;
@@ -265,8 +265,7 @@ class MageFrostFlameMissile : TimedActor
 
 	action void A_VolcanoExplode()
 	{
-		A_ChangeVelocity(0, 0, 0, CVF_REPLACE);
-		A_SetSpeed(0);
+		A_StopMoving();
 		
 		A_Explode(40, 100);
 	}
@@ -408,50 +407,95 @@ class MageFrostPoisonMissile : Actor
     }
 }
 
-class MageFrostWaterMissileSmoke : Actor
+class MageFrostWaterSmoke : Actor
 {
 	Default
 	{
 	    +NOBLOCKMAP +NOGRAVITY +SHADOW
 	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
-		RenderStyle "Translucent";
-		Alpha 0.7;
-        Scale 0.5;
+        RenderStyle "Translucent";
+        Alpha 0.5;
 	}
 	States
 	{
-	Spawn:
-		SPSH ABCD 1;
-		Stop;
+        Spawn:
+            SPSH ABCD 4;
+            Stop;
 	}
 }
-class MageFrostWaterMissile : FastProjectile
+
+class MageWaterDrip : Actor
+{
+	Default
+	{
+		Radius 20;
+		Height 16;
+        Projectile;
+		+NOBLOCKMAP
+		+NOTELEPORT
+		+CANNOTPUSH
+		+ZDOOMTRANS
+        -NOGRAVITY
+        +THRUACTORS;
+        Gravity 0.25;
+		RenderStyle "Add";
+		DamageType "Water";
+        Scale 0.5;
+	}
+
+	States
+	{
+	Spawn:
+        SPSH A 48 BRIGHT;
+    Death:
+		SPSH EFGHIJK 4 BRIGHT;
+		Stop;
+	}	
+}
+class MageFrostWaterMissile : TimedActor
 {
     Default
     {
-        Speed 80;
-        Radius 8;
-        Height 6;
-        Damage 4;
+        Speed 70;
+        Radius 12;
+        Height 8;
+        Damage 20;
+        Projectile;
         +SPAWNSOUNDSOURCE
-        -NOGRAVITY
-        Gravity 0.25;
-		MissileType "MageFrostWaterMissileSmoke";
+        +CANPUSHWALLS
+        +CANUSEWALLS
+        +ACTIVATEIMPACT
+        -DONTTHRUST
+        -CANNOTPUSH
+        -NODAMAGETHRUST
+        MissileType "MageFrostWaterSmoke";
         Obituary "$OB_MPMWEAPFROST";
-		DeathSound "WaterSplash";
+        Scale 3.0;
 
+		DeathSound "WaterSplash";
 		DamageType "Water";
     }
     States
     {
     Spawn:
-        SPSH A 4;
-        Loop;
+        SPSH AAAAAAAAA 3 A_DripWater;
     Death:
-        SPSH B 4 A_RadiusThrust(2000, 64, RTF_NOIMPACTDAMAGE);
+        SPSH B 4;
         SPSH CD 4;
         Stop;
     }
+
+    action void A_DripWater ()
+	{
+        Spawn("MageWaterDrip", pos, ALLOW_REPLACE);
+	}
+
+	override int DoSpecialDamage(Actor target, int damage, name damagetype)
+	{
+		A_PushTarget(target);
+
+		return Super.DoSpecialDamage(target, damage, DamageType);
+	}
 }
 
 class MageFrostSunMissile : Actor
@@ -499,6 +543,7 @@ class MageFrostMoonMissile : Actor
         Height 8;
         Damage 0;
         Projectile;
+		+DONTREFLECT
         Obituary "$OB_MPMWEAPFROST";
         Translation "Ice";
         Scale 2.0;
@@ -785,7 +830,7 @@ class MageFrostLightningMissile1 : Actor
 		-ACTIVATEPCROSS
 		+ZDOOMTRANS
 		RenderStyle "Add";
-		Obituary "$OB_MPMWEAPLIGHTNING";
+		Obituary "$OB_MPMWEAPFROST";
 	}
 	States
 	{
