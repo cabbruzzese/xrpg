@@ -27,7 +27,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		Player.ForwardMove 1.08, 1.2;
 		Player.SideMove 1.125, 1.475;
 		Player.Portrait "P_FWALK1";
-		Player.WeaponSlot 1, "XRpgFWeapFist";
+		Player.WeaponSlot 1, "XRpgFWeapFist", "XRpgFWeapMorningStar";
 		Player.WeaponSlot 2, "XRpgFWeapAxe";
 		Player.WeaponSlot 3, "XRpgFWeapHammer";
 		Player.WeaponSlot 4, "XRpgFWeapQuietus";
@@ -53,6 +53,8 @@ class XRpgFighterPlayer : XRpgPlayer
 		//Player.StartItem "BerserkSpell";
 		//Player.StartItem "StunSpell";
 		//Player.StartItem "PowerSpell";
+		
+		Player.StartItem "XRpgFWeapMorningStar";
 	}
 	
 	States

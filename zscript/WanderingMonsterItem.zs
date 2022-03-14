@@ -270,7 +270,7 @@ class WanderingMonsterItem : Powerup
             props.BossFlag |= WMF_BRUTE;
 
         int leaderChance = min(BOSSTYPE_CHANCE_LEADER + playerLevel, BOSSTYPE_CHANCE_MAX);
-        if (random[WMFLeader](1,100) < leaderChance)
+        if (random[WMFLeader](1,100) < leaderChance && !(Owner is "XRpgSummonWraith"))
 		{
 			props.BossFlag |= WMF_LEADER;
 			
@@ -356,13 +356,14 @@ class WanderingMonsterItem : Powerup
         }
     }
 
+    const WML_DEATH_RAISE_LIMIT = 1;
     void DoDeathLeaderSpecial()
     {
         //Friendly leaders do not raise the dead
         if (Owner.bFriendly)
             return;
 
-        Owner.A_RadiusGive("RaiseWraithItem", 200, RGF_CORPSES);
+        Owner.A_RadiusGive("RaiseWraithItem", 200, RGF_CORPSES, 1, "", "", 0, WML_DEATH_RAISE_LIMIT);
     }
 
     void DoFireLeaderSpecial()
