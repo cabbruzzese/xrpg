@@ -1,7 +1,5 @@
-class XRpgFWeapMorningStar : XRpgFighterWeapon
+class XRpgFWeapMorningStar : XRpgFighterWeapon replaces EttinMace
 {
-	const MSTAR_RANGE = 1.5 * DEFMELEERANGE;
-
 	Default
 	{
 		+BLOODSPLATTER
@@ -12,15 +10,23 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon
 		Weapon.KickBack 150;
 		Weapon.YAdjust -10;
 		Weapon.AmmoType1 "Mana2";
-		Inventory.PickupMessage "$TXT_WEAPON_F3";
-		Obituary "$OB_MPFWEAPHAMMERM";
-		Tag "$TAG_FWEAPHAMMER";
+		Inventory.PickupMessage "$TXT_WEAPON_MSTAR";
+		Obituary "$OB_MPFWEAPMSTAR";
+		Tag "$TAG_FWEAPMSTAR";
+		Inventory.MaxAmount 1;
+
+        XRpgFighterWeapon.MeleePush 10;
+        XRpgFighterWeapon.MeleeAdjust true;
+		XRpgFighterWeapon.WeaponRange 1.8 * DEFMELEERANGE;
 	}
 
 	States
 	{
 	Spawn:
-		WFHM A -1;
+		ETTB MNOP 5;
+		ETTB Q 5;
+		ETTB R 5;
+		ETTB S -1;
 		Stop;
 	Select:
 		FMCE A 1 A_Raise;
@@ -34,7 +40,7 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon
 	Fire:
 		FMCE B 2 Offset (5, 0);
 		FMCE B 4 Offset (5, 0) A_CheckBerserk(false);
-		FMCE C 3 Offset (5, 0) A_FMStarMelee;
+		FMCE C 3 Offset (5, 0) A_FWeaponMelee(1, 90, 0, 1.5);
 		FMCE D 3 Offset (5, 0);
 		FMCE E 2 Offset (5, 0);
 		FMCE E 10 Offset (5, 150);
@@ -47,7 +53,7 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon
 		FMCE A 1;
 		Goto Ready;
 	BerserkFire:
-		FMCE C 3 Offset (5, 0) A_FMStarMelee;
+		FMCE C 3 Offset (5, 0) A_FWeaponMelee(1, 90, 0, 1.5);
 		FMCE D 3 Offset (5, 0);
 		FMCE E 2 Offset (5, 0);
 		FMCE E 6 Offset (5, 150);
@@ -59,49 +65,22 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon
 		FMCE A 1 Offset (0, 35);
 		FMCE A 1;
 		Goto Ready;
-	}
-
-	action void A_FMStarMelee()
-	{
-		FTranslatedLineTarget t;
-
-		if (player == null)
-		{
-			return;
-		}
-
-		int damage = random[MStarAtk](1, 123);
-
-		let xrpgPlayer = XRpgPlayer(player.mo);
-		{
-			let statItem = xrpgPlayer.GetStats();
-			damage += statItem.Strength;
-		}
-
-		for (int i = 0; i < 16; i++)
-		{
-			for (int j = 1; j >= -1; j -= 2)
-			{
-				double ang = angle + j*i*(45. / 32);
-				double slope = AimLineAttack(ang, MSTAR_RANGE, t, 0., ALF_CHECK3D);
-				if (t.linetarget != null)
-				{
-					LineAttack(ang, MSTAR_RANGE, slope, damage, 'Melee', "HammerPuff", true, t);
-					if (t.linetarget != null)
-					{
-						AdjustPlayerAngle(t);
-						if (t.linetarget.bIsMonster || t.linetarget.player)
-						{
-							t.linetarget.Thrust(10, t.attackAngleFromSource);
-						}
-						weaponspecial = false; // Don't throw a hammer
-						return;
-					}
-				}
-			}
-		}
-		// didn't find any targets in meleerange
-		double slope = AimLineAttack (angle, MSTAR_RANGE, null, 0., ALF_CHECK3D);
-		weaponspecial = (LineAttack (angle, MSTAR_RANGE, slope, damage, 'Melee', "HammerPuff", true) == null);
+	AltFire:
+        FSHL A 1 A_CheckShield;
+        FSHL BC 1;
+        FSHL D 1 A_FWeaponMeleeAttack(1, 20, 0, 1.5, 0, SHIELD_RANGE, "AxePuff", false, 20);
+    AltHold:
+		FSHL E 8 A_UseShield;
+		FSHL E 4 A_Refire;
+        FSHL E 4 A_CheckShieldCharged;
+        FSHL DCBA 2;
+        Goto Ready;
+    ShieldCharged:
+        FSHL FGH 2 BRIGHT;
+		FSHL F 2 BRIGHT A_Refire;
+        FSHL G 2 BRIGHT A_ShieldFire;
+    ShieldFireFinish:
+		FSHL DCBA 2;
+        Goto Ready;
 	}
 }

@@ -23,3 +23,13 @@ TXT_DIVINESPELLPICKUP = "You have been blessed with Divine Intervention.";
 TXT_BERSERKSPELLPICKUP = "You have gained the Berserk skill.";
 TXT_STUNSPELLPICKUP = "You have gained the Stunning Strike skill.";
 TXT_POWERSPELLPICKUP = "You have gained the Power Strike skill.";
+
+TXT_SHIELDITEM = "This shield is in good condition.";
+TXT_WEAPON_MSTAR = "This will make a crude, but effective, club.";
+TXT_WEAPON_RAZOR = "That dead beast won't need this sword.";
+
+OB_MPFWEAPRAZOR = "%o got sliced thin by %k's razor sword.";
+OB_MPFWEAPMSTAR = "%o hed their head bashed in by %k's morning star.";
+
+TAG_FWEAPRAZOR = "Razor Sword";
+TAG_FWEAPMSTAR = "Morning Star";

@@ -168,10 +168,25 @@ class XRpgWeapon : Weapon
 
 class XRpgFighterWeapon : XRpgWeapon
 {
+    class<Actor> puffType;
+    int weaponRange;
+    int meleePush;
+    bool MeleeAdjust;
+
+    property Pufftype : puffType;
+    property WeaponRange : weaponRange;
+    property MeleePush : meleePush;
+    property MeleeAdjust : meleeAdjust;
+
 	Default
 	{
 		Weapon.Kickback 150;
 		Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer";
+
+        XRpgFighterWeapon.Pufftype "HammerPuff";
+        XRpgFighterWeapon.WeaponRange 1.5 * DEFMELEERANGE;
+        XRpgFighterWeapon.MeleePush 0;
+        XRpgFighterWeapon.MeleeAdjust true;
 	}
 
     action void A_CheckBerserk(bool isAltFire)
@@ -188,6 +203,154 @@ class XRpgFighterWeapon : XRpgWeapon
 				A_SetWeapState("BerserkFire");
 		}
 	}
+
+    action void A_FWeaponMelee(int damageMin, int damageMax, int angleMod = 0, double strengthMod = 1.0, double magicMod = 0.0)
+	{
+        if (!player)
+			return;
+        
+        Weapon weapon = player.ReadyWeapon;
+        XRpgFighterWeapon weap = XRpgFighterWeapon(weapon);
+        if (!weap)
+            return;
+
+		A_FWeaponMeleeAttack(damageMin, damageMax, angleMod, strengthMod, magicMod, 
+                            weap.WeaponRange, weap.Pufftype, 
+                            weap.MeleeAdjust, weap.MeleePush);
+    }
+
+    action void A_FWeaponMeleePuff(int damageMin, int damageMax, int angleMod = 0, double strengthMod = 1.0, double magicMod = 0.0, class<actor> puffClass = "HammerPuff")
+	{
+        if (!player)
+			return;
+        
+        Weapon weapon = player.ReadyWeapon;
+        XRpgFighterWeapon weap = XRpgFighterWeapon(weapon);
+        if (!weap)
+            return;
+
+		A_FWeaponMeleeAttack(damageMin, damageMax, angleMod, strengthMod, magicMod, 
+                            weap.WeaponRange, puffClass, 
+                            weap.MeleeAdjust, weap.MeleePush);
+    }
+
+    action void A_FWeaponMeleeAttack(int damageMin, int damageMax, int angleMod, double strengthMod, double magicMod, int range, class<actor> puffClass, bool isAdjust, int push)
+	{
+		FTranslatedLineTarget t;
+
+		if (!player)
+			return;
+
+		int damage = random[FWeeaponMelee](damageMin, damageMax);
+
+		let xrpgPlayer = XRpgPlayer(player.mo);
+        if (!xrpgPlayer)
+        return;
+
+        if (strengthMod > 0)
+            damage += xrpgPlayer.GetStrength() * strengthMod;
+
+        if (magicMod > 0)
+            damage += xrpgPlayer.GetMagic() * magicMod;
+  
+		for (int i = 0; i < 16; i++)
+		{
+			for (int j = 1; j >= -1; j -= 2)
+			{
+				double ang = angle + j*i*(45. / 32) + angleMod;
+				double slope = AimLineAttack(ang, range, t, 0., ALF_CHECK3D);
+				if (t.linetarget != null)
+				{
+					LineAttack(ang, range, slope, damage, 'Melee', puffClass, true, t);
+					if (t.linetarget != null)
+					{
+                        if (isAdjust)
+						    AdjustPlayerAngle(t);
+                        
+						if (push > 0 && (t.linetarget.bIsMonster || t.linetarget.player))
+						{
+							t.linetarget.Thrust(push, t.attackAngleFromSource);
+						}
+						weaponspecial = false; // Don't throw a hammer
+						return;
+					}
+				}
+			}
+		}
+		// didn't find any targets in meleerange
+		double slope = AimLineAttack (angle + angleMod, range, null, 0., ALF_CHECK3D);
+		weaponspecial = (LineAttack (angle + angleMod, range, slope, damage, 'Melee', puffClass, true) == null);
+	}
+
+    action void A_CheckShield()
+    {
+        if (!player)
+			return;
+
+		let xrpgPlayer = XRpgFighterPlayer(player.mo);
+        if (!xrpgPlayer)
+            return;
+
+        if (!xrpgPlayer.GetShield())
+            A_SetWeapState("Ready");
+    }
+
+    action void A_UseShield()
+    {
+        if (!player)
+			return;
+
+		let xrpgPlayer = XRpgFighterPlayer(player.mo);
+        if (!xrpgPlayer)
+            return;
+
+        let shield = xrpgPlayer.GetShield();
+        if (!shield)
+            return;
+
+        if (shield.IsCharged())
+        {
+            A_SetWeapState("ShieldCharged");
+            return;
+        }
+
+        //A_Print("Charging Shield");
+        shield.SetShieldTimeout();
+    }
+
+    action void A_CheckShieldCharged()
+    {
+        if (!player)
+			return;
+
+		let xrpgPlayer = XRpgFighterPlayer(player.mo);
+        if (!xrpgPlayer)
+            return;
+
+        let shield = xrpgPlayer.GetShield();
+        if (!shield)
+            return;
+        
+        A_SetWeapState("ShieldFireFinish");
+    }
+
+    action void A_ShieldFire()
+    {
+        if (!player)
+			return;
+
+		let xrpgPlayer = XRpgFighterPlayer(player.mo);
+        if (!xrpgPlayer)
+            return;
+
+        //xrpgPlayer.A_Print("Try to fire");
+
+        let shield = xrpgPlayer.GetShield();
+        if (!shield)
+            return;
+        
+        shield.ShootShield();
+    }
 }
 
 class XRpgClericWeapon : XRpgWeapon

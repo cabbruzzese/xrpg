@@ -15,6 +15,10 @@ const BOSSTYPE_CHANCE_MAX = 75;
 const BOSS_DAMAGE_RESIST = 4;
 const BOSS_DAMAGE_VULNERABILITY = 2;
 
+const DROP_WEAP_CHANCE = 32;
+const DROP_SHIELD_CHANCE = 16;
+const DROP_ARMOR_CHANCE = 16;
+
 enum EWanderingMonsterFlags
 {
 	WMF_BRUTE = 1,
@@ -106,8 +110,47 @@ class WanderingMonsterItem : Powerup
         return false;
     }
 
+    bool TryDropEquipment()
+    {
+        if (!Owner)
+            return false;
+
+        //Items automatically drop on XDEATH, don't spawn new ones
+        if (Owner.Health <= Owner.GibHealth)
+            return false;
+        
+        class<Actor> dropClass;
+        int dropChance;
+
+        if (Owner is "Ettin")
+        {
+            dropClass = "XRpgFWeapMorningStar";
+            dropChance = DROP_WEAP_CHANCE;
+        }
+        else if (Owner is "Centaur")
+        {
+            if (random[CentaurDrop](1,2) == 2)
+            {
+                dropClass = "XRpgFighterWeapon";
+                dropChance = DROP_WEAP_CHANCE;
+            }
+            else
+            {
+                dropClass = "XRpgShield";
+                dropChance = DROP_SHIELD_CHANCE;
+            }
+        }
+
+        if (!dropClass)
+            return false;
+
+        return Owner.A_DropItem(dropClass, 1, dropChance);
+    }
+
     override void OwnerDied()
     {
+        TryDropEquipment();
+
         if (BossFlag & WMF_LEADER)
         {
             Owner.A_DropItem("Mana3", 20, DROP_AMMO_CHANCE_BIG);
