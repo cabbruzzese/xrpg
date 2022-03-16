@@ -272,27 +272,28 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		if (!xrpgPlayer)
 			return FindState("Fire");
 
-		let buttons = xrpgPlayer.GetPlayerInput(INPUT_BUTTONS);
-		let rightAttack = (buttons & (BT_MOVERIGHT));
-		let leftAttack = (buttons & (BT_MOVELEFT));
-		let backAttack = (buttons & (BT_BACK));
+		let forwardMove = xrpgPlayer.GetPlayerInput(INPUT_FORWARDMOVE);
+		let sideMove = xrpgPlayer.GetPlayerInput(INPUT_SIDEMOVE);
+		let rightMove = sideMove > 0;
+		let leftMove = sideMove < 0;
+		let backMove = forwardMove < 0;
 		
 		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
 		
 		if (isBerserk)
 		{
-			if (rightAttack && !backAttack)
+			if (rightMove && !backMove)
 				return Ammo1.Amount ? FindState ("BerserkRightSwingGlow") :  FindState ("BerserkRightSwing");	
-			else if (leftAttack && !backAttack)
+			else if (leftMove && !backMove)
 				return Ammo1.Amount ? FindState ("BerserkLeftSwingGlow") :  FindState ("BerserkLeftSwing");	
 			else
 				return Ammo1.Amount ? FindState ("BerserkFireGlow") :  FindState ("BerserkFire");
 		}
 		else
 		{
-			if (rightAttack && !backAttack)
+			if (rightMove && !backMove)
 				return Ammo1.Amount ? FindState ("RightSwingGlow") :  FindState ("RightSwing");	
-			else if (leftAttack && !backAttack)
+			else if (leftMove && !backMove)
 				return Ammo1.Amount ? FindState ("LeftSwingGlow") :  FindState ("LeftSwing");	
 		}
 

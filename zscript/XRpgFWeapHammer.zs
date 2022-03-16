@@ -125,10 +125,9 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 
 		if (miss)
 		{
-			let buttons = xrpgPlayer.GetPlayerInput(INPUT_BUTTONS);
-			let backAttack = (buttons & (BT_BACK));
+			let forwardMove = xrpgPlayer.GetPlayerInput(INPUT_FORWARDMOVE);
 
-			if (backAttack)
+			if (forwardMove < 0)
 				weaponspecial = true;
 
 			return;

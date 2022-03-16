@@ -48,7 +48,7 @@ class XRpgFighterPlayer : XRpgPlayer
 
 		//NOTE: Uncomment for testing
 		//Player.StartItem "XRpgFWeapAxe";
-		Player.StartItem "XRpgFWeapHammer";
+		//Player.StartItem "XRpgFWeapHammer";
 		//Player.StartItem "XRpgFWeapQuietus";
 		//Player.StartItem "BerserkSpell";
 		//Player.StartItem "StunSpell";
@@ -56,7 +56,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		
 		//Player.StartItem "XRpgFWeapMorningStar";
 		//Player.StartItem "XRpgFWeapRazor";
-		Player.StartItem "XRpgShield";
+		//Player.StartItem "XRpgShield";
 	}
 	
 	States
