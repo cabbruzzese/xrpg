@@ -17,7 +17,7 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon replaces EttinMace
 
         XRpgFighterWeapon.MeleePush 10;
         XRpgFighterWeapon.MeleeAdjust true;
-		XRpgFighterWeapon.WeaponRange 1.8 * DEFMELEERANGE;
+		XRpgFighterWeapon.WeaponRange int(1.8 * double(DEFMELEERANGE));
 	}
 
 	States

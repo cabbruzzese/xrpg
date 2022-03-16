@@ -131,7 +131,7 @@ class WanderingMonsterItem : Powerup
         {
             if (random[CentaurDrop](1,2) == 2)
             {
-                dropClass = "XRpgFighterWeapon";
+                dropClass = "XRpgFWeapRazor";
                 dropChance = DROP_WEAP_CHANCE;
             }
             else
@@ -313,7 +313,7 @@ class WanderingMonsterItem : Powerup
             props.BossFlag |= WMF_BRUTE;
 
         int leaderChance = min(BOSSTYPE_CHANCE_LEADER + playerLevel, BOSSTYPE_CHANCE_MAX);
-        if (random[WMFLeader](1,100) < leaderChance && !(Owner is "XRpgSummonWraith"))
+        if (random[WMFLeader](1,100) < leaderChance && !(Owner is "MonsterSummonWraith"))
 		{
 			props.BossFlag |= WMF_LEADER;
 			

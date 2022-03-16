@@ -170,7 +170,7 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 		
 		int lineDamage = 0;
 		double slope = AimLineAttack (angle, FLAME_VILE_RANGE);
-		LineAttack(angle, FLAME_VILE_RANGE, slope, lineDamage, "Fire", "FlameVilePuff", true, t);
+		LineAttack(angle, FLAME_VILE_RANGE, slope, lineDamage, "Fire", "FlameVilePuff", LAF_NOINTERACT, t);
 		if (t.linetarget != null)
 		{
 			if (t.linetarget.bIsMonster)

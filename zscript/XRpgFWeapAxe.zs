@@ -34,7 +34,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXE A 1 A_FAxeCheckReady;
 		Loop;
 	Fire:
-		FAXE B 4 Offset (15, 32) A_FAxeCheckAtk(0);
+		FAXE B 4 Offset (15, 32);// A_FAxeCheckAtk();
 		FAXE C 3 Offset (15, 32);
 		FAXE D 2 Offset (15, 32);
 		FAXE D 1 Offset (-5, 70) A_FAxeAttack;
@@ -115,9 +115,9 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXE A 1 Offset (0, 36);
 		FAXE A 1;
 		Goto ReadyGlow;
-	AltFire:
+	RightSwing:
 		FAXS A 4 Offset (190, -10) A_FAxeCheckSwingAtk;
-		FAXS A 10 Offset (190, -10);
+		FAXS A 6 Offset (190, -10);
 		FAXS A 1 Offset (140, -2) A_FAxeSwingAttack(-40);
 		FAXS A 1 Offset (90, 6) A_FAxeSwingAttack(-20);
 		FAXS A 1 Offset (40, 14) A_FAxeSwingAttack(0);
@@ -130,8 +130,8 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		TNT1 A 14 Offset (-310, 70);
 		TNT1 A 4 Offset (-310, 70) A_ReFire;
 		Goto Ready;
-	BerserkAltFire:
-		FAXS A 10 Offset (190, -10);
+	BerserkRightSwing:
+		FAXS A 6 Offset (190, -10);
 		FAXS A 1 Offset (140, -2) A_FAxeSwingAttack(-40);
 		FAXS A 1 Offset (90, 6) A_FAxeSwingAttack(-20);
 		FAXS A 1 Offset (40, 14) A_FAxeSwingAttack(0);
@@ -144,8 +144,8 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		TNT1 A 4 Offset (-310, 70);
 		TNT1 A 4 Offset (-310, 70) A_ReFire;
 		Goto Ready;
-	AltFireGlow:
-		FAXS B 10 Offset (190, -10);
+	RightSwingGlow:
+		FAXS B 6 Offset (190, -10);
 		FAXS B 1 Offset (140, -2) A_FAxeSwingAttack(-40, true);
 		FAXS B 1 Offset (90, 6) A_FAxeSwingAttack(-20, true);
 		FAXS B 1 Offset (40, 14) A_FAxeSwingAttack(0, true);
@@ -158,8 +158,8 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		TNT1 A 14 Offset (-310, 70);
 		TNT1 A 4 Offset (-310, 70) A_ReFire;
 		Goto Ready;
-	BerserkAltFireGlow:
-		FAXS B 10 Offset (190, -10);
+	BerserkRightSwingGlow:
+		FAXS B 6 Offset (190, -10);
 		FAXS B 1 Offset (140, -2) A_FAxeSwingAttack(-40, true);
 		FAXS B 1 Offset (90, 6) A_FAxeSwingAttack(-20, true);
 		FAXS B 1 Offset (40, 14) A_FAxeSwingAttack(0, true);
@@ -172,6 +172,80 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		TNT1 A 4 Offset (-310, 70);
 		TNT1 A 2 Offset (-310, 70) A_ReFire;
 		Goto Ready;
+	LeftSwing:
+		FAXS C 4 Offset (-190, -10) A_FAxeCheckSwingAtk;
+		FAXS C 6 Offset (-190, -10);
+		FAXS C 1 Offset (-140, -2) A_FAxeSwingAttack(40);
+		FAXS C 1 Offset (-90, 6) A_FAxeSwingAttack(20);
+		FAXS C 1 Offset (-40, 14) A_FAxeSwingAttack(0);
+		FAXS C 1 Offset (10, 22) A_FAxeSwingAttack(-20);
+		FAXS C 1 Offset (60, 30) A_FAxeSwingAttack(-40);
+		FAXS C 1 Offset (110, 38);
+		FAXS C 1 Offset (160, 46);
+		FAXS C 1 Offset (210, 54);
+		FAXS C 1 Offset (260, 62);
+		TNT1 A 14 Offset (310, 70);
+		TNT1 A 4 Offset (310, 70) A_ReFire;
+		Goto Ready;
+	BerserkLeftSwing:
+		FAXS C 6 Offset (-190, -10);
+		FAXS C 1 Offset (-140, -2) A_FAxeSwingAttack(40);
+		FAXS C 1 Offset (-90, 6) A_FAxeSwingAttack(20);
+		FAXS C 1 Offset (-40, 14) A_FAxeSwingAttack(0);
+		FAXS C 1 Offset (10, 22) A_FAxeSwingAttack(-20);
+		FAXS C 1 Offset (60, 30) A_FAxeSwingAttack(-40);
+		FAXS C 1 Offset (110, 38);
+		FAXS C 1 Offset (160, 46);
+		FAXS C 1 Offset (210, 54);
+		FAXS C 1 Offset (260, 62);
+		TNT1 A 4 Offset (310, 70);
+		TNT1 A 4 Offset (310, 70) A_ReFire;
+		Goto Ready;
+	LeftSwingGlow:
+		FAXS D 6 Offset (-190, -10);
+		FAXS D 1 Offset (-140, -2) A_FAxeSwingAttack(40, true);
+		FAXS D 1 Offset (-90, 6) A_FAxeSwingAttack(20, true);
+		FAXS D 1 Offset (-40, 14) A_FAxeSwingAttack(0, true);
+		FAXS D 1 Offset (10, 22) A_FAxeSwingAttack(-20, true);
+		FAXS D 1 Offset (60, 30) A_FAxeSwingAttack(-40, true);
+		FAXS D 1 Offset (110, 38);
+		FAXS D 1 Offset (160, 46);
+		FAXS D 1 Offset (210, 54);
+		FAXS D 1 Offset (260, 62);
+		TNT1 A 14 Offset (310, 70);
+		TNT1 A 4 Offset (310, 70) A_ReFire;
+		Goto Ready;
+	BerserkLeftSwingGlow:
+		FAXS D 6 Offset (-190, -10);
+		FAXS D 1 Offset (-140, -2) A_FAxeSwingAttack(40, true);
+		FAXS D 1 Offset (-90, 6) A_FAxeSwingAttack(20, true);
+		FAXS D 1 Offset (-40, 14) A_FAxeSwingAttack(0, true);
+		FAXS D 1 Offset (10, 22) A_FAxeSwingAttack(-20, true);
+		FAXS D 1 Offset (60, 30) A_FAxeSwingAttack(-40, true);
+		FAXS D 1 Offset (110, 38);
+		FAXS D 1 Offset (160, 46);
+		FAXS D 1 Offset (210, 54);
+		FAXS D 1 Offset (260, 62);
+		TNT1 A 4 Offset (310, 70);
+		TNT1 A 2 Offset (310, 70) A_ReFire;
+		Goto Ready;
+	AltFire:
+        FSHL A 1 A_CheckShield;
+        FSHL BC 1;
+        FSHL D 1 A_FWeaponMeleeAttack(1, 20, 0, 1.5, 0, SHIELD_RANGE, "AxePuff", false, 20);
+    AltHold:
+		FSHL E 8 A_UseShield;
+		FSHL E 4 A_Refire;
+        FSHL E 4 A_CheckShieldCharged;
+        FSHL DCBA 2;
+        Goto Ready;
+    ShieldCharged:
+        FSHL FGH 2 BRIGHT;
+		FSHL F 2 BRIGHT A_Refire;
+        FSHL G 2 BRIGHT A_ShieldFire;
+    ShieldFireFinish:
+		FSHL DCBA 2;
+        Goto Ready;
 	}
 	
 	override State GetUpState ()
@@ -191,14 +265,35 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 
 	override State GetAtkState (bool hold)
 	{
-		if (Owner && Owner.player && Owner.player.mo)
-		{
-			let xrpgPlayer = XRpgPlayer(Owner.player.mo);
+		if (!Owner || !Owner.player || !Owner.player.mo)
+			return FindState("Fire");
+		
+		let xrpgPlayer = XRpgPlayer(Owner.player.mo);
+		if (!xrpgPlayer)
+			return FindState("Fire");
 
-			if (xrpgPlayer && xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
-			{
+		let buttons = xrpgPlayer.GetPlayerInput(INPUT_BUTTONS);
+		let rightAttack = (buttons & (BT_MOVERIGHT));
+		let leftAttack = (buttons & (BT_MOVELEFT));
+		let backAttack = (buttons & (BT_BACK));
+		
+		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
+		
+		if (isBerserk)
+		{
+			if (rightAttack && !backAttack)
+				return Ammo1.Amount ? FindState ("BerserkRightSwingGlow") :  FindState ("BerserkRightSwing");	
+			else if (leftAttack && !backAttack)
+				return Ammo1.Amount ? FindState ("BerserkLeftSwingGlow") :  FindState ("BerserkLeftSwing");	
+			else
 				return Ammo1.Amount ? FindState ("BerserkFireGlow") :  FindState ("BerserkFire");
-			}
+		}
+		else
+		{
+			if (rightAttack && !backAttack)
+				return Ammo1.Amount ? FindState ("RightSwingGlow") :  FindState ("RightSwing");	
+			else if (leftAttack && !backAttack)
+				return Ammo1.Amount ? FindState ("LeftSwingGlow") :  FindState ("LeftSwing");	
 		}
 
 		return Ammo1.Amount ? FindState ("FireGlow") :  Super.GetAtkState(hold);
@@ -315,18 +410,18 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		if (random[FWeapAxeSound](1,3) == 1)
 			A_StartSound ("*fistgrunt", CHAN_VOICE);
 
-		bool isBeserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
+		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
 
 		if (A_CheckAllMana(AXE_SWING_BLUEMANA, 0))
 		{
-			if (isBeserk)
-				A_SetWeapState("BerserkAltFireGlow");
+			if (isBerserk)
+				A_SetWeapState("BerserkRightSwingGlow");
 			else
-				A_SetWeapState("AltFireGlow");
+				A_SetWeapState("RightSwingGlow");
 		}
-		else if (isBeserk)
+		else if (isBerserk)
 		{
-			A_SetWeapState("BerserkAltFire");
+			A_SetWeapState("BerserkRightSwing");
 		}
 	}
 
@@ -400,39 +495,91 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		LineAttack (angle + angleMod, DEFMELEERANGE, slope, damage, 'Melee', pufftype, true);
 	}
 
-	//============================================================================
-	//
-	// A_FAxeCheckAtk
-	//
-	//============================================================================
+	// //============================================================================
+	// //
+	// // A_FAxeCheckAtk
+	// //
+	// //============================================================================
 
-	action void A_FAxeCheckAtk(int throwing)
-	{
-		if (player == null)
-			return;
+	// action void A_CheckGlowAttack(bool isSideAttack)
+	// {
+	// 	if (!player)
+	// 		return;
 
-		let xrpgPlayer = XRpgPlayer(player.mo);
-		if (!xrpgPlayer)
-			return;
+	// 	let xrpgPlayer = XRpgPlayer(player.mo);
+	// 	if (!xrpgPlayer)
+	// 		return;
 
-		if (!throwing && xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
-		{
-			Weapon w = player.ReadyWeapon;
-			if (w.Ammo1 && w.Ammo1.Amount > 0)
-				A_SetWeapState("BerserkFireGlow");
-			else
-				A_SetWeapState("BerserkFire");
-		}
+	// 	xrpgPlayer.A_Print("In A_CheckGlowAttack");
 
-		Weapon w = player.ReadyWeapon;
-		if (w.Ammo1 && w.Ammo1.Amount > 0)
-		{
-			if (throwing)
-				A_SetWeapState("AltFireGlow");
-			else
-				A_SetWeapState("FireGlow");
-		}
-	}
+	// 	if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
+	// 	{
+	// 		if (isSideAttack)
+	// 			A_SetWeapState("BerserkRightSwingGlow");
+	// 		else
+	// 			A_SetWeapState("BerserkFireGlow");
+	// 	}
+	// 	else
+	// 	{
+	// 		if (isSideAttack)
+	// 			A_SetWeapState("RightSwingGlow");
+	// 		else
+	// 			A_SetWeapState("FireGlow");
+	// 	}
+	// }
+
+	// action void A_CheckAttack(bool isSideAttack)
+	// {
+	// 	if (!player)
+	// 		return;
+
+	// 	let xrpgPlayer = XRpgPlayer(player.mo);
+	// 	if (!xrpgPlayer)
+	// 		return;
+
+	// 	xrpgPlayer.A_Print("In A_CheckAttack");
+
+	// 	if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
+	// 	{
+	// 		if (isSideAttack)
+	// 			A_SetWeapState("BerserkRightSwing");
+	// 		else
+	// 			A_SetWeapState("BerserkFire");
+	// 	}
+	// 	else
+	// 	{
+	// 		if (isSideAttack)
+	// 			A_SetWeapState("BerserkRightSwing");
+
+	// 		//No change for regular attack
+	// 	}
+	// }
+	// action void A_FAxeCheckAtk()
+	// {
+	// 	//A_Print(String.Format("Player being selected: %i - BT_Left: %i - BT_RIGHT: %i", consoleplayer, BT_LEFT, BT_RIGHT));
+
+	// 	if (!player)
+	// 		return;
+
+	// 	let xrpgPlayer = XRpgPlayer(player.mo);
+	// 	if (!xrpgPlayer)
+	// 		return;
+
+	// 	xrpgPlayer.A_Print("A_FAxeCheckAtk");
+
+	// 	let buttons = GetPlayerInput(consoleplayer, INPUT_BUTTONS);
+	// 	bool sideAttack = buttons & (BT_LEFT|BT_RIGHT);
+
+	// 	xrpgPlayer.A_Print("Got Buttons");
+
+	// 	//xrpgPlayer.A_Print(String.Format("Player being selected: %i - input: %i - BT_Left: %i - BT_RIGHT: %i", consoleplayer, buttons, BT_LEFT, BT_RIGHT));
+
+	// 	Weapon w = player.ReadyWeapon;
+	// 	if (w.Ammo1 && w.Ammo1.Amount > 0)
+	// 		A_CheckGlowAttack(sideAttack);
+	// 	else
+	// 		A_CheckAttack(sideAttack);
+	// }
 
 	//============================================================================
 	//

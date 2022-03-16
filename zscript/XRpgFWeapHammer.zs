@@ -1,7 +1,4 @@
 // The Fighter's Hammer -----------------------------------------------------
-const HAMMER_CHARGE_MAX = 25;
-const HAMMER_CHARGE_MIN = 8;
-
 class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 {
 	const HAMMER_RANGE = 1.5 * DEFMELEERANGE;
@@ -19,8 +16,6 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		Inventory.PickupMessage "$TXT_WEAPON_F3";
 		Obituary "$OB_MPFWEAPHAMMERM";
 		Tag "$TAG_FWEAPHAMMER";
-
-		XRpgWeapon.MaxCharge HAMMER_CHARGE_MAX;
 	}
 
 	States
@@ -43,7 +38,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR C 3 Offset (5, 0) A_FHammerAttackMelee;
 		FHMR D 3 Offset (5, 0);
 		FHMR E 2 Offset (5, 0);
-		FHMR E 10 Offset (5, 150);
+		FHMR E 10 Offset (5, 150) A_FHammerThrow;
 		FHMR A 1 Offset (0, 60);
 		FHMR A 1 Offset (0, 55);
 		FHMR A 1 Offset (0, 50);
@@ -56,21 +51,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR C 3 Offset (5, 0) A_FHammerAttackMelee;
 		FHMR D 3 Offset (5, 0);
 		FHMR E 2 Offset (5, 0);
-		FHMR E 6 Offset (5, 150);
-		FHMR A 1 Offset (0, 60);
-		FHMR A 1 Offset (0, 55);
-		FHMR A 1 Offset (0, 50);
-		FHMR A 1 Offset (0, 45);
-		FHMR A 1 Offset (0, 40);
-		FHMR A 1 Offset (0, 35);
-		FHMR A 1;
-		Goto Ready;
-	ShortChargeAttack:
-		FHMR B 6 Offset (5, 1);
-		FHMR C 3 Offset (5, 0);
-		FHMR D 3 Offset (5, 0);
-		FHMR E 2 Offset (5, 0);
-		FHMR E 10 Offset (5, 150) A_FHammerThrow;
+		FHMR E 6 Offset (5, 150) A_FHammerThrow;
 		FHMR A 1 Offset (0, 60);
 		FHMR A 1 Offset (0, 55);
 		FHMR A 1 Offset (0, 50);
@@ -80,43 +61,27 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1;
 		Goto Ready;
 	AltFire:
-	AltHold:
-		FHMR F 3 Offset (1, -40) A_ChargeUp;
-		FHMR F 1 Offset (1, -40) A_ReFire;
-		FHMR F 1 Offset (1, -40) A_CheckMinCharge(HAMMER_CHARGE_MIN);
-		FHMR C 3 Offset (60, 30);
-		FHMR D 3 Offset (90, 30);
-		FHMR E 2 Offset (90, 30);
-		FHMR E 10 Offset (-5, 150) A_HammerSlam();
-		FHMR A 1 Offset (0, 60);
-		FHMR A 1 Offset (0, 55);
-		FHMR A 1 Offset (0, 50);
-		FHMR A 1 Offset (0, 45);
-		FHMR A 1 Offset (0, 40);
-		FHMR A 1 Offset (0, 35);
-		FHMR A 1;
-		Goto Ready;
-	}
-
-	//============================================================================
-	//
-	// A_FHammerAttack
-	//
-	//============================================================================
-
-	action void A_FHammerAttack()
-	{
-		// Don't spawn a hammer if the player doesn't have enough mana
-		if (player.ReadyWeapon == null ||
-			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
-				Weapon.AltFire : Weapon.PrimaryFire, false, true))
-		{ 
-			weaponspecial = false;
-		}
+        FSHL A 1 A_CheckShield;
+        FSHL BC 1;
+        FSHL D 1 A_FWeaponMeleeAttack(1, 20, 0, 1.5, 0, SHIELD_RANGE, "AxePuff", false, 20);
+    AltHold:
+		FSHL E 8 A_UseShield;
+		FSHL E 4 A_Refire;
+        FSHL E 4 A_CheckShieldCharged;
+        FSHL DCBA 2;
+        Goto Ready;
+    ShieldCharged:
+        FSHL FGH 2 BRIGHT;
+		FSHL F 2 BRIGHT A_Refire;
+        FSHL G 2 BRIGHT A_ShieldFire;
+    ShieldFireFinish:
+		FSHL DCBA 2;
+        Goto Ready;
 	}
 
 	action void A_FHammerAttackMelee()
 	{
+		weaponspecial = false;
 		FTranslatedLineTarget t;
 
 		if (player == null)
@@ -155,8 +120,24 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 			}
 		}
 		// didn't find any targets in meleerange
-		double slope = AimLineAttack (angle, HAMMER_RANGE, null, 0., ALF_CHECK3D);
-		weaponspecial = (LineAttack (angle, HAMMER_RANGE, slope, damage, 'Melee', "HammerPuff", true) == null);
+		double slope = AimLineAttack (angle, HAMMER_RANGE, t, 0., ALF_CHECK3D);
+		bool miss = !(LineAttack (angle, HAMMER_RANGE, slope, damage, 'Melee', "HammerPuff", true));
+
+		if (miss)
+		{
+			let buttons = xrpgPlayer.GetPlayerInput(INPUT_BUTTONS);
+			let backAttack = (buttons & (BT_BACK));
+
+			if (backAttack)
+				weaponspecial = true;
+
+			return;
+		}
+
+		FLineTraceData RemoteRay;
+		bool hit = LineTrace (angle, HAMMER_RANGE, slope, TRF_THRUACTORS, 32, 0, 0, RemoteRay);
+		if (hit && RemoteRay.HitType == TRACE_HitFloor)
+			A_HammerSlam();
 	}
 
 	//============================================================================
@@ -167,12 +148,11 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 
 	action void A_FHammerThrow()
 	{
-		if (player == null)
-		{
+		if (!player)
 			return;
-		}
 
-		invoker.ChargeValue = 0;
+		if (!weaponspecial)
+			return;
 
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
@@ -194,19 +174,14 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 			return;
 		}
 
-		float explodeDamageMod = 1.0 + (float(invoker.ChargeValue) / float(invoker.MaxCharge));
-		invoker.ChargeValue = 0;
-
-		int damage = random[FWeapHammer](1, 70);
-		damage += (invoker.ChargeValue * 3);
+		int damage = random[FWeapHammer](50, 100);
 
 		int range = 150;
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer)
 			damage += xrpgPlayer.GetStrength();
 		
-		int thrustSpeed = 3500;
-		thrustSpeed += invoker.ChargeValue * 100;
+		int thrustSpeed = 4500;
 		A_Explode(damage, range, false);
 		A_RadiusThrust(thrustSpeed, range, RTF_NOIMPACTDAMAGE);
 
@@ -220,16 +195,12 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 
 			w.DepleteAmmo (false, false);
 			let mo = HammerFloorMissile2(SpawnPlayerMissile("HammerFloorMissile2"));
-			if (mo)
-			{
-				mo.ExplodeDamageMod = explodeDamageMod;
-			}
 		}
 	}
 }
 
 const HAMMERFLOOR_RADIUS = 80;
-const HAMMERFLOOR_RADIUSDAMAGE = 40;
+const HAMMERFLOOR_RADIUSDAMAGE = 70;
 const HAMMERFLOOR_DAMAGE = 0;
 class HammerFloorMissile1 : Actor
 {
@@ -261,8 +232,6 @@ class HammerFloorMissile1 : Actor
 
 class HammerFloorMissile2 : HammerFloorMissile1
 {
-	float explodeDamageMod;
-	property ExplodeDamageMod : explodeDamageMod;
 	Default
 	{
 		Radius 5;
@@ -272,8 +241,6 @@ class HammerFloorMissile2 : HammerFloorMissile1
 		Damage HAMMERFLOOR_DAMAGE;
 		+FLOORHUGGER
 		RenderStyle "Add";
-
-		HammerFloorMissile2.ExplodeDamageMod 1.0;
 		
 		+RIPPER
 	}
@@ -302,7 +269,6 @@ class HammerFloorMissile2 : HammerFloorMissile1
 			mo.Vel.X = MinVel; // Force block checking
 			mo.CheckMissileSpawn (radius);
 			mo.SetOrigin((mo.Pos.X, mo.Pos.Y, mo.Pos.Z + 2), false);
-			mo.ExplodeDamageMod = ExplodeDamageMod;
 			
 			mo.FloorFireExplode();
 		}
@@ -312,7 +278,7 @@ class HammerFloorMissile2 : HammerFloorMissile1
 	{
 		if (!invoker)
 			return;
-		int damage = HAMMERFLOOR_RADIUSDAMAGE * invoker.ExplodeDamageMod;
+		int damage = HAMMERFLOOR_RADIUSDAMAGE;
 		A_Explode(damage, HAMMERFLOOR_RADIUS, 0);
 		A_StartSound("MaulatorMissileHit", CHAN_BODY);
 	}
