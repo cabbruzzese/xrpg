@@ -231,7 +231,9 @@ class PowerSpell : FighterSpellItem
 
 				let vecOffset = (source.Pos.X - xrpgPlayer.Pos.X, source.Pos.Y - xrpgPlayer.Pos.Y);
 				let attackAngle = Vectorangle(vecOffset.x, vecOffset.y);
-				source.Thrust(power, attackAngle);
+
+				if (!source.bDONTTHRUST)
+					source.Thrust(power, attackAngle);
 
 				let magicDamage = xrpgPlayer.GetMagic() * 4;
 				newdamage = damage + magicDamage;

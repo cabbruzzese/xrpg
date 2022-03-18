@@ -33,7 +33,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1 A_WeaponReady;
 		Loop;
 	Fire:
-		FHMR B 2 Offset (5, 0);
+		FHMR B 2 Offset (5, 0) A_CheckHammerKeys;
 		FHMR B 4 Offset (5, 0) A_CheckBerserk(false);
 		FHMR C 3 Offset (5, 0) A_FHammerAttackMelee;
 		FHMR D 3 Offset (5, 0);
@@ -79,23 +79,32 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
         Goto Ready;
 	}
 
-	action void A_FHammerAttackMelee()
+	action void A_CheckHammerKeys()
 	{
 		weaponspecial = false;
+
+		if (!player || !player.mo)
+			return;
+		
+		let forwardMove = player.mo.GetPlayerInput(INPUT_FORWARDMOVE);
+
+		//If stepping backwards, we can throw
+		if (forwardMove < 0)
+			weaponspecial = true;
+	}
+
+	action void A_FHammerAttackMelee()
+	{
 		FTranslatedLineTarget t;
 
-		if (player == null)
-		{
+		if (!player)
 			return;
-		}
 
 		int damage = random[HammerAtk](1, 123);
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
-		{
-			let statItem = xrpgPlayer.GetStats();
-			damage += statItem.Strength;
-		}
+		if (xrpgPlayer)
+			damage += xrpgPlayer.GetStrength();
 
 		for (int i = 0; i < 16; i++)
 		{
@@ -111,7 +120,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 						AdjustPlayerAngle(t);
 						if (t.linetarget.bIsMonster || t.linetarget.player)
 						{
-							t.linetarget.Thrust(10, t.attackAngleFromSource);
+							A_ThrustTarget(t.linetarget, 10, t.attackAngleFromSource);
 						}
 						weaponspecial = false; // Don't throw a hammer
 						return;
@@ -123,20 +132,13 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		double slope = AimLineAttack (angle, HAMMER_RANGE, t, 0., ALF_CHECK3D);
 		bool miss = !(LineAttack (angle, HAMMER_RANGE, slope, damage, 'Melee', "HammerPuff", true));
 
-		if (miss)
-		{
-			let forwardMove = xrpgPlayer.GetPlayerInput(INPUT_FORWARDMOVE);
-
-			if (forwardMove < 0)
-				weaponspecial = true;
-
-			return;
-		}
-
 		FLineTraceData RemoteRay;
 		bool hit = LineTrace (angle, HAMMER_RANGE, slope, TRF_THRUACTORS, 32, 0, 0, RemoteRay);
 		if (hit && RemoteRay.HitType == TRACE_HitFloor)
 			A_HammerSlam();
+
+		if (!miss || hit)
+			weaponspecial = false;
 	}
 
 	//============================================================================
@@ -168,10 +170,10 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 
 	action void A_HammerSlam()
 	{
-		if (player == null)
-		{
+		weaponspecial = false;
+
+		if (!player)
 			return;
-		}
 
 		int damage = random[FWeapHammer](50, 100);
 

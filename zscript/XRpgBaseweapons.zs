@@ -164,6 +164,17 @@ class XRpgWeapon : Weapon
 
         return mo;
 	}
+
+    action void A_ThrustTarget (Actor thrustTarget, double thrustSpeed, double thrustAngle)
+    {
+        if (!thrustTarget)
+            return;
+        
+        if (thrustTarget.bDONTTHRUST)
+            return;
+
+        thrustTarget.Thrust(thrustSpeed, thrustAngle);
+    }
 }
 
 class XRpgFighterWeapon : XRpgWeapon
@@ -267,9 +278,9 @@ class XRpgFighterWeapon : XRpgWeapon
                         if (isAdjust)
 						    AdjustPlayerAngle(t);
                         
-						if (push > 0 && (t.linetarget.bIsMonster || t.linetarget.player))
+						if (push != 0 && (t.linetarget.bIsMonster || t.linetarget.player))
 						{
-							t.linetarget.Thrust(push, t.attackAngleFromSource);
+                            A_ThrustTarget(t.linetarget, push, t.attackAngleFromSource);
 						}
 						weaponspecial = false; // Don't throw a hammer
 						return;

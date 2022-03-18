@@ -119,6 +119,9 @@ class StoppableActor : Actor
 	{
 		if (!victim)
 			return;
+		
+		if (victim.bDONTTHRUST)
+			return;
 
 		if (victim.bIsMonster || (victim is "PlayerPawn"))
 		{

@@ -206,7 +206,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 							}
 							else
 							{
-								t.linetarget.Thrust(1, t.attackAngleFromSource);
+								A_ThrustTarget(t.linetarget, 1, t.attackAngleFromSource);
 							}
 						}
 

@@ -108,8 +108,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 				if (t.linetarget.player != null || 
 					(t.linetarget.Mass < 10000000 && (t.linetarget.bIsMonster)))
 				{
-					if (!t.linetarget.bDontThrust)
-						t.linetarget.Thrust(power, t.attackAngleFromSource);
+					A_ThrustTarget(t.linetarget, power, t.attackAngleFromSource);
 				}
 				AdjustPlayerAngle(t);
 				return true;
@@ -177,8 +176,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 				if (t.linetarget.player != null || 
 					(t.linetarget.Mass < 10000000 && (t.linetarget.bIsMonster)))
 				{
-					if (!t.linetarget.bDontThrust)
-						t.linetarget.Thrust(power, t.attackAngleFromSource);
+					A_ThrustTarget(t.linetarget, power, t.attackAngleFromSource);
 				}
 				AdjustPlayerAngle(t);
 				return true;

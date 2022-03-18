@@ -478,11 +478,11 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 					{
 						if (t.linetarget.bIsMonster || t.linetarget.player)
 						{
-							t.linetarget.Thrust(power, t.attackAngleFromSource);
+							A_ThrustTarget(t.linetarget, power, t.attackAngleFromSource);
 						}
 						
 						A_DepleteAllMana(AXE_SWING_BLUEMANA,0);
-						weapon.DepleteAmmo (weapon.bAltFire, false);
+						//weapon.DepleteAmmo (weapon.bAltFire, false);
 
 						return;
 					}
@@ -495,92 +495,6 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		double slope = AimLineAttack (angle + angleMod, DEFMELEERANGE, null, 0., ALF_CHECK3D);
 		LineAttack (angle + angleMod, DEFMELEERANGE, slope, damage, 'Melee', pufftype, true);
 	}
-
-	// //============================================================================
-	// //
-	// // A_FAxeCheckAtk
-	// //
-	// //============================================================================
-
-	// action void A_CheckGlowAttack(bool isSideAttack)
-	// {
-	// 	if (!player)
-	// 		return;
-
-	// 	let xrpgPlayer = XRpgPlayer(player.mo);
-	// 	if (!xrpgPlayer)
-	// 		return;
-
-	// 	xrpgPlayer.A_Print("In A_CheckGlowAttack");
-
-	// 	if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
-	// 	{
-	// 		if (isSideAttack)
-	// 			A_SetWeapState("BerserkRightSwingGlow");
-	// 		else
-	// 			A_SetWeapState("BerserkFireGlow");
-	// 	}
-	// 	else
-	// 	{
-	// 		if (isSideAttack)
-	// 			A_SetWeapState("RightSwingGlow");
-	// 		else
-	// 			A_SetWeapState("FireGlow");
-	// 	}
-	// }
-
-	// action void A_CheckAttack(bool isSideAttack)
-	// {
-	// 	if (!player)
-	// 		return;
-
-	// 	let xrpgPlayer = XRpgPlayer(player.mo);
-	// 	if (!xrpgPlayer)
-	// 		return;
-
-	// 	xrpgPlayer.A_Print("In A_CheckAttack");
-
-	// 	if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
-	// 	{
-	// 		if (isSideAttack)
-	// 			A_SetWeapState("BerserkRightSwing");
-	// 		else
-	// 			A_SetWeapState("BerserkFire");
-	// 	}
-	// 	else
-	// 	{
-	// 		if (isSideAttack)
-	// 			A_SetWeapState("BerserkRightSwing");
-
-	// 		//No change for regular attack
-	// 	}
-	// }
-	// action void A_FAxeCheckAtk()
-	// {
-	// 	//A_Print(String.Format("Player being selected: %i - BT_Left: %i - BT_RIGHT: %i", consoleplayer, BT_LEFT, BT_RIGHT));
-
-	// 	if (!player)
-	// 		return;
-
-	// 	let xrpgPlayer = XRpgPlayer(player.mo);
-	// 	if (!xrpgPlayer)
-	// 		return;
-
-	// 	xrpgPlayer.A_Print("A_FAxeCheckAtk");
-
-	// 	let buttons = GetPlayerInput(consoleplayer, INPUT_BUTTONS);
-	// 	bool sideAttack = buttons & (BT_LEFT|BT_RIGHT);
-
-	// 	xrpgPlayer.A_Print("Got Buttons");
-
-	// 	//xrpgPlayer.A_Print(String.Format("Player being selected: %i - input: %i - BT_Left: %i - BT_RIGHT: %i", consoleplayer, buttons, BT_LEFT, BT_RIGHT));
-
-	// 	Weapon w = player.ReadyWeapon;
-	// 	if (w.Ammo1 && w.Ammo1.Amount > 0)
-	// 		A_CheckGlowAttack(sideAttack);
-	// 	else
-	// 		A_CheckAttack(sideAttack);
-	// }
 
 	//============================================================================
 	//
@@ -633,7 +547,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 					{
 						if (t.linetarget.bIsMonster || t.linetarget.player)
 						{
-							t.linetarget.Thrust(power, t.attackAngleFromSource);
+							A_ThrustTarget(t.linetarget, power, t.attackAngleFromSource);
 						}
 						AdjustPlayerAngle(t);
 						

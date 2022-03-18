@@ -24,12 +24,20 @@ TXT_BERSERKSPELLPICKUP = "You have gained the Berserk skill.";
 TXT_STUNSPELLPICKUP = "You have gained the Stunning Strike skill.";
 TXT_POWERSPELLPICKUP = "You have gained the Power Strike skill.";
 
-TXT_SHIELDITEM = "This shield is in good condition.";
-TXT_WEAPON_MSTAR = "This will make a crude, but effective, club.";
-TXT_WEAPON_RAZOR = "That dead beast won't need this sword.";
-
 OB_MPFWEAPRAZOR = "%o got sliced thin by %k's razor sword.";
 OB_MPFWEAPMSTAR = "%o hed their head bashed in by %k's morning star.";
+OB_MPFWEAPCLEAVER = "%o had their chops busted by %k.";
 
 TAG_FWEAPRAZOR = "Razor Sword";
 TAG_FWEAPMSTAR = "Morning Star";
+TAG_FWEAPCLEAVER = "Butcher's Cleaver";
+
+TXT_SHIELDITEM = "This shield is in good condition.";
+TXT_WEAPON_MSTAR = "This will make a crude, but effective, club.";
+TXT_WEAPON_RAZOR = "That dead beast won't need this sword.";
+TXT_WEAPON_CLEAVER = "A cleaver? With one of these every problem looks like a flank steak.";
+
+TXT_ARMOR_WRAITHHELM = "A horned helm? Somewhere a viking's head is getting cold.";
+TXT_ARMOR_BISHOPGEM = "What a lovely ornament of death. May it protect me.";
+TXT_ARMOR_ETTINARMOR = "It may look like a barbarian's swimwear, but at least it's armor.";
+TXT_ARMOR_SUITHELMET = "O holy knight, a helmet! It's sturdy too!";

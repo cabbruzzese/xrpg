@@ -15,9 +15,9 @@ const BOSSTYPE_CHANCE_MAX = 75;
 const BOSS_DAMAGE_RESIST = 4;
 const BOSS_DAMAGE_VULNERABILITY = 2;
 
-const DROP_WEAP_CHANCE = 32;
-const DROP_SHIELD_CHANCE = 16;
-const DROP_ARMOR_CHANCE = 16;
+const DROP_WEAP_CHANCE = 16;
+const DROP_SHIELD_CHANCE = 12;
+const DROP_ARMOR_CHANCE = 24;
 
 enum EWanderingMonsterFlags
 {
@@ -114,6 +114,9 @@ class WanderingMonsterItem : Powerup
     {
         if (!Owner)
             return false;
+        
+        if (Owner.bFriendly)
+            return false;
 
         //Items automatically drop on XDEATH, don't spawn new ones
         if (Owner.Health <= Owner.GibHealth)
@@ -124,8 +127,16 @@ class WanderingMonsterItem : Powerup
 
         if (Owner is "Ettin")
         {
-            dropClass = "XRpgFWeapMorningStar";
-            dropChance = DROP_WEAP_CHANCE;
+            if (random[CentaurDrop](1,2) == 2)
+            {
+                dropClass = "EttinArmor";
+                dropChance = DROP_ARMOR_CHANCE;
+            }
+            else
+            {
+                dropClass = "XRpgFWeapMorningStar";
+                dropChance = DROP_WEAP_CHANCE;
+            }
         }
         else if (Owner is "Centaur")
         {
@@ -139,6 +150,16 @@ class WanderingMonsterItem : Powerup
                 dropClass = "XRpgShield";
                 dropChance = DROP_SHIELD_CHANCE;
             }
+        }
+        else if (Owner is "Wraith")
+        {
+            dropClass = "WraithHelmet";
+            dropChance = DROP_ARMOR_CHANCE;
+        }
+        else if (Owner is "Bishop")
+        {
+            dropClass = "BishopGem";
+            dropChance = DROP_ARMOR_CHANCE;
         }
 
         if (!dropClass)
@@ -500,6 +521,9 @@ class WanderingMonsterItem : Powerup
         if (BossFlag & WMF_BRUTE)
         {
             if (!damageTarget)
+                return;
+
+            if (damageTarget.bDONTTHRUST)
                 return;
             
             let xrpgPlayer = XRpgPlayer(damageTarget);

@@ -27,7 +27,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		Player.ForwardMove 1.08, 1.2;
 		Player.SideMove 1.125, 1.475;
 		Player.Portrait "P_FWALK1";
-		Player.WeaponSlot 1, "XRpgFWeapFist", "XRpgFWeapMorningStar", "XRpgFWeapRazor";
+		Player.WeaponSlot 1, "XRpgFWeapFist", "XRpgFWeapMorningStar", "XRpgFWeapRazor", "XRpgFWeapCleaver";
 		Player.WeaponSlot 2, "XRpgFWeapAxe";
 		Player.WeaponSlot 3, "XRpgFWeapHammer";
 		Player.WeaponSlot 4, "XRpgFWeapQuietus";
@@ -57,6 +57,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		//Player.StartItem "XRpgFWeapMorningStar";
 		//Player.StartItem "XRpgFWeapRazor";
 		//Player.StartItem "XRpgShield";
+		//Player.StartItem "XRpgFWeapCleaver";
 	}
 	
 	States
