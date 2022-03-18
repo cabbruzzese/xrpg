@@ -29,7 +29,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		Player.Portrait "P_FWALK1";
 		Player.WeaponSlot 1, "XRpgFWeapFist", "XRpgFWeapMorningStar", "XRpgFWeapRazor", "XRpgFWeapCleaver";
 		Player.WeaponSlot 2, "XRpgFWeapAxe";
-		Player.WeaponSlot 3, "XRpgFWeapHammer";
+		Player.WeaponSlot 3, "XRpgFWeapHammer", "XRpgFWeapPolearm";
 		Player.WeaponSlot 4, "XRpgFWeapQuietus";
 		
 		Player.ColorRange 246, 254;
@@ -58,6 +58,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		//Player.StartItem "XRpgFWeapRazor";
 		//Player.StartItem "XRpgShield";
 		//Player.StartItem "XRpgFWeapCleaver";
+		Player.StartItem "XRpgFWeapPolearm";
 	}
 	
 	States

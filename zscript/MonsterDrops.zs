@@ -371,7 +371,7 @@ class XRpgSuitOfArmor : Actor replaces ZSuitOfArmor
 		}
 
 		//Spawn Polearm
-		//TODO
+		A_SpawnChunk("XRpgFWeapPolearm");
 
 		//Spawn Helmet
 		A_SpawnChunk("SuitHelmet");

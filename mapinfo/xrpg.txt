@@ -32,7 +32,7 @@ gameinfo
 	intermissioncounter = false
 	weaponslot = 1, "XRpgFWeapFist", "XRpgCWeapMace", "XRpgMWeapWand", "XRpgFWeapMorningStar", "XRpgFWeapRazor", "XRpgFWeapCleaver"
 	weaponslot = 2, "XRpgFWeapAxe", "XRpgCWeapStaff", "XRpgMWeapFrost"
-	weaponslot = 3, "XRpgFWeapHammer", "XRpgCWeapFlame", "XRpgMWeapLightning"
+	weaponslot = 3, "XRpgFWeapHammer", "XRpgCWeapFlame", "XRpgMWeapLightning", "XRpgFWeapPolearm"
 	weaponslot = 4, "XRpgFWeapQuietus", "XRpgCWeapWraithverge", "XRpgMWeapBloodscourge"
 	dimcolor = "00 00 40"
 	dimamount = 0.5
