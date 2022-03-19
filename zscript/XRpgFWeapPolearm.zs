@@ -1,6 +1,6 @@
-CONST POLEARM_LOWER_INCREMENT_X = 10;
-CONST POLEARM_LOWER_INCREMENT_Y = 35;
-class XRpgFWeapPolearm : XRpgFighterWeapon replaces EttinMace
+CONST POLEARM_LOWER_INCREMENT_X = 48;
+CONST POLEARM_LOWER_INCREMENT_Y = 72;
+class XRpgFWeapPolearm : XRpgFighterWeapon
 {
 	Default
 	{
@@ -17,6 +17,7 @@ class XRpgFWeapPolearm : XRpgFighterWeapon replaces EttinMace
 		Tag "$TAG_FWEAPPOLEARM";
 		Inventory.MaxAmount 1;
 
+		XRpgFighterWeapon.Pufftype "AxePuff";
         XRpgFighterWeapon.MeleePush 6;
         XRpgFighterWeapon.MeleeAdjust false;
 		XRpgFighterWeapon.WeaponRange int(3.0 * double(DEFMELEERANGE));
@@ -39,64 +40,69 @@ class XRpgFWeapPolearm : XRpgFighterWeapon replaces EttinMace
 		Loop;
 	Fire:
     Cut:
-		FPOL A 2 Offset (POLEARM_LOWER_INCREMENT_X * 1, 10);
-        FPOL A 2 Offset (POLEARM_LOWER_INCREMENT_X * 2, 30);
-        FPOL A 2 Offset (POLEARM_LOWER_INCREMENT_X * 3, 50) A_CheckBerserk(false);
-        FPOL H 4 Offset (1, 1);
-		FPOL I 4 Offset (0, 0);
-		FPOL J 4 Offset (0, 0);
-		FPOL J 4 Offset (0, 0) A_FWeaponMelee(1, 90, 0, 1.5);
-		FPOL J 4 Offset (0, 50);
-        FPOL J 4 Offset (0, 100);
-        FPOL J 4 Offset (0, 150);
+		FPOL A 3;
+        FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 1, 0);
+        FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 2, 0) A_CheckBerserk(false);
+        FPOL H 6 Offset (1, 1);
+		FPOL I 3 Offset (0, 0);
+		FPOL J 3 Offset (0, 0) A_FWeaponMelee(1, 120, 0, 1.5);
+		FPOL J 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1);
+        FPOL J 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL J 6 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3);
         Goto Ready;
     Thrust:
-        FPOL A 2 Offset (25, 10);
-        FPOL A 2 Offset (45, 30);
-        FPOL A 2 Offset (55, 50) A_CheckBerserk(false);
-        FPOL G 2 Offset (1, -150);
-        FPOL G 2 Offset (0, -100);
-        FPOL G 2 Offset (0, -50);
-        FPOL G 2 Offset (0, 1) A_FWeaponMelee(1, 90, 0, 1.5);
-        FPOL G 2 Offset (0, -50);
-        FPOL G 2 Offset (0, -100);
-        FPOL G 2 Offset (0, -150);
+		FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 1, POLEARM_LOWER_INCREMENT_Y * 1);
+        FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 2, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 3, POLEARM_LOWER_INCREMENT_Y * 3) A_CheckBerserk(false);
+        FPOL G 3 Offset (1, POLEARM_LOWER_INCREMENT_Y * 4);
+        FPOL G 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3);
+        FPOL G 4 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL G 8 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1) A_FWeaponMelee(1, 100, 0, 1);
+        FPOL G 4 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL G 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3);
+        FPOL G 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 4);
         Goto Ready;
     RightSwing:
-		FPOL A 2 Offset (25, 10);
-        FPOL A 2 Offset (45, 30);
-        FPOL A 2 Offset (55, 50) A_CheckBerserk(false);
-		FPOL B 4 Offset (1, 1);
-		FPOL C 4 Offset (0, 0) A_FWeaponMelee(1, 90, 0, 1.5);
-		FPOL D 4 Offset (0, 0);
-		FPOL E 4 Offset (0, 0);
-		FPOL F 4 Offset (0, 0);
-        FPOL F 4 Offset (0, -50);
-        FPOL F 8 Offset (0, 100);
+		FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 1, POLEARM_LOWER_INCREMENT_Y * 1);
+        FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 2, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 3, POLEARM_LOWER_INCREMENT_Y * 3) A_CheckBerserk(false);
+		FPOL B 8 Offset (1, 1);
+		FPOL C 2 Offset (0, -1) A_FWeaponMelee(1, 20, -30, 0.25);
+		FPOL C 2 Offset (0, -1) A_FWeaponMeleePuff(1, 20, -20, 0.25, 0.0, "SmallMacePuffSilent");
+		FPOL D 2 Offset (0, -1) A_FWeaponMeleePuff(1, 20, -10, 0.25, 0.0, "SmallMacePuffSilent");
+		FPOL D 2 Offset (0, -1) A_FWeaponMeleePuff(1, 20, 10, 0.25, 0.0, "SmallMacePuffSilent");
+		FPOL E 2 Offset (0, -1) A_FWeaponMeleePuff(1, 20, 20, 0.25, 0.0, "SmallMacePuffSilent");
+		FPOL E 2 Offset (0, -1) A_FWeaponMeleePuff(1, 20, 30, 0.25, 0.0, "SmallMacePuffSilent");
+		FPOL F 3 Offset (0, 0);
+        FPOL F 3 Offset (POLEARM_LOWER_INCREMENT_X * -1, POLEARM_LOWER_INCREMENT_Y * 1);
+        FPOL F 3 Offset (POLEARM_LOWER_INCREMENT_X * -2, POLEARM_LOWER_INCREMENT_Y * 2);
 		Goto Ready;
     LeftSwing:
-        FPOL A 2 Offset (25, 10);
-        FPOL A 2 Offset (45, 30);
-        FPOL A 2 Offset (55, 50) A_CheckBerserk(false);
-		FPOL B 4 Offset (1, 1) A_Mirror;
-		FPOL C 4 Offset (0, 0) A_FWeaponMelee(1, 90, 0, 1.5);
-		FPOL D 4 Offset (0, 0);
-		FPOL E 4 Offset (0, 0);
-		FPOL F 4 Offset (0, 0);
-        FPOL F 4 Offset (0, -50);
-        FPOL F 8 Offset (0, 100) A_RestoreMirror;
+		FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 1, POLEARM_LOWER_INCREMENT_Y * 1);
+        FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 2, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 3, POLEARM_LOWER_INCREMENT_Y * 3) A_CheckBerserk(false);
+		FPOL B 8 Offset (1, -1) A_Mirror;
+		FPOL C 2 Offset (0, -1) A_FWeaponMelee(1, 20, 30, 0.25);
+		FPOL C 2 Offset (0, -1) A_FWeaponMeleePuff(1, 20, 20, 0.25, 0.0, "SmallMacePuffSilent");
+		FPOL D 2 Offset (0, -1) A_FWeaponMeleePuff(1, 20, 10, 0.25, 0.0, "SmallMacePuffSilent");
+		FPOL D 2 Offset (0, -1) A_FWeaponMeleePuff(1, 20, -10, 0.25, 0.0, "SmallMacePuffSilent");
+		FPOL E 2 Offset (0, -1) A_FWeaponMeleePuff(1, 20, -20, 0.25, 0.0, "SmallMacePuffSilent");
+		FPOL E 2 Offset (0, -1) A_FWeaponMeleePuff(1, 20, -30, 0.25, 0.0, "SmallMacePuffSilent");
+		FPOL F 3 Offset (0, -1);
+        FPOL F 3 Offset (POLEARM_LOWER_INCREMENT_X * -1, POLEARM_LOWER_INCREMENT_Y * 1);
+        FPOL F 3 Offset (POLEARM_LOWER_INCREMENT_X * -2, POLEARM_LOWER_INCREMENT_Y * 2) A_RestoreMirror;
 		Goto Ready;
 	BerserkFire:
-		FPOL A 2 Offset (25, 10);
-        FPOL A 2 Offset (45, 30);
-        FPOL A 2 Offset (55, 50) A_CheckBerserk(false);
+		FPOL A 2 Offset (POLEARM_LOWER_INCREMENT_X * 1, POLEARM_LOWER_INCREMENT_Y * 1);
+        FPOL A 2 Offset (POLEARM_LOWER_INCREMENT_X * 2, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL A 2 Offset (POLEARM_LOWER_INCREMENT_X * 3, POLEARM_LOWER_INCREMENT_Y * 3) A_CheckBerserk(false);
         FPOL H 4 Offset (1, 1);
 		FPOL I 4 Offset (0, 0);
 		FPOL J 4 Offset (0, 0);
 		FPOL J 4 Offset (0, 0) A_FWeaponMelee(1, 90, 0, 1.5);
 		FPOL J 4 Offset (0, 50);
-        FPOL J 4 Offset (0, 100);
-        FPOL J 4 Offset (0, 150);
+        FPOL J 4 Offset (POLEARM_LOWER_INCREMENT_X * -1, POLEARM_LOWER_INCREMENT_Y * 1);
+        FPOL J 4 Offset (POLEARM_LOWER_INCREMENT_X * -2, POLEARM_LOWER_INCREMENT_Y * 2);
         Goto Ready;
 	}
 
@@ -135,6 +141,6 @@ class XRpgFWeapPolearm : XRpgFighterWeapon replaces EttinMace
 				return FindState ("Thrust");
 		}
 
-		return Ammo1.Amount ? FindState ("FireGlow") :  Super.GetAtkState(hold);
+		return Ammo1.Amount ? FindState ("Fire") :  Super.GetAtkState(hold);
 	}
 }
