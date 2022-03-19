@@ -58,7 +58,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		//Player.StartItem "XRpgFWeapRazor";
 		//Player.StartItem "XRpgShield";
 		//Player.StartItem "XRpgFWeapCleaver";
-		Player.StartItem "XRpgFWeapPolearm";
+		//Player.StartItem "XRpgFWeapPolearm";
 	}
 	
 	States

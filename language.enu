@@ -38,7 +38,7 @@ TXT_SHIELDITEM = "This shield is in good condition.";
 TXT_WEAPON_MSTAR = "This will make a crude, but effective, club.";
 TXT_WEAPON_RAZOR = "That dead beast won't need this sword.";
 TXT_WEAPON_CLEAVER = "A cleaver? With one of these every problem looks like a flank steak.";
-TXT_WEAPON_POLEARM = "I'm not used to polearms but I'm sure I can swing it."
+TXT_WEAPON_POLEARM = "I'm not used to polearms but I'm sure I can swing it.";
 
 TXT_ARMOR_WRAITHHELM = "A horned helm? Somewhere a viking's head is getting cold.";
 TXT_ARMOR_BISHOPGEM = "What a lovely ornament of death. May it protect me.";
