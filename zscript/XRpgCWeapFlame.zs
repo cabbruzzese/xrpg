@@ -86,7 +86,7 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 		if (isThrustPunch)
 		{
 			Thrust(15, angle);
-	        A_StartSound ("*fistgrunt", CHAN_VOICE);
+	        A_GruntSound(-1);
 		}
 
 		int damage = random[CWeapFlame](1, 40);

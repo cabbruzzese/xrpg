@@ -12,7 +12,6 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		Weapon.AmmoUse1 2;
 		Weapon.AmmoGive1 25;
 		Weapon.KickBack 150;
-		Weapon.YAdjust -12;
 		Weapon.AmmoType1 "Mana1";
 		Inventory.PickupMessage "$TXT_WEAPON_F2";
 		Obituary "$OB_MPFWEAPAXE";
@@ -408,8 +407,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		if (!w)
 			return;
 		
-		if (random[FWeapAxeSound](1,3) == 1)
-			A_StartSound ("*fistgrunt", CHAN_VOICE);
+		A_GruntSound(33);
 
 		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
 

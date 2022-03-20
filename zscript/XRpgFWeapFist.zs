@@ -140,7 +140,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 				{
 					weaponspecial = 0;
 					player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState("Fire2"));
-					A_StartSound ("*fistgrunt", CHAN_VOICE);
+					A_GruntSound(-1);
 				}
 				return;
 			}
@@ -201,7 +201,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		invoker.ChargeValue = 0;
 
 		Thrust(power / 2, angle);
-		A_StartSound ("*fistgrunt", CHAN_VOICE);
+		A_GruntSound(-1);
 
 		for (int i = 0; i < 16; i++)
 		{

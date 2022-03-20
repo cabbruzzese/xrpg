@@ -8,7 +8,6 @@ class XRpgFWeapCleaver : XRpgFighterWeapon replaces TableShit10
 		Weapon.AmmoUse1 3;
 		Weapon.AmmoGive1 25;
 		Weapon.KickBack 150;
-		Weapon.YAdjust -10;
 		Weapon.AmmoType1 "Mana2";
 		Inventory.PickupMessage "$TXT_WEAPON_CLEAVER";
 		Obituary "$OB_MPFWEAPCLEAVER";

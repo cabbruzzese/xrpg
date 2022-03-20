@@ -11,7 +11,6 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		Weapon.AmmoUse1 3;
 		Weapon.AmmoGive1 25;
 		Weapon.KickBack 150;
-		Weapon.YAdjust -10;
 		Weapon.AmmoType1 "Mana2";
 		Inventory.PickupMessage "$TXT_WEAPON_F3";
 		Obituary "$OB_MPFWEAPHAMMERM";
@@ -89,7 +88,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		let forwardMove = player.mo.GetPlayerInput(INPUT_FORWARDMOVE);
 
 		//If stepping backwards, we can throw
-		if (forwardMove < 0)
+		if (forwardMove != 0)
 			weaponspecial = true;
 	}
 

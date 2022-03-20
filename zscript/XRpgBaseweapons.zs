@@ -9,6 +9,7 @@ class XRpgWeapon : Weapon
 
     Default
 	{
+        +INVENTORY.RESTRICTABSOLUTELY
         XRpgWeapon.ChargeValue 0;
         XRpgWeapon.MaxCharge 0;
     }
@@ -174,6 +175,16 @@ class XRpgWeapon : Weapon
             return;
 
         thrustTarget.Thrust(thrustSpeed, thrustAngle);
+    }
+
+    // Chance to play grunt sound.
+    // Chance is percentage. -1 always plays
+    action void A_GruntSound(int chance)
+    {
+        if (chance > 0 && random[GruntSound](1,100) > chance)
+            return;
+
+        A_StartSound ("*fistgrunt", CHAN_VOICE);
     }
 }
 

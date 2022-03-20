@@ -13,6 +13,7 @@ class XRpgShield : Inventory replaces CentaurShield
 
 	Default
 	{
+		+INVENTORY.RESTRICTABSOLUTELY
 		+INVENTORY.FANCYPICKUPSOUND
 		Inventory.PickupFlash "PickupFlash";
 		Inventory.Amount 1;
