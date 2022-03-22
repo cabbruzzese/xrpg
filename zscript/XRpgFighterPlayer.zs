@@ -49,7 +49,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		//NOTE: Uncomment for testing
 		//Player.StartItem "XRpgFWeapAxe";
 		//Player.StartItem "XRpgFWeapHammer";
-		//Player.StartItem "XRpgFWeapQuietus";
+		Player.StartItem "XRpgFWeapQuietus";
 		//Player.StartItem "BerserkSpell";
 		//Player.StartItem "StunSpell";
 		//Player.StartItem "PowerSpell";

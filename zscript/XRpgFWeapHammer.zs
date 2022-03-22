@@ -157,7 +157,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
 		{
-			if (!weapon.DepleteAmmo (false, false))
+			if (!weapon.DepleteAmmo (false, true))
 				return;
 		}
 		Actor mo = SpawnPlayerMissile ("HammerMissile"); 

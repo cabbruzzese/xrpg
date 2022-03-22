@@ -19,7 +19,7 @@ class XRpgFWeapPolearm : XRpgFighterWeapon
 		XRpgFighterWeapon.Pufftype "AxePuff";
         XRpgFighterWeapon.MeleePush 6;
         XRpgFighterWeapon.MeleeAdjust false;
-		XRpgFighterWeapon.WeaponRange int(2.2 * double(DEFMELEERANGE));
+		XRpgFighterWeapon.WeaponRange int(2.4 * double(DEFMELEERANGE));
 	}
 
 	States

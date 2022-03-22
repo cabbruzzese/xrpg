@@ -86,11 +86,14 @@ class ActorList
 class TimedActor : StoppableActor
 {
     int timeLimit;
+	bool dieOnTimer;
     property TimeLimit : timeLimit;
+	property DieOnTimer : dieOnTimer;
 
     Default
     {
         TimedActor.TimeLimit 100;
+		TimedActor.DieOnTimer false;
     }
 
     override void Tick()
@@ -100,7 +103,14 @@ class TimedActor : StoppableActor
         TimeLimit--;
         if (TimeLimit < 1)
         {
-            Destroy();
+			if (DieOnTimer)
+			{
+				A_StopMoving(true);
+			}
+			else
+			{
+            	Destroy();
+			}
         }
     }
 }
@@ -137,7 +147,11 @@ class StoppableActor : Actor
 		invoker.A_SetSpeed(0);
 
 		if (gotoDeath)
+		{
+			invoker.bRipper = false;
+			invoker.bMissile = false;
 			invoker.SetStateLabel("Death");
+		}
 	}
 
 	void AdjustSpeed (double speedMod)
