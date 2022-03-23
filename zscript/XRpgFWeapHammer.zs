@@ -2,6 +2,7 @@
 class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 {
 	const HAMMER_RANGE = 1.5 * DEFMELEERANGE;
+	const HAMMER_SLAM_MANA = 9;
 
 	Default
 	{
@@ -190,10 +191,10 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		Weapon w = player.ReadyWeapon;
 		if (w != null)
 		{
-			if (w.Ammo1 && w.Ammo1.Amount < 3)
+			if (w.Ammo1 && w.Ammo1.Amount < HAMMER_SLAM_MANA)
 				return;
 
-			w.DepleteAmmo (false, false);
+			A_DepleteAllMana(0, HAMMER_SLAM_MANA);
 			let mo = HammerFloorMissile2(SpawnPlayerMissile("HammerFloorMissile2"));
 		}
 	}
