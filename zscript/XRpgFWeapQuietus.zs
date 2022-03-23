@@ -214,18 +214,18 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		FSRD B 1 Bright Offset (5, 40);
 		Goto Ready;
 	BerserkRightSwing:
-		FSRT D 2 Bright Offset (5, 36);
-		FSRT E 2 Bright Offset (5, 36);
-		FSRD F 2 Bright Offset (5, 36);
-		FSRD G 2 Bright Offset (5, 36) A_FSwordAttack();
-		FSRD H 2 Bright Offset (5, 36);
-		FSRD I 2 Bright Offset (5, 36);
-		FSRD I 6 Bright Offset (5, 150);
-		FSRD A 1 Bright Offset (5, 60);
-		FSRD B 1 Bright Offset (5, 55);
-		FSRD C 1 Bright Offset (5, 50);
-		FSRD A 1 Bright Offset (5, 45);
-		FSRD B 1 Bright Offset (5, 40);
+		FSRN D 2 Bright Offset (5, 36);
+		FSRN E 2 Offset (5, 36);
+		FSRN F 2 Offset (5, 36) A_FWeaponMelee(1, 40, -15);
+		FSRN G 2 Offset (5, 36) A_FWeaponMeleePuff(1, 40, 0, 1.0, 0.0, "NormalSwordPuffSilent");
+		FSRN H 2 Offset (5, 36) A_FWeaponMeleePuff(1, 40, 15, 1.0, 0.0, "NormalSwordPuffSilent");
+		TNT1 A 2 Offset (5, 36);
+		TNT1 A 6 Offset (5, 150);
+		FSRN A 1 Offset (5, 60);
+		FSRN A 1 Offset (5, 55);
+		FSRN A 1 Offset (5, 50);
+		FSRN A 1 Offset (5, 45);
+		FSRN A 1 Offset (5, 40);
 		Goto Ready;
 	BerserkLeftSwing:
 		FSRN D 2 Offset (5, 36) A_Mirror;
@@ -419,6 +419,15 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		if (!player)
 			return;
 
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (!xrpgPlayer)
+			return;
+
+		//If berserk, all attacks are at least half of max charge
+		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
+		if (isBerserk)
+			invoker.ChargeValue = Max(invoker.ChargeValue, invoker.MaxCharge / 2);
+
 		double chargeDamage = 150.0 * (double(invoker.ChargeValue) / double(SWORD_CHARGE_MAX));
 		int damage = random[FWeapBigSword](1, 100) + chargeDamage;
 
@@ -438,6 +447,15 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 			
 			weapon.DepleteAmmo (false, true);
 		}
+		
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (!xrpgPlayer)
+			return;
+
+		//If berserk, all attacks are at least half of max charge
+		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
+		if (isBerserk)
+			invoker.ChargeValue = Max(invoker.ChargeValue, invoker.MaxCharge / 2);
 		
 		int chargeCount = invoker.ChargeValue / 3;
 

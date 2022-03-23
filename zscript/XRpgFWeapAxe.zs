@@ -130,7 +130,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		TNT1 A 4 Offset (-310, 70) A_ReFire;
 		Goto Ready;
 	BerserkRightSwing:
-		FAXS A 6 Offset (190, -10);
+		FAXS A 4 Offset (190, -10);
 		FAXS A 1 Offset (140, -2) A_FAxeSwingAttack(-40);
 		FAXS A 1 Offset (90, 6) A_FAxeSwingAttack(-20);
 		FAXS A 1 Offset (40, 14) A_FAxeSwingAttack(0);
@@ -140,8 +140,8 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXS A 1 Offset (-160, 46);
 		FAXS A 1 Offset (-210, 54);
 		FAXS A 1 Offset (-260, 62);
-		TNT1 A 4 Offset (-310, 70);
-		TNT1 A 4 Offset (-310, 70) A_ReFire;
+		TNT1 A 2 Offset (-310, 70);
+		TNT1 A 2 Offset (-310, 70) A_ReFire;
 		Goto Ready;
 	RightSwingGlow:
 		FAXS B 6 Offset (190, -10);
@@ -158,7 +158,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		TNT1 A 4 Offset (-310, 70) A_ReFire;
 		Goto Ready;
 	BerserkRightSwingGlow:
-		FAXS B 6 Offset (190, -10);
+		FAXS B 4 Offset (190, -10);
 		FAXS B 1 Offset (140, -2) A_FAxeSwingAttack(-40, true);
 		FAXS B 1 Offset (90, 6) A_FAxeSwingAttack(-20, true);
 		FAXS B 1 Offset (40, 14) A_FAxeSwingAttack(0, true);
@@ -168,7 +168,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXS B 1 Offset (-160, 46);
 		FAXS B 1 Offset (-210, 54);
 		FAXS B 1 Offset (-260, 62);
-		TNT1 A 4 Offset (-310, 70);
+		TNT1 A 2 Offset (-310, 70);
 		TNT1 A 2 Offset (-310, 70) A_ReFire;
 		Goto Ready;
 	LeftSwing:
@@ -187,7 +187,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		TNT1 A 4 Offset (310, 70) A_ReFire;
 		Goto Ready;
 	BerserkLeftSwing:
-		FAXS C 6 Offset (-190, -10);
+		FAXS C 4 Offset (-190, -10);
 		FAXS C 1 Offset (-140, -2) A_FAxeSwingAttack(40);
 		FAXS C 1 Offset (-90, 6) A_FAxeSwingAttack(20);
 		FAXS C 1 Offset (-40, 14) A_FAxeSwingAttack(0);
@@ -197,8 +197,8 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXS C 1 Offset (160, 46);
 		FAXS C 1 Offset (210, 54);
 		FAXS C 1 Offset (260, 62);
-		TNT1 A 4 Offset (310, 70);
-		TNT1 A 4 Offset (310, 70) A_ReFire;
+		TNT1 A 2 Offset (310, 70);
+		TNT1 A 2 Offset (310, 70) A_ReFire;
 		Goto Ready;
 	LeftSwingGlow:
 		FAXS D 6 Offset (-190, -10);
@@ -215,7 +215,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		TNT1 A 4 Offset (310, 70) A_ReFire;
 		Goto Ready;
 	BerserkLeftSwingGlow:
-		FAXS D 6 Offset (-190, -10);
+		FAXS D 4 Offset (-190, -10);
 		FAXS D 1 Offset (-140, -2) A_FAxeSwingAttack(40, true);
 		FAXS D 1 Offset (-90, 6) A_FAxeSwingAttack(20, true);
 		FAXS D 1 Offset (-40, 14) A_FAxeSwingAttack(0, true);
@@ -225,7 +225,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 		FAXS D 1 Offset (160, 46);
 		FAXS D 1 Offset (210, 54);
 		FAXS D 1 Offset (260, 62);
-		TNT1 A 4 Offset (310, 70);
+		TNT1 A 2 Offset (310, 70);
 		TNT1 A 2 Offset (310, 70) A_ReFire;
 		Goto Ready;
 	AltFire:
@@ -239,7 +239,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
         FSHL DCBA 2;
         Goto Ready;
     ShieldCharged:
-        FSHL FGH 2 BRIGHT;
+        FSHL FGH 2 BRIGHT A_UseShield(false);
 		FSHL F 2 BRIGHT A_Refire;
         FSHL G 2 BRIGHT A_ShieldFire;
     ShieldFireFinish:

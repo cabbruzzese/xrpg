@@ -7,10 +7,7 @@ class XRpgFWeapPolearm : XRpgFighterWeapon
 		+BLOODSPLATTER
 		Weapon.SelectionOrder 900;
 		+WEAPON.AMMO_OPTIONAL
-		Weapon.AmmoUse1 3;
-		Weapon.AmmoGive1 25;
 		Weapon.KickBack 150;
-		Weapon.AmmoType1 "Mana2";
 		Inventory.PickupMessage "$TXT_WEAPON_POLEARM";
 		Obituary "$OB_MPFWEAPPOLEARM";
 		Tag "$TAG_FWEAPPOLEARM";

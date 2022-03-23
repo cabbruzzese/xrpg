@@ -317,7 +317,7 @@ class XRpgFighterWeapon : XRpgWeapon
             A_SetWeapState("Ready");
     }
 
-    action void A_UseShield()
+    action void A_UseShield(bool checkCharged = true)
     {
         if (!player)
 			return;
@@ -330,7 +330,7 @@ class XRpgFighterWeapon : XRpgWeapon
         if (!shield)
             return;
 
-        if (shield.IsCharged())
+        if (checkCharged && shield.IsCharged())
         {
             A_SetWeapState("ShieldCharged");
             return;
@@ -353,6 +353,9 @@ class XRpgFighterWeapon : XRpgWeapon
         if (!shield)
             return;
         
+        //A_Print("Clearing Shield");
+        shield.ClearShieldTimeout();
+        shield.ClearCharge();
         A_SetWeapState("ShieldFireFinish");
     }
 

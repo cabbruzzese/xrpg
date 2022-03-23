@@ -5,10 +5,7 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon replaces EttinMace
 		+BLOODSPLATTER
 		Weapon.SelectionOrder 900;
 		+WEAPON.AMMO_OPTIONAL
-		Weapon.AmmoUse1 3;
-		Weapon.AmmoGive1 25;
 		Weapon.KickBack 150;
-		Weapon.AmmoType1 "Mana2";
 		Inventory.PickupMessage "$TXT_WEAPON_MSTAR";
 		Obituary "$OB_MPFWEAPMSTAR";
 		Tag "$TAG_FWEAPMSTAR";
@@ -52,10 +49,10 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon replaces EttinMace
 		FMCE A 1;
 		Goto Ready;
 	BerserkFire:
-		FMCE C 3 Offset (5, 0) A_FWeaponMelee(1, 90, 0, 1.5);
-		FMCE D 3 Offset (5, 0);
+		FMCE C 2 Offset (5, 0) A_FWeaponMelee(1, 90, 0, 1.5);
+		FMCE D 2 Offset (5, 0);
 		FMCE E 2 Offset (5, 0);
-		FMCE E 6 Offset (5, 150);
+		FMCE E 4 Offset (5, 150);
 		FMCE A 1 Offset (0, 60);
 		FMCE A 1 Offset (0, 55);
 		FMCE A 1 Offset (0, 50);
@@ -75,7 +72,7 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon replaces EttinMace
         FSHL DCBA 2;
         Goto Ready;
     ShieldCharged:
-        FSHL FGH 2 BRIGHT;
+        FSHL FGH 2 BRIGHT A_UseShield(false);
 		FSHL F 2 BRIGHT A_Refire;
         FSHL G 2 BRIGHT A_ShieldFire;
     ShieldFireFinish:

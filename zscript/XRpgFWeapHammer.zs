@@ -70,7 +70,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
         FSHL DCBA 2;
         Goto Ready;
     ShieldCharged:
-        FSHL FGH 2 BRIGHT;
+        FSHL FGH 2 BRIGHT A_UseShield(false);
 		FSHL F 2 BRIGHT A_Refire;
         FSHL G 2 BRIGHT A_ShieldFire;
     ShieldFireFinish:
@@ -200,7 +200,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 }
 
 const HAMMERFLOOR_RADIUS = 80;
-const HAMMERFLOOR_RADIUSDAMAGE = 70;
+const HAMMERFLOOR_RADIUSDAMAGE = 55;
 const HAMMERFLOOR_DAMAGE = 0;
 class HammerFloorMissile1 : Actor
 {

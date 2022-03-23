@@ -5,10 +5,7 @@ class XRpgFWeapRazor : XRpgFighterWeapon replaces CentaurSword
 		+BLOODSPLATTER
 		Weapon.SelectionOrder 900;
 		+WEAPON.AMMO_OPTIONAL
-		Weapon.AmmoUse1 3;
-		Weapon.AmmoGive1 25;
 		Weapon.KickBack 150;
-		Weapon.AmmoType1 "Mana2";
 		Inventory.PickupMessage "$TXT_WEAPON_RAZOR";
 		Obituary "$OB_MPFWEAPRAZOR";
 		Tag "$TAG_FWEAPRAZOR";
@@ -17,7 +14,7 @@ class XRpgFWeapRazor : XRpgFighterWeapon replaces CentaurSword
         XRpgFighterWeapon.Pufftype "AxePuff";
         XRpgFighterWeapon.WeaponRange 2.0 * DEFMELEERANGE;
         XRpgFighterWeapon.MeleePush 0;
-        XRpgFighterWeapon.MeleeAdjust false;
+        XRpgFighterWeapon.MeleeAdjust true;
 	}
 
 	States
@@ -58,9 +55,9 @@ class XRpgFWeapRazor : XRpgFighterWeapon replaces CentaurSword
 		FRZR C 1 Offset (5, 0) A_FWeaponMelee(10, 30, -25, 0.35);
 		FRZR C 1 Offset (5, 0) A_FWeaponMelee(10, 30, 0, 0.35);
 		FRZR C 1 Offset (5, 0) A_FWeaponMelee(10, 30, 25, 0.35);
-		FRZR D 3 Offset (5, 0);
+		FRZR D 2 Offset (5, 0);
 		FRZR E 2 Offset (5, 0);
-		FRZR E 6 Offset (5, 150);
+		FRZR E 4 Offset (5, 150);
 		FRZR A 1 Offset (0, 60);
 		FRZR A 1 Offset (0, 55);
 		FRZR A 1 Offset (0, 50);
@@ -80,7 +77,7 @@ class XRpgFWeapRazor : XRpgFighterWeapon replaces CentaurSword
         FSHL DCBA 2;
         Goto Ready;
     ShieldCharged:
-        FSHL FGH 2 BRIGHT;
+        FSHL FGH 2 BRIGHT A_UseShield(false);
 		FSHL F 2 BRIGHT A_Refire;
         FSHL G 2 BRIGHT A_ShieldFire;
     ShieldFireFinish:

@@ -49,7 +49,7 @@ class XRpgFighterPlayer : XRpgPlayer
 		//NOTE: Uncomment for testing
 		//Player.StartItem "XRpgFWeapAxe";
 		//Player.StartItem "XRpgFWeapHammer";
-		Player.StartItem "XRpgFWeapQuietus";
+		//Player.StartItem "XRpgFWeapQuietus";
 		//Player.StartItem "BerserkSpell";
 		//Player.StartItem "StunSpell";
 		//Player.StartItem "PowerSpell";
@@ -163,7 +163,7 @@ class XRpgFighterPlayer : XRpgPlayer
 
 	override void Regenerate (PlayerLevelItem statItem)
 	{
-		int strengthRegen = statItem.Strength / 4 + REGENERATE_MIN_VALUE;
+		int strengthRegen = statItem.Strength / 3 + REGENERATE_MIN_VALUE;
 		RegenerateHealth(strengthRegen);
 	}
 

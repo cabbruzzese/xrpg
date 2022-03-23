@@ -187,11 +187,18 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 
     action void A_FPunchAttack2()
     {
-		if (player == null)
-		{
+		if (!player)
 			return;
-		}
 
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (!xrpgPlayer)
+			return;
+
+		//If berserk, all attacks are at least half of max charge
+		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
+		if (isBerserk)
+			invoker.ChargeValue = Max(invoker.ChargeValue, invoker.MaxCharge / 2);
+		
 		double damageMod = 1.0 + (double(invoker.ChargeValue) / 10);
 
         int damage = random[FighterAtk](15, 35);

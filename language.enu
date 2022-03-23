@@ -34,6 +34,7 @@ TAG_FWEAPMSTAR = "Morning Star";
 TAG_FWEAPCLEAVER = "Butcher's Cleaver";
 TAG_FWEAPPOLEARM = "Polearm";
 
+TXT_MEADSTEIN = "Delicious Mead! Cheers!";
 TXT_SHIELDITEM = "This shield is in good condition.";
 TXT_WEAPON_MSTAR = "This will make a crude, but effective, club.";
 TXT_WEAPON_RAZOR = "That dead beast won't need this sword.";

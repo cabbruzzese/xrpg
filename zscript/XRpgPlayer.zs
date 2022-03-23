@@ -425,7 +425,7 @@ class XRpgPlayer : PlayerPawn
 	{
 		regenMax = Max(regenMax, REGENERATE_MIN_VALUE);
 		if (Health < regenMax)
-			A_SetHealth(Health + 1);
+			GiveBody(1);
 	}
 
 	virtual void Regenerate(PlayerLevelItem statItem) { }
@@ -480,6 +480,53 @@ class XRpgPlayer : PlayerPawn
 		mo.CheckMissileSpawn (radius);
 	}
 
+	int GetMana(class<Inventory> type)
+    {
+        let ammo = Inventory(FindInventory(type));
+        if (!ammo)
+            return 0;
+        
+        return ammo.Amount;
+    }
+
+    bool CheckMana(class<Inventory> type, int ammoUse)
+    {
+        if (ammoUse == 0)
+            return true;
+
+        let ammo = Inventory(FindInventory(type));
+        if (!ammo || ammo.Amount < ammoUse)
+            return false;
+        
+        return true;
+    }
+
+    bool CheckAllMana(int blueAmmoUse, int greenAmmoUse)
+    {
+        let blueResult = CheckMana("Mana1", blueAmmoUse);
+        let greenResult = CheckMana("Mana2", greenAmmoUse);
+        
+        return blueResult && greenResult;
+    }
+
+    bool DepleteMana(class<Inventory> type, int ammoUse)
+    {
+        let ammo = Inventory(FindInventory(type));
+        if (!ammo || ammo.Amount < ammoUse)
+            return false;
+
+        ammo.Amount -= ammoUse;
+        return true;
+    }
+
+    bool DepleteAllMana(int blueAmmoUse, int greenAmmoUse)
+    {
+        let blueResult = DepleteMana("Mana1", blueAmmoUse);
+        let greenResult = DepleteMana("Mana2", greenAmmoUse);
+
+        return blueResult && greenResult;
+    }
+
 	override void CheatGive (String name, int amount)
 	{
 		int i;
@@ -524,4 +571,5 @@ class XRpgPlayer : PlayerPawn
 
 		Super.CheatGive(name, amount);
 	}
+
 }

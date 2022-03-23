@@ -5,10 +5,7 @@ class XRpgFWeapCleaver : XRpgFighterWeapon replaces TableShit10
 		+BLOODSPLATTER
 		Weapon.SelectionOrder 900;
 		+WEAPON.AMMO_OPTIONAL
-		Weapon.AmmoUse1 3;
-		Weapon.AmmoGive1 25;
 		Weapon.KickBack 150;
-		Weapon.AmmoType1 "Mana2";
 		Inventory.PickupMessage "$TXT_WEAPON_CLEAVER";
 		Obituary "$OB_MPFWEAPCLEAVER";
 		Tag "$TAG_FWEAPCLEAVER";
@@ -65,7 +62,7 @@ class XRpgFWeapCleaver : XRpgFighterWeapon replaces TableShit10
         FSHL DCBA 2;
         Goto Ready;
     ShieldCharged:
-        FSHL FGH 2 BRIGHT;
+        FSHL FGH 2 BRIGHT A_UseShield(false);
 		FSHL F 2 BRIGHT A_Refire;
         FSHL G 2 BRIGHT A_ShieldFire;
     ShieldFireFinish:
