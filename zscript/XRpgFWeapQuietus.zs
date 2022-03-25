@@ -76,6 +76,7 @@ class XRpgQuietusDrop : Actor replaces QuietusDrop
 // The Fighter's Sword (Quietus) --------------------------------------------
 const SWORD_RANGE = 2 * DEFMELEERANGE;
 const SWORD_CHARGE_MAX = 20;
+const SWORD_SLASH_MANA = 5;
 class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 {
 	Default
@@ -305,17 +306,30 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		if (!xrpgPlayer)
 			return FindState("PowerCut");
 
-		if (Ammo1.Amount < AmmoUse1 || Ammo2.Amount < AmmoUse2)
-			return GetAtkState(hold);
-
-		if (hold && ChargeValue > 0)
-			return FindState("AltHold");
+		
 
 		let sideMove = xrpgPlayer.GetPlayerInput(INPUT_SIDEMOVE);
 		let rightMove = sideMove > 0;
 		let leftMove = sideMove < 0;
 		
 		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
+		bool isCutHold = (hold && ChargeValue > 0);
+
+		if (sideMove != 0 && !isCutHold)
+		{
+			//If slashing, check slashing mana
+			if (Ammo1.Amount < SWORD_SLASH_MANA || Ammo2.Amount < SWORD_SLASH_MANA)
+				return GetAtkState(hold);
+		}
+		else
+		{
+			//Check Cut Mana
+			if (Ammo1.Amount < AmmoUse1 || Ammo2.Amount < AmmoUse2)
+				return GetAtkState(hold);
+		}
+
+		if (isCutHold)
+			return FindState("AltHold");
 
 		if (rightMove)
 			return isBerserk ? FindState ("BerserkPowerRightSwing") : FindState ("PowerRightSwing");
@@ -378,18 +392,16 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 
 	action void A_FSwordAttack(bool mirrored = false)
 	{
-		if (player == null)
-		{
+		if (!player)
 			return;
-		}
 
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
 		{
-			if (!A_CheckAllMana(invoker.AmmoUse1, invoker.AmmoUse2))
+			if (!A_CheckAllMana(SWORD_SLASH_MANA, SWORD_SLASH_MANA))
 				return;
 			
-			weapon.DepleteAmmo (false, true);
+			A_DepleteAllMana(SWORD_SLASH_MANA, SWORD_SLASH_MANA);
 		}
 
 		if (mirrored)

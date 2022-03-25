@@ -427,11 +427,23 @@ class WanderingMonsterItem : Powerup
         if (Owner.bFriendly)
             return;
 
+        if (Owner.bDormant)
+            return;
+        
+        if (Owner.InStateSequence(Owner.CurState, Owner.ResolveState("Spawn")))
+            return;
+
         Owner.A_RadiusGive("RaiseWraithItem", 200, RGF_CORPSES, 1, "", "", 0, WML_DEATH_RAISE_LIMIT);
     }
 
     void DoFireLeaderSpecial()
     {
+        if (Owner.bDormant)
+            return;
+        
+        if (Owner.InStateSequence(Owner.CurState, Owner.ResolveState("Spawn")))
+            return;
+
         for (int i = 0; i < 6; i++)
         {
             let xVel = frandom[WMLFireBall](-2, 2);
@@ -529,7 +541,7 @@ class WanderingMonsterItem : Powerup
             let xrpgPlayer = XRpgPlayer(damageTarget);
             if (damageTarget.bIsMonster || xrpgPlayer)
             {
-                damageTarget.Thrust(15, Owner.angle);
+                damageTarget.Thrust(12, Owner.angle);
             }
         }
    }

@@ -359,7 +359,7 @@ class XRpgPlayer : PlayerPawn
 			expItem = GiveInventoryType("ExpSquishItemGiver");
 
 		//Set minimum spawn level in multiplayer
-		if (multiplayer)
+		if (multiplayer || DEBUG_MODE)
 		{
 			CVar minLevelSetting = CVar.FindCVar('xrpg_minlevel');
 

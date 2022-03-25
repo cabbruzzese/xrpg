@@ -1,5 +1,7 @@
 version "4.3.0"
 
+const DEBUG_MODE = 0;
+
 #include "zscript/XRpgPlayer.zs"
 #include "zscript/XRpgClericPlayer.zs"
 #include "zscript/XRpgFighterPlayer.zs"
