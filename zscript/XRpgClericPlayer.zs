@@ -57,6 +57,8 @@ class XRpgClericPlayer : XRpgPlayer
 		//Player.StartItem "XRpgCWeapFlame";
 		//Player.StartItem "XRpgCWeapWraithverge";
 		//Player.StartItem "XRpgCWeapFlail";
+
+		//Player.StartItem "SmiteSpell";
 	}
 	
 	States

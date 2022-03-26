@@ -705,7 +705,7 @@ class MageLightningLightningMissile : FastProjectile
         +RIPPER
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
-        MissileType "MageFrostLightningSmoke";
+        MissileType "MageLightningLightningSmoke";
         DeathSound "MageLightningFire";
         Obituary "$OB_MPMWEAPLIGHTNING";
 		Scale 1.5;

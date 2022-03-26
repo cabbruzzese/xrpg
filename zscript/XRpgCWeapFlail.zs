@@ -67,7 +67,7 @@ class XRpgCWeapFlail : XRpgClericWeapon
         if (isSmite)
         {
             puffType = "SmallFlailIce";
-            damage += xrpgPlayer.GetMagic() * 2;
+            damage += xrpgPlayer.GetMagic();
         }
 
 		for (int i = 0; i < 16; i++)
@@ -78,10 +78,17 @@ class XRpgCWeapFlail : XRpgClericWeapon
 				double slope = AimLineAttack(ang, FLAIL_MELEE_RANGE, t, 0., ALF_CHECK3D);
 				if (t.linetarget)
 				{
-					LineAttack(ang, FLAIL_MELEE_RANGE, slope, damage, 'Melee', puffType, true, t);
+					let puffObj = LineAttack(ang, FLAIL_MELEE_RANGE, slope, damage, 'Melee', puffType, true, t);
 					if (t.linetarget != null)
 					{
 						AdjustPlayerAngle(t);
+
+                        if (isSmite)
+                        {
+                            Vector3 dir = (AngleToVector(t.angleFromSource, cos(slope)), -sin(slope));
+                            let hitBackoffPos = puffObj.Pos - (dir * FLAIL_ICE_OFFSET_DIST);
+                            A_IceSpellMissileExplode(hitBackoffPos);
+                        }
 
 						return;
 					}
@@ -106,6 +113,7 @@ class XRpgCWeapFlail : XRpgClericWeapon
 
     const FLAIL_ICE_OFFSET_Z = 9;
     const FLAIL_ICE_OFFSET_DIST = 5;
+    const FLAIL_ICE_OFFSET_ACTORDIST = 16;
     action void A_IceSpellMissileExplode(Vector3 targetPos)
 	{
         if (!player || !player.mo)
@@ -214,7 +222,7 @@ class FlailIceMissile : Actor
 		Speed 10;
 		Radius 4;
 		Height 4;
-		Damage 3;
+		Damage 1;
 		DamageType "Ice";
 		Gravity 0.125;
         Projectile;
