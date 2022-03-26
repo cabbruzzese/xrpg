@@ -13,7 +13,7 @@ Increases health gain at levels and the power of melee attacks.
 
 ## Magic
 
-Increases mana gain at levels, duration of some spells, and damage of some spells.
+Increases mana gain at levels, duration of some spells, and effect of some spells.
 
 ## Armor
 
@@ -47,7 +47,7 @@ Learns new spells at 2nd level, and every 5th level.
 # Magic System
 There are 2 magic systems and a skill system. They are used like items. 
 
-You can customize their shortcuts in the options menu. Defaults are keypad numbers for Mage, keypad symbols for Cleric, and "," "." and "/" for fighter.
+You can customize their shortcuts in the options menu. Defaults are keypad numbers for Mage, and keypad symbols for Cleric. (Fighter skills are passive)
 
 While active, skills and spells will be indicated on the screen. If there is a timer or cooldown, it will be displayed next to the spell.
 
@@ -74,7 +74,7 @@ Holy Smite is learned at level 3. Spells are learned in order every 7th level.
 ## Mage Spells
 The mage learns elemental spells that are channeled through his magical weapons While a spell is active, using alt fire will activate the spell. Each weapon channels the elements differently.
 
-Mana used by spells depends on the weapon and spell. More powerful spells use more mana. The wand uses blue mana when casting spells. Frosh shards use green. Lightning uses both. The most powerful weapon, Bloodscourge, uses no mana. It instead provides an infinite source of magic for each spell type.
+Mana used by spells depends on the weapon and spell. More powerful spells use more mana. The wand uses blue mana when casting spells. Frosh shards use green. Lightning uses both. The most powerful weapon, Bloodscourge, uses both mana types with similar power to this ultimate weapon.
 
 **Note:** Use Zoom and Reload to quickly change spells
 
@@ -89,6 +89,10 @@ Mana used by spells depends on the weapon and spell. More powerful spells use mo
 | Death | Necromancy and pain | 7 |
 | Lightning | Storms and wind | 8 |
 | Blood | Vampiric magic | 9 |
+
+# Surprises
+
+There are many new surprises in the game. There are new fighter weapons, new pickups, and new experiences in the environments. Hopefully this gives players a new sense of mystery and wonder and the desire to explore every nook and cranny of the game once again.
 
 # Credits
 

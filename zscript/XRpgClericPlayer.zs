@@ -32,7 +32,7 @@ class XRpgClericPlayer : XRpgPlayer
 		Player.Hexenarmor 0, 10, 25, 5, 20;
 		Player.StartItem "XRpgCWeapMace";
 		Player.Portrait "P_CWALK1";
-		Player.WeaponSlot 1, "XRpgCWeapMace";
+		Player.WeaponSlot 1, "XRpgCWeapMace", "XRpgCWeapFlail";
 		Player.WeaponSlot 2, "XRpgCWeapStaff";
 		Player.WeaponSlot 3, "XRpgCWeapFlame";
 		Player.WeaponSlot 4, "XRpgCWeapWraithverge";
@@ -56,6 +56,7 @@ class XRpgClericPlayer : XRpgPlayer
 		//Player.StartItem "XRpgCWeapStaff";
 		//Player.StartItem "XRpgCWeapFlame";
 		//Player.StartItem "XRpgCWeapWraithverge";
+		//Player.StartItem "XRpgCWeapFlail";
 	}
 	
 	States

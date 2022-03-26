@@ -32,6 +32,7 @@ const DEBUG_MODE = 0;
 #include "zscript/XRpgCWeapStaff.zs"
 #include "zscript/XRpgCWeapFlame.zs"
 #include "zscript/XRpgCWeapWraithverge.zs"
+#include "zscript/XRpgCWeapFlail.zs"
 #include "zscript/EventHandlers.zs"
 #include "zscript/RaiseDead.zs"
 #include "zscript/WanderingMonsterItem.zs"
@@ -41,3 +42,4 @@ const DEBUG_MODE = 0;
 #include "zscript/XRpgShield.zs"
 #include "zscript/StatueMonster.zs"
 #include "zscript/XRpgGargoyle.zs"
+#include "zscript/XRpgDecorations.zs"

@@ -114,10 +114,8 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 	{
 		FTranslatedLineTarget t;
 
-		if (player == null)
-		{
+		if (!player)
 			return;
-		}
 
 		int damage = random[CWeapMace](1, 40);
 

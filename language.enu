@@ -28,11 +28,13 @@ OB_MPFWEAPRAZOR = "%o got sliced thin by %k's razor sword.";
 OB_MPFWEAPMSTAR = "%o hed their head bashed in by %k's morning star.";
 OB_MPFWEAPCLEAVER = "%o had their chops busted by %k.";
 OB_MPFWEAPPOLEARM = "%o got skewered by %k's polearm.";
+OB_CWEAPFLAIL = "%o was bashed into the ground by %k.";
 
 TAG_FWEAPRAZOR = "Razor Sword";
 TAG_FWEAPMSTAR = "Morning Star";
 TAG_FWEAPCLEAVER = "Butcher's Cleaver";
 TAG_FWEAPPOLEARM = "Polearm";
+TAG_CWEAPFLAIL = "Flail";
 
 TXT_MEADSTEIN = "Delicious Mead! Cheers!";
 TXT_SHIELDITEM = "This shield is in good condition.";
@@ -40,6 +42,7 @@ TXT_WEAPON_MSTAR = "This will make a crude, but effective, club.";
 TXT_WEAPON_RAZOR = "That dead beast won't need this sword.";
 TXT_WEAPON_CLEAVER = "A cleaver? With one of these every problem looks like a flank steak.";
 TXT_WEAPON_POLEARM = "I'm not used to polearms but I'm sure I can swing it.";
+TXT_WEAPON_FLAIL = "A flail! It's good to listen to the old ball and chain.";
 
 TXT_ARMOR_WRAITHHELM = "A horned helm? Somewhere a viking's head is getting cold.";
 TXT_ARMOR_BISHOPGEM = "What a lovely ornament of death. May it protect me.";
