@@ -329,37 +329,46 @@ class WanderingMonsterItem : Powerup
         int playerLevel = GetMaxPlayerLevel();
         LeaderProps props;
 
-        int bruteChance = min(BOSSTYPE_CHANCE_BRUTE + playerLevel, BOSSTYPE_CHANCE_MAX);
-        if (random[WMFBrute](0, 100) < bruteChance)
-            props.BossFlag |= WMF_BRUTE;
+        if (Owner is "WonderingMonsterBase")
+        {
+            let wonderingMonster = WonderingMonsterBase(Owner);
+            props.LeaderFlag = wonderingMonster.DefaultLeaderFlag;
+            props.BossFlag = wonderingMonster.DefaultBossFlag;
+        }
+        else
+        {
+            int bruteChance = min(BOSSTYPE_CHANCE_BRUTE + playerLevel, BOSSTYPE_CHANCE_MAX);
+            if (random[WMFBrute](0, 100) < bruteChance)
+                props.BossFlag |= WMF_BRUTE;
 
-        int leaderChance = min(BOSSTYPE_CHANCE_LEADER + playerLevel, BOSSTYPE_CHANCE_MAX);
-        if (random[WMFLeader](1,100) < leaderChance && !(Owner is "MonsterSummonWraith"))
-		{
-			props.BossFlag |= WMF_LEADER;
-			
-			let bossRoll = random[WMLType](1, BOSSTYPE_LEADER_SUB_NUM);
-			
-			if (bossRoll == 1)
-				props.LeaderFlag = WML_POISON;
-			else if (bossRoll == 2)
-				props.LeaderFlag = WML_ICE;
-			else if (bossRoll == 3)
-				props.LeaderFlag = WML_FIRE;
-			else if (bossRoll == 4)
-				props.LeaderFlag = WML_LIGHTNING;
-			else if (bossRoll == 5)
-				props.LeaderFlag = WML_BLOOD;
-			else if (bossRoll == 6)
-				props.LeaderFlag = WML_DEATH;
-			else
-				props.LeaderFlag = WML_STONE;
-		}
+            int leaderChance = min(BOSSTYPE_CHANCE_LEADER + playerLevel, BOSSTYPE_CHANCE_MAX);
+            if (random[WMFLeader](1,100) < leaderChance && !(Owner is "MonsterSummonWraith"))
+            {
+                props.BossFlag |= WMF_LEADER;
+                
+                let bossRoll = random[WMLType](1, BOSSTYPE_LEADER_SUB_NUM);
+                
+                if (bossRoll == 1)
+                    props.LeaderFlag = WML_POISON;
+                else if (bossRoll == 2)
+                    props.LeaderFlag = WML_ICE;
+                else if (bossRoll == 3)
+                    props.LeaderFlag = WML_FIRE;
+                else if (bossRoll == 4)
+                    props.LeaderFlag = WML_LIGHTNING;
+                else if (bossRoll == 5)
+                    props.LeaderFlag = WML_BLOOD;
+                else if (bossRoll == 6)
+                    props.LeaderFlag = WML_DEATH;
+                else
+                    props.LeaderFlag = WML_STONE;
+            }
 
-        //Don't make Leader types invisible
-        int spectreChance = min(BOSSTYPE_CHANCE_SPECTRE + playerLevel, BOSSTYPE_CHANCE_MAX);
-		if (!(props.BossFlag & WMF_LEADER) && random[WMFSpectre](1,100) < spectreChance)
-			props.BossFlag |= WMF_SPECTRE;
+            //Don't make Leader types invisible
+            int spectreChance = min(BOSSTYPE_CHANCE_SPECTRE + playerLevel, BOSSTYPE_CHANCE_MAX);
+            if (!(props.BossFlag & WMF_LEADER) && random[WMFSpectre](1,100) < spectreChance)
+                props.BossFlag |= WMF_SPECTRE;
+        }
 
         ApplyBossMonster(props);
     }
@@ -579,9 +588,6 @@ class WanderingMonsterItem : Powerup
             if (BossFlag & WMF_LEADER)
             {
                 DoLeaderTakeDamage(damage, damageType, inflictor, source, newdamage);
-
-                //if (newdamage != damage)
-                    //console.printf("Damage resisted: " .. damage .. " reduced to: " .. newdamage);
             }
         }
 

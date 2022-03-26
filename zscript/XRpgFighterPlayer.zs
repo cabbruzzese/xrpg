@@ -1,5 +1,6 @@
 // The fighter --------------------------------------------------------------
-
+const FIGHTERPLAYER_MASS_MAX = 500;
+const FIGHTERPLAYER_MASS_MOD = 3;
 class XRpgFighterPlayer : XRpgPlayer
 {
 	Default
@@ -130,6 +131,9 @@ class XRpgFighterPlayer : XRpgPlayer
 			statItem.Dexterity += 1;
 		else
 			statItem.Magic += 1;
+		
+		int newMass = Min(FIGHTERPLAYER_MASS_MAX, Mass + (statItem.Strength * FIGHTERPLAYER_MASS_MOD));
+		A_SetMass(newMass);
 	}
 
 	void GiveRandomSpell()
