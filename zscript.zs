@@ -43,3 +43,4 @@ const DEBUG_MODE = 0;
 #include "zscript/StatueMonster.zs"
 #include "zscript/XRpgGargoyle.zs"
 #include "zscript/XRpgDecorations.zs"
+#include "zscript/XRpgBishop.zs"
