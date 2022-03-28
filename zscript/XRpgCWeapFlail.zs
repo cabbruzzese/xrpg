@@ -194,6 +194,7 @@ class SmallFlailIceSilent : Actor
 		+PUFFONACTORS
 		+ZDOOMTRANS
 		+PUFFONACTORS
+		+ICESHATTER
 		RenderStyle "Translucent";
 		Alpha 0.25;
 		AttackSound "MageShardsExplode";

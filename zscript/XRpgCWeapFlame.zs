@@ -101,7 +101,7 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 			puffType = "BurnyFlamePuff";
 
 			if (xrpgPlayer)
-				damage += xrpgPlayer.GetMagic();
+				damage += xrpgPlayer.GetMagic() * 2;
 		}
 
 		for (int i = 0; i < 16; i++)
@@ -348,32 +348,20 @@ class BurnyFlamePuff : Actor
 		+NOBLOCKMAP 
 		+NOGRAVITY
 		+PUFFONACTORS
-		+RIPPER
-		+MISSILE
-		+PUFFGETSOWNER
 		RenderStyle "Translucent";
 		Alpha 0.6;
 		AttackSound "ClericFlameFire";
 		SeeSound "ClericFlameFire";
 		ActiveSound "FighterPunchMiss";
 		VSpeed 1;
-		Damage 1;
 		Scale 0.8;
 		DamageType "Fire";
 	}
 	States
 	{
 	Spawn:
-		CFFX ABCDE 2 BRIGHT Light("YellowSunSmall");
-		CFFX F 2 BRIGHT Light("YellowSunSmall") A_EndRipper;
-	Death:
+		CFFX ABCDEF 2 BRIGHT Light("YellowSunSmall");
 		CFFX GHIJKLM 2 BRIGHT Light("YellowSunSmall");
 		Stop;
-	}
-
-	action void A_EndRipper()
-	{
-		bRipper = false;
-		bMissile = false;
 	}
 }
