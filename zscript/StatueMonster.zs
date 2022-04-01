@@ -16,15 +16,22 @@ class WonderingMonsterBase : Actor
 const STATUEMONSTER_OFFSET_Z = 4;
 class StatueMonster : Actor
 {
+    int damageFaceAngle;
+    bool spawnFinished;
+
     Class<Actor> statueMonsterType;
     int spawnMonsterChance;
-    int transformHeight;
     bool singleChance;
+    bool endSolid;
+    bool spawnOnGround;
+    bool canBeKilled;
 
     property StatueMonsterType : statueMonsterType;
     property SpawnMonsterChance : spawnMonsterChance;
-    property TransformHeight : transformHeight;
     property SingleChance : singleChance;
+    property EndSolid : endSolid;
+    property SpawnOnGround : spawnOnGround;
+    property CanBeKilled : canBeKilled;
 
     Default
     {
@@ -32,20 +39,40 @@ class StatueMonster : Actor
 		Mass 0x7fffffff;
 		+SOLID +SHOOTABLE +NOBLOOD +NOICEDEATH
         +DONTRIP +NORADIUSDMG +CANTSEEK +NEVERTARGET +NOTAUTOAIMED
+
+        StatueMonster.EndSolid 1;
+        StatueMonster.SpawnOnGround 0;
+        StatueMonster.CanBeKilled 0;
+    }
+
+    bool IsSpawnFinished()
+    {
+        return spawnFinished;
     }
 
     action void A_SpawnStatueMonster()
     {
+        invoker.spawnFinished = true;
+
+        if (!invoker.EndSolid)
+            A_NoBlocking();
+
         if (!invoker.statueMonsterType)
             return;
 
-        if (invoker.TransformHeight > 0)
-            invoker.Height = invoker.TransformHeight;
-        else
-            invoker.Height *= 0.66;
+        int heightOffset = invoker.DeathHeight;
+        if (invoker.SpawnOnGround)
+            heightOffset = 0;
 
-        let spawnPos = invoker.Pos + (0, 0, invoker.height + STATUEMONSTER_OFFSET_Z);
+        invoker.Height = DeathHeight;
+        
+        let spawnPos = invoker.Pos + (0, 0, heightOffset + STATUEMONSTER_OFFSET_Z);
         Actor mo = Spawn(invoker.statueMonsterType, spawnPos, ALLOW_REPLACE);
+
+        if (mo)
+        {
+            mo.A_SetAngle(invoker.damageFaceAngle);
+        }
     }
 
     override int TakeSpecialDamage(Actor inflictor, Actor source, int damage, Name damagetype)
@@ -54,15 +81,26 @@ class StatueMonster : Actor
         {
             SetNotShootable();
 
+            //Set angle to face after attack
+            if (source)
+                damageFaceAngle = AngleTo(source);
+            else if (inflictor)
+                damageFaceAngle = AngleTo(source);
+            else
+                damageFaceAngle = angle;
+
             SetState(FindState("StatueMonsterRise"));
         }
 
         if (SingleChance) //if single chance, turn off ability to be hit after first try
             SetNotShootable();
 
-        super.TakeSpecialDamage(inflictor, source, damage, damagetype);
+        int damageResult = super.TakeSpecialDamage(inflictor, source, damage, damagetype);
 
-		return 0;
+        if (!CanBeKilled)
+		    return 0;
+        
+        return damageResult;
 	}
 
     void SetNotShootable()
@@ -79,8 +117,8 @@ class XRpgStatueGargoyleBase : StatueMonster
 		Radius 14;
 		Height 108;
 		DeathSound "EarthStartMove";
+        DeathHeight 64;
 
-        StatueMonster.TransformHeight 72;
         StatueMonster.SingleChance true;
 	}
 }
@@ -91,6 +129,6 @@ class XRpgStatueGargoyleShortBase : XRpgStatueGargoyleBase
 	{
         Radius 14;
 		Height 62;
-        StatueMonster.TransformHeight 24;
+        DeathHeight 24;
 	}
 }

@@ -44,3 +44,4 @@ const DEBUG_MODE = 0;
 #include "zscript/XRpgGargoyle.zs"
 #include "zscript/XRpgDecorations.zs"
 #include "zscript/XRpgBishop.zs"
+#include "zscript/XRpgUndead.zs"

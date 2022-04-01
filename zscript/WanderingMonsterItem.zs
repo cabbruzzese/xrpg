@@ -443,6 +443,7 @@ class WanderingMonsterItem : Powerup
             return;
 
         Owner.A_RadiusGive("RaiseWraithItem", 200, RGF_CORPSES, 1, "", "", 0, WML_DEATH_RAISE_LIMIT);
+        Owner.A_RadiusGive("RaiseStatueItem", 400, RGF_OBJECTS, 1, "", "", 0, WML_DEATH_RAISE_LIMIT);
     }
 
     void DoFireLeaderSpecial()

@@ -20,7 +20,7 @@ class RaiseDeadItem : Inventory
 			return false;
 		
 		//Don't summon dying wraiths
-		if (Owner is "Wraith")
+		if (Owner is "Wraith" || Owner is "XRpgUndead")
 			return false;
 
 		Actor mo = Spawn(self.SummonType, Owner.Pos, ALLOW_REPLACE);
@@ -38,5 +38,34 @@ class RaiseWraithItem : RaiseDeadItem
     Default
     {
         RaiseDeadItem.SummonType "MonsterSummonWraith";
+    }
+}
+
+class RaiseStatueItem : Inventory
+{
+	Default
+	{
+		+INVENTORY.UNDROPPABLE
+		+INVENTORY.UNTOSSABLE
+		+INVENTORY.AUTOACTIVATE
+		+INVENTORY.PERSISTENTPOWER
+		+INVENTORY.UNCLEARABLE
+	}
+
+    override bool Use(bool pickup)
+    {
+		if (!Owner)
+			return false;
+		
+		let statueMo = StatueMonster(Owner);
+		if (!statueMo)
+			return false;
+		
+		if (!statueMo.IsSpawnFinished() && statueMo.StatueMonsterType)
+		{
+			statueMo.SetState(statueMo.FindState("StatueMonsterRise"));
+		}
+
+        return false;
     }
 }

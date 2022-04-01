@@ -1,6 +1,7 @@
 [enu default]
 
 OB_FIREBOSS = "%o got burned by a fire %k.";
+OB_UNDEAD = "%o had their brains eaten by an %k.";
 
 TXT_SPELLPICKUP = "You have learned a spell";
 
@@ -35,6 +36,8 @@ TAG_FWEAPMSTAR = "Morning Star";
 TAG_FWEAPCLEAVER = "Butcher's Cleaver";
 TAG_FWEAPPOLEARM = "Polearm";
 TAG_CWEAPFLAIL = "Flail";
+
+FN_UNDEAD = "Undead Corpse";
 
 TXT_MEADSTEIN = "Delicious Mead! Cheers!";
 TXT_SHIELDITEM = "This shield is in good condition.";
