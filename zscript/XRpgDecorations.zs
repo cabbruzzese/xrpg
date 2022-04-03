@@ -124,7 +124,7 @@ class XRpgBarrel : ExplodableJunk replaces ZBarrel
         Radius 15;
 		Height 32;
         Health 250;
-        DeathHeight 12;
+        DeathHeight 0;
 
 		ExplodableJunk.JunkType1 "BarrelBoard";
 		ExplodableJunk.JunkType2 "BarrelRing";

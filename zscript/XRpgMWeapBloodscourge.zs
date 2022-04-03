@@ -6,7 +6,7 @@ class XRpgMageWeaponPiece : WeaponPiece replaces MageWeaponPiece
 	{
 		Inventory.PickupSound "misc/w_pkup";
 		Inventory.PickupMessage "$TXT_BLOODSCOURGE_PIECE";
-		Inventory.ForbiddenTo "XRpgFighterPlayer", "XRpgClericPlayer";
+		Inventory.ForbiddenTo "XRpgFighterPlayer", "XRpgClericPlayer", "FighterPlayer", "ClericPlayer";
 		WeaponPiece.Weapon "XRpgMWeapBloodscourge";
 		+FLOATBOB
 	}

@@ -122,6 +122,8 @@ class UndeadSleeping : UndeadStatue replaces ZCorpseSleeping
 		Radius 20;
 		Height 16;
         DeathHeight 16;
+
+		-NORADIUSDMG
 	}
     States
 	{
@@ -148,6 +150,7 @@ class UndeadSitting : UndeadStatue replaces ZCorpseSitting
         Health 90;
 		DeathSound "FireDemonDeath";
 
+		-NORADIUSDMG
         StatueMonster.CanBeKilled 1;
 	}
 

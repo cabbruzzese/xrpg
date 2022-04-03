@@ -6,7 +6,7 @@ class XRpgClericWeaponPiece : WeaponPiece replaces ClericWeaponPiece
 	{
 		Inventory.PickupSound "misc/w_pkup";
 		Inventory.PickupMessage "$TXT_WRAITHVERGE_PIECE";
-		Inventory.ForbiddenTo "FighterPlayer", "MagePlayer";
+		Inventory.ForbiddenTo "FighterPlayer", "MagePlayer", "XRpgFighterPlayer", "XRpgMagePlayer";
 		WeaponPiece.Weapon "XRpgCWeapWraithverge";
 		+FLOATBOB
 	}

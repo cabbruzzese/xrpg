@@ -6,7 +6,7 @@ class XRpgFighterWeaponPiece : WeaponPiece replaces FighterWeaponPiece
 	{
 		Inventory.PickupSound "misc/w_pkup";
 		Inventory.PickupMessage "$TXT_QUIETUS_PIECE";
-		Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer";
+		Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer", "ClericPlayer", "MagePlayer";
 		WeaponPiece.Weapon "XRpgFWeapQuietus";
 		+FLOATBOB
 	}

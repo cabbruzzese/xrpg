@@ -203,7 +203,7 @@ class XRpgFighterWeapon : XRpgWeapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer";
+		Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer", "ClericPlayer", "MagePlayer";
 
         XRpgFighterWeapon.Pufftype "HammerPuff";
         XRpgFighterWeapon.WeaponRange 1.5 * DEFMELEERANGE;
@@ -383,7 +383,7 @@ class XRpgClericWeapon : XRpgWeapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.ForbiddenTo "XRpgFighterPlayer", "XRpgMagePlayer";
+		Inventory.ForbiddenTo "XRpgFighterPlayer", "XRpgMagePlayer", "FighterPlayer", "MagePlayer";
 	}
 
     action bool A_IsSmite()
@@ -404,7 +404,7 @@ class XRpgMageWeapon : XRpgWeapon
 	Default
 	{
 		Weapon.Kickback 150;
-		Inventory.ForbiddenTo "XRpgFighterPlayer", "XRpgClericPlayer";
+		Inventory.ForbiddenTo "XRpgFighterPlayer", "XRpgClericPlayer", "FighterPlayer", "ClericPlayer";
 	}
 
     action bool A_FireMissileSpell(Class<Actor> missileType, int blueAmmoUse = 0, int greenAmmoUse = 0, int angleMod = 0, int angleSpread = 0, int zSpread = 0)

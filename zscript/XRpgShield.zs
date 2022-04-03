@@ -21,7 +21,7 @@ class XRpgShield : Inventory replaces CentaurShield
 		Inventory.MaxAmount 1;
 		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$TXT_SHIELDITEM";
-        Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer";
+        Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer", "ClericPlayer", "MagePlayer";
 
         XRpgShield.ShieldCharge 0;
         XRpgShield.ShieldTimeout 0;
