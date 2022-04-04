@@ -85,7 +85,7 @@ class StatueMonster : Actor
             if (source)
                 damageFaceAngle = AngleTo(source);
             else if (inflictor)
-                damageFaceAngle = AngleTo(source);
+                damageFaceAngle = AngleTo(inflictor);
             else
                 damageFaceAngle = angle;
 
