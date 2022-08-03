@@ -98,7 +98,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		Inventory.PickupSound "WeaponBuild";
 		Tag "$TAG_FWEAPQUIETUS";
 
-		+WEAPON.AMMO_OPTIONAL
+		+WEAPON.AXEBLOOD +WEAPON.AMMO_OPTIONAL +WEAPON.MELEEWEAPON
 		+WEAPON.ALT_AMMO_OPTIONAL
 
 		XRpgWeapon.MaxCharge SWORD_CHARGE_MAX;

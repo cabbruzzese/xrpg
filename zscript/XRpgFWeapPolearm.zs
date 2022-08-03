@@ -6,7 +6,7 @@ class XRpgFWeapPolearm : XRpgFighterWeapon
 	{
 		+BLOODSPLATTER
 		Weapon.SelectionOrder 900;
-		+WEAPON.AMMO_OPTIONAL
+		+WEAPON.AXEBLOOD +WEAPON.AMMO_OPTIONAL +WEAPON.MELEEWEAPON
 		Weapon.KickBack 150;
 		Inventory.PickupMessage "$TXT_WEAPON_POLEARM";
 		Obituary "$OB_MPFWEAPPOLEARM";

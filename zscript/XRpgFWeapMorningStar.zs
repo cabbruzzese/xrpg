@@ -4,7 +4,7 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon replaces EttinMace
 	{
 		+BLOODSPLATTER
 		Weapon.SelectionOrder 900;
-		+WEAPON.AMMO_OPTIONAL
+		+WEAPON.AMMO_OPTIONAL +WEAPON.MELEEWEAPON
 		Weapon.KickBack 150;
 		Inventory.PickupMessage "$TXT_WEAPON_MSTAR";
 		Obituary "$OB_MPFWEAPMSTAR";

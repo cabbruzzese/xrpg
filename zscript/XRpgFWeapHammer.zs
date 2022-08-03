@@ -8,7 +8,7 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 	{
 		+BLOODSPLATTER
 		Weapon.SelectionOrder 900;
-		+WEAPON.AMMO_OPTIONAL
+		+WEAPON.AMMO_OPTIONAL +WEAPON.MELEEWEAPON
 		Weapon.AmmoUse1 3;
 		Weapon.AmmoGive1 25;
 		Weapon.KickBack 150;

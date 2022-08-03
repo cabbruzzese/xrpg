@@ -11,7 +11,7 @@ class XRpgCWeapFlail : XRpgClericWeapon
 		Obituary "$OB_CWEAPFLAIL";
 		Tag "$TAG_CWEAPFLAIL";
         Inventory.MaxAmount 1;
-        +WEAPON.AMMO_OPTIONAL
+        +WEAPON.AMMO_OPTIONAL +WEAPON.MELEEWEAPON
 	}
 
 	States

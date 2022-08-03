@@ -4,6 +4,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 {
 	Default
 	{
+		+WEAPON.MELEEWEAPON
 		Weapon.SelectionOrder 3500;
 		Weapon.KickBack 150;
 		Weapon.YAdjust -8;
