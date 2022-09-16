@@ -186,7 +186,7 @@ class XRpgBishop : Actor replaces Bishop
 		{
 			mo.angle = angle;
             mo.Translation = Translation;
-            mo.A_SetScale(ScaleX);
+            mo.A_SetScale(Scale.X);
 		}
 	}
 
@@ -225,7 +225,7 @@ class XRpgBishop : Actor replaces Bishop
 		{
 			mo.angle = angle;
             mo.Translation = Translation;
-            mo.A_SetScale(ScaleX);
+            mo.A_SetScale(Scale.X);
 		}
 	}
 	

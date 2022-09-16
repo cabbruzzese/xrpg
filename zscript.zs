@@ -12,7 +12,6 @@ const DEBUG_MODE = 0;
 #include "zscript/XRpgMageSpells.zs"
 #include "zscript/XRpgClericSpells.zs"
 #include "zscript/XRpgFighterSpells.zs"
-#include "zscript/XRpgSpellItem.zs"
 #include "zscript/XRpgBaseWeapons.zs"
 #include "zscript/XRpgMWeapWand.zs"
 #include "zscript/XRpgMWeapFrost.zs"

@@ -67,7 +67,7 @@ class XRpgUndead : WonderingMonsterBase
     const UNDEAD_LEAP_VELF = 15;
     action void A_LeapAttack()
     {
-        A_PlaySound("WraithSight");
+		A_StartSound ("WraithSight", CHAN_BODY);
         let newVel = invoker.Vel + (0,0,UNDEAD_LEAP_VELZ);
         invoker.A_ChangeVelocity(newVel.X, newVel.Y, newVel.Z, CVF_REPLACE);
         invoker.Thrust(UNDEAD_LEAP_VELF, angle);
