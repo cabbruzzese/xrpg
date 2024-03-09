@@ -246,7 +246,8 @@ class MageFrostFlameMissile : TimedActor
 		-NOGRAVITY
 		Health 4;
 
-		TimedActor.TimeLimit 200;
+		TimedActor.TimeLimit 100;
+		TimedActor.DieOnTimer true;
     }
     States
     {
@@ -498,7 +499,7 @@ class MageFrostWaterMissile : TimedActor
 	}
 }
 
-class MageFrostSunMissile : Actor
+class MageFrostSunMissile : OffsetSpriteActor
 {
     Default
     {
@@ -512,6 +513,8 @@ class MageFrostSunMissile : Actor
         Scale 4.0;
         DamageType "Fire";
 		SeeSound "TreeExplode";
+        OffsetSpriteActor.OffsetSpriteX 0;
+        OffsetSpriteActor.OffsetSpriteY 30;
     }
     States
     {
@@ -557,6 +560,7 @@ class MageFrostMoonMissile : Actor
         MSP1 ABCD 4 Light("MoonBigFade3") A_RadiusThrust(-2000, 100, RTF_NOIMPACTDAMAGE & RTF_THRUSTZ );
         Loop;
     Death:
+		TNT1 A 0 A_SpriteOffset(4, 28);
         RADE DDEE 3 Light("MoonBigFade3") FrostMoonPull;
         RADE FFGG 3 Light("MoonBigFade4") FrostMoonPull;
         RADE HI 3 Light("MoonBigFade5");
@@ -602,7 +606,7 @@ const FROSTCHAIN_HOOK_HEIGHT = 32;
 const FROSTCHAIN_CHAIN_HEIGHT = 64;
 const FROSTCHAIN_SPREAD = 32;
 const FROSTCHAIN_LIFT = 16;
-const FROSTCHAIN_HEALTH = 128;
+const FROSTCHAIN_HEALTH = 196;
 class MageFrostChain : Actor
 {
 	MageFrostChainLink chainLinks[FROSTCHAIN_MAX_LINKS];
@@ -778,6 +782,7 @@ class MageFrostDeathMissile : Actor
 
 		if (!target.bIsMonster)
 		{
+			A_StartSound("FlechetteBounce", CHAN_BODY);
 			Dispose();
 			return result;
 		}

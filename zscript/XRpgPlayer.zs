@@ -228,7 +228,7 @@ class XRpgPlayer : PlayerPawn
 			A_SetHealth(MaxHealth);
 	}
 
-	int GetRandomManaBonus(PlayerLevelItem statItem)
+	virtual int GetRandomManaBonus(PlayerLevelItem statItem)
 	{
 		//mana increases by random up to half Magic, min 5 (weighted for low end of flat scale)
 		int halfMagic = statItem.Magic / 2;
@@ -538,8 +538,6 @@ class XRpgPlayer : PlayerPawn
 
 	override void CheatGive (String name, int amount)
 	{
-		int i;
-		Class<Inventory> type;
 		let player = self.player;
 
 		if (player.mo == NULL || player.health <= 0)
@@ -575,6 +573,18 @@ class XRpgPlayer : PlayerPawn
 				GiveInventory("LightningSpell", 1);
 				GiveInventory("BloodSpell", 1);
 			}
+			return;
+		}
+
+		if (name ~== "thac0")
+		{			
+			GrantXP(5000);
+			return;
+		}
+
+		if (name ~== "shield")
+		{			
+			GiveInventory("XRpgShield", 1);
 			return;
 		}
 

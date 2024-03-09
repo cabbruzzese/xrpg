@@ -253,6 +253,8 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		A_FireMissileSpell("MageWandLightningMissile", 3, 3);
 		A_FireMissileSpell("MageWandLightningMissile", 3, 3, -7);
 		A_FireMissileSpell("MageWandLightningMissile", 3, 3, 7);
+
+		A_StartSound("ThunderCrash", CHAN_BODY);
 	}
 
 	const SUMMONBAT_DIST = 160.0;
@@ -553,7 +555,7 @@ class MageStaffWaterMissile : Actor
 	}
 }
 
-class MageStaffSunMissile : Actor
+class MageStaffSunMissile : OffsetSpriteActor
 {
     Default
     {
@@ -567,6 +569,8 @@ class MageStaffSunMissile : Actor
         Scale 2.0;
         DamageType "Fire";
 		SeeSound "TreeExplode";
+		OffsetSpriteActor.OffsetSpriteX 0;
+        OffsetSpriteActor.OffsetSpriteY 16;
     }
     States
     {
@@ -582,7 +586,7 @@ class MageStaffSunMissile : Actor
 
 	action void A_SunExplode()
 	{
-		A_Explode(70, 150, false);
+		A_Explode(55, 120);
 		A_StartSound("Fireball", CHAN_BODY);
 	}
 }

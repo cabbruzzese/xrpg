@@ -1,6 +1,4 @@
-
 // The Mage's Wand ----------------------------------------------------------
-
 class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 {
 	Default
@@ -39,39 +37,39 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         Goto Ready;
     FlameSpell:
         MWND A 7;
-        MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandFlameMissile", 2);
+        MWND B 7 Bright Offset (0, 48) A_FireMissileSpell("MageWandFlameMissile", MANA_WAND_FLAME_BLUE, MANA_WAND_FLAME_GREEN);
         Goto AltFireFinish;
     IceSpell:
         MWND A 3;
-        MWND B 2 Bright Offset (0, 48) A_FireMissileSpell("MageWandIceMissile", 1, 0, 0, 3, 3);
+        MWND B 2 Bright Offset (0, 48) A_FireMissileSpell("MageWandIceMissile", MANA_WAND_ICE_BLUE, MANA_WAND_ICE_GREEN, 0, 3, 3);
         Goto RapidFireFinish;
     PoisonSpell:
         MWND A 3;
-        MWND B 2 Bright Offset (0, 48) A_FireMissileSpell("MageWandPoisonMissile", 2, 0);
+        MWND B 2 Bright Offset (0, 48) A_FireMissileSpell("MageWandPoisonMissile", MANA_WAND_POISON_BLUE, MANA_WAND_POISON_GREEN);
         Goto RapidFireFinish;
     WaterSpell:
         MWND A 5;
-        MWND B 7 Bright Offset (0, 48) A_FireWaterSpell;
+        MWND B 7 Bright Offset (0, 48) A_FireWaterSpell(MANA_WAND_WATER_BLUE, MANA_WAND_WATER_GREEN);
         Goto AltFireFinish;
     SunSpell:
         MWND A 7;
-        MWND B 9 Bright Offset (0, 48) A_FireMissileSpell("MageWandSunMissile", 6, 0);
+        MWND B 9 Bright Offset (0, 48) A_FireMissileSpell("MageWandSunMissile", MANA_WAND_SUN_BLUE, MANA_WAND_SUN_GREEN);
         Goto AltFireFinish;
     MoonSpell:
         MWND A 7;
-        MWND B 9 Bright Offset (0, 48) A_FireMissileSpell("MageWandMoonMissile", 3, 0);
+        MWND B 9 Bright Offset (0, 48) A_FireMissileSpell("MageWandMoonMissile", MANA_WAND_MOON_BLUE, MANA_WAND_MOON_GREEN);
         Goto AltFireFinish;
     DeathSpell:
         MWND A 5;
-        MWND B 7 Bright Offset (0, 48) A_FireDeathSpell;
+        MWND B 7 Bright Offset (0, 48) A_FireDeathSpell(MANA_WAND_DEATH_BLUE, MANA_WAND_DEATH_GREEN);
         Goto AltFireFinish;
     LightningSpell:
         MWND A 9;
-        MWND B 11 Bright Offset (0, 48) A_FireLightningSpell;
+        MWND B 11 Bright Offset (0, 48) A_FireLightningSpell(MANA_WAND_LIGHTNIN_BLUE, MANA_WAND_LIGHTNIN_GREEN);
         Goto AltFireFinish;
     BloodSpell:
         MWND A 5;
-		MWND B 7 Bright Offset (0, 48) A_FireBloodSpell;
+		MWND B 7 Bright Offset (0, 48) A_FireBloodSpell(MANA_WAND_BLOOD_BLUE, MANA_WAND_BLOOD_GREEN);
         Goto AltFireFinish;
     Reload:
 		#### # 8 A_NextSpell;
@@ -81,9 +79,9 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 		Goto Ready;
 	}
 
-    action void A_FireWaterSpell()
+    action void A_FireWaterSpell(int blueManaUse, int greenManaUse)
 	{
-        if (!A_AttemptFireSpell(4, 0))
+        if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 
         A_FireSpreadMissile("MageWandWaterMissile", 6, 6);
@@ -93,9 +91,9 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         A_FireSpreadMissile("MageWandWaterMissile", 6, 6);
 	}
 
-    action void A_FireDeathSpell()
+    action void A_FireDeathSpell(int blueManaUse, int greenManaUse)
 	{
-        if (!A_AttemptFireSpell(5, 0))
+        if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 
         SpawnPlayerMissile("MageWandDeathMissile", angle);
@@ -103,16 +101,16 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         SpawnPlayerMissile("MageWandDeathMissile", angle - 12);
 	}
 
-    action void A_FireLightningSpell()
-    {
-        A_FireMissileSpell("MageWandLightningMissile", 5);
+    action void A_FireLightningSpell(int blueManaUse, int greenManaUse)
+	{
+        A_FireMissileSpell("MageWandLightningMissile", blueManaUse, greenManaUse);
 
         A_StartSound("ThunderCrash", CHAN_BODY);
     }
 
-    action void A_FireBloodSpell()
+    action void A_FireBloodSpell(int blueManaUse, int greenManaUse)
 	{
-        if (!A_AttemptFireSpell(5, 0))
+        if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 
         SpawnPlayerMissile("MageWandBloodMissile", angle + 8);
@@ -252,7 +250,7 @@ class MageWandWaterMissile : Actor
     }
 }
 
-class MageWandSunMissile : Actor
+class MageWandSunMissile : OffsetSpriteActor
 {
     Default
     {
@@ -267,6 +265,8 @@ class MageWandSunMissile : Actor
         Scale 2.0;
         DamageType "Fire";
         SeeSound "TreeExplode";
+        OffsetSpriteActor.OffsetSpriteX 0;
+        OffsetSpriteActor.OffsetSpriteY 16;
     }
     States
     {
@@ -314,6 +314,7 @@ class MageWandMoonMissile : Actor
         MSP1 ABCD 4 Light("MoonSmall");
         Loop;
     Death:
+        TNT1 A 0 A_SpriteOffset(0, 28);
         RADE D 6 Light("MoonBig");
         RADE E 3 Light("MoonBigFade1");
         RADE F 3 Light("MoonBigFade2");

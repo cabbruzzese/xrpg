@@ -4,8 +4,9 @@ const BOSSTYPE_CHANCE_LEADER = 2;
 
 const BOSSTYPE_LEADER_SUB_NUM = 7;
 
-const DROP_AMMO_CHANCE = 128;
-const DROP_AMMO_CHANCE_BIG = 196;
+const DROP_AMMO_CHANCE = 72;
+const DROP_AMMO_CHANCE_BIG = 128;
+const DROP_HEALTH_CHANCE = 144;
 
 const LIGHTNINGBOSS_TELEPORT_DIST = 256;
 const LIGHTNINGBOSS_TELEPORT_FAIL_MAX = 20;
@@ -189,7 +190,7 @@ class WanderingMonsterItem : Powerup
         if (randomDrop < 50)
         {
             if (randomDrop > 25)
-                Owner.A_DropItem("CrystalVial", 10, DROP_AMMO_CHANCE);
+                Owner.A_DropItem("CrystalVial", 10, DROP_HEALTH_CHANCE);
             else if (randomDrop > 15)
                 Owner.A_DropItem("Mana1", 15, DROP_AMMO_CHANCE);
             else if (randomDrop > 5)

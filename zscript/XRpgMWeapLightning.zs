@@ -474,7 +474,7 @@ class MageLightningWaterMissileFloor : TimedActor
 
 const SUN_RADIANT_DAMAGE = 40;
 const SUN_RADIANT_DIST = 300;
-class MageLightningSunMissile : Actor
+class MageLightningSunMissile : OffsetSpriteActor
 {
     Default
     {
@@ -489,7 +489,9 @@ class MageLightningSunMissile : Actor
         Scale 6.0;
         DamageType "Fire";
 		SeeSound "TreeExplode";
-    }
+        OffsetSpriteActor.OffsetSpriteX 0;
+        OffsetSpriteActor.OffsetSpriteY 32;
+	}
     States
     {
     Spawn:
@@ -601,6 +603,7 @@ class MageLightningMoonMissile : Actor
         MSP1 D 8 Light("MoonBig") A_BigMoonPull(1);
         Loop;
     Death:
+		TNT1 A 0 A_SpriteOffset(5, 54);
         RADE D 6 Light("MoonBigFade1");
         RADE E 6 Light("MoonBigFade2");
         RADE F 6 Light("MoonBigFade3");

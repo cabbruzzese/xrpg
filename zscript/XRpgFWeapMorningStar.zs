@@ -78,5 +78,14 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon replaces EttinMace
     ShieldFireFinish:
 		FSHL DCBA 2;
         Goto Ready;
+	FistFire:
+		FPCH B 5 Offset (5, 40) A_Mirror;
+		FPCH C 4 Offset (5, 40);
+		FPCH D 4 Offset (5, 40) A_OffhandPunchAttack;
+		FPCH C 4 Offset (5, 40);
+		FPCH B 3 Offset (5, 40);
+		FPCH B 3 Offset (5, 40) A_Refire;
+		FPCH E 1 Offset (0, 150) A_RestoreMirror;
+		Goto Ready;
 	}
 }

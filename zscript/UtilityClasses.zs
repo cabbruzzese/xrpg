@@ -115,7 +115,7 @@ class TimedActor : StoppableActor
     }
 }
 
-class StoppableActor : Actor
+class StoppableActor : OffsetSpriteActor
 {
 	double oldSpeed;
 	property OldSpeed : oldSpeed;
@@ -176,4 +176,18 @@ class StoppableActor : Actor
 		invoker.bMissile = true;
 		A_RenewSpeed();
 	}
+}
+
+class OffsetSpriteActor : Actor
+{
+	double offsetSpriteX;
+	double offsetSpriteY;
+	property OffsetSpriteX : offsetSpriteX;
+	property OffsetSpriteY : offsetSpriteY;
+    
+    override void PostBeginPlay()
+	{
+		if (offsetSpriteX != 0 || offsetSpriteY != 0)
+			A_SpriteOffset(offsetSpriteX, offsetSpriteY);
+    }
 }

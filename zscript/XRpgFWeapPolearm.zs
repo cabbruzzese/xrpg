@@ -46,17 +46,31 @@ class XRpgFWeapPolearm : XRpgFighterWeapon
         FPOL J 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
         FPOL J 6 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3);
         Goto Ready;
-    Thrust:
+    AltFire:
 		FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 1, POLEARM_LOWER_INCREMENT_Y * 1);
         FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 2, POLEARM_LOWER_INCREMENT_Y * 2);
         FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 3, POLEARM_LOWER_INCREMENT_Y * 3);
-        FPOL G 3 Offset (1, POLEARM_LOWER_INCREMENT_Y * 4);
-        FPOL G 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3);
-        FPOL G 4 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
-        FPOL G 8 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1) A_FWeaponMeleeAttack(1, 100, 0, 1.0, 0.0, int(3.2 * double(DEFMELEERANGE)), "AxePuff", true, true);
-        FPOL G 4 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
-        FPOL G 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3);
-        FPOL G 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 4);
+    AltHold:
+        FPOL G 2 Offset (1, POLEARM_LOWER_INCREMENT_Y * 3) A_CheckBerserk(true);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2.5);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2) A_ChargeForward(5);
+        FPOL G 4 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1.5) A_ChargeForward(7);
+        FPOL G 8 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1) A_FWeaponMeleeAttack(1, 90, 0, 1.0, 0.0, int(3.2 * double(DEFMELEERANGE)), "AxePuff", true, true);
+        FPOL G 4 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1.5);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2.5);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3) A_Refire;
+        Goto Ready;
+	BerserkAltFire:
+        FPOL G 2 Offset (1, POLEARM_LOWER_INCREMENT_Y * 3);
+        FPOL G 2 Offset (1, POLEARM_LOWER_INCREMENT_Y * 2.5);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2) A_ChargeForward(5);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1.5) A_ChargeForward(7);
+        FPOL G 6 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1) A_FWeaponMeleeAttack(1, 100, 0, 1.0, 0.0, int(3.2 * double(DEFMELEERANGE)), "AxePuff", true, true);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1.5);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2.5);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3)A_Refire;
         Goto Ready;
     RightSwing:
 		FPOL A 3 Offset (POLEARM_LOWER_INCREMENT_X * 1, POLEARM_LOWER_INCREMENT_Y * 1);
@@ -99,18 +113,6 @@ class XRpgFWeapPolearm : XRpgFighterWeapon
 		FPOL J 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1);
         FPOL J 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
         FPOL J 4 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3);
-        Goto Ready;
-    BerserkThrust:
-		FPOL A 2 Offset (POLEARM_LOWER_INCREMENT_X * 1, POLEARM_LOWER_INCREMENT_Y * 1);
-        FPOL A 2 Offset (POLEARM_LOWER_INCREMENT_X * 2, POLEARM_LOWER_INCREMENT_Y * 2);
-        FPOL A 2 Offset (POLEARM_LOWER_INCREMENT_X * 3, POLEARM_LOWER_INCREMENT_Y * 3);
-        FPOL G 2 Offset (1, POLEARM_LOWER_INCREMENT_Y * 4);
-        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3);
-        FPOL G 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
-		FPOL G 6 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1) A_FWeaponMeleeAttack(1, 100, 0, 1.0, 0.0, int(3.2 * double(DEFMELEERANGE)), "AxePuff", true, true);
-        FPOL G 3 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
-        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3);
-        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 4);
         Goto Ready;
     BerserkRightSwing:
 		FPOL A 2 Offset (POLEARM_LOWER_INCREMENT_X * 1, POLEARM_LOWER_INCREMENT_Y * 1);
@@ -164,8 +166,6 @@ class XRpgFWeapPolearm : XRpgFighterWeapon
 			return isBerserk ? FindState ("BerserkRightSwing") : FindState ("RightSwing");
 		else if (leftMove)
 			return isBerserk ? FindState ("BerserkLeftSwing") : FindState ("LeftSwing");
-		else if (forwardMove != 0)
-			return isBerserk ? FindState ("BerserkThrust") : FindState ("Thrust");
 
 		return isBerserk ? FindState ("BerserkFire") :  Super.GetAtkState(hold);
 	}

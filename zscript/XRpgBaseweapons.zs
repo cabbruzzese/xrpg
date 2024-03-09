@@ -200,6 +200,11 @@ class XRpgWeapon : Weapon
 
         A_StartSound ("*fistgrunt", CHAN_VOICE);
     }
+
+    action void A_ChargeForward(int thrust)
+	{
+		Thrust(thrust, angle);
+	}
 }
 
 class XRpgFighterWeapon : XRpgWeapon
@@ -307,7 +312,7 @@ class XRpgFighterWeapon : XRpgWeapon
 						{
                             A_ThrustTarget(t.linetarget, push, t.attackAngleFromSource);
 						}
-						weaponspecial = false; // Don't throw a hammer
+						weaponspecial = false;
 						return;
 					}
 				}
@@ -328,8 +333,17 @@ class XRpgFighterWeapon : XRpgWeapon
             return;
 
         if (!xrpgPlayer.GetShield())
-            A_SetWeapState("Ready");
+        {
+            A_SetWeapState("FistFire");
+            return;
+        }
     }
+
+    action void A_OffhandPunchAttack()
+	{
+        A_FWeaponMeleeAttack(1, 55, 0, 1, 0, 2*DEFMELEERANGE, "PunchPuff", false, 0);
+	}
+	
 
     action void A_UseShield(bool checkCharged = true)
     {
@@ -342,7 +356,13 @@ class XRpgFighterWeapon : XRpgWeapon
 
         let shield = xrpgPlayer.GetShield();
         if (!shield)
+        {
+            A_SetWeapState("FistFire");
             return;
+        }
+
+        //Make sure weapon is no mirrored if shield is being used.
+        A_RestoreMirror();
 
         if (checkCharged && shield.IsCharged())
         {

@@ -195,4 +195,14 @@ class XRpgFighterPlayer : XRpgPlayer
 	{
 		return XRpgShield(FindInventory("XRpgShield"));
 	}
+
+	override int GetRandomManaBonus(PlayerLevelItem statItem)
+	{
+		//mana increases by random up to 1/3 Magic, min 5 (weighted for low end of flat scale)
+		int partMagic = statItem.Magic / 3;
+		int manaBonus = random[LvlMana](1, partMagic);
+		manaBonus = Max(manaBonus, 5);
+		
+		return manaBonus;
+	}
 }
