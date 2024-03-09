@@ -14,7 +14,7 @@ class XRpgSummonBat : Actor
 		Height 8;
         Radius 10;
 		Mass 10;
-		Damage 6;
+		Damage 1;
 
 		Monster;
 		+NOGRAVITY +DROPOFF +FLOAT
@@ -85,5 +85,14 @@ class XRpgSummonBat : Actor
 		AddZ(BobSin(weaveindex));
 		WeaveIndexZ = (weaveindex + 2) & 63;
 		A_Chase ();
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+		let expItem = Inventory(FindInventory("SummonExpSquishItem"));
+		if (expItem == null)
+			expItem = GiveInventoryType("SummonExpSquishItem");
 	}
 }

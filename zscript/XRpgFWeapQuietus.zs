@@ -75,8 +75,8 @@ class XRpgQuietusDrop : Actor replaces QuietusDrop
 
 // The Fighter's Sword (Quietus) --------------------------------------------
 const SWORD_RANGE = 2 * DEFMELEERANGE;
-const SWORD_CHARGE_MAX = 20;
 const SWORD_SLASH_MANA = 5;
+
 class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 {
 	Default
@@ -101,8 +101,6 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		+WEAPON.AXEBLOOD +WEAPON.AMMO_OPTIONAL +WEAPON.MELEEWEAPON
 		+WEAPON.ALT_AMMO_OPTIONAL
 
-		XRpgWeapon.MaxCharge SWORD_CHARGE_MAX;
-
 		XRpgFighterWeapon.Pufftype "NormalSwordPuff";
         XRpgFighterWeapon.MeleePush 8;
         XRpgFighterWeapon.MeleeAdjust false;
@@ -115,22 +113,19 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		TNT1 A -1;
 		Stop;
 	Select:
-		//FSRD A 1 Bright A_Raise;
 		FSRN A 1 A_Raise;
 		Loop;
 	Deselect:
-		//FSRD A 1 Bright A_Lower;
 		FSRN A 1 A_Lower;
 		Loop;
 	Ready:
-		//FSRD AAAABBBBCCCC 1 Bright A_FSwordWeaponReady;
-		FSRN A 1 A_FSwordWeaponReady;
+		FSRN A 1 A_WeaponReady;
 		Loop;
 	Fire:
 	Cut:
-	Hold:
-		FSRN D 4 Offset (-50, 0) A_ChargeUp;
-		FSRN D 4 Offset (-50, 0) A_Refire;
+		FSRN D 5 Offset (-50, 0) A_CheckBerserk(false);
+	BerserkFire:
+		FSRN D 3 Offset (-50, 0);
 		FSRN D 1 Offset (-100, 0);
 		FSRN D 1 Offset (-125, 0);
 		FSRN J 2 Offset (1, 0);
@@ -144,9 +139,9 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		Goto Ready;
 	AltFire:
 	PowerCut:
-	AltHold:
-		FSRT D 4 Bright Offset (-50, 0) A_ChargeUp;
-		FSRT D 4 Bright Offset (-50, 0) A_Refire;
+		FSRT D 5 Bright Offset (-50, 0) A_CheckBerserk(true);
+	BerserkAltFire:
+		FSRT D 3 Bright Offset (-50, 0);
 		FSRT D 1 Bright Offset (-100, 0);
 		FSRT D 1 Bright Offset (-125, 0);
 		FSRT J 2 Bright Offset (1, 0);
@@ -281,9 +276,6 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		if (!xrpgPlayer)
 			return FindState("Cut");
 
-		if (hold && ChargeValue > 0)
-			return FindState("Hold");
-
 		let sideMove = xrpgPlayer.GetPlayerInput(INPUT_SIDEMOVE);
 		let rightMove = sideMove > 0;
 		let leftMove = sideMove < 0;
@@ -306,16 +298,13 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		if (!xrpgPlayer)
 			return FindState("PowerCut");
 
-		
-
 		let sideMove = xrpgPlayer.GetPlayerInput(INPUT_SIDEMOVE);
 		let rightMove = sideMove > 0;
 		let leftMove = sideMove < 0;
 		
 		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
-		bool isCutHold = (hold && ChargeValue > 0);
 
-		if (sideMove != 0 && !isCutHold)
+		if (sideMove != 0)
 		{
 			//If slashing, check slashing mana
 			if (Ammo1.Amount < SWORD_SLASH_MANA || Ammo2.Amount < SWORD_SLASH_MANA)
@@ -328,60 +317,12 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 				return GetAtkState(hold);
 		}
 
-		if (isCutHold)
-			return FindState("AltHold");
-
 		if (rightMove)
 			return isBerserk ? FindState ("BerserkPowerRightSwing") : FindState ("PowerRightSwing");
 		else if (leftMove)
 			return isBerserk ? FindState ("BerserkPowerLeftSwing") : FindState ("PowerLeftSwing");
 
 		return Super.GetAltAtkState(hold);
-	}
-
-	action void A_ChargeCheckAttack()
-	{
-		if (player == null)
-			return;
-
-		let xrpgPlayer = XRpgPlayer(player.mo);
-		if (!xrpgPlayer)
-			return;
-
-		Weapon w = player.ReadyWeapon;
-		if (!w)
-			return;
-		
-		bool weaponspecial = true;
-		// Don't spawn a missile if the player doesn't have enough mana
-		if (player.ReadyWeapon == null ||
-			!player.ReadyWeapon.CheckAmmo (player.ReadyWeapon.bAltFire ?
-				Weapon.AltFire : Weapon.PrimaryFire, false, true))
-		{ 
-			weaponspecial = false;
-		}
-
-		if (weaponspecial)
-		{
-			if (invoker.ChargeValue > 5)
-			{
-				A_SetWeapState("AltFireBeam");
-			}
-			else if (weaponspecial)
-			{
-				A_SetWeapState("AltFireSlash");
-			}
-		}
-		else
-		{
-			A_SetWeapState("FireSwing");
-		}
-	}
-	
-	action void A_FSwordWeaponReady()
-	{
-		invoker.ChargeValue = 0;
-		A_WeaponReady();
 	}
 	
 	//============================================================================
@@ -435,15 +376,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		if (!xrpgPlayer)
 			return;
 
-		//If berserk, all attacks are at least half of max charge
-		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
-		if (isBerserk)
-			invoker.ChargeValue = Max(invoker.ChargeValue, invoker.MaxCharge / 2);
-
-		double chargeDamage = 150.0 * (double(invoker.ChargeValue) / double(SWORD_CHARGE_MAX));
-		int damage = random[FWeapBigSword](1, 100) + chargeDamage;
-
-		A_FWeaponMelee(chargeDamage, chargeDamage + 100);
+		A_FWeaponMelee(50, 110);
 	}
 
 	action void A_FSwordPowerCut ()
@@ -460,22 +393,7 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 			weapon.DepleteAmmo (false, true);
 		}
 		
-		let xrpgPlayer = XRpgPlayer(player.mo);
-		if (!xrpgPlayer)
-			return;
-
-		//If berserk, all attacks are at least half of max charge
-		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
-		if (isBerserk)
-			invoker.ChargeValue = Max(invoker.ChargeValue, invoker.MaxCharge / 2);
-		
-		int chargeCount = invoker.ChargeValue / 3;
-
 		SwordRainMissile mo = SwordRainMissile(SpawnPlayerMissile ("SwordRainMissile"));
-		if (mo)
-		{
-			mo.TimeLimit += chargeCount;
-		}
 	}
 }
 
@@ -584,7 +502,7 @@ class SwordRain : Actor
         Speed 120;
         Radius 2;
         Height 2;
-        Damage 5;
+        Damage 4;
         Projectile;
         +RIPPER
         +CANNOTPUSH +NODAMAGETHRUST
@@ -610,7 +528,7 @@ class SwordRain : Actor
 	action void A_SwordRainExplode()
 	{
 		A_SetScale(0.5);
-		int damage = 40;
+		int damage = 20;
 		int range = 90;
 
 		let xrpgPlayer = XRpgPlayer(target);
@@ -624,8 +542,9 @@ class SwordRain : Actor
 	}
 }
 
-const SWORD_SLASH_MISSILE_SPEED = 12;
+const SWORD_SLASH_MISSILE_SPEED = 22;
 const SWORD_SLASH_MISSILE_SPEED_MOD = 3;
+const SWORD_SLASH_MISSILE_SPEED_DAMAGE = 8;
 class FSwordSlashMissile1 : TimedActor
 {
 	Default
@@ -633,7 +552,7 @@ class FSwordSlashMissile1 : TimedActor
 		Speed SWORD_SLASH_MISSILE_SPEED;
 		Radius 2;
 		Height 2;
-		Damage 5;
+		Damage SWORD_SLASH_MISSILE_SPEED_DAMAGE;
 		Projectile;
 		+EXTREMEDEATH
 		+ZDOOMTRANS
@@ -646,7 +565,7 @@ class FSwordSlashMissile1 : TimedActor
 	States
 	{
 	Spawn:
-		FSFX ABCABC 3 Bright;
+		FSFX ABCABCABC 3 Bright;
 		FSFX B 1 A_StopMoving(true);
 	Death:
 		FSFX D 4 Bright;

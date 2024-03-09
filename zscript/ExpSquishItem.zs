@@ -72,6 +72,14 @@ class ExpSquishItem : Powerup
             {
                 xrpgPlayer.DoXPHit(source, damage, damageType);
             }
+
+			// if (source) 
+			// {
+			// 	let modifiedDamage = source.GetModifiedDamage(damagetype, damage, passive, inflictor, source, flags);
+
+			// 	string dmgMsg = String.Format("XP is %d and modified is %d", newdamage, modifiedDamage);
+			// 	source.A_Print(dmgMsg);
+			// }
         }
 	}
 
@@ -88,7 +96,10 @@ class ExpSquishItem : Powerup
 	override void OwnerDied() {}
 }
 
-/*class SummonExpSquishItem : Powerup
+const XP_GRANT_PLAYER_LIMIT = 10;
+const XP_GRANT_PLAYER_RADIUS = 5000;
+
+class SummonExpSquishItem : Powerup
 {
 	Default
 	{
@@ -101,6 +112,18 @@ class ExpSquishItem : Powerup
         Powerup.Duration 0x7FFFFFFF;
 	}
 
+    int GetPlayerCount()
+	{
+		int total = 0;
+		for (int i = 0; i < MaxPlayers; i++)
+		{
+			if (playeringame[i])
+				total++;
+		}
+
+		return total;
+	}
+
 	//===========================================================================
 	//
 	// ModifyDamage
@@ -111,18 +134,24 @@ class ExpSquishItem : Powerup
 	{
 		if (!passive && damage > 0 && Owner && Owner.bIsMonster && Owner.bFriendly)
         {
-			//console.printf("Summoned monster attacked");
-			if (!owner.tracer)
-				return;
+			if (source && source.bIsMonster)
+			{
+				int numPlayers = GetPlayerCount();
+				if (numPlayers < 1)
+					return;
+
+				//Console.Printf(String.Format("Number of players: %d", numPlayers));
+
+				int newXp = damage / numPlayers;
+
+				newXP = Max(newXP, 1);
+				newXP = Min(newXP, MAXXPHIT);
 			
-            let xrpgPlayer = XRpgPlayer(Owner.tracer);
-            if (xrpgPlayer)
-            {
-                xrpgPlayer.DoXPHit(source, damage, damageType);
-            }
+				Owner.A_RadiusGive("ExpBonusItem", XP_GRANT_PLAYER_RADIUS, RGF_PLAYERS, newXp, "", "", 0, XP_GRANT_PLAYER_LIMIT);
+			}
         }
 	}
-}*/
+}
 
 class ExpSquishItemGiver : PowerupGiver
 {
@@ -142,4 +171,28 @@ class ExpSquishItemGiver : PowerupGiver
 		DEFN ABCD 3;
 		Loop;
 	}
+}
+
+class ExpBonusItem : Powerup
+{
+	Default
+	{
+		+INVENTORY.UNDROPPABLE
+        +INVENTORY.UNTOSSABLE
+        +INVENTORY.AUTOACTIVATE
+	}
+
+    override bool Use(bool pickup)
+    {
+		if (Owner && Owner.Player && Owner.Player.mo)
+		{
+			let xrpgPlayer = XRpgPlayer(Owner.Player.mo);
+			if (xrpgPlayer)
+			{
+				xrpgPlayer.GrantXP(Amount);
+			}
+		}
+
+        return true;
+    }
 }

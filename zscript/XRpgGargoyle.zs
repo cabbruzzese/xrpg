@@ -314,7 +314,7 @@ class StatueFireDemon : WonderingMonsterBase
 
 	Default
 	{
-		Health 160;
+		Health 90;
 		ReactionTime 8;
 		PainChance 1;
 		Speed 13;

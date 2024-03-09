@@ -299,6 +299,10 @@ class GhostarangMissile : Actor
 			target.Alpha = 0.6;
 			target.A_SetHealth(GHOSTARANG_REVIVE_HEALTH);
 
+			let fsItem = SummonExpSquishItem(target.FindInventory("SummonExpSquishItem"));
+			if (!fsItem)
+		        fsItem = SummonExpSquishItem(target.GiveInventoryType("SummonExpSquishItem"));
+
 			Spawn("MinotaurSmoke", target.Pos, ALLOW_REPLACE);
 
 			SetStateLabel("Death");

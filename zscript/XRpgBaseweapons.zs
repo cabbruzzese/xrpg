@@ -14,11 +14,25 @@ class XRpgWeapon : Weapon
         XRpgWeapon.MaxCharge 0;
     }
 
-	action void A_ChargeUp()
+	action void A_ChargeUp(int overchargeMax = 0, StateLabel overchargeState = "Hold")
 	{
 		invoker.ChargeValue++;
+
 		if (invoker.chargeValue > invoker.MaxCharge)
-			invoker.chargeValue = invoker.MaxCharge;
+        {
+            if (overchargeMax > 0)
+            {
+                if (invoker.chargeValue > overchargeMax)
+                {
+                    invoker.chargeValue = invoker.MaxCharge;
+                    A_SetWeapState(overchargeState);
+                }
+            }
+            else
+            {
+                invoker.chargeValue = invoker.MaxCharge;
+            }
+        }
 	}
 
     action void A_CheckMinCharge(int minCharge)
@@ -376,6 +390,25 @@ class XRpgFighterWeapon : XRpgWeapon
         
         shield.ShootShield();
     }
+
+    action void A_FighterChargeUp(int overchargeMax = 0, StateLabel overchargeState = "Hold", bool skipOnBerserk = false)
+	{
+        if (skipOnBerserk)
+        {
+            let xrpgPlayer = XRpgPlayer(player.mo);
+            if (!xrpgPlayer)
+                return;
+
+            if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
+            {
+                invoker.chargeValue = invoker.MaxCharge;
+                A_SetWeapState(overchargeState);
+                return;
+            }
+        }
+
+        A_ChargeUp(overchargeMax, overchargeState);
+	}
 }
 
 class XRpgClericWeapon : XRpgWeapon
@@ -649,6 +682,11 @@ class StunStars : Bridge
             let zo = target.Height + STUNSTARS_VDIST;
             let newPos = target.Pos + (0,0, zo);
             SetOrigin(newPos, true);
+
+            if (target is "Centaur" && target.Health > 0 && target.bInvulnerable)
+            {
+                target.bInvulnerable = false;
+            }
         }
 
         Super.Tick();

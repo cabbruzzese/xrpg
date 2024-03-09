@@ -310,6 +310,15 @@ class XRpgPlayer : PlayerPawn
 		UpdateLevelStats(statItem);
 	}
 
+	void GrantXP(int xp)
+	{
+        if (xp <= 0)
+            return;
+
+		let statItem = GetStats();
+        GiveXP(statItem, xp);
+	}
+
     void DoXPHit(Actor xpSource, int damage, name damagetype)
 	{
         if (damage <= 0)

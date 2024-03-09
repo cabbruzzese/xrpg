@@ -14,12 +14,34 @@ class BossMaker : EventHandler
         return wmItem;
     }
 
+    SummonExpSquishItem InitFriendlySummon(Actor monsterObj)
+    {
+        let fsItem = SummonExpSquishItem(monsterObj.FindInventory("SummonExpSquishItem"));
+
+        if (fsItem)
+            return fsItem;
+        
+        fsItem = SummonExpSquishItem(monsterObj.GiveInventoryType("SummonExpSquishItem"));
+
+        return fsItem;
+    }
+
     override void WorldThingSpawned(WorldEvent e)
     {
-        // Check that the Actor is valid and an enemy monster and not a boss
-        if (e.thing && e.thing.bIsMonster && !e.thing.bFriendly && !e.thing.bBoss)
+        // Check that the Actor is valid and a monster
+        if (e.thing && e.thing.bIsMonster)
         {
-            InitWanderingMonster(e.thing);
+            //if a monster, but not a boss, give wandering monster item
+            if (!e.thing.bFriendly && !e.thing.bBoss)
+            {
+                InitWanderingMonster(e.thing);
+            }
+
+            //if friendly, give summoned monster item
+            if (e.thing.bFriendly)
+            {
+                InitFriendlySummon(e.thing);
+            }
         }
     }
 }

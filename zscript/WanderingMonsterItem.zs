@@ -379,7 +379,7 @@ class WanderingMonsterItem : Powerup
         if (Owner.Health - damage < 0)
             return;
 
-        if (damageType == "Water")
+        if (damageType == "Water" || damageType == "Ice")
             return;
 
         if (!IsTimedOutExpired())
@@ -484,6 +484,19 @@ class WanderingMonsterItem : Powerup
    {
        switch (LeaderType)
         {
+            case WML_ICE:
+                DoIceLeaderTakeDamage(damage, damageType, inflictor, source);
+                break;
+            case WML_LIGHTNING:
+                DoLightningLeaderTakeDamage(damage, damageType, inflictor, source);
+                break;
+        }
+   }
+
+    void DoLeaderAbsorbDamage(int damage, Name damageType, Actor inflictor, Actor source, out int newdamage)
+    {
+        switch (LeaderType)
+        {
             case WML_FIRE:
                 if (damageType == 'Fire')
                     newdamage = damage / BOSS_DAMAGE_RESIST;
@@ -491,7 +504,6 @@ class WanderingMonsterItem : Powerup
                     newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
             case WML_ICE:
-                DoIceLeaderTakeDamage(damage, damageType, inflictor, source);
                 if (damageType == 'Ice' ||
                     damageType == 'Water')
                     newdamage = damage / BOSS_DAMAGE_RESIST;
@@ -499,7 +511,6 @@ class WanderingMonsterItem : Powerup
                     newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
             case WML_LIGHTNING:
-                DoLightningLeaderTakeDamage(damage, damageType, inflictor, source);
                 if (damageType == 'Electric')
                     newdamage = damage / BOSS_DAMAGE_RESIST;
                 else if (damageType == 'Water')
@@ -509,7 +520,7 @@ class WanderingMonsterItem : Powerup
                 if (damageType == 'Death')
                     newdamage = damage / BOSS_DAMAGE_RESIST;
                 else if (damageType == 'Fire' ||
-                         damageType == 'Holy')
+                        damageType == 'Holy')
                     newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
             case WML_POISON:
@@ -535,7 +546,12 @@ class WanderingMonsterItem : Powerup
                     newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
         }
-   }
+        // if (source) 
+        // {
+        //     string dmgMsg = String.Format("Damage is %d", newdamage);
+        //     source.A_Print(dmgMsg);
+        // }
+    }
 
    void DoBossCauseDamage(int damage, Name damageType, Actor damageTarget)
    {
@@ -603,6 +619,14 @@ class WanderingMonsterItem : Powerup
             }
         }
 	}
+
+    override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {
+        if (damage > 0)
+        {
+            DoLeaderAbsorbDamage(damage, damageType, inflictor, source, newdamage);
+        }
+    }
 
     void DoThink()
     {

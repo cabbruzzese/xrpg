@@ -3,7 +3,10 @@ const SHIELD_MIN_CHARGE = 5;
 const SHIELD_DEFENSE = 0.4;
 const SHIELD_MISSILE_DEFENSE = 0;
 const SHIELD_RANGE = 1.5 * DEFMELEERANGE;
-const SHIELD_MANA_COST = 1;
+const SHIELD_MANA_COST_MIN = 2;
+const SHIELD_MANA_COST_MAX = 10;
+const SHIELD_MANA_COST_MOD = 0.2;
+
 class XRpgShield : Inventory replaces CentaurShield
 {
     int shieldCharge;
@@ -89,9 +92,12 @@ class XRpgShield : Inventory replaces CentaurShield
 
 		if (passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
-            if (inflictor.bMissile && xrpgPlayer.CheckAllMana(SHIELD_MANA_COST, SHIELD_MANA_COST))
+			int manaCost = damage * SHIELD_MANA_COST_MOD;
+			manaCost = max(manaCost, SHIELD_MANA_COST_MIN);
+			manaCost = min(manaCost, SHIELD_MANA_COST_MAX);
+            if (inflictor.bMissile && xrpgPlayer.CheckAllMana(manaCost, manaCost))
             {
-				xrpgPlayer.DepleteAllMana(SHIELD_MANA_COST, SHIELD_MANA_COST);
+				xrpgPlayer.DepleteAllMana(manaCost, manaCost);
                 int chargeVal = Max(damage, 1);
 			    AddCharge(chargeVal);
 
@@ -151,7 +157,7 @@ class ShieldFX : Actor
 	Default
 	{
 		Speed 20;
-		Damage 15;
+		Damage 10;
 		Projectile;
 		+SPAWNSOUNDSOURCE
 		+ZDOOMTRANS
