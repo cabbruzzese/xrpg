@@ -14,6 +14,7 @@ class XRpgPlayer : PlayerPawn
 	XRpgSpellItem activeSpell2;
 	int regenerateTicks;
 	int regenerateTicksMax;
+	XRpgMagicItem activeMagicItem;
 
 	property InitStrength : initStrength;
 	property InitDexterity : initDexterity;
@@ -22,6 +23,7 @@ class XRpgPlayer : PlayerPawn
 	property ActiveSpell2 : activeSpell2;
 	property RegenerateTicks : regenerateTicks;
 	property RegenerateTicksMax : regenerateTicksMax;
+	property ActiveMagicItem: activeMagicItem;
 
 	Default
 	{
@@ -164,6 +166,39 @@ class XRpgPlayer : PlayerPawn
 		}
 
 		return removed;
+	}
+
+	bool IsMagicItemSlotOpen(XRpgMagicItem magicItem)
+	{
+		if (!magicItem)
+			return true;
+		
+		return false;
+	}
+
+	bool SetActiveMagicItem(XRpgMagicItem magicItem)
+	{
+		if (!magicItem)
+			return false;
+
+		//clear if used twice
+		if (ActiveMagicItem == magicItem)
+		{
+			ActiveMagicItem = null;
+			return false;
+		}
+
+		//Just replace for basic spells
+		ActiveMagicItem = magicItem;
+		return true;
+	}
+
+	bool IsMagicItemActive(XRpgMagicItem magicItem)
+	{
+		if (!magicItem)
+			return false;
+
+		return ActiveMagicItem == magicItem;
 	}
 	
 	void UpdateLevelStats(PlayerLevelItem statItem)

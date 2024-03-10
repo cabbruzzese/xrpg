@@ -58,9 +58,13 @@ class XRpgMagePlayer : XRpgPlayer
 
 		XRpgPlayer.RegenerateTicksMax 64;
 
+		//Uncomment for testing
 		//Player.StartItem "XRpgMWeapFrost";
 		//Player.StartItem "XRpgMWeapLightning";
 		//Player.StartItem "XRpgMWeapBloodscourge";
+
+		//Player.StartItem "IceRing";
+		//Player.StartItem "FireRing";
 	}
 
 	States

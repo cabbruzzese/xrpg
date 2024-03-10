@@ -59,6 +59,9 @@ class XRpgClericPlayer : XRpgPlayer
 		//Player.StartItem "XRpgCWeapFlail";
 
 		//Player.StartItem "SmiteSpell";
+
+		//Player.StartItem "IceRing";
+		//Player.StartItem "FireRing";
 	}
 	
 	States

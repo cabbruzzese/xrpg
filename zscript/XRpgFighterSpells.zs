@@ -170,34 +170,6 @@ class PowerSpell : FighterSpellItem
 		XRpgSpellItem.DrawInactive true;
 	}
 
-	void ThrowSpark(Actor victim)
-    {
-        let xo = random[FSpellPowerSpark](-16, 16);
-        let yo = random[FSpellPowerSpark](-16, 16);
-        let zo = victim.Height / 2;
-        let sparkPos = victim.Pos + (xo, yo, zo);
-
-        let vx = frandom[FSpellPowerSpark](-2.0, 2.0);
-        let vy = frandom[FSpellPowerSpark](-2.0, 2.0);
-        let vz = frandom[FSpellPowerSpark](2.0, 4.0);
-
-        let mo = Spawn("PowerSpark");
-        if (!mo)
-            return;
-
-        mo.target = victim;
-        mo.SetOrigin(sparkPos, false);
-        mo.A_ChangeVelocity(vx, vy, vz, CVF_REPLACE);
-    }
-
-	void ThrowSparks(Actor victim)
-	{
-		for (int i = 0; i < 8; i++)
-        {
-            ThrowSpark(victim);
-        }
-	}
-
 	override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
 	{
 		if (!Owner)
@@ -239,7 +211,7 @@ class PowerSpell : FighterSpellItem
 				newdamage = damage + magicDamage;
 
 				xrpgPlayer.DoBlend("55 CC CC", 0.2, 20);
-				ThrowSparks(source);
+				ActorUtils.ThrowSparks(source, "PowerSpark");
 			}
 
 			SetEffectTimeout();

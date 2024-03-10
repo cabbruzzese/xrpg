@@ -44,3 +44,6 @@ const DEBUG_MODE = 0;
 #include "zscript/XRpgDecorations.zs"
 #include "zscript/XRpgBishop.zs"
 #include "zscript/XRpgUndead.zs"
+#include "zscript/XRpgSerpent.zs"
+#include "zscript/XRpgMagicItem.zs"
+#include "zscript/XRpgMagicRings.zs"

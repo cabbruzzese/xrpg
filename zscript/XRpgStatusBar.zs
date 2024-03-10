@@ -67,6 +67,7 @@ class XRpgStatusBar : HexenStatusBar
 		}
 
 		DrawSkillStuff();
+		DrawMagicItemStuff(state == HUD_Fullscreen);
 	}
 
 	protected void DrawFullScreenStuff ()
@@ -362,13 +363,17 @@ class XRpgStatusBar : HexenStatusBar
 		}
 	}
 	const TIMERGEM_OFFSET_X = 13;
+	const ICON_BOX_OFFSET_Y = 15;
 	protected void DrawSkillStuff()
 	{
 		let magePlayer = XRpgMagePlayer(CPlayer.mo);
 		if (magePlayer)
 		{
-			DrawImage("ARTIBOX", (14, 124), 0, HX_SHADOW);
-			DrawInventoryIcon(magePlayer.ActiveSpell, (13, 109), DI_ITEM_CENTER, boxsize:(28, 28));
+			int msXPos = 14;
+			int msYPos = 117;
+
+			DrawImage("ARTIBOX", (msXPos, msYPos), 0, HX_SHADOW);
+			DrawInventoryIcon(magePlayer.ActiveSpell, (msXPos, msYPos - ICON_BOX_OFFSET_Y), DI_ITEM_CENTER, boxsize:(28, 28));
 		}
 
 		let clericPlayer = XRpgClericPlayer(CPlayer.mo);
@@ -383,6 +388,28 @@ class XRpgStatusBar : HexenStatusBar
 		{
 			DrawMultiSlotSpell(fighterPlayer.ActiveSpell, 0, "INVGEMR2", false);
 			DrawMultiSlotSpell(fighterPlayer.ActiveSpell2, -30, "INVGEMR2", false);
+		}
+	}
+
+	protected void DrawMagicItemStuff(bool fullScreen)
+	{	
+		int miXPos = 305;
+		int miYPos = 117;
+
+		if (fullScreen)
+		{
+			miXPos = 14;
+			miYPos = 164;
+		}
+
+		let xrpgPlayer = XRpgPlayer(CPlayer.mo);
+		if (!xrpgPlayer)
+			return;
+
+		if (xrpgPlayer.ActiveMagicItem)
+		{
+			DrawImage("ARTIBOX", (miXPos, miYPos), 0, HX_SHADOW);
+			DrawInventoryIcon(xrpgPlayer.ActiveMagicItem, (miXPos, miYPos - ICON_BOX_OFFSET_Y), DI_ITEM_CENTER, boxsize:(28, 28));
 		}
 	}
 }

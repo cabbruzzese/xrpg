@@ -191,3 +191,90 @@ class OffsetSpriteActor : Actor
 			A_SpriteOffset(offsetSpriteX, offsetSpriteY);
     }
 }
+
+class PowerSpark : Actor
+{
+    Default
+    {
+        Radius 5;
+		Mass 5;
+		Projectile;
+		-ACTIVATEPCROSS
+		-ACTIVATEIMPACT
+        -NOGRAVITY
+		BounceType "HexenCompat";
+		BounceFactor 0.3;
+        Scale 0.25;
+    }
+
+    States
+	{
+	Spawn:
+		SGSA FGHIJ 4;
+		SGSA FGHIJ 4;
+		SGSA FGHIJ 4;
+		Stop;
+	Death:
+		Stop;
+	}
+}
+
+class ActorUtils : Actor
+{
+	static void CopyStyles(Actor copySource, Actor copyTarget, bool copyAngle = false)
+	{
+		if (!copySource)
+			return;
+		if (!copyTarget)
+			return;
+
+		if (copyAngle)
+			copyTarget.A_SetAngle(copySource.angle);
+	
+		copyTarget.Translation = copySource.Translation;
+		copyTarget.A_SetScale(copySource.Scale.X);
+
+		copyTarget.A_SetRenderStyle(copySource.alpha, copySource.GetRenderStyle());
+	}
+
+	static void ThrowSpark(Actor victim, Name sparkType)
+    {
+		if (!victim)
+			return;
+		
+		if (!sparkType)
+			return;
+		
+        let xo = random[FSpellPowerSpark](-16, 16);
+        let yo = random[FSpellPowerSpark](-16, 16);
+        let zo = victim.Height / 2;
+        let sparkPos = victim.Pos + (xo, yo, zo);
+
+        let vx = frandom[FSpellPowerSpark](-2.0, 2.0);
+        let vy = frandom[FSpellPowerSpark](-2.0, 2.0);
+        let vz = frandom[FSpellPowerSpark](2.0, 4.0);
+
+        let mo = Spawn(sparkType);
+        if (!mo)
+            return;
+
+        mo.target = victim;
+        mo.SetOrigin(sparkPos, false);
+        mo.A_ChangeVelocity(vx, vy, vz, CVF_REPLACE);
+    }
+
+	static void ThrowSparks(Actor victim, Name sparkType)
+	{
+		if (!victim)
+			return;
+		
+		if (!sparkType)
+			return;
+
+		for (int i = 0; i < 8; i++)
+        {
+            ThrowSpark(victim, sparkType);
+        }
+	}
+
+}

@@ -610,33 +610,6 @@ class XRpgMageWeapon : XRpgWeapon
 	}
 }
 
-class PowerSpark : Actor
-{
-    Default
-    {
-        Radius 5;
-		Mass 5;
-		Projectile;
-		-ACTIVATEPCROSS
-		-ACTIVATEIMPACT
-        -NOGRAVITY
-		BounceType "HexenCompat";
-		BounceFactor 0.3;
-        Scale 0.25;
-    }
-
-    States
-	{
-	Spawn:
-		SGSA FGHIJ 4;
-		SGSA FGHIJ 4;
-		SGSA FGHIJ 4;
-		Stop;
-	Death:
-		Stop;
-	}
-}
-
 const STUNSTARS_DIST = 16;
 const STUNSTARS_VDIST = 16;
 class StunStars : Bridge
