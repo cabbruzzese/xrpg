@@ -6,6 +6,10 @@ const SHIELD_RANGE = 1.5 * DEFMELEERANGE;
 const SHIELD_MANA_COST_MIN = 2;
 const SHIELD_MANA_COST_MAX = 10;
 const SHIELD_MANA_COST_MOD = 0.2;
+const SHIELD_DAMAGE_MIN = 1;
+const SHIELD_DAMAGE_MAX = 20;
+const SHIELD_STR_MOD = 0.8;
+const SHIELD_KNOCKBACK = 20;
 
 class XRpgShield : Inventory replaces CentaurShield
 {

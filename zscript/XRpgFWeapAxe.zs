@@ -231,7 +231,7 @@ class XRpgFWeapAxe : XRpgFighterWeapon replaces FWeapAxe
 	AltFire:
         FSHL A 1 A_CheckShield;
         FSHL BC 1;
-        FSHL D 1 A_FWeaponMeleeAttack(1, 20, 0, 1.5, 0, SHIELD_RANGE, "AxePuff", false, 20);
+        FSHL D 1 A_ShieldBashMelee;
     AltHold:
 		FSHL E 8 A_UseShield;
 		FSHL E 4 A_Refire;

@@ -341,9 +341,13 @@ class XRpgFighterWeapon : XRpgWeapon
 
     action void A_OffhandPunchAttack()
 	{
-        A_FWeaponMeleeAttack(1, 55, 0, 1, 0, 2*DEFMELEERANGE, "PunchPuff", false, 0);
+        A_FWeaponMeleeAttack(1, 45, 0, 1, 0, 2*DEFMELEERANGE, "PunchPuff", false, 0);
 	}
 	
+    action void A_ShieldBashMelee()
+    {
+        A_FWeaponMeleeAttack(SHIELD_DAMAGE_MIN, SHIELD_DAMAGE_MAX, 0, SHIELD_STR_MOD, 0, SHIELD_RANGE, "AxePuff", false, SHIELD_KNOCKBACK);
+    }
 
     action void A_UseShield(bool checkCharged = true)
     {
