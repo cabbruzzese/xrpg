@@ -27,20 +27,23 @@ class BossMaker : EventHandler
     }
 
     override void WorldThingSpawned(WorldEvent e)
-    {
+    {        
         // Check that the Actor is valid and a monster
-        if (e.thing && e.thing.bIsMonster)
+        if (e.thing)
         {
-            //if a monster, but not a boss, give wandering monster item
-            if (!e.thing.bFriendly && !e.thing.bBoss)
+            if (e.thing.bIsMonster)
             {
-                InitWanderingMonster(e.thing);
-            }
+                //if a monster, but not a boss, give wandering monster item
+                if (!e.thing.bFriendly && !e.thing.bBoss)
+                {
+                    InitWanderingMonster(e.thing);
+                }
 
-            //if friendly, give summoned monster item
-            if (e.thing.bFriendly)
-            {
-                InitFriendlySummon(e.thing);
+                //if friendly, give summoned monster item
+                if (e.thing.bFriendly)
+                {
+                    InitFriendlySummon(e.thing);
+                }
             }
         }
     }

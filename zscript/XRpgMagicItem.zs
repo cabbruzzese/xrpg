@@ -18,6 +18,10 @@ class XRpgMagicItem : PowerupGiver
 	{
 	}
 
+	virtual void Unequip()
+	{
+	}
+
 	void ShowMessage()
 	{
 		if (!Owner)
@@ -44,7 +48,10 @@ class XRpgMagicItem : PowerupGiver
 		bool success = xrpgPlayer.SetActiveMagicItem(self);
 
 		if (!success)
+		{
+			Unequip();
 			return false;
+		}
 
 		ShowMessage();
 		Equip();

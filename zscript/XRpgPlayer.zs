@@ -200,17 +200,38 @@ class XRpgPlayer : PlayerPawn
 
 		return ActiveMagicItem == magicItem;
 	}
-	
-	void UpdateLevelStats(PlayerLevelItem statItem)
+
+	void ApplyDexArmorBonusStats(PlayerLevelItem statItem, XRpgMagicItem magicItem)
 	{
+		if (!statItem)
+			return;
+
 		//Gain 1 AC (5%) per 10 Dex
 		int armorMod = statItem.Dexterity / 2;
 		armorMod = Max(armorMod, 0);
 		armorMod = Min(armorMod, MAX_LEVEL_ARMOR);
-		
+
+		let armorItem = MagicArmor(magicItem);
+		if (armorItem)
+			armorMod += armorItem.ArmorBonus;
+
 		let hArmor = HexenArmor(FindInventory("HexenArmor"));
 		if (hArmor)
+		{
 			hArmor.Slots[4] = armorMod;
+		}
+	}
+
+	void ApplyDexArmorBonus()
+	{
+		let statItem = GetStats();
+		
+		ApplyDexArmorBonusStats(statItem, ActiveMagicItem);
+	}
+	
+	void UpdateLevelStats(PlayerLevelItem statItem)
+	{
+		ApplyDexArmorBonusStats(statItem, ActiveMagicItem);
 	}
 
 	int CalcXPNeeded(PlayerLevelItem statItem)

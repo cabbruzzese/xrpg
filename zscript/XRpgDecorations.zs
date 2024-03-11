@@ -146,21 +146,30 @@ class XRpgBarrel : ExplodableJunk replaces ZBarrel
 	{
 		Name spawnItem = "CrystalVial";
 
-		//Spawn random item
-        int itemNum = random[BarrelExplode](1,4);
-        if (itemNum == 1)
-            spawnItem = "XRpgCWeapFlail";
-		else
+		int itemNum = random[BarrelExplode](1,100);
+
+		switch(itemNum)
 		{
-			int artiNum = random[BarrelExplode](1,10);
-			if (artiNum == 1)
-				spawnItem = "ArtiTorch";
-			else if (artiNum == 2)
-				spawnItem = "ArtiBoostArmor";
-			else if (artiNum == 3)
-				spawnItem = "ArtiHealth";
-			else if (artiNum <= 5)
-				spawnItem = "ArtiBlastRadius";
+			case 100:
+				spawnItem = "DragonBracers";
+				break;
+			case 99:
+				spawnItem = "IceRing";
+				break;
+			case 98:
+				spawnItem = "FireRing";
+				break;
+			default:
+				int artiNum = random[BarrelExplode](1,10);
+				if (artiNum == 1)
+					spawnItem = "ArtiTorch";
+				else if (artiNum == 2)
+					spawnItem = "CrystalVial";
+				else if (artiNum == 3)
+					spawnItem = "ArtiHealth";
+				else if (artiNum <= 5)
+					spawnItem = "ArtiBlastRadius";
+				break;
 		}
 
 		return spawnItem;

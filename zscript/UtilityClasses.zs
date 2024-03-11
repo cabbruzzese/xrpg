@@ -277,4 +277,17 @@ class ActorUtils : Actor
         }
 	}
 
+	static bool ClericPlayerExists()
+    {
+        for (int i = 0; i < MaxPlayers; i++)
+        {
+            if (players[i].mo && players[i].mo is "XRpgClericPlayer")
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }
