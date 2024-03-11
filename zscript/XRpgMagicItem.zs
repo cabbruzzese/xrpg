@@ -49,13 +49,10 @@ class XRpgMagicItem : PowerupGiver
 
 		if (!success)
 		{
-			Unequip();
 			return false;
 		}
 
 		ShowMessage();
-		Equip();
-
 		return false;
 	}
 }

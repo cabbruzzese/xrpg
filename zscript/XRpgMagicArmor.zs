@@ -28,11 +28,10 @@ class MagicArmor : XRpgMagicItem
 }
 
 
-class DragonBracers : MagicArmor replaces ArtiBoostArmor
+class DragonBracers : MagicArmor
 {
 	Default
 	{
-		Inventory.DefMaxAmount;
 		Inventory.PickupFlash "PickupFlash";
 		+INVENTORY.INVBAR +INVENTORY.FANCYPICKUPSOUND
 		Inventory.Icon "ARTIBRAC";

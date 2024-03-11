@@ -48,3 +48,4 @@ const DEBUG_MODE = 0;
 #include "zscript/XRpgMagicItem.zs"
 #include "zscript/XRpgMagicRings.zs"
 #include "zscript/XRpgMagicArmor.zs"
+#include "zscript/XRpgMagicAmulets.zs"

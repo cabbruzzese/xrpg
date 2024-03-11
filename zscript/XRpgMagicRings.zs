@@ -120,7 +120,8 @@ class DamageMagicRing : MagicRing
 				source.DamageMobj(Owner, source, totalDamage, RingDamageType, DMG_NO_ENHANCE);
 
 				//Give XP for hit since EXP item won't run
-				xrpgPlayer.GrantXP(totalDamage);
+				if (source.bIsMonster)
+					xrpgPlayer.GrantXP(totalDamage);
 
 				//Do not give normal damage
 				newdamage = 0;
@@ -132,7 +133,8 @@ class DamageMagicRing : MagicRing
 				source.DamageMobj(Owner, source, ringDamage, RingDamageType, DMG_NO_ENHANCE);
 
 				//Give XP for hit at average ammount
-				xrpgPlayer.GrantXP(ringDamage);
+				if (source.bIsMonster)
+					xrpgPlayer.GrantXP(ringDamage);
 			}
 
 			ActorUtils.ThrowSparks(source, SparkType);

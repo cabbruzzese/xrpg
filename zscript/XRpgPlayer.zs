@@ -181,15 +181,27 @@ class XRpgPlayer : PlayerPawn
 		if (!magicItem)
 			return false;
 
-		//clear if used twice
+		XRpgMagicItem previousItem = ActiveMagicItem;
+
+		//clear if same item is used twice
 		if (ActiveMagicItem == magicItem)
 		{
 			ActiveMagicItem = null;
+
+			//Unequip old item
+			previousItem.Unequip();
 			return false;
 		}
 
-		//Just replace for basic spells
+		//Just replace
 		ActiveMagicItem = magicItem;
+
+		//Unequip old and equip new
+		if (previousItem)
+			previousItem.Unequip();
+			
+		magicItem.Equip();
+
 		return true;
 	}
 

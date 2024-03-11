@@ -144,32 +144,25 @@ class XRpgBarrel : ExplodableJunk replaces ZBarrel
 
 	override Name GetDropType()
 	{
-		Name spawnItem = "CrystalVial";
+		Name spawnItem;
 
 		int itemNum = random[BarrelExplode](1,100);
 
-		switch(itemNum)
+		if (itemNum > 98)
 		{
-			case 100:
-				spawnItem = "DragonBracers";
-				break;
-			case 99:
-				spawnItem = "IceRing";
-				break;
-			case 98:
-				spawnItem = "FireRing";
-				break;
-			default:
-				int artiNum = random[BarrelExplode](1,10);
-				if (artiNum == 1)
-					spawnItem = "ArtiTorch";
-				else if (artiNum == 2)
-					spawnItem = "CrystalVial";
-				else if (artiNum == 3)
-					spawnItem = "ArtiHealth";
-				else if (artiNum <= 5)
-					spawnItem = "ArtiBlastRadius";
-				break;
+			spawnItem = "ArtiBoostArmor";
+		}
+		else
+		{
+			int artiNum = random[BarrelExplode](1,10);
+			if (artiNum == 1)
+				spawnItem = "ArtiTorch";
+			else if (artiNum == 2)
+				spawnItem = "CrystalVial";
+			else if (artiNum == 3)
+				spawnItem = "ArtiHealth";
+			else if (artiNum <= 5)
+				spawnItem = "ArtiBlastRadius";
 		}
 
 		return spawnItem;

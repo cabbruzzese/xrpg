@@ -47,4 +47,28 @@ class BossMaker : EventHandler
             }
         }
     }
+
+    override void CheckReplacement(ReplaceEvent e)
+	{
+		if (e.Replacee is 'ArtiBoostArmor')
+		{
+			Name spawnType;
+            int magicItemNum = random[MagicItemSpawn](1,4);
+            switch (magicItemNum)
+            {
+                case 1:
+                    e.Replacement = 'DragonBracers';
+                    break;
+                case 2:
+                    e.Replacement = 'FireRing';
+                    break;
+                case 3:
+                    e.Replacement = 'IceRing';
+                    break;
+                case 4:
+                    e.Replacement = 'RegenAmulet';
+                    break;
+            }
+		}
+	}
 }
