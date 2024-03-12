@@ -1,22 +1,14 @@
-class MagicRing : XRpgMagicItem
-{
-    override void Equip()
-	{
-		if (!Owner)
-			return;
-		
-		Owner.A_SetBlend("99 11 11", 0.8, 40);
-	}
-}
-
 class FireSparks: PowerSpark
 {
 	States
 	{
 	Spawn:
-		FFSM ABCDE 4;
-		FFSM ABCDE 4;
-		FFSM ABCDE 4;
+		FFSM ABCDE 4 Light("LittleFireLight1");
+		FFSM ABCDE 4 Light("LittleFireLight2");
+		FFSM AB 4 Light("LittleFireLight3");
+		FFSM C 4 Light("LittleFireLight4");
+		FFSM D 4 Light("LittleFireLight5");
+		FFSM E 4;
 		Stop;
 	Death:
 		Stop;
@@ -41,10 +33,35 @@ class IceSparks: PowerSpark
 	}
 }
 
-const RING_DAMAGE_THRESHOLD = 5;
-const RING_DAMAGEMIN = 1;
-const RING_DAMAGEMAX = 25;
-class DamageMagicRing : MagicRing
+class LightningSparks: PowerSpark
+{
+	Default
+	{
+		Scale 0.25;
+		Mass 1;
+	}
+	States
+	{
+	Spawn:
+		MLFX NOPQRSTU 4;
+		Stop;
+	Death:
+		Stop;
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+		double randSpeed = random(60, 120) / 10;
+        A_ChangeVelocity(Vel.X, Vel.Y, randSpeed, CVF_REPLACE);
+    }
+}
+
+const MAGICITEM_DAMAGE_THRESHOLD = 5;
+const MAGICITEM_DAMAGE_MIN = 1;
+const MAGICITEM_DAMAGE_MAX = 25;
+class DamageMagicItem : XRpgMagicItem
 {
 	Name sparkType;
 	property SparkType: sparkType;
@@ -62,11 +79,11 @@ class DamageMagicRing : MagicRing
 	{
 		XRpgMagicItem.EffectMessage "$TXT_FIRERING_USE";
 
-		DamageMagicRing.SparkType "FireSparks";
-		DamageMagicRing.RingDamageType "Fire";
-		DamageMagicRing.damageMin RING_DAMAGEMIN;
-		DamageMagicRing.damageMax RING_DAMAGEMAX;
-		DamageMagicRing.DamageThreshold RING_DAMAGE_THRESHOLD;
+		DamageMagicItem.SparkType "FireSparks";
+		DamageMagicItem.RingDamageType "Fire";
+		DamageMagicItem.damageMin MAGICITEM_DAMAGE_MIN;
+		DamageMagicItem.damageMax MAGICITEM_DAMAGE_MAX;
+		DamageMagicItem.DamageThreshold MAGICITEM_DAMAGE_THRESHOLD;
 	}
 
     override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
@@ -116,12 +133,9 @@ class DamageMagicRing : MagicRing
 			else if (damageType == "Melee" || damageType == "Normal" || damageType == "None")
 			{
 				int totalDamage = damage + ringDamage;
-				//Damage target with ring damage type, but do not let player items modify damage again (no enhance)
-				source.DamageMobj(Owner, source, totalDamage, RingDamageType, DMG_NO_ENHANCE);
 
-				//Give XP for hit since EXP item won't run
-				if (source.bIsMonster)
-					xrpgPlayer.GrantXP(totalDamage);
+				//Damage target with ring damage type and ring as inflictor so we can ignore second damage calculation
+				source.DamageMobj(Owner, self, totalDamage, RingDamageType, 0);
 
 				//Do not give normal damage
 				newdamage = 0;
@@ -129,12 +143,8 @@ class DamageMagicRing : MagicRing
 			//If damage is a special type, apply extra damage of ring type
 			else
 			{
-				//Damage target with ring damage type, but do not let player items modify damage again (no enhance)
-				source.DamageMobj(Owner, source, ringDamage, RingDamageType, DMG_NO_ENHANCE);
-
-				//Give XP for hit at average ammount
-				if (source.bIsMonster)
-					xrpgPlayer.GrantXP(ringDamage);
+				//Damage target with ring damage type and ring as inflictor so we can ignore second damage calculation
+				source.DamageMobj(Owner, self, ringDamage, RingDamageType, 0);
 			}
 
 			ActorUtils.ThrowSparks(source, SparkType);
@@ -142,7 +152,7 @@ class DamageMagicRing : MagicRing
 	}
 }
 
-class FireRing : DamageMagicRing
+class FireRing : DamageMagicItem
 {
 	Default
 	{
@@ -154,8 +164,9 @@ class FireRing : DamageMagicRing
 
 		XRpgMagicItem.EffectMessage "$TXT_FIRERING_USE";
 
-		DamageMagicRing.SparkType "FireSparks";
-		DamageMagicRing.RingDamageType "Fire";
+		DamageMagicItem.SparkType "FireSparks";
+		DamageMagicItem.RingDamageType "Fire";
+		DamageMagicItem.damageMax 13; //Fire doubles damage, reduce total bonus
 	}
 	States
 	{
@@ -164,16 +175,29 @@ class FireRing : DamageMagicRing
 		Loop;
 	}
 
-    override void Equip()
+	override void DoEquipBlend()
 	{
 		if (!Owner)
 			return;
 		
 		Owner.A_SetBlend("99 11 11", 0.8, 40);
 	}
+
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {
+        if (!IsActive())
+            return;
+        
+        if (damage > 0 && (damageType =='Fire'))
+        {
+            newdamage = damage / 2;
+        }
+
+		console.printf(damageType);
+    }
 }
 
-class IceRing : DamageMagicRing
+class IceRing : DamageMagicItem
 {
 	Default
 	{
@@ -185,8 +209,8 @@ class IceRing : DamageMagicRing
 
 		XRpgMagicItem.EffectMessage "$TXT_ICERING_USE";
 
-		DamageMagicRing.SparkType "IceSparks";
-		DamageMagicRing.RingDamageType "Ice";
+		DamageMagicItem.SparkType "IceSparks";
+		DamageMagicItem.RingDamageType "Ice";
 	}
 	States
 	{
@@ -195,11 +219,65 @@ class IceRing : DamageMagicRing
 		Loop;
 	}
 
-    override void Equip()
+    override void DoEquipBlend()
 	{
 		if (!Owner)
 			return;
 		
 		Owner.A_SetBlend("11 11 99", 0.8, 40);
 	}
+
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {
+        if (!IsActive())
+            return;
+        
+        if (damage > 0 && (damageType =='Ice'))
+        {
+            newdamage = damage / 2;
+        }
+    }
+}
+
+class LightningRing : DamageMagicItem
+{
+	Default
+	{
+		Inventory.PickupFlash "PickupFlash";
+		Inventory.Icon "LRNGA0";
+		Inventory.PickupSound "misc/p_pkup";
+		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
+		Tag "$TAG_ARTIBOOSTARMOR";
+
+		XRpgMagicItem.EffectMessage "$TXT_LIGHTNINGRING_USE";
+
+		DamageMagicItem.SparkType "LightningSparks";
+		DamageMagicItem.RingDamageType "Electric";
+		DamageMagicItem.damageMax 30;
+	}
+	States
+	{
+	Spawn:
+		LRNG A 4 Bright;
+		Loop;
+	}
+
+    override void DoEquipBlend()
+	{
+		if (!Owner)
+			return;
+		
+		Owner.A_SetBlend("77 77 33", 0.8, 40);
+	}
+
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {
+        if (!IsActive())
+            return;
+        
+        if (damage > 0 && (damageType =='Electric'))
+        {
+            newdamage = damage / 2;
+        }
+    }
 }

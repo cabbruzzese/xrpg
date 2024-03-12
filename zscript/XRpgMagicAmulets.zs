@@ -54,6 +54,14 @@ class RegenAmulet : MagicAmulet
 		Loop;
 	}
 
+	override void DoEquipBlend()
+	{
+		if (!Owner)
+			return;
+		
+		Owner.A_SetBlend("88 88 88", 0.8, 40);
+	}
+
     override void ApplyEffect()
     {
         if (!Owner)

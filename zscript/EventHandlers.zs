@@ -68,6 +68,9 @@ class BossMaker : EventHandler
                 case 4:
                     e.Replacement = 'RegenAmulet';
                     break;
+                case 5:
+                    e.replacement = 'LightningRing';
+                    break;
             }
 		}
 	}

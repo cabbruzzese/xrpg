@@ -55,5 +55,7 @@ TXT_ARMOR_SUITHELMET = "O holy knight, a helmet! ...and it's sturdy!";
 TXT_MAGICITEMPICKUP = "This item emits a strong magical aura";
 TXT_FIRERING_USE = "Your hands are enveloped with a warm glow";
 TXT_ICERING_USE = "Cold air chills your hands";
+TXT_LIGHTNINGRING_USE = "Your hands feel a sudden shock";
 TXT_DRAGONBRACERS_USE = "You feel protected";
 TXT_AMULET_USE = "You feel healthier";
+TXT_BOOTSOFSPEED_USE = "The world around you seems slower";

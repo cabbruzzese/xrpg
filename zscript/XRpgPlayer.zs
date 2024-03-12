@@ -213,6 +213,15 @@ class XRpgPlayer : PlayerPawn
 		return ActiveMagicItem == magicItem;
 	}
 
+	void ApplyMovementBonus()
+	{
+		double speedMod = 0;
+		if (ActiveMagicItem && ActiveMagicItem.SpeedBoost != 0)
+			speedMod = ActiveMagicItem.SpeedBoost;
+
+		A_SetSpeed(1 + speedMod);
+	}
+
 	void ApplyDexArmorBonusStats(PlayerLevelItem statItem, XRpgMagicItem magicItem)
 	{
 		if (!statItem)
@@ -402,6 +411,8 @@ class XRpgPlayer : PlayerPawn
 
 		let statItem = GetStats();
         GiveXP(statItem, xp);
+
+		//console.printf(String.Format("XP Given: %d", xp));
 	}
 
 	const MANA_MAX_MOD = 10; 

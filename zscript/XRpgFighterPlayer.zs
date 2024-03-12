@@ -63,6 +63,8 @@ class XRpgFighterPlayer : XRpgPlayer
 
 		//Player.StartItem "IceRing";
 		//Player.StartItem "FireRing";
+		//Player.StartItem "DragonBracers";
+		//Player.StartItem "LightningRing";
 	}
 	
 	States

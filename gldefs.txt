@@ -79,3 +79,28 @@ pointlight MoonBigFade4 {
     size 8
     subtractive 1
 }
+
+pointlight LittleFireLight1 {
+    color 1.0 0.7 0.7
+    size 16
+}
+
+pointlight LittleFireLight2 {
+    color 1.0 0.7 0.7
+    size 12
+}
+
+pointlight LittleFireLight3 {
+    color 1.0 0.5 0.5
+    size 8
+}
+
+pointlight LittleFireLight4 {
+    color 1.0 0.7 0.7
+    size 4
+}
+
+pointlight LittleFireLight5 {
+    color 1.0 0.5 0.5
+    size 2
+}

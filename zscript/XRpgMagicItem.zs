@@ -1,5 +1,8 @@
 class XRpgMagicItem : PowerupGiver
 {
+	double speedBoost;
+	property SpeedBoost: speedBoost;
+
 	string effectMessage;
 	property EffectMessage: effectMessage;
 
@@ -14,8 +17,13 @@ class XRpgMagicItem : PowerupGiver
 		XRpgMagicItem.EffectMessage "$TXT_MAGICITEMPICKUP";
 	}
 
+	virtual void DoEquipBlend()
+	{
+	}
+
 	virtual void Equip()
 	{
+		DoEquipBlend();
 	}
 
 	virtual void Unequip()

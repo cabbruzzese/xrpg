@@ -557,7 +557,7 @@ class WanderingMonsterItem : Powerup
         // if (source) 
         // {
         //     string dmgMsg = String.Format("Damage is %d", newdamage);
-        //     source.A_Print(dmgMsg);
+        //     console.printf(dmgMsg);
         // }
     }
 

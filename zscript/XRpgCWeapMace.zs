@@ -235,14 +235,43 @@ class SmiteningMissileSmoke : Actor
 		Height 16;
 	    +NOBLOCKMAP +NOGRAVITY +SHADOW
 	    +NOTELEPORT +CANNOTPUSH +NODAMAGETHRUST
-		Scale 0.5;
+		XScale 0.5;
+		YScale 0.75;
 	}
 	States
 	{
 	Spawn:
 		MLFX L 12;
 		Stop;
+	Spawn2:
+		MLFX I 12;
+		Stop;
+	Spawn3:
+		MLFX J 12;
+		Stop;
+	Spawn4:
+		MLFX K 12;
+		Stop;
+	Spawn5:
+		MLFX M 12;
+		Stop;
 	}
+
+	override void PostBeginPlay()
+	{
+		A_SpriteOffset(0, -48);
+
+		int frameNum = random(1,5);
+		if (frameNum == 2)
+			SetStateLabel("Spawn2");
+		if (frameNum == 3)
+			SetStateLabel("Spawn3");
+		if (frameNum == 4)
+			SetStateLabel("Spawn4");
+		if (frameNum == 5)
+			SetStateLabel("Spawn5");
+    }
+
 }
 class SmiteningMissile : FastProjectile
 {
@@ -271,6 +300,8 @@ class SmiteningMissile : FastProjectile
 		Loop;
     Death:
         MLFX M 2 Bright A_SmiteningExplode;
+		MLFX E 0 A_ResizeSmiteningBlast;
+		MLFX EFG 4;
         Stop;
     }
 
@@ -287,6 +318,11 @@ class SmiteningMissile : FastProjectile
 		}
 		
 		A_Explode(damage, range, 0, false, 0, 0, 10, "BulletPuff", 'Holy');
+	}
+
+	action void A_ResizeSmiteningBlast()
+	{
+		A_SetScale(0.5, 0.75);
 	}
 }
 

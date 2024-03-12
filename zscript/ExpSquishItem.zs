@@ -78,7 +78,7 @@ class ExpSquishItem : Powerup
 			// 	let modifiedDamage = source.GetModifiedDamage(damagetype, damage, passive, inflictor, source, flags);
 
 			// 	string dmgMsg = String.Format("XP is %d and modified is %d", newdamage, modifiedDamage);
-			// 	source.A_Print(dmgMsg);
+			// 	console.printf(dmgMsg);
 			// }
         }
 	}

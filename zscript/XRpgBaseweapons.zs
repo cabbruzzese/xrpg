@@ -374,7 +374,7 @@ class XRpgFighterWeapon : XRpgWeapon
             return;
         }
 
-        //A_Print("Charging Shield");
+        //console.printf("Charging Shield");
         shield.SetShieldTimeout();
     }
 
@@ -391,7 +391,7 @@ class XRpgFighterWeapon : XRpgWeapon
         if (!shield)
             return;
         
-        //A_Print("Clearing Shield");
+        //console.printf("Clearing Shield");
         shield.ClearShieldTimeout();
         shield.ClearCharge();
         A_SetWeapState("ShieldFireFinish");
@@ -406,7 +406,7 @@ class XRpgFighterWeapon : XRpgWeapon
         if (!xrpgPlayer)
             return;
 
-        //xrpgPlayer.A_Print("Try to fire");
+        //console.printf("Try to fire");
 
         let shield = xrpgPlayer.GetShield();
         if (!shield)
