@@ -53,7 +53,7 @@ class BossMaker : EventHandler
 		if (e.Replacee is 'ArtiBoostArmor')
 		{
 			Name spawnType;
-            int magicItemNum = random[MagicItemSpawn](1,4);
+            int magicItemNum = random[MagicItemSpawn](1,6);
             switch (magicItemNum)
             {
                 case 1:
@@ -70,6 +70,9 @@ class BossMaker : EventHandler
                     break;
                 case 5:
                     e.replacement = 'LightningRing';
+                    break;
+                case 6:
+                    e.replacement = 'ManaAmulet';
                     break;
             }
 		}
