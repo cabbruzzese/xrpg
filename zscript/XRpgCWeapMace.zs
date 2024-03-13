@@ -224,7 +224,7 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 		if (!A_IsSmite())
 			return;
 
-		A_FireVerticalMissilePos("SmiteningMissile", lineTarget.Pos.X, lineTarget.Pos.Y, lineTarget.Pos.Z, -90, false);
+		A_FireVerticalMissilePos("SmiteningMissile", lineTarget.Pos.X, lineTarget.Pos.Y, lineTarget.Pos.Z, -90, false, true);
 	}
 }
 

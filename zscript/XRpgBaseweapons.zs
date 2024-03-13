@@ -59,13 +59,56 @@ class XRpgWeapon : Weapon
         player.SetPsprite(PSP_WEAPON, player.ReadyWeapon.FindState(stateName));
     }
 
-    action void A_AltFireCheckSpellSelected()
+    const WEAPON_ID_MAGE_WAND = 1;
+    const WEAPON_ID_MAGE_FROST = 2;
+    const WEAPON_ID_MAGE_LIGHTNING = 3;
+    const WEAPON_ID_MAGE_BLOODSCOURGE = 4;
+    action bool A_CheckSpellManaByWeapon(XRpgMagePlayer magePlayer, int weaponId)
+    {
+        if (!magePlayer || !magePlayer.ActiveSpell || weaponId == 0)
+            return false;
+
+        int blueManaUse = 0;
+        int greenManaUse = 0;
+        switch (weaponId)
+        {
+            case WEAPON_ID_MAGE_WAND:
+                blueManaUse = magePlayer.ActiveSpell.SpellCostBlue1;
+                greenManaUse = magePlayer.ActiveSpell.SpellCostGreen1;
+                break;
+            case WEAPON_ID_MAGE_FROST:
+                blueManaUse = magePlayer.ActiveSpell.SpellCostBlue2;
+                greenManaUse = magePlayer.ActiveSpell.SpellCostGreen2;
+                break;
+            case WEAPON_ID_MAGE_LIGHTNING:
+                blueManaUse = magePlayer.ActiveSpell.SpellCostBlue3;
+                greenManaUse = magePlayer.ActiveSpell.SpellCostGreen3;
+                break;
+            case WEAPON_ID_MAGE_BLOODSCOURGE:
+                blueManaUse = magePlayer.ActiveSpell.SpellCostBlue4;
+                greenManaUse = magePlayer.ActiveSpell.SpellCostGreen4;
+                break;
+        }
+
+        if (blueManaUse > 0 && !A_CheckMana('Mana1', blueManaUse))
+            return false;
+
+        if (greenManaUse > 0 && !A_CheckMana('Mana2', greenManaUse))
+            return false;
+
+        return true;
+    }
+
+    action void A_AltFireCheckSpellSelected(int weaponId = 0)
 	{
 		if (player == null)
 			return;
 
         let magePlayer = XRpgMagePlayer(player.mo);
         if (!magePlayer || !magePlayer.ActiveSpell)
+            A_SetWeapState("Ready");
+
+        if (weaponId > 0 && !A_CheckSpellManaByWeapon(magePlayer, weaponId))
             A_SetWeapState("Ready");
 	}
 
@@ -134,11 +177,14 @@ class XRpgWeapon : Weapon
         }
 	}
 
-    action Actor A_FireVerticalMissilePos(Class<Actor> missileTypeName, int xPos, int yPos, int zPos, int zSpeed = -90, bool isFloor = false)
+    const VERTICAL_MISSILE_JITTER = 64;
+    action Actor A_FireVerticalMissilePos(Class<Actor> missileTypeName, int xPos, int yPos, int zPos, int zSpeed = -90, bool isFloor = false, bool retryFailures = false)
     {
-		Actor mo = SpawnPlayerMissile(missileTypeName);
-		if (!mo) return null;
-		
+        int retryAttempts = 20;
+
+        Actor mo = SpawnPlayerMissile(missileTypeName);
+        if (!mo) return null;
+            
         mo.SetOrigin((xPos, yPos, zPos), false);
 
         double newz;
@@ -147,21 +193,34 @@ class XRpgWeapon : Weapon
         else
             newz = mo.CurSector.HighestCeilingAt((mo.pos.x, mo.pos.y)) - mo.Height;
 
-        /*if (isFloor)
-            newz = mo.CurSector.NextLowestFloorAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) + mo.height;
-        else
-		    newz = mo.CurSector.NextHighestCeilingAt(mo.pos.x, mo.pos.y, mo.pos.z, mo.pos.z, FFCF_NOPORTALS) - mo.height;*/
+        while (retryAttempts > 0)
+        {
+            retryAttempts--;
 
-        
-        mo.SetOrigin((xPos, yPos, newz), false);
-		//mo.SetZ(newz);
+            mo.SetOrigin((xPos, yPos, newz), false);
+            if (ActorUtils.IsPositionInvalid(mo))
+            {
+                if (isFloor)
+                    newz += VERTICAL_MISSILE_JITTER;
+                else
+                    newz -= VERTICAL_MISSILE_JITTER;
+            }
+            else
+            {
+                retryAttempts = 0;
+            }
 
-		mo.Vel.X = MinVel; // Force collision detection
+            if (!retryFailures)
+                retryAttempts = 0; 
+        }
+
+        mo.Vel.X = MinVel; // Force collision detection
         mo.Vel.Y = MinVel; // Force collision detection
-		mo.Vel.Z = zSpeed;
-		mo.CheckMissileSpawn (radius);
+        mo.Vel.Z = zSpeed;
+        mo.CheckMissileSpawn (radius);
 
         return mo;
+
     }
 
     action Actor A_FireVerticalMissile(Class<Actor> missileTypeName, int xSpread = 0, int ySpread = 0, int zSpeed = -90, int xMod = 0, int yMod = 0)

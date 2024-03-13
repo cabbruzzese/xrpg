@@ -290,4 +290,12 @@ class ActorUtils : Actor
         return false;
     }
 
+	static bool IsPositionInvalid(Actor tester)
+	{
+		if (!tester)
+			return true;
+		
+		return(!tester.TestMobjLocation() || tester.height > (tester.ceilingz - tester.floorz) || !tester.CheckMove(tester.Pos.XY));
+	}
+
 }

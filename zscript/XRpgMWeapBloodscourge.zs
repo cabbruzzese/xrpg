@@ -120,7 +120,8 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		MSTF J 5 Offset (0, 36);
 		Goto Ready;
     AltFire:
-        MSTF G 4 Offset (0, 40) A_AltFireCheckSpellSelected;
+		MSTF A 0 A_AltFireCheckSpellSelected(WEAPON_ID_MAGE_BLOODSCOURGE);
+        MSTF G 4 Offset (0, 40);
 		MSTF H 3 Bright Offset (0, 48) A_FireSpell;
 	AltFireFinish:
 		MSTF H 2 Bright Offset (0, 48) A_MStaffPalette;
@@ -136,31 +137,31 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		MSTF J 5 Offset (0, 36);
 		Goto Ready;
 	FlameSpell:
-		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffFlameMissile", 2, 2);
+		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffFlameMissile", MANA_BLOODSCOURGE_FLAME_BLUE, MANA_BLOODSCOURGE_FLAME_GREEN);
         Goto RapidFireFinish;
     IceSpell:
-		MSTF H 7 Bright Offset (0, 48) A_FireIceSpell;
+		MSTF H 7 Bright Offset (0, 48) A_FireIceSpell(MANA_BLOODSCOURGE_ICE_BLUE, MANA_BLOODSCOURGE_ICE_GREEN);
         Goto AltFireFinish;
     PoisonSpell:
-		MSTF H 5 Bright Offset (0, 48) A_FirePoisonSpell;
+		MSTF H 5 Bright Offset (0, 48) A_FirePoisonSpell(MANA_BLOODSCOURGE_POISON_BLUE, MANA_BLOODSCOURGE_POISON_GREEN);
         Goto AltFireFinish;
     WaterSpell:
-		MSTF H 5 Bright Offset (0, 48) A_FireWaterSpell;
+		MSTF H 5 Bright Offset (0, 48) A_FireWaterSpell(MANA_BLOODSCOURGE_WATER_BLUE, MANA_BLOODSCOURGE_WATER_GREEN);
         Goto AltFireFinish;
     SunSpell:
-		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffSunMissile", 1, 1);
+		MSTF H 1 Bright Offset (0, 48) A_FireMissileSpell("MageStaffSunMissile", MANA_BLOODSCOURGE_SUN_BLUE, MANA_BLOODSCOURGE_SUN_GREEN);
         Goto RapidFireFinish;
     MoonSpell:
-		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffMoonMissile", 3, 3);
+		MSTF H 9 Bright Offset (0, 48) A_FireMissileSpell("MageStaffMoonMissile", MANA_BLOODSCOURGE_MOON_BLUE, MANA_BLOODSCOURGE_MOON_GREEN);
         Goto AltFireFinish;
     DeathSpell:
-		MSTF H 9 Bright Offset (0, 48) A_FireDeathSpell;
+		MSTF H 9 Bright Offset (0, 48) A_FireDeathSpell(MANA_BLOODSCOURGE_DEATH_BLUE, MANA_BLOODSCOURGE_DEATH_GREEN);
         Goto AltFireFinish;
     LightningSpell:
-		MSTF H 9 Bright Offset (0, 48) A_FireLightningSpell();
+		MSTF H 9 Bright Offset (0, 48) A_FireLightningSpell(MANA_BLOODSCOURGE_LIGHTNING_BLUE, MANA_BLOODSCOURGE_LIGHTNING_GREEN);
         Goto AltFireFinish;
     BloodSpell:
-		MSTF H 1 Bright Offset (0, 48) A_FireBloodSpell;
+		MSTF H 1 Bright Offset (0, 48) A_FireBloodSpell(MANA_BLOODSCOURGE_BLOOD_BLUE, MANA_BLOODSCOURGE_BLOOD_GREEN);
 		MSTF H 24 Bright Offset (0, 48);
         Goto AltFireFinish;
 	Reload:
@@ -174,12 +175,12 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 	const ICECLOUD_SPREAD = 150;
 	const ICECLOUD_DIST = 160;
 	const ICECLOUD_HEIGHTMOD = 20.0;
-	action void A_FireIceCloud()
+	action void A_FireIceCloud(int blueManaUse, int greenManaUse)
 	{
 		if (!player || !player.mo)
 			return;
 		
-		if (!A_AttemptFireSpell(3, 3))
+		if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
 			return;
 		
 		let mo = Spawn("MageIceCloud");
@@ -194,11 +195,11 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		mo.SetOrigin((Pos.X + forwardDir.X + xMod, Pos.Y + forwardDir.Y + yMod, Pos.Z + forwardDir.Z + zMod + ICECLOUD_HEIGHTMOD), false);
 		mo.target = player.mo;
 	}
-    action void A_FireIceSpell()
+    action void A_FireIceSpell(int blueManaUse, int greenManaUse)
 	{
         for (int i = 0; i < 4; i++)
         {
-            A_FireIceCloud();
+            A_FireIceCloud(blueManaUse, greenManaUse);
         }
 	}
 
@@ -210,9 +211,9 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 			mo.AdjustSpeed(speedMod);
 		}
 	}
-    action void A_FirePoisonSpell()
+    action void A_FirePoisonSpell(int blueManaUse, int greenManaUse)
 	{
-		if (!A_AttemptFireSpell(9, 9))
+		if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 		
         A_FirePoisoinSpellMissile(1.0, 0);
@@ -230,9 +231,9 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 
 	const STAFFWATER_BOLT_SPREAD_X = 12;
 	const STAFFWATER_BOLT_SPREAD_Y = 5;
-    action void A_FireWaterSpell()
+    action void A_FireWaterSpell(int blueManaUse, int greenManaUse)
 	{
-		if (!A_AttemptFireSpell(6, 6))
+		if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 
         for (int i = 0; i < 12; i++)
@@ -241,18 +242,18 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
         }
 	}
 
-	action void A_FireDeathSpell()
+	action void A_FireDeathSpell(int blueManaUse, int greenManaUse)
 	{
-		A_FireMissileSpell("MageStaffDeathMissile2", 3, 3);
-		A_FireMissileSpell("MageStaffDeathMissile2", 3, 3, -13);
-		A_FireMissileSpell("MageStaffDeathMissile2", 3, 3, 13);
+		A_FireMissileSpell("MageStaffDeathMissile2", blueManaUse, greenManaUse);
+		A_FireMissileSpell("MageStaffDeathMissile2", blueManaUse, greenManaUse, -13);
+		A_FireMissileSpell("MageStaffDeathMissile2", blueManaUse, greenManaUse, 13);
 	}
 
-	action void A_FireLightningSpell()
+	action void A_FireLightningSpell(int blueManaUse, int greenManaUse)
 	{
-		A_FireMissileSpell("MageWandLightningMissile", 3, 3);
-		A_FireMissileSpell("MageWandLightningMissile", 3, 3, -7);
-		A_FireMissileSpell("MageWandLightningMissile", 3, 3, 7);
+		A_FireMissileSpell("MageWandLightningMissile", blueManaUse, greenManaUse);
+		A_FireMissileSpell("MageWandLightningMissile", blueManaUse, greenManaUse, -7);
+		A_FireMissileSpell("MageWandLightningMissile", blueManaUse, greenManaUse, 7);
 
 		A_StartSound("ThunderCrash", CHAN_BODY);
 	}
@@ -261,12 +262,12 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 	const SUMMONBAT_SPREAD = 90.01;
 	const SUMMONBAT_HEIGHTMOD = 20.0;
 	const SUMMONBAT_SWARM_SIZE = 13;
-	action void A_SummonBat()
+	action void A_SummonBat(int blueManaUse, int greenManaUse)
 	{
 		if (!player || !player.mo)
 			return;
 		
-		if (!A_AttemptFireSpell(1, 1))
+		if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
 			return;
 		
 		XRpgSummonBat mo = XRpgSummonBat(Spawn("XRpgSummonBat"));
@@ -283,11 +284,11 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		mo.A_SetAngle(player.mo.angle);
 		mo.target = player.mo;
 	}
-	action void A_FireBloodSpell()
+	action void A_FireBloodSpell(int blueManaUse, int greenManaUse)
 	{	
 		for (int i = 0; i < SUMMONBAT_SWARM_SIZE; i++)
 		{
-			A_SummonBat();
+			A_SummonBat(blueManaUse, greenManaUse);
 		}
 	}
 	

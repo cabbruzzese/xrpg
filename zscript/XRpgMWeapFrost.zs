@@ -42,7 +42,8 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE A 10 A_ReFire;
 		Goto Ready;
 	AltFire:
-		CONE B 3 A_AltFireCheckSpellSelected;
+		CONE A 0 A_AltFireCheckSpellSelected(WEAPON_ID_MAGE_FROST);
+		CONE B 3;
 		CONE C 1 A_FireSpell();
 		CONE D 3;
 		CONE E 5;
@@ -62,55 +63,55 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireFlameSpell;
+        CONE F 3 Bright A_FireFlameSpell(MANA_FROST_FLAME_BLUE, MANA_FROST_FLAME_GREEN);
         Goto AltFireFinish;
     IceSpell:
 		CONE C 1;
 		CONE D 2;
 		CONE E 2;
-        CONE F 2 Bright A_FireMissileSpell("MageFrostIceMissile", 0, 1);
+        CONE F 2 Bright A_FireMissileSpell("MageFrostIceMissile", MANA_FROST_ICE_BLUE, MANA_FROST_ICE_GREEN);
         Goto RapidFireFinish;
     PoisonSpell:
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireMissileSpell("MageFrostPoisonMissile", 0, 6);
+        CONE F 3 Bright A_FireMissileSpell("MageFrostPoisonMissile", MANA_FROST_POISON_BLUE, MANA_FROST_POISON_GREEN);
         Goto AltFireFinish;
     WaterSpell:
 		CONE C 1;
 		CONE D 1;
 		CONE E 1;
-        CONE F 2 Bright A_FireMissileSpell("MageFrostWaterMissile", 0, 4);
+        CONE F 2 Bright A_FireMissileSpell("MageFrostWaterMissile", MANA_FROST_WATER_BLUE, MANA_FROST_WATER_GREEN);
         Goto AltFireFinish;
     SunSpell:
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireMissileSpell("MageFrostSunMissile", 0, 8);
+        CONE F 3 Bright A_FireMissileSpell("MageFrostSunMissile", MANA_FROST_SUN_BLUE, MANA_FROST_SUN_GREEN);
         Goto AltFireFinish;
     MoonSpell:
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireMissileSpell("MageFrostMoonMissile", 0, 4);
+        CONE F 3 Bright A_FireMissileSpell("MageFrostMoonMissile", MANA_FROST_MOON_BLUE, MANA_FROST_MOON_GREEN);
         Goto AltFireFinish;
     DeathSpell:
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireMissileSpell("MageFrostDeathMissile", 0, 6);
+        CONE F 3 Bright A_FireMissileSpell("MageFrostDeathMissile", MANA_FROST_DEATH_BLUE, MANA_FROST_DEATH_GREEN);
         Goto AltFireFinish;
     LightningSpell:
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireLightningSpell;
+        CONE F 3 Bright A_FireLightningSpell(MANA_FROST_LIGHTNING_BLUE, MANA_FROST_LIGHTNING_GREEN);
         Goto AltFireFinish;
     BloodSpell:
 		CONE C 3;
 		CONE D 3;
 		CONE E 5;
-        CONE F 3 Bright A_FireBloodSpell;
+        CONE F 3 Bright A_FireBloodSpell(MANA_FROST_BLOOD_BLUE, MANA_FROST_BLOOD_GREEN);
         Goto AltFireFinish;
 	Reload:
 		#### # 8 A_NextSpell;
@@ -171,9 +172,9 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		}
 	}
 
-    action void A_FireFlameSpell()
+    action void A_FireFlameSpell(int blueManaUse, int greenManaUse)
 	{
-		if (!A_AttemptFireSpell(0, 5))
+		if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 
         A_FireSpreadMissile("MageFrostFlameMissile", 9, 2);
@@ -183,9 +184,9 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		A_StartSound ("FireDemonAttack", CHAN_BODY);
 	}
 
-	action void A_FireLightningSpell()
+	action void A_FireLightningSpell(int blueManaUse, int greenManaUse)
 	{
-		if (!A_AttemptFireSpell(0, 3))
+		if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 
 		let mo = SpawnPlayerMissile("MageFrostLightningMissile2");
@@ -195,9 +196,9 @@ class XRpgMWeapFrost : XRpgMageWeapon replaces MWeapFrost
 		}
 	}
 
-    action void A_FireBloodSpell()
+    action void A_FireBloodSpell(int blueManaUse, int greenManaUse)
 	{
-		if (!A_AttemptFireSpell(0, 7))
+		if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 
         SpawnPlayerMissile("MageFrostBloodMissile", angle + 8);

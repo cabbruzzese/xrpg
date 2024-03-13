@@ -26,7 +26,8 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
 		MWND A 3 Offset (0, 36) A_ReFire;
 		Goto Ready;
     AltFire:
-		MWND A 1 A_AltFireCheckSpellSelected;
+		MWND A 0 A_AltFireCheckSpellSelected(WEAPON_ID_MAGE_WAND);
+        MWND A 1;
 		MWND B 1 Bright Offset (0, 48) A_FireSpell();
     AltFireFinish:
 		MWND A 6 Offset (0, 40);

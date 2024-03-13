@@ -420,7 +420,7 @@ class WanderingMonsterItem : Powerup
 
             Owner.SetZ(newPos.z);
 
-            if (traceFail || !Owner.TestMobjLocation() || Owner.height > (Owner.ceilingz - Owner.floorz) || !Owner.CheckMove(Owner.Pos.XY))
+            if (traceFail || ActorUtils.IsPositionInvalid(Owner))
             {
                 //Move unsuccessful, move back
                 Owner.SetOrigin(oldPos, false);

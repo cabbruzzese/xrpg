@@ -47,7 +47,8 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		MLNG B 2 Bright Offset (0, 40);
 		Goto Ready;
     AltFire:
-        MLNG DE 3 Bright A_AltFireCheckSpellSelected;
+		MLNG A 0 Bright A_AltFireCheckSpellSelected(WEAPON_ID_MAGE_LIGHTNING);
+        MLNG DE 3 Bright;
 		MLNG F 3 Bright A_FireSpell;
 	AltFireFinish:
 		MLNG G 4 Bright;
@@ -68,31 +69,31 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		MLNG B 2 Bright Offset (0, 40);
 		Goto Ready;
 	FlameSpell:
-		MLNG F 1 Bright A_FireMissileSpell("MageLightningFlameMissile2", 3, 2);
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningFlameMissile2", MANA_LIGHTNING_FLAME_BLUE, MANA_LIGHTNING_FLAME_GREEN);
         Goto AltFireFinish;
     IceSpell:
-		MLNG F 1 Bright A_FireIceSpell;
+		MLNG F 1 Bright A_FireIceSpell(MANA_LIGHTNING_ICE_BLUE, MANA_LIGHTNING_ICE_GREEN);
         Goto AltFireFinish;
     PoisonSpell:
-		MLNG F 1 Bright A_FireMissileSpell("MageLightningPoisonMissile", 2, 2);
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningPoisonMissile", MANA_LIGHTNING_POISON_BLUE, MANA_LIGHTNING_POISON_GREEN);
         Goto RapidFireFinish;
     WaterSpell:
-		MLNG F 1 Bright A_FireWaterSpell;
+		MLNG F 1 Bright A_FireWaterSpell(MANA_LIGHTNING_WATER_BLUE, MANA_LIGHTNING_WATER_GREEN);
         Goto AltFireFinish;
     SunSpell:
-		MLNG F 1 Bright A_FireMissileSpell("MageLightningSunMissile", 10, 10);
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningSunMissile", MANA_LIGHTNING_SUN_BLUE, MANA_LIGHTNING_SUN_GREEN);
         Goto AltFireFinish;
     MoonSpell:
-		MLNG F 1 Bright A_FireMissileSpell("MageLightningMoonMissile", 8, 8);
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningMoonMissile", MANA_LIGHTNING_MOON_BLUE, MANA_LIGHTNING_MOON_GREEN);
         Goto AltFireFinish;
     DeathSpell:
-		MLNG F 1 Bright A_FireMissileSpell("MageLightningDeathMissile", 10, 10);
+		MLNG F 1 Bright A_FireMissileSpell("MageLightningDeathMissile", MANA_LIGHTNING_DEATH_BLUE, MANA_LIGHTNING_DEATH_GREEN);
         Goto AltFireFinish;
     LightningSpell:
-		MLNG F 1 Bright A_FireLightningSpell();
+		MLNG F 1 Bright A_FireLightningSpell(MANA_LIGHTNING_LIGHTNING_BLUE, MANA_LIGHTNING_LIGHTNING_GREEN);
         Goto AltFireFinish;
     BloodSpell:
-		MLNG F 1 Bright A_FireBloodSpell;
+		MLNG F 1 Bright A_FireBloodSpell(MANA_LIGHTNING_BLOOD_BLUE, MANA_LIGHTNING_BLOOD_GREEN);
         Goto AltFireFinish;
 	Reload:
 		#### # 8 Bright A_NextSpell;
@@ -102,9 +103,9 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		Goto Ready;
 	}
 
-	action void A_FireIceSpell()
+	action void A_FireIceSpell(int blueManaUse, int greenManaUse)
 	{
-        if (!A_AttemptFireSpell(3, 3))
+        if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 
         SpawnPlayerMissile("MageLightningIceMissile", angle);
@@ -114,9 +115,9 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
 		A_StartSound ("IceGuyMissileExplode", CHAN_BODY);
 	}
 
-	action void A_FireWaterSpell()
+	action void A_FireWaterSpell(int blueManaUse, int greenManaUse)
 	{
-        if (!A_AttemptFireSpell(6, 2))
+        if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 
         SpawnPlayerMissile("MageLightningWaterMissileFloor", angle);
@@ -126,18 +127,18 @@ class XRpgMWeapLightning : XRpgMageWeapon replaces MWeapLightning
         SpawnPlayerMissile("MageLightningWaterMissileFloor", angle - 4);
 	}
 
-	action void A_FireLightningSpell()
+	action void A_FireLightningSpell(int blueManaUse, int greenManaUse)
 	{
 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
 		weaponspecial = (LineAttack (angle, DEFMELEERANGE, slope, 0, 'Melee', null, true) == null);
 
 		if (weaponSpecial)
-			A_FireMissileSpell("MageLightningLightningTele", 10, 10);
+			A_FireMissileSpell("MageLightningLightningTele", blueManaUse, greenManaUse);
 	}
 
-    action void A_FireBloodSpell()
+    action void A_FireBloodSpell(int blueManaUse, int greenManaUse)
 	{
-		if (!A_AttemptFireSpell(7, 7))
+		if (!A_AttemptFireSpell(blueManaUse, greenManaUse))
             return;
 
 		SpawnPlayerMissile("MageLightningBloodMissile1", angle + 9);

@@ -21,8 +21,8 @@ class SmiteSpell : XRpgSpellItem
 		XRpgSpellItem.TimerVal 0;
 		XRpgSpellItem.MaxTimer 500;
 
-		XRpgSpellItem.ManaCostBlue 25;
-		XRpgSpellItem.ManaCostGreen 25;
+		XRpgSpellItem.ManaCostBlue 30;
+		XRpgSpellItem.ManaCostGreen 30;
 
 		XRpgSpellItem.MagicTimerMod 5;
 		XRpgSpellItem.IsMultiSlot true;

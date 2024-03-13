@@ -33,6 +33,24 @@ class XRpgSpellItem : PowerupGiver
 	property CanRenew : canRenew;
 	property EffectTimeout : effectTimeout;
 
+	int spellCostBlue1;
+	int spellCostBlue2;
+	int spellCostBlue3;
+	int spellCostBlue4;
+	property SpellCostBlue1: spellCostBlue1;
+	property SpellCostBlue2: spellCostBlue2;
+	property SpellCostBlue3: spellCostBlue3;
+	property SpellCostBlue4: spellCostBlue4;
+
+	int spellCostGreen1;
+	int spellCostGreen2;
+	int spellCostGreen3;
+	int spellCostGreen4;
+	property SpellCostGreen1: spellCostGreen1;
+	property SpellCostGreen2: spellCostGreen2;
+	property SpellCostGreen3: spellCostGreen3;
+	property SpellCostGreen4: spellCostGreen4;
+
 	Default
 	{
 		+COUNTITEM
