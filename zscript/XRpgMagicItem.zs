@@ -1,4 +1,23 @@
-class XRpgMagicItem : PowerupGiver
+const PAPERDOLL_SLOT_ACCESSORY = 1;
+
+class AccessorySlotElement : ItemSlotElement
+{
+	override bool Clicked()
+	{
+		let xrpgPlayer = xrpgPlayer(player);
+
+		if (xrpgPlayer && xrpgPlayer.hud.selectedItem)
+		{
+			nextSlotItem = xrpgPlayer.hud.selectedItem;
+
+			return true;
+		}
+
+		return super.Clicked();
+	}
+}
+
+class XRpgMagicItem : TabMenuItem
 {
 	double speedBoost;
 	property SpeedBoost: speedBoost;
@@ -15,6 +34,9 @@ class XRpgMagicItem : PowerupGiver
 		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
 
 		XRpgMagicItem.EffectMessage "$TXT_MAGICITEMPICKUP";
+
+		TabMenuItem.Selectable true;
+		TabMenuItem.Listable true;
 	}
 
 	virtual void DoEquipBlend()

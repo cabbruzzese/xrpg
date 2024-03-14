@@ -68,6 +68,9 @@ class XRpgStatusBar : HexenStatusBar
 
 		DrawSkillStuff();
 		DrawMagicItemStuff(state == HUD_Fullscreen);
+
+		DrawPaperdoll();
+		TabMenuRenderer.Draw(self, CPlayer);
 	}
 
 	protected void DrawFullScreenStuff ()
@@ -285,6 +288,10 @@ class XRpgStatusBar : HexenStatusBar
 
 	protected void DrawExpStuff (int isFullscreen)
 	{
+		//don't render on automap
+		if (automapactive)
+			return;
+
         let xPos = 0;
 		let yPos = 126;
 		let yStep = 8;
@@ -325,6 +332,9 @@ class XRpgStatusBar : HexenStatusBar
 
 	protected void DrawMultiSlotSpell(XRpgSpellItem spellItem, int yOffset, string gemIcon, bool alwaysDrawBox = true)
 	{
+		if (automapactive)
+			return;
+
 		if (alwaysDrawBox || spellItem)
 			DrawImage("ARTIBOX", (14, 124 + yOffset), 0, HX_SHADOW);
 
@@ -366,6 +376,9 @@ class XRpgStatusBar : HexenStatusBar
 	const ICON_BOX_OFFSET_Y = 15;
 	protected void DrawSkillStuff()
 	{
+		if (automapactive)
+			return;
+
 		let magePlayer = XRpgMagePlayer(CPlayer.mo);
 		if (magePlayer)
 		{
@@ -393,6 +406,9 @@ class XRpgStatusBar : HexenStatusBar
 
 	protected void DrawMagicItemStuff(bool fullScreen)
 	{	
+		if (automapactive)
+			return;
+		
 		int miXPos = 305;
 		int miYPos = 117;
 
@@ -410,6 +426,27 @@ class XRpgStatusBar : HexenStatusBar
 		{
 			DrawImage("ARTIBOX", (miXPos, miYPos), 0, HX_SHADOW);
 			DrawInventoryIcon(xrpgPlayer.ActiveMagicItem, (miXPos, miYPos - ICON_BOX_OFFSET_Y), DI_ITEM_CENTER, boxsize:(28, 28));
+		}
+	}
+
+	protected void DrawPaperdoll()
+	{
+		if (!automapactive)
+			return;
+		
+		int miXPos = 240;
+		int miYPos = 100;
+
+		let xrpgPlayer = XRpgPlayer(CPlayer.mo);
+		if (!xrpgPlayer)
+			return;
+
+		DrawImage(xrpgPlayer.PaperdollIcon, (miXPos, miYPos), 0);
+
+		if (xrpgPlayer.accessorySlot)
+		{
+			DrawImage(xrpgPlayer.accessorySlot.image, xrpgPlayer.accessorySlot.displayPos, 0);
+			DrawInventoryIcon(xrpgPlayer.ActiveMagicItem, (xrpgPlayer.accessorySlot.displayPos.X, xrpgPlayer.accessorySlot.displayPos.Y - ICON_BOX_OFFSET_Y), DI_ITEM_CENTER, boxsize:(28, 28));
 		}
 	}
 }

@@ -58,13 +58,21 @@ class XRpgMagePlayer : XRpgPlayer
 
 		XRpgPlayer.RegenerateTicksMax 64;
 
+		XRpgPlayer.CursorIcon "CURMA0";
+		XRpgPlayer.PaperdollIcon "M_MWALK2";
+
 		//Uncomment for testing
 		//Player.StartItem "XRpgMWeapFrost";
 		//Player.StartItem "XRpgMWeapLightning";
 		//Player.StartItem "XRpgMWeapBloodscourge";
 
-		//Player.StartItem "IceRing";
-		//Player.StartItem "FireRing";
+		// Player.StartItem "FireRing";
+		// Player.StartItem "IceRing";
+		// Player.StartItem "LightningRing";
+		// Player.StartItem "DragonBracers";
+		// Player.StartItem "BootsOfSpeed";
+		// Player.StartItem "RegenAmulet";
+		// Player.StartItem "ManaAmulet";
 	}
 
 	States

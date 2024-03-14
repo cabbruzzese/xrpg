@@ -1,3 +1,13 @@
+class Math
+{
+	static int Clamp(int val, int min, int max)
+	{
+		int returnVal = max(min, val);
+		return min(max, returnval);
+	}
+
+}
+
 const ACTORLISTMAX = 128;
 class ActorList
 {

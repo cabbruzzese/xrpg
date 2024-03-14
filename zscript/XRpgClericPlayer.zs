@@ -53,6 +53,9 @@ class XRpgClericPlayer : XRpgPlayer
 		XRpgPlayer.InitDexterity 8;
 		XRpgPlayer.InitMagic 7;
 
+		XRpgPlayer.CursorIcon "CURCA0";
+		XRpgPlayer.PaperdollIcon "M_CWALK2";
+		
 		//Player.StartItem "XRpgCWeapStaff";
 		//Player.StartItem "XRpgCWeapFlame";
 		//Player.StartItem "XRpgCWeapWraithverge";
@@ -60,8 +63,13 @@ class XRpgClericPlayer : XRpgPlayer
 
 		//Player.StartItem "SmiteSpell";
 
-		//Player.StartItem "IceRing";
-		//Player.StartItem "FireRing";
+		// Player.StartItem "FireRing";
+		// Player.StartItem "IceRing";
+		// Player.StartItem "LightningRing";
+		// Player.StartItem "DragonBracers";
+		// Player.StartItem "BootsOfSpeed";
+		// Player.StartItem "RegenAmulet";
+		// Player.StartItem "ManaAmulet";
 	}
 	
 	States

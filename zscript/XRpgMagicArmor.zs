@@ -42,7 +42,7 @@ class DragonBracers : MagicArmor
 	Default
 	{
 		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.INVBAR +INVENTORY.FANCYPICKUPSOUND
+		+INVENTORY.FANCYPICKUPSOUND
 		Inventory.Icon "ARTIBRAC";
 		Inventory.PickupSound "misc/p_pkup";
 		Tag "$TAG_ARTIBOOSTARMOR";
@@ -70,7 +70,7 @@ class BootsOfSpeed : MagicArmor replaces ArtiSpeedBoots
 	Default
 	{
 		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.INVBAR +INVENTORY.FANCYPICKUPSOUND
+		+INVENTORY.FANCYPICKUPSOUND
 		Inventory.Icon "ARTISPED";
 		Inventory.PickupSound "misc/p_pkup";
 		Tag "$TAG_ARTISPEED";

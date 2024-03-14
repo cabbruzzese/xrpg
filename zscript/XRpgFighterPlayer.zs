@@ -47,6 +47,9 @@ class XRpgFighterPlayer : XRpgPlayer
 		XRpgPlayer.InitDexterity 8;
 		XRpgPlayer.InitMagic 4;
 
+		XRpgPlayer.CursorIcon "CURFA0";
+		XRpgPlayer.PaperdollIcon "M_FWALK2";
+
 		//NOTE: Uncomment for testing
 		//Player.StartItem "XRpgFWeapAxe";
 		//Player.StartItem "XRpgFWeapHammer";
@@ -61,10 +64,13 @@ class XRpgFighterPlayer : XRpgPlayer
 		//Player.StartItem "XRpgFWeapCleaver";
 		//Player.StartItem "XRpgFWeapPolearm";
 
-		//Player.StartItem "IceRing";
-		//Player.StartItem "FireRing";
-		//Player.StartItem "DragonBracers";
-		//Player.StartItem "LightningRing";
+		// Player.StartItem "FireRing";
+		// Player.StartItem "IceRing";
+		// Player.StartItem "LightningRing";
+		// Player.StartItem "DragonBracers";
+		// Player.StartItem "BootsOfSpeed";
+		// Player.StartItem "RegenAmulet";
+		// Player.StartItem "ManaAmulet";
 	}
 	
 	States

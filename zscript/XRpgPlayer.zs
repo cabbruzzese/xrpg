@@ -7,6 +7,9 @@ const REGENERATE_MIN_VALUE = 15;
 
 class XRpgPlayer : PlayerPawn
 {
+	PlayerHudController hud;
+	AccessorySlotElement accessorySlot;
+
 	int initStrength;
 	int initDexterity;
 	int initMagic;
@@ -25,10 +28,20 @@ class XRpgPlayer : PlayerPawn
 	property RegenerateTicksMax : regenerateTicksMax;
 	property ActiveMagicItem: activeMagicItem;
 
+	string cursorIcon;
+	property CursorIcon:cursorIcon;
+
+	string paperdollIcon;
+	property PaperdollIcon:paperdollIcon;
+
+
 	Default
 	{
 		XRpgPlayer.RegenerateTicks 0;
 		XRpgPlayer.RegenerateTicksMax REGENERATE_TICKS_MAX_DEFAULT;
+
+		XRpgPlayer.CursorIcon "M_SLDLT";
+		XRpgPlayer.PaperdollIcon "M_FWALK2";
 	}
 
 	double GetScaledMod(int stat)
@@ -436,6 +449,12 @@ class XRpgPlayer : PlayerPawn
 	{
 		Super.PostBeginPlay();
 
+		hud = new('PlayerHudController');
+		hud.CursorIcon = CursorIcon;
+
+		accessorySlot = new('AccessorySlotElement');
+		accessorySlot.Init("ARTIBOX", (30,30), false, true, (190, 80), self);
+
 		let statItem = GetStats();
 		GiveLevelSkill(statItem);
 		GiveStartingMana(statItem);
@@ -530,6 +549,15 @@ class XRpgPlayer : PlayerPawn
 				let statItem = GetStats();
 				Regenerate(statItem);
 			}
+		}
+
+		//Update inventory if change is pending
+		if (accessorySlot && accessorySlot.nextSlotItem)
+		{
+			let newItem = XRpgMagicItem(accessorySlot.nextSlotItem);
+			if (newItem)
+				newItem.Use(false);
+			accessorySlot.nextSlotItem = null;
 		}
 
 		Super.Tick();

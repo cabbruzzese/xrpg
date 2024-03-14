@@ -1,4 +1,4 @@
-class BossMaker : EventHandler
+class BossMakerEventHandler : EventHandler
 {
     WanderingMonsterItem InitWanderingMonster(Actor monsterObj)
     {

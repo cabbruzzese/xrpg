@@ -32,7 +32,7 @@ const DEBUG_MODE = 0;
 #include "zscript/XRpgCWeapFlame.zs"
 #include "zscript/XRpgCWeapWraithverge.zs"
 #include "zscript/XRpgCWeapFlail.zs"
-#include "zscript/EventHandlers.zs"
+#include "zscript/BossMakerEventHandler.zs"
 #include "zscript/RaiseDead.zs"
 #include "zscript/WanderingMonsterItem.zs"
 #include "zscript/BossProjectiles.zs"
@@ -49,3 +49,8 @@ const DEBUG_MODE = 0;
 #include "zscript/XRpgMagicRings.zs"
 #include "zscript/XRpgMagicArmor.zs"
 #include "zscript/XRpgMagicAmulets.zs"
+
+#include "zscript/TabMenuEventHandler.zs"
+#include "zscript/TabMenuInventory.zs"
+#include "zscript/TabMenuUI.zs"
+#include "zscript/TabMenuRenderer.zs"
