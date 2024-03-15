@@ -537,6 +537,30 @@ class XRpgPlayer : PlayerPawn
 
 	virtual void Regenerate(PlayerLevelItem statItem) { }
 
+	void DoInventorySlotAction()
+	{
+		if (accessorySlot)
+		{
+			if (accessorySlot.nextSlotItem)
+			{
+				let newItem = XRpgMagicItem(accessorySlot.nextSlotItem);
+				if (newItem)
+					newItem.Use(false);
+				accessorySlot.nextSlotItem = null;
+			}
+			else if (accessorySlot.clearSlot)
+			{
+				//pick up the item
+				hud.selectedItem = activeMagicItem;
+				
+				//setting to the same item clears it
+				SetActiveMagicItem(activeMagicItem);
+			}
+
+			accessorySlot.clearSlot = false;
+		}
+	}
+
 	override void Tick()
 	{
 		RegenerateTicks++;
@@ -552,13 +576,7 @@ class XRpgPlayer : PlayerPawn
 		}
 
 		//Update inventory if change is pending
-		if (accessorySlot && accessorySlot.nextSlotItem)
-		{
-			let newItem = XRpgMagicItem(accessorySlot.nextSlotItem);
-			if (newItem)
-				newItem.Use(false);
-			accessorySlot.nextSlotItem = null;
-		}
+		DoInventorySlotAction();
 
 		Super.Tick();
 	}

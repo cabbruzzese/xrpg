@@ -39,4 +39,9 @@ class TabMenuItem : PowerupGiver
             element.Init("", (DisplayHeight, DisplayWidth), Selectable, StopPropagation);
         }
     }
+
+    ui virtual bool CanRenderInventory()
+    {
+        return true;
+    }
 }

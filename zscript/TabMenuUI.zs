@@ -59,4 +59,5 @@ class PlayerUIElement : TabMenuUIElement
 class ItemSlotElement : PlayerUIElement
 {
 	Inventory nextSlotItem;
+    bool clearSlot;
 }

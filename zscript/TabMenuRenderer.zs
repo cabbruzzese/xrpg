@@ -38,6 +38,10 @@ class TabMenuRenderer ui
             let element = item.element;
             if (element && item.Icon.IsValid() && item.Listable)
             {
+                //check if item is allowed to render
+                if (!item.CanRenderInventory())
+                    continue;
+
                 element.SetRenderPosition(invPosition);
                 sbar.DrawTexture(item.Icon, element.displayPos, BaseStatusBar.DI_ITEM_CENTER);
 
@@ -139,6 +143,8 @@ class PlayerHudController
                         selectedItem = null;
                 }
             }
+
+            selectedItem = null;
         }
     }
 }

@@ -98,10 +98,12 @@ class DamageMagicItem : XRpgMagicItem
         if (!xrpgPlayer)
 			return;
 		
+		//Do ring damage effect
 		if (!passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
-			//Do ring damage effect
-			int ringDamage = random[FireRingDamage](damageMin, damageMax);
+			//ring damage cannot be over 15% of original damage
+			int damageMaxTotal = Math.Clamp(damageMax, damageMin, damage * 0.15);
+			int ringDamage = random[FireRingDamage](damageMin, damageMaxTotal);
 
 			if (inflictor.bRipper)
 			{

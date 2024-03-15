@@ -6,9 +6,12 @@ class AccessorySlotElement : ItemSlotElement
 	{
 		let xrpgPlayer = xrpgPlayer(player);
 
-		if (xrpgPlayer && xrpgPlayer.hud.selectedItem)
+		if (xrpgPlayer)
 		{
-			nextSlotItem = xrpgPlayer.hud.selectedItem;
+			if (xrpgPlayer.hud.selectedItem)
+				nextSlotItem = xrpgPlayer.hud.selectedItem;
+			else
+				clearSlot = true;
 
 			return true;
 		}
@@ -38,6 +41,19 @@ class XRpgMagicItem : TabMenuItem
 		TabMenuItem.Selectable true;
 		TabMenuItem.Listable true;
 	}
+
+	override bool CanRenderInventory()
+    {
+		let xrpgPlayer = XRpgPlayer(Owner);
+		if (!xrpgPlayer)
+			return false;
+		
+		//Don't render in inventory if active or selected
+		if (self == xrpgPlayer.hud.selectedItem || self == xrpgPlayer.ActiveMagicItem)
+			return false;
+
+        return super.CanRenderInventory();
+    }
 
 	virtual void DoEquipBlend()
 	{

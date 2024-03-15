@@ -2,7 +2,7 @@
 Simple Hexen RPG by Peewee RotA
 
 ## Summary
-An RPG mod for Hexen that gives leveling, skills, and spells as well as alt fire attacks for every weapon.
+An RPG mod for Hexen that gives leveling, skills, new inventory, and spells as well as alt fire attacks for every weapon.
 
 # Stats
 Original statistics from classes are improved by leveling. Their stats are based on their starting stats already shown in level select.
@@ -59,7 +59,7 @@ There are 3 fighter skills that are learned at random every 10th level.
 ## Cleric Spells
 Cleric spells improve the cleric and bless him with a holy power for a short time. Two powers can be active at once.
 
-Most spells have a timer while they are active. This timer is increased with Magic ability from leveling. Other spells have a cool down which is decreased with Magic ability form leveling.
+Most spells have a timer while they are active. This timer is increased with Magic ability from leveling. Other spells have a cool down which is decreased with Magic ability from leveling.
 
 Holy Smite is learned at level 3. Spells are learned in order every 7th level.
 
@@ -90,9 +90,26 @@ Mana used by spells depends on the weapon and spell. More powerful spells use mo
 | Lightning | Storms and wind | 8 |
 | Blood | Vampiric magic | 9 |
 
+# Magic Items
+
+Powerful magical items are now found around the world. These are equipped with a the new inventory system. Open the automap and use your mouse to equip magic items.
+
+## Magic Rings
+
+Increase damage and provide some protection against the elements.
+
+## Magic Amulets
+
+Restores your powers. Some amulets provide protection from poison.
+
+## Armor
+
+Wear enchanted armors to increase your AC or to gain magical enhancements.
+
+
 # Surprises
 
-There are many new surprises in the game. There are new fighter weapons, new pickups, and new experiences in the environments. Hopefully this gives players a new sense of mystery and wonder and the desire to explore every nook and cranny of the game once again.
+There are many new surprises in the game. There are new melee weapons for the fighter and cleric, new pickups, and new experiences in the environments. Hopefully this gives players a renewed sense of mystery and wonder and the desire to explore every nook and cranny of the game once again.
 
 # Credits
 
