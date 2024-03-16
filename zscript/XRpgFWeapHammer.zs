@@ -1,5 +1,5 @@
 // The Fighter's Hammer -----------------------------------------------------
-class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
+class XRpgFWeapHammer : XRpgFighterShieldWeapon replaces FWeapHammer
 {
 	const HAMMER_RANGE = 1.5 * DEFMELEERANGE;
 	const HAMMER_SLAM_MANA = 9;
@@ -24,15 +24,19 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		WFHM A -1;
 		Stop;
 	Select:
+	WeaponSelect:
 		FHMR A 1 A_Raise;
 		Loop;
 	Deselect:
+	WeaponDeselect:
 		FHMR A 1 A_Lower;
 		Loop;
 	Ready:
+	WeaponReady:
 		FHMR A 1 A_WeaponReady;
 		Loop;
 	Fire:
+	WeaponFire:
 		FHMR B 2 Offset (5, 0) A_CheckHammerKeys;
 		FHMR B 4 Offset (5, 0) A_CheckBerserk(false);
 		FHMR C 3 Offset (5, 0) A_FHammerAttackMelee;
@@ -61,31 +65,23 @@ class XRpgFWeapHammer : XRpgFighterWeapon replaces FWeapHammer
 		FHMR A 1;
 		Goto Ready;
 	AltFire:
-        FSHL A 1 A_CheckShield;
-        FSHL BC 1;
-        FSHL D 1 A_ShieldBashMelee;
+		Goto ShieldFrameAltFire;
+	ShieldSpikedFire:
+		Goto ShieldFrameShieldSpikedFire;
     AltHold:
-		FSHL E 8 A_UseShield;
-		FSHL E 4 A_Refire;
-        FSHL E 4 A_CheckShieldCharged;
-        FSHL DCBA 2;
-        Goto Ready;
+		Goto ShieldFrameAltHold;
+	ShieldSpikedHold:
+		Goto ShieldFrameShieldSpikedHold;
+	ShieldKiteFire:
+		Goto ShieldFrameShieldKiteFire;
+	ShieldKiteHold:
+		Goto ShieldFrameShieldKiteHold;
     ShieldCharged:
-        FSHL FGH 2 BRIGHT A_UseShield(false);
-		FSHL F 2 BRIGHT A_Refire;
-        FSHL G 2 BRIGHT A_ShieldFire;
+		Goto ShieldFrameShieldCharged;
     ShieldFireFinish:
-		FSHL DCBA 2;
-        Goto Ready;
+		Goto ShieldFrameShieldFireFinish;
 	FistFire:
-		FPCH B 5 Offset (5, 40) A_Mirror;
-		FPCH C 4 Offset (5, 40);
-		FPCH D 4 Offset (5, 40) A_OffhandPunchAttack;
-		FPCH C 4 Offset (5, 40);
-		FPCH B 3 Offset (5, 40);
-		FPCH B 3 Offset (5, 40) A_Refire;
-		FPCH E 1 Offset (0, 150) A_RestoreMirror;
-		Goto Ready;
+		Goto ShieldFrameFistFire;
 	}
 
 	action void A_CheckHammerKeys()

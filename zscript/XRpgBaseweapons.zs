@@ -289,6 +289,10 @@ class XRpgFighterWeapon : XRpgWeapon
         XRpgFighterWeapon.MeleeAdjust true;
 	}
 
+	States
+	{
+
+    }
     action void A_CheckBerserk(bool isAltFire)
 	{
 		let xrpgPlayer = XRpgPlayer(player.mo);
@@ -381,98 +385,6 @@ class XRpgFighterWeapon : XRpgWeapon
 		double slope = AimLineAttack (angle + angleMod, range, null, 0., ALF_CHECK3D);
 		weaponspecial = (LineAttack (angle + angleMod, range, slope, damage, 'Melee', puffClass, true) == null);
 	}
-
-    action void A_CheckShield()
-    {
-        if (!player)
-			return;
-
-		let xrpgPlayer = XRpgFighterPlayer(player.mo);
-        if (!xrpgPlayer)
-            return;
-
-        if (!xrpgPlayer.GetShield())
-        {
-            A_SetWeapState("FistFire");
-            return;
-        }
-    }
-
-    action void A_OffhandPunchAttack()
-	{
-        A_FWeaponMeleeAttack(1, 45, 0, 1, 0, 2*DEFMELEERANGE, "PunchPuff", false, 0);
-	}
-	
-    action void A_ShieldBashMelee()
-    {
-        A_FWeaponMeleeAttack(SHIELD_DAMAGE_MIN, SHIELD_DAMAGE_MAX, 0, SHIELD_STR_MOD, 0, SHIELD_RANGE, "AxePuff", false, SHIELD_KNOCKBACK);
-    }
-
-    action void A_UseShield(bool checkCharged = true)
-    {
-        if (!player)
-			return;
-
-		let xrpgPlayer = XRpgFighterPlayer(player.mo);
-        if (!xrpgPlayer)
-            return;
-
-        let shield = xrpgPlayer.GetShield();
-        if (!shield)
-        {
-            A_SetWeapState("FistFire");
-            return;
-        }
-
-        //Make sure weapon is no mirrored if shield is being used.
-        A_RestoreMirror();
-
-        if (checkCharged && shield.IsCharged())
-        {
-            A_SetWeapState("ShieldCharged");
-            return;
-        }
-
-        //console.printf("Charging Shield");
-        shield.SetShieldTimeout();
-    }
-
-    action void A_CheckShieldCharged()
-    {
-        if (!player)
-			return;
-
-		let xrpgPlayer = XRpgFighterPlayer(player.mo);
-        if (!xrpgPlayer)
-            return;
-
-        let shield = xrpgPlayer.GetShield();
-        if (!shield)
-            return;
-        
-        //console.printf("Clearing Shield");
-        shield.ClearShieldTimeout();
-        shield.ClearCharge();
-        A_SetWeapState("ShieldFireFinish");
-    }
-
-    action void A_ShieldFire()
-    {
-        if (!player)
-			return;
-
-		let xrpgPlayer = XRpgFighterPlayer(player.mo);
-        if (!xrpgPlayer)
-            return;
-
-        //console.printf("Try to fire");
-
-        let shield = xrpgPlayer.GetShield();
-        if (!shield)
-            return;
-        
-        shield.ShootShield();
-    }
 
     action void A_FighterChargeUp(int overchargeMax = 0, StateLabel overchargeState = "Hold", bool skipOnBerserk = false)
 	{

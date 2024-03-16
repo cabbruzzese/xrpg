@@ -152,9 +152,6 @@ class EttinArmor : XRpgBodyItem
 	}
 }
 
-
-// Mesh Armor (1) -----------------------------------------------------------
-
 class MeshBodyArmor : XRpgBodyItem replaces MeshArmor
 {
 	Default
@@ -184,40 +181,6 @@ class MeshBodyArmor : XRpgBodyItem replaces MeshArmor
     }
 }
 	
-// Falcon Shield (2) --------------------------------------------------------
-
-class FalconLargeShield : XRpgShieldItem replaces FalconShield
-{
-	Default
-	{
-		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.FANCYPICKUPSOUND
-		Inventory.Icon "AR_2A0";
-		Inventory.PickupSound "misc/p_pkup";
-		
-		Tag "$TAG_FALCONSHIELD";
-        XRpgEquipableItem.EffectMessage "$TXT_FALCONSHIELD_USE";
-				
-		XRpgEquipableItem.ArmorBonus 20;
-		XRpgEquipableItem.SpeedBoost -0.1;
-		XRpgArmorItem.IsHeavy true;
-	}
-	States
-	{
-	Spawn:
-		AR_2 A -1;
-		Stop;
-	}
-
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, 12);
-    }
-}
-
-// Amulet of Warding (4) ----------------------------------------------------
 class WardingAmulet : XRpgNeckItem replaces AmuletOfWarding
 {
 	Default

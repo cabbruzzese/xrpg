@@ -59,21 +59,22 @@ class XRpgFighterPlayer : XRpgPlayer
 		//Player.StartItem "PowerSpell";
 		
 		//Player.StartItem "XRpgFWeapMorningStar";
-		//Player.StartItem "XRpgFWeapRazor";
-		//Player.StartItem "XRpgShield";
+		// Player.StartItem "XRpgFWeapRazor";
+		// Player.StartItem "XRpgShield";
 		//Player.StartItem "XRpgFWeapCleaver";
 		//Player.StartItem "XRpgFWeapPolearm";
 
-		Player.StartItem "FireRing";
-		Player.StartItem "IceRing";
-		Player.StartItem "LightningRing";
-		Player.StartItem "DragonBracers";
-		Player.StartItem "BootsOfSpeed";
-		Player.StartItem "RegenAmulet";
-		Player.StartItem "ManaAmulet";
-		Player.StartItem "WardingAmulet";
+		// Player.StartItem "FireRing";
+		// Player.StartItem "IceRing";
+		// Player.StartItem "LightningRing";
+		// Player.StartItem "DragonBracers";
+		// Player.StartItem "BootsOfSpeed";
+		// Player.StartItem "RegenAmulet";
+		// Player.StartItem "ManaAmulet";
+		// Player.StartItem "WardingAmulet";
 		//Player.StartItem "PlatinumHelmet";
 		//Player.StartItem "SuitHelmet";
+		// Player.StartItem "FalconLargeShield";
 	}
 	
 	States
@@ -205,9 +206,13 @@ class XRpgFighterPlayer : XRpgPlayer
 		return false;
 	}
 
-	XRpgShield GetShield ()
+	MagicShield GetShield ()
 	{
-		return XRpgShield(FindInventory("XRpgShield"));
+		let item = MagicShield(ActiveMagicItems[PAPERDOLL_SLOT_SHIELD]);
+		if (!item)
+			return null;
+		
+		return item;
 	}
 
 	override int GetRandomManaBonus(PlayerLevelItem statItem)

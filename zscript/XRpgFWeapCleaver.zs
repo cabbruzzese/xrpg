@@ -1,4 +1,4 @@
-class XRpgFWeapCleaver : XRpgFighterWeapon replaces TableShit10
+class XRpgFWeapCleaver : XRpgFighterShieldWeapon replaces TableShit10
 {
 	Default
 	{
@@ -22,15 +22,19 @@ class XRpgFWeapCleaver : XRpgFighterWeapon replaces TableShit10
 		TST0 A -1;
 		Stop;
 	Select:
+	WeaponSelect:
 		CLEV A 1 A_Raise;
 		Loop;
 	Deselect:
+	WeaponDeselect:
 		CLEV A 1 A_Lower;
 		Loop;
 	Ready:
+	WeaponReady:
 		CLEV A 1 A_WeaponReady;
 		Loop;
 	Fire:
+	WeaponFire:
 		CLEV B 4 Offset (5, 0);
 		CLEV B 2 Offset (5, 0) A_CheckBerserk(false);
 		CLEV C 2 Offset (5, 0) A_FWeaponMelee(15, 45, 0, 1);
@@ -51,31 +55,23 @@ class XRpgFWeapCleaver : XRpgFighterWeapon replaces TableShit10
 		CLEV A 1 Offset (0, 40);
 		CLEV A 1;
 		Goto Ready;
-    AltFire:
-        FSHL A 1 A_CheckShield;
-        FSHL BC 1;
-        FSHL D 1 A_ShieldBashMelee;
+	AltFire:
+		Goto ShieldFrameAltFire;
+	ShieldSpikedFire:
+		Goto ShieldFrameShieldSpikedFire;
     AltHold:
-		FSHL E 8 A_UseShield;
-		FSHL E 4 A_Refire;
-        FSHL E 4 A_CheckShieldCharged;
-        FSHL DCBA 2;
-        Goto Ready;
+		Goto ShieldFrameAltHold;
+	ShieldSpikedHold:
+		Goto ShieldFrameShieldSpikedHold;
+	ShieldKiteFire:
+		Goto ShieldFrameShieldKiteFire;
+	ShieldKiteHold:
+		Goto ShieldFrameShieldKiteHold;
     ShieldCharged:
-        FSHL FGH 2 BRIGHT A_UseShield(false);
-		FSHL F 2 BRIGHT A_Refire;
-        FSHL G 2 BRIGHT A_ShieldFire;
+		Goto ShieldFrameShieldCharged;
     ShieldFireFinish:
-		FSHL DCBA 2;
-        Goto Ready;
+		Goto ShieldFrameShieldFireFinish;
 	FistFire:
-		FPCH B 5 Offset (5, 40) A_Mirror;
-		FPCH C 4 Offset (5, 40);
-		FPCH D 4 Offset (5, 40) A_OffhandPunchAttack;
-		FPCH C 4 Offset (5, 40);
-		FPCH B 3 Offset (5, 40);
-		FPCH B 3 Offset (5, 40) A_Refire;
-		FPCH E 1 Offset (0, 150) A_RestoreMirror;
-		Goto Ready;
+		Goto ShieldFrameFistFire;
 	}
 }

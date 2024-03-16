@@ -1,4 +1,4 @@
-class XRpgFWeapMorningStar : XRpgFighterWeapon replaces EttinMace
+class XRpgFWeapMorningStar : XRpgFighterShieldWeapon replaces EttinMace
 {
 	Default
 	{
@@ -25,15 +25,19 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon replaces EttinMace
 		ETTB S -1;
 		Stop;
 	Select:
+	WeaponSelect:
 		FMCE A 1 A_Raise;
 		Loop;
 	Deselect:
+	WeaponDeselect:
 		FMCE A 1 A_Lower;
 		Loop;
 	Ready:
+	WeaponReady:
 		FMCE A 1 A_WeaponReady;
 		Loop;
 	Fire:
+	WeaponFire:
 		FMCE B 2 Offset (5, 0);
 		FMCE B 4 Offset (5, 0) A_CheckBerserk(false);
 		FMCE C 3 Offset (5, 0) A_FWeaponMelee(1, 90, 0, 1.5);
@@ -62,30 +66,22 @@ class XRpgFWeapMorningStar : XRpgFighterWeapon replaces EttinMace
 		FMCE A 1;
 		Goto Ready;
 	AltFire:
-        FSHL A 1 A_CheckShield;
-        FSHL BC 1;
-        FSHL D 1 A_ShieldBashMelee;
+		Goto ShieldFrameAltFire;
+	ShieldSpikedFire:
+		Goto ShieldFrameShieldSpikedFire;
     AltHold:
-		FSHL E 8 A_UseShield;
-		FSHL E 4 A_Refire;
-        FSHL E 4 A_CheckShieldCharged;
-        FSHL DCBA 2;
-        Goto Ready;
+		Goto ShieldFrameAltHold;
+	ShieldSpikedHold:
+		Goto ShieldFrameShieldSpikedHold;
+	ShieldKiteFire:
+		Goto ShieldFrameShieldKiteFire;
+	ShieldKiteHold:
+		Goto ShieldFrameShieldKiteHold;
     ShieldCharged:
-        FSHL FGH 2 BRIGHT A_UseShield(false);
-		FSHL F 2 BRIGHT A_Refire;
-        FSHL G 2 BRIGHT A_ShieldFire;
+		Goto ShieldFrameShieldCharged;
     ShieldFireFinish:
-		FSHL DCBA 2;
-        Goto Ready;
+		Goto ShieldFrameShieldFireFinish;
 	FistFire:
-		FPCH B 5 Offset (5, 40) A_Mirror;
-		FPCH C 4 Offset (5, 40);
-		FPCH D 4 Offset (5, 40) A_OffhandPunchAttack;
-		FPCH C 4 Offset (5, 40);
-		FPCH B 3 Offset (5, 40);
-		FPCH B 3 Offset (5, 40) A_Refire;
-		FPCH E 1 Offset (0, 150) A_RestoreMirror;
-		Goto Ready;
+		Goto ShieldFrameFistFire;
 	}
 }

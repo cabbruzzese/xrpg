@@ -1,4 +1,4 @@
-class XRpgFWeapRazor : XRpgFighterWeapon replaces CentaurSword
+class XRpgFWeapRazor : XRpgFighterShieldWeapon replaces CentaurSword
 {
 	Default
 	{
@@ -26,15 +26,19 @@ class XRpgFWeapRazor : XRpgFighterWeapon replaces CentaurSword
 		CTDP T -1;
 		Stop;
 	Select:
+	WeaponSelect:
 		FRZR A 1 A_Raise;
 		Loop;
 	Deselect:
+	WeaponDeselect:
 		FRZR A 1 A_Lower;
 		Loop;
 	Ready:
+	WeaponReady:
 		FRZR A 1 A_WeaponReady;
 		Loop;
 	Fire:
+	WeaponFire:
 		FRZR B 2 Offset (5, 0);
 		FRZR B 4 Offset (5, 0) A_CheckBerserk(false);
 		FRZR C 1 Offset (5, 0) A_FWeaponMelee(10, 30, -25, 0.35);
@@ -66,31 +70,23 @@ class XRpgFWeapRazor : XRpgFighterWeapon replaces CentaurSword
 		FRZR A 1 Offset (0, 35);
 		FRZR A 1;
 		Goto Ready;
-    AltFire:
-        FSHL A 1 A_CheckShield;
-        FSHL BC 1;
-        FSHL D 1 A_ShieldBashMelee;
+	AltFire:
+		Goto ShieldFrameAltFire;
+	ShieldSpikedFire:
+		Goto ShieldFrameShieldSpikedFire;
     AltHold:
-		FSHL E 8 A_UseShield;
-		FSHL E 4 A_Refire;
-        FSHL E 4 A_CheckShieldCharged;
-        FSHL DCBA 2;
-        Goto Ready;
+		Goto ShieldFrameAltHold;
+	ShieldSpikedHold:
+		Goto ShieldFrameShieldSpikedHold;
+	ShieldKiteFire:
+		Goto ShieldFrameShieldKiteFire;
+	ShieldKiteHold:
+		Goto ShieldFrameShieldKiteHold;
     ShieldCharged:
-        FSHL FGH 2 BRIGHT A_UseShield(false);
-		FSHL F 2 BRIGHT A_Refire;
-        FSHL G 2 BRIGHT A_ShieldFire;
+		Goto ShieldFrameShieldCharged;
     ShieldFireFinish:
-		FSHL DCBA 2;
-        Goto Ready;
+		Goto ShieldFrameShieldFireFinish;
 	FistFire:
-		FPCH B 5 Offset (5, 40) A_Mirror;
-		FPCH C 4 Offset (5, 40);
-		FPCH D 4 Offset (5, 40) A_OffhandPunchAttack;
-		FPCH C 4 Offset (5, 40);
-		FPCH B 3 Offset (5, 40);
-		FPCH B 3 Offset (5, 40) A_Refire;
-		FPCH E 1 Offset (0, 150) A_RestoreMirror;
-		Goto Ready;
+		Goto ShieldFrameFistFire;
 	}
 }

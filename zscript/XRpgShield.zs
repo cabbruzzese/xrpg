@@ -11,38 +11,23 @@ const SHIELD_DAMAGE_MAX = 20;
 const SHIELD_STR_MOD = 0.8;
 const SHIELD_KNOCKBACK = 20;
 
-class XRpgShield : Inventory replaces CentaurShield
+const SHIELD_TYPE_ROUND = 0;
+const SHIELD_TYPE_SPIKED = 1;
+const SHIELD_TYPE_KITE = 2;
+
+class MagicShield : XRpgShieldItem
 {
     int shieldCharge;
     int shieldTimeout;
+	bool canCharge;
+	int shieldType;
 
     property ShieldCharge : shieldCharge;
     property ShieldTimeout : shieldTimeout;
+	property CanCharge: canCharge;
+	property ShieldType: shieldType;
 
-	Default
-	{
-		+INVENTORY.RESTRICTABSOLUTELY
-		+INVENTORY.FANCYPICKUPSOUND
-		Inventory.PickupFlash "PickupFlash";
-		Inventory.Amount 1;
-		Inventory.MaxAmount 1;
-		Inventory.PickupSound "misc/p_pkup";
-		Inventory.PickupMessage "$TXT_SHIELDITEM";
-        Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer", "ClericPlayer", "MagePlayer";
-
-        XRpgShield.ShieldCharge 0;
-        XRpgShield.ShieldTimeout 0;
-	}
-
-	States
-	{
-	Spawn:
-		CTDP ABCDEFGHIJ 3;
-		CTDP J -1;
-		Stop;
-	}
-
-    void AddCharge(int amount)
+	void AddCharge(int amount)
     {
         ShieldCharge += amount;
 
@@ -55,12 +40,323 @@ class XRpgShield : Inventory replaces CentaurShield
         ShieldCharge = 0;
     }
 
-    bool IsCharged()
+    virtual bool IsCharged()
+    {
+        return false;
+    }
+
+    virtual void ShootShield()
+    {
+    }
+
+    override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
+	{
+		if (!Owner)
+			return;
+
+		if (!inflictor)
+			return;
+		
+		let xrpgPlayer = XRpgFighterPlayer(Owner);
+        if (!xrpgPlayer)
+			return;
+		
+        if (!IsShieldTimeoutActive())
+            return;
+
+		if (passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
+        {
+			newdamage = double(damage) * SHIELD_DEFENSE;
+            
+            Owner.A_StartSound("FlechetteBounce", CHAN_VOICE);
+        }
+	}
+
+    bool IsShieldTimeoutActive()
+	{
+		return ShieldTimeout > 0;
+	}
+
+	void SetShieldTimeout(int ammount = 20)
+	{
+		ShieldTimeout = ammount;
+	}
+
+	void ClearShieldTimeout()
+	{
+		ShieldTimeout = 0;
+	}
+
+    override void Tick()
+	{
+		Super.Tick();
+
+		if (!Owner)
+			return;
+		let xrpgPlayer = XRpgFighterPlayer(Owner);
+        if (!xrpgPlayer)
+			return;
+
+		if (ShieldTimeout > 0)
+		{
+			ShieldTimeout--;
+
+			xrpgPlayer.bDONTTHRUST = true;
+		}
+		else
+		{
+			xrpgPlayer.bDONTTHRUST = false;
+		}    
+	}
+}
+
+class XRpgFighterShieldWeapon : XRpgFighterWeapon
+{
+	States
+	{
+	Select:
+		TNT1 A 0 A_ForwardToSelect;
+	Deselect:
+		TNT1 A 0 A_ForwardToDeselect;
+	Ready:
+		TNT1 A 0 A_ForwardToReady;
+	Fire:
+		TNT1 A 0 A_ForwardToFire;
+	ShieldFrameAltFire:
+        FSHL A 0 A_CheckShield;
+	ShieldFrameShieldSpikedFire:
+        FSHL A 1;
+        FSHL BC 1;
+        FSHL D 1 A_ShieldBashMelee;
+    ShieldFrameAltHold:
+        FSHL E 0 A_CheckShieldHold;
+	ShieldFrameShieldSpikedHold:
+		FSHL E 8 A_UseShield;
+		FSHL E 4 A_Refire;
+        FSHL E 4 A_CheckShieldCharged;
+        FSHL DCBA 2;
+        Goto Ready;
+	ShieldFrameShieldKiteFire:
+		FSH2 A 1;
+        FSH2 BC 1;
+        FSH2 D 1 A_ShieldBashMelee;
+	ShieldFrameShieldKiteHold:
+		FSH2 E 8 A_UseShield;
+		FSH2 E 4 A_Refire;
+        FSH2 E 4 A_CheckShieldCharged;
+        FSH2 DCBA 2;
+        Goto Ready;
+    ShieldFrameShieldCharged:
+        FSHL FGH 2 BRIGHT A_UseShield(false);
+		FSHL F 2 BRIGHT A_Refire;
+        FSHL G 2 BRIGHT A_ShieldFire;
+    ShieldFrameShieldFireFinish:
+		FSHL DCBA 2;
+        Goto Ready;
+	ShieldFrameFistFire:
+		FPCH B 5 Offset (5, 40) A_Mirror;
+		FPCH C 4 Offset (5, 40);
+		FPCH D 4 Offset (5, 40) A_OffhandPunchAttack;
+		FPCH C 4 Offset (5, 40);
+		FPCH B 3 Offset (5, 40);
+		FPCH B 3 Offset (5, 40) A_Refire;
+		FPCH E 1 Offset (0, 150) A_RestoreMirror;
+		Goto Ready;
+	}
+
+	action void A_ForwardToReady()
+	{
+		A_SetWeapState("WeaponReady");
+	}
+	action void A_ForwardToSelect()
+	{
+		A_SetWeapState("WeaponSelect");
+	}
+	action void A_ForwardToDeselect()
+	{
+		A_SetWeapState("WeaponDeselect");
+	}
+		action void A_ForwardToFire()
+	{
+		A_SetWeapState("WeaponFire");
+	}
+
+	action void A_CheckShield()
+    {
+        if (!player)
+			return;
+
+		let xrpgPlayer = XRpgFighterPlayer(player.mo);
+        if (!xrpgPlayer)
+            return;
+
+		let shieldItem = xrpgPlayer.GetShield();
+        if (!shieldItem)
+        {
+            A_SetWeapState("FistFire");
+            return;
+        }
+		
+		// console.printf(string.format("Shield Type: %d", shieldItem.ShieldType));
+		switch (shieldItem.ShieldType)
+		{
+			case SHIELD_TYPE_SPIKED:
+				A_SetWeapState("ShieldSpikedFire");
+				return;
+			case SHIELD_TYPE_KITE:
+				A_SetWeapState("ShieldKiteFire");
+				return;
+		}
+
+		//default to fist
+		A_SetWeapState("FistFire");
+        return;
+    }
+
+	action void A_CheckShieldHold()
+    {
+        if (!player)
+			return;
+
+		let xrpgPlayer = XRpgFighterPlayer(player.mo);
+        if (!xrpgPlayer)
+            return;
+
+		let shieldItem = xrpgPlayer.GetShield();
+        if (!shieldItem)
+        {
+            A_SetWeapState("FistFire");
+            return;
+        }
+		
+		// console.printf(string.format("Shield Type Hold: %d", shieldItem.ShieldType));
+		switch (shieldItem.ShieldType)
+		{
+			case SHIELD_TYPE_SPIKED:
+				A_SetWeapState("ShieldSpikedHold");
+				return;
+			case SHIELD_TYPE_KITE:
+				A_SetWeapState("ShieldKiteHold");
+				return;
+		}
+
+		//default to fist
+		A_SetWeapState("FistFire");
+        return;
+    }
+
+    action void A_OffhandPunchAttack()
+	{
+        A_FWeaponMeleeAttack(1, 45, 0, 1, 0, 2*DEFMELEERANGE, "PunchPuff", false, 0);
+	}
+	
+    action void A_ShieldBashMelee()
+    {
+        A_FWeaponMeleeAttack(SHIELD_DAMAGE_MIN, SHIELD_DAMAGE_MAX, 0, SHIELD_STR_MOD, 0, SHIELD_RANGE, "AxePuff", false, SHIELD_KNOCKBACK);
+    }
+
+    action void A_UseShield(bool checkCharged = true)
+    {
+        if (!player)
+			return;
+
+		let xrpgPlayer = XRpgFighterPlayer(player.mo);
+        if (!xrpgPlayer)
+            return;
+
+        let shield = xrpgPlayer.GetShield();
+        if (!shield)
+        {
+            A_SetWeapState("FistFire");
+            return;
+        }
+
+        //Make sure weapon is not mirrored if shield is being used.
+        A_RestoreMirror();
+
+        if (checkCharged && shield.IsCharged() && shield.CanCharge)
+        {
+            A_SetWeapState("ShieldCharged");
+            return;
+        }
+
+        //console.printf("Charging Shield");
+        shield.SetShieldTimeout();
+    }
+
+    action void A_CheckShieldCharged()
+    {
+        if (!player)
+			return;
+
+		let xrpgPlayer = XRpgFighterPlayer(player.mo);
+        if (!xrpgPlayer)
+            return;
+
+        let shield = xrpgPlayer.GetShield();
+        if (!shield || !shield.CanCharge)
+            return;
+        
+        //console.printf("Clearing Shield");
+        shield.ClearShieldTimeout();
+        shield.ClearCharge();
+        A_SetWeapState("ShieldFireFinish");
+    }
+
+    action void A_ShieldFire()
+    {
+        if (!player)
+			return;
+
+		let xrpgPlayer = XRpgFighterPlayer(player.mo);
+        if (!xrpgPlayer)
+            return;
+
+        //console.printf("Try to fire");
+
+        let shield = xrpgPlayer.GetShield();
+        if (!shield || !shield.CanCharge)
+            return;
+        
+        shield.ShootShield();
+    }
+}
+
+class XRpgShield : MagicShield replaces CentaurShield
+{
+	Default
+	{
+		+INVENTORY.RESTRICTABSOLUTELY
+        Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer", "ClericPlayer", "MagePlayer";
+
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "FSHLK0";
+		Inventory.PickupSound "misc/p_pkup";
+		
+		Tag "$TAG_CENTAURSHIELD";
+		Inventory.PickupMessage "$TXT_SHIELDITEM";
+        XRpgEquipableItem.EffectMessage "$TXT_CENTAURSHIELD_USE";
+				
+		XRpgEquipableItem.ArmorBonus 5;
+		MagicShield.CanCharge true;
+		MagicShield.ShieldType SHIELD_TYPE_SPIKED;
+	}
+
+	States
+	{
+	Spawn:
+		CTDP ABCDEFGHIJ 3;
+		CTDP J -1;
+		Stop;
+	}
+
+    override bool IsCharged()
     {
         return ShieldCharge >= SHIELD_MIN_CHARGE;
     }
 
-    void ShootShield()
+    override void ShootShield()
     {
         if (!Owner)
 			return;
@@ -117,43 +413,6 @@ class XRpgShield : Inventory replaces CentaurShield
             Owner.A_StartSound("FlechetteBounce", CHAN_VOICE);
         }
 	}
-
-    bool IsShieldTimeoutActive()
-	{
-		return ShieldTimeout > 0;
-	}
-
-	void SetShieldTimeout(int ammount = 20)
-	{
-		ShieldTimeout = ammount;
-	}
-
-	void ClearShieldTimeout()
-	{
-		ShieldTimeout = 0;
-	}
-
-    override void Tick()
-	{
-		Super.Tick();
-
-		if (!Owner)
-			return;
-		let xrpgPlayer = XRpgFighterPlayer(Owner);
-        if (!xrpgPlayer)
-			return;
-
-		if (ShieldTimeout > 0)
-		{
-			ShieldTimeout--;
-
-			xrpgPlayer.bDONTTHRUST = true;
-		}
-		else
-		{
-			xrpgPlayer.bDONTTHRUST = false;
-		}    
-	}
 }
 
 class ShieldFX : Actor
@@ -182,4 +441,36 @@ class ShieldFX : Actor
 		CTFX F 2 Bright;
 		Stop;
 	}
+}
+
+class FalconLargeShield : MagicShield replaces FalconShield
+{
+	Default
+	{
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "AR_2A0";
+		Inventory.PickupSound "misc/p_pkup";
+		
+		Tag "$TAG_FALCONSHIELD";
+        XRpgEquipableItem.EffectMessage "$TXT_FALCONSHIELD_USE";
+				
+		XRpgEquipableItem.ArmorBonus 20;
+		XRpgEquipableItem.SpeedBoost -0.25;
+		XRpgArmorItem.IsHeavy true;
+		MagicShield.ShieldType SHIELD_TYPE_KITE;
+	}
+	States
+	{
+	Spawn:
+		AR_2 A -1;
+		Stop;
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+        A_SpriteOffset(0, 12);
+    }
 }

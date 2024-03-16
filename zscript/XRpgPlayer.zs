@@ -261,6 +261,10 @@ class XRpgPlayer : PlayerPawn
 				speedMod = armorEquipped.speedBoost;
 		}
 
+		//Speed can never be reduced more than 90%
+		if (speedMod < -0.9)
+			speedMod = -0.9;
+
 		A_SetSpeed(1 + speedMod);
 	}
 
