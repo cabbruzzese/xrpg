@@ -234,6 +234,43 @@ class XRpgMagePlayer : XRpgPlayer
 
 		return availSpells;
 	}
+
+	override bool CanUseArmor(int slot, XRpgArmorItem armorItem)
+	{
+		if (!armorItem)
+			return false;
+
+		if (slot == PAPERDOLL_SLOT_SHIELD)
+		{
+			A_Print("$TXT_MAGE_NOSHIELD");
+			return false;
+		}
+
+		if (armorItem.IsHeavy)
+		{
+			A_Print("$TXT_MAGE_NOHEAVY");
+			return false;
+		}
+
+		return true;
+	}
+
+	override int MaxArmorValue(int slot)
+	{
+		switch (slot)
+		{
+			case PAPERDOLL_SLOT_HELMET:
+				return 10;
+			case PAPERDOLL_SLOT_BODY:
+				return 5;
+			case PAPERDOLL_SLOT_SHIELD:
+				return 0;
+			case PAPERDOLL_SLOT_NECK:
+				return 25;
+		}
+
+		return 0;
+	}
 }
 
 class AvailableSpells

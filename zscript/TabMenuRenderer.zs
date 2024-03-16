@@ -123,24 +123,29 @@ class PlayerHudController
             {
                 itemFound = true;
 
-                if (element.Clicked())
+                if (element.Clicked() && item.CanRenderInventoryPlay())
                 {
                     selectedItem = item;
+
+                    if (selectedItem && selectedItem.StopPropagation)
+                        break;
                 }
-                
-                if (selectedItem.StopPropagation)
-                    break;
             }
         }
         if (!itemFound)
         {
             let xrpgPlayer = XRpgPlayer(playerObj);
-            if (xrpgPlayer && xrpgPlayer.accessorySlot)
+
+            for (int i = 0; i < PAPERDOLL_SLOTS; i++)
             {
-                if (xrpgPlayer.accessorySlot.IsInBounds(mousePos))
+                let slot = xrpgPlayer.accessorySlots[i];
+                if (xrpgPlayer && slot)
                 {
-                    if (xrpgPlayer.accessorySlot.Clicked())
-                        selectedItem = null;
+                    if (slot.IsInBounds(mousePos))
+                    {
+                        if (slot.Clicked())
+                            selectedItem = null;
+                    }
                 }
             }
 

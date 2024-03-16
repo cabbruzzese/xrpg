@@ -77,7 +77,7 @@ class DamageMagicItem : XRpgMagicItem
 
 	Default
 	{
-		XRpgMagicItem.EffectMessage "$TXT_FIRERING_USE";
+		XRpgEquipableItem.EffectMessage "$TXT_FIRERING_USE";
 
 		DamageMagicItem.SparkType "FireSparks";
 		DamageMagicItem.RingDamageType "Fire";
@@ -162,9 +162,9 @@ class FireRing : DamageMagicItem
 		Inventory.Icon "FRNGA0";
 		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
-		Tag "$TAG_ARTIBOOSTARMOR";
+		Tag "$TAG_FIRERING";
 
-		XRpgMagicItem.EffectMessage "$TXT_FIRERING_USE";
+		XRpgEquipableItem.EffectMessage "$TXT_FIRERING_USE";
 
 		DamageMagicItem.SparkType "FireSparks";
 		DamageMagicItem.RingDamageType "Fire";
@@ -173,8 +173,8 @@ class FireRing : DamageMagicItem
 	States
 	{
 	Spawn:
-		FRNG A 4 Bright;
-		Loop;
+		FRNG A -1;
+		Stop;
 	}
 
 	override void DoEquipBlend()
@@ -195,7 +195,7 @@ class FireRing : DamageMagicItem
             newdamage = damage / 2;
         }
 
-		console.printf(damageType);
+		//console.printf(damageType);
     }
 }
 
@@ -207,9 +207,9 @@ class IceRing : DamageMagicItem
 		Inventory.Icon "IRNGA0";
 		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
-		Tag "$TAG_ARTIBOOSTARMOR";
+		Tag "$TAG_ICERING";
 
-		XRpgMagicItem.EffectMessage "$TXT_ICERING_USE";
+		XRpgEquipableItem.EffectMessage "$TXT_ICERING_USE";
 
 		DamageMagicItem.SparkType "IceSparks";
 		DamageMagicItem.RingDamageType "Ice";
@@ -217,8 +217,8 @@ class IceRing : DamageMagicItem
 	States
 	{
 	Spawn:
-		IRNG A 4 Bright;
-		Loop;
+		IRNG A -1;
+		Stop;
 	}
 
     override void DoEquipBlend()
@@ -249,9 +249,9 @@ class LightningRing : DamageMagicItem
 		Inventory.Icon "LRNGA0";
 		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
-		Tag "$TAG_ARTIBOOSTARMOR";
+		Tag "$TAG_LIGHTNINGRING";
 
-		XRpgMagicItem.EffectMessage "$TXT_LIGHTNINGRING_USE";
+		XRpgEquipableItem.EffectMessage "$TXT_LIGHTNINGRING_USE";
 
 		DamageMagicItem.SparkType "LightningSparks";
 		DamageMagicItem.RingDamageType "Electric";
@@ -260,8 +260,8 @@ class LightningRing : DamageMagicItem
 	States
 	{
 	Spawn:
-		LRNG A 4 Bright;
-		Loop;
+		LRNG A -1;
+		Stop;
 	}
 
     override void DoEquipBlend()

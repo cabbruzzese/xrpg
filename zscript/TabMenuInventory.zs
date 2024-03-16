@@ -44,4 +44,9 @@ class TabMenuItem : PowerupGiver
     {
         return true;
     }
+
+    virtual bool CanRenderInventoryPlay()
+    {
+        return true;
+    }
 }

@@ -173,5 +173,22 @@ class XRpgClericPlayer : XRpgPlayer
 		
 		return manaBonus;
 	}
+
+	override int MaxArmorValue(int slot)
+	{
+		switch (slot)
+		{
+			case PAPERDOLL_SLOT_HELMET:
+				return 10;
+			case PAPERDOLL_SLOT_BODY:
+				return 10;
+			case PAPERDOLL_SLOT_SHIELD:
+				return 25;
+			case PAPERDOLL_SLOT_NECK:
+				return 10;
+		}
+
+		return 0;
+	}
 }
 		

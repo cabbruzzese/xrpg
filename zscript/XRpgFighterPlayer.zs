@@ -64,13 +64,16 @@ class XRpgFighterPlayer : XRpgPlayer
 		//Player.StartItem "XRpgFWeapCleaver";
 		//Player.StartItem "XRpgFWeapPolearm";
 
-		// Player.StartItem "FireRing";
-		// Player.StartItem "IceRing";
-		// Player.StartItem "LightningRing";
-		// Player.StartItem "DragonBracers";
-		// Player.StartItem "BootsOfSpeed";
-		// Player.StartItem "RegenAmulet";
-		// Player.StartItem "ManaAmulet";
+		Player.StartItem "FireRing";
+		Player.StartItem "IceRing";
+		Player.StartItem "LightningRing";
+		Player.StartItem "DragonBracers";
+		Player.StartItem "BootsOfSpeed";
+		Player.StartItem "RegenAmulet";
+		Player.StartItem "ManaAmulet";
+		Player.StartItem "WardingAmulet";
+		//Player.StartItem "PlatinumHelmet";
+		//Player.StartItem "SuitHelmet";
 	}
 	
 	States
@@ -215,5 +218,22 @@ class XRpgFighterPlayer : XRpgPlayer
 		manaBonus = Max(manaBonus, 5);
 		
 		return manaBonus;
+	}
+
+	override int MaxArmorValue(int slot)
+	{
+		switch (slot)
+		{
+			case PAPERDOLL_SLOT_HELMET:
+				return 15;
+			case PAPERDOLL_SLOT_BODY:
+				return 25;
+			case PAPERDOLL_SLOT_SHIELD:
+				return 15;
+			case PAPERDOLL_SLOT_NECK:
+				return 5;
+		}
+
+		return 0;
 	}
 }

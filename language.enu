@@ -51,12 +51,37 @@ TXT_ARMOR_WRAITHHELM = "A horned helm? Somewhere a viking's head is getting cold
 TXT_ARMOR_BISHOPGEM = "What a lovely ornament of death. May it protect me.";
 TXT_ARMOR_ETTINARMOR = "It may look like a barbarian's swimwear, but at least it's armor.";
 TXT_ARMOR_SUITHELMET = "O holy knight, a helmet! ...and it's sturdy!";
+TAG_ETTINARMOR = "Ettin Armor.";
 
-TXT_MAGICITEMPICKUP = "This item emits a strong magical aura";
-TXT_FIRERING_USE = "Your hands are enveloped with a warm glow";
-TXT_ICERING_USE = "Cold air chills your hands";
-TXT_LIGHTNINGRING_USE = "Your hands feel a sudden shock";
-TXT_DRAGONBRACERS_USE = "You feel protected";
-TXT_REGENAMULET_USE = "You feel healthier";
-TXT_MANAAMULET_USE = "Magic energy flows through your veins";
-TXT_BOOTSOFSPEED_USE = "The world around you seems slower";
+TXT_MAGE_NOSHIELD = "Mages are not proficient with shields.";
+TXT_MAGE_NOHEAVY = "Mages cannot wear heavy armor."
+
+TAG_FIRERING = "Ring of Flames.";
+TAG_ICERING = "Ring of Cold.";
+TAG_LIGHTNINGRING = "Ring of Shocking.";
+TAG_DRAGONBRACERS = "Dragon Bracers.";
+TAG_REGENAMULET = "Amulet of Life.";
+TAG_MANAAMULET = "Amulet of Magic.";
+TAG_BOOTSOFSPEED = "Boots of Speed.";
+TAG_PLATINUMHELM = "Platinum Helm.";
+TAG_MESHARMOR = "Mesh Armor.";
+TAG_FALCONSHIELD = "Falcon Shield.";
+TAG_WARDINGAMULET = "Amulet of Warding.";
+TAG_BISHOPGEM = "Dark Bishop's Amulet.";
+TAG_SUITHELMET = "Full Helm.";
+TAG_WRAITHHELM = "Wraith Helmet.";
+
+TXT_MAGICITEMPICKUP = "This item emits a strong magical aura.";
+TXT_ARMORITEMPICKUP = "A piece of armor.";
+
+TXT_FIRERING_USE = "Your hands are enveloped with a warm glow.";
+TXT_ICERING_USE = "Cold air chills your hands.";
+TXT_LIGHTNINGRING_USE = "Your hands feel a sudden shock.";
+TXT_DRAGONBRACERS_USE = "You feel protected.";
+TXT_REGENAMULET_USE = "You feel healthier.";
+TXT_MANAAMULET_USE = "Magic energy flows through your veins.";
+TXT_BOOTSOFSPEED_USE = "The world around you seems slower.";
+TXT_PLATINUMHELM_USE = "This helm will keep your head safe.";
+TXT_MESHARMOR_USE = "A fine mesh armor.";
+TXT_FALCONSHIELD_USE = "A heavy emblazoned shield.";
+TXT_WARDINGAMULET_USE = "Your skin hardens like rock.";

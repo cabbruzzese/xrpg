@@ -53,6 +53,9 @@ class XRpgStatusBar : HexenStatusBar
 	{
 		Super.Draw (state, TicFrac);
 
+		//draw visor under everything
+		//DrawVisor(state == HUD_Fullscreen);
+
 		if (state == HUD_StatusBar)
 		{
 			BeginStatusBar();
@@ -66,10 +69,11 @@ class XRpgStatusBar : HexenStatusBar
             DrawExpStuff(1);
 		}
 
+		DrawPaperdoll();
+
 		DrawSkillStuff();
 		DrawMagicItemStuff(state == HUD_Fullscreen);
 
-		DrawPaperdoll();
 		TabMenuRenderer.Draw(self, CPlayer);
 	}
 
@@ -279,10 +283,10 @@ class XRpgStatusBar : HexenStatusBar
 					if (++cnt >= 5) break;
 				}
 			}
-			DrawHexenArmor(HEXENARMOR_ARMOR, "ARMSLOT1", (150, 164), DI_ITEM_OFFSETS);
-			DrawHexenArmor(HEXENARMOR_SHIELD, "ARMSLOT2", (181, 164), DI_ITEM_OFFSETS);
-			DrawHexenArmor(HEXENARMOR_HELM, "ARMSLOT3", (212, 164), DI_ITEM_OFFSETS);
-			DrawHexenArmor(HEXENARMOR_AMULET, "ARMSLOT4", (243, 164), DI_ITEM_OFFSETS);
+			// DrawHexenArmor(HEXENARMOR_ARMOR, "ARMSLOT1", (150, 164), DI_ITEM_OFFSETS);
+			// DrawHexenArmor(HEXENARMOR_SHIELD, "ARMSLOT2", (181, 164), DI_ITEM_OFFSETS);
+			// DrawHexenArmor(HEXENARMOR_HELM, "ARMSLOT3", (212, 164), DI_ITEM_OFFSETS);
+			// DrawHexenArmor(HEXENARMOR_AMULET, "ARMSLOT4", (243, 164), DI_ITEM_OFFSETS);
 		}
 	}
 
@@ -422,10 +426,11 @@ class XRpgStatusBar : HexenStatusBar
 		if (!xrpgPlayer)
 			return;
 
-		if (xrpgPlayer.ActiveMagicItem)
+		let item = xrpgPlayer.activeMagicItems[PAPERDOLL_SLOT_ACCESSORY];
+		if (item)
 		{
 			DrawImage("ARTIBOX", (miXPos, miYPos), 0, HX_SHADOW);
-			DrawInventoryIcon(xrpgPlayer.ActiveMagicItem, (miXPos, miYPos - ICON_BOX_OFFSET_Y), DI_ITEM_CENTER, boxsize:(28, 28));
+			DrawInventoryIcon(item, (miXPos, miYPos - ICON_BOX_OFFSET_Y), DI_ITEM_CENTER, boxsize:(28, 28));
 		}
 	}
 
@@ -443,10 +448,43 @@ class XRpgStatusBar : HexenStatusBar
 
 		DrawImage(xrpgPlayer.PaperdollIcon, (miXPos, miYPos), 0);
 
-		if (xrpgPlayer.accessorySlot)
+		for (int i = 0; i < PAPERDOLL_SLOTS; i++)
 		{
-			DrawImage(xrpgPlayer.accessorySlot.image, xrpgPlayer.accessorySlot.displayPos, 0);
-			DrawInventoryIcon(xrpgPlayer.ActiveMagicItem, (xrpgPlayer.accessorySlot.displayPos.X, xrpgPlayer.accessorySlot.displayPos.Y - ICON_BOX_OFFSET_Y), DI_ITEM_CENTER, boxsize:(28, 28));
+			let slot = xrpgPlayer.accessorySlots[i];
+			let item = xrpgPlayer.ActiveMagicItems[i];
+
+			if (slot)
+			{
+				//Always render accessory slot, only render armor if item is active
+				if (i == PAPERDOLL_SLOT_ACCESSORY || item)
+					DrawImage(slot.image, slot.displayPos, 0);
+
+				if (item)
+					DrawInventoryIcon(item, (slot.displayPos.X, slot.displayPos.Y - ICON_BOX_OFFSET_Y), DI_ITEM_CENTER, boxsize:(28, 28));
+			}
+		}
+	}
+
+	protected void DrawVisor(bool fullscreen)
+	{		
+		if (automapactive)
+			return;
+		
+		let xrpgPlayer = XRpgPlayer(CPlayer.mo);
+		if (!xrpgPlayer)
+			return;
+
+		let helm = XRpgHelmetItem(xrpgPlayer.ActiveMagicItems[PAPERDOLL_SLOT_HELMET]);
+		if (helm && helm.VisorImage)
+		{
+			int mX = 160;
+			int mY = 0;
+			if (fullscreen)
+			{
+				mx = 320;
+				mY = 240;
+			}
+			DrawImage(helm.VisorImage, (mX,mY), DI_ITEM_CENTER, 1, (-1,-1), (3,3));
 		}
 	}
 }

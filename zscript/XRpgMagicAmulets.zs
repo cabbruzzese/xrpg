@@ -1,5 +1,5 @@
 const AMULET_TIMEOUT_MAX = 14;
-class MagicAmulet : XRpgMagicItem
+class MagicAmulet : XRpgNeckItem
 {
     int timer;
 
@@ -43,15 +43,15 @@ class RegenAmulet : MagicAmulet
 		Inventory.Icon "RAMUA0";
 		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
-		Tag "$TAG_ARTIBOOSTARMOR";
+		Tag "$TAG_REGENAMULET";
 
-		XRpgMagicItem.EffectMessage "$TXT_REGENAMULET_USE";
+		XRpgEquipableItem.EffectMessage "$TXT_REGENAMULET_USE";
 	}
 	States
 	{
 	Spawn:
-		RAMU A 4 Bright;
-		Loop;
+		RAMU A -1 Bright;
+		Stop;
 	}
 
 	override void DoEquipBlend()
@@ -97,16 +97,16 @@ class ManaAmulet : MagicAmulet
 		Inventory.Icon "MAMUA0";
 		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
-		Tag "$TAG_ARTIBOOSTARMOR";
+		Tag "$TAG_MANAAMULET";
 
-		XRpgMagicItem.EffectMessage "$TXT_MANAAMULET_USE";
+		XRpgEquipableItem.EffectMessage "$TXT_MANAAMULET_USE";
         MagicAmulet.timerMax 15;
 	}
 	States
 	{
 	Spawn:
-		MAMU A 4 Bright;
-		Loop;
+		MAMU A -1 Bright;
+		Stop;
 	}
 
     bool TryGiveBlueMana(int blueAmmo)
@@ -149,8 +149,6 @@ class ManaAmulet : MagicAmulet
         let xrpgPlayer = XRpgPlayer(Owner);
         if (xrpgPlayer)
         {
-            manaNum++;
-
             if (manaNum == 1)
                 TryGiveBlueMana(MANA_REGEN_THRESHOLD);
             else

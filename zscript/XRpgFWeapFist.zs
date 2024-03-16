@@ -2,6 +2,8 @@ const FIST_CHARGE_MAX = 20;
 
 class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 {
+	bool hasAltHit;
+
 	Default
 	{
 		+BLOODSPLATTER
@@ -55,10 +57,10 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		FPCH B 2 Offset (-10, 40) A_ChargeUp;
 		FPCH B 2 Offset (-10, 40) A_ReFire;
 		FPCH C 2 Offset (5, 40);
-		FPCH D 4 Offset (5, 40) A_FPunchAttack2;
-		FPCH DE 2 Offset (5, 40);
-		FPCH E 1 Offset (15, 50);
-		FPCH E 1 Offset (25, 60);
+		FPCH D 4 Offset (5, 40) A_AttemptPunchAttack2(true, true);
+		FPCH DE 2 Offset (5, 40) A_AttemptPunchAttack2(false);
+		FPCH E 1 Offset (15, 50) A_AttemptPunchAttack2(false);
+		FPCH E 1 Offset (25, 60) A_AttemptPunchAttack2(false);
 		FPCH E 1 Offset (35, 70);
 		FPCH E 1 Offset (45, 80);
 		FPCH E 1 Offset (55, 90);
@@ -185,7 +187,19 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		return false;
 	}
 
-    action void A_FPunchAttack2()
+	//Attempt punch on multiple frames, but only one frame can hit.
+	action void A_AttemptPunchAttack2(bool doThrust = false, bool firstAttack = false)
+	{
+		//Clear for first attack
+		if (firstAttack)
+			invoker.hasAltHit = false;
+
+		//only swing if never hit
+		if (!invoker.hasAltHit)
+			A_FPunchAttack2(doThrust);
+	}
+
+    action void A_FPunchAttack2(bool doThrust)
     {
 		if (!player)
 			return;
@@ -207,14 +221,18 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 
 		invoker.ChargeValue = 0;
 
-		Thrust(power / 2, angle);
-		A_GruntSound(-1);
+		if (doThrust)
+		{
+			Thrust(power / 2, angle);
+			A_GruntSound(-1);
+		}
 
 		for (int i = 0; i < 16; i++)
 		{
 			if (TryPunch2(angle + i*(45./16), damage, power) ||
 				TryPunch2(angle - i*(45./16), damage, power))
 			{ // hit something
+				invoker.hasAltHit = true;
 				return;
 			}
 		}
@@ -222,6 +240,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		weaponspecial = 0;
 
 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
-		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', "PunchPuff", true);
+		if (LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', "PunchPuff", true))
+			invoker.hasAltHit = true;
     }
 }

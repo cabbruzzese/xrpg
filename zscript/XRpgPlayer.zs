@@ -8,7 +8,8 @@ const REGENERATE_MIN_VALUE = 15;
 class XRpgPlayer : PlayerPawn
 {
 	PlayerHudController hud;
-	AccessorySlotElement accessorySlot;
+	EquipmentSlotElement accessorySlots[PAPERDOLL_SLOTS];
+	XRpgEquipableItem activeMagicItems[PAPERDOLL_SLOTS];
 
 	int initStrength;
 	int initDexterity;
@@ -17,7 +18,6 @@ class XRpgPlayer : PlayerPawn
 	XRpgSpellItem activeSpell2;
 	int regenerateTicks;
 	int regenerateTicksMax;
-	XRpgMagicItem activeMagicItem;
 
 	property InitStrength : initStrength;
 	property InitDexterity : initDexterity;
@@ -26,14 +26,12 @@ class XRpgPlayer : PlayerPawn
 	property ActiveSpell2 : activeSpell2;
 	property RegenerateTicks : regenerateTicks;
 	property RegenerateTicksMax : regenerateTicksMax;
-	property ActiveMagicItem: activeMagicItem;
 
 	string cursorIcon;
 	property CursorIcon:cursorIcon;
 
 	string paperdollIcon;
 	property PaperdollIcon:paperdollIcon;
-
 
 	Default
 	{
@@ -181,7 +179,7 @@ class XRpgPlayer : PlayerPawn
 		return removed;
 	}
 
-	bool IsMagicItemSlotOpen(XRpgMagicItem magicItem)
+	bool IsMagicItemSlotOpen(XRpgEquipableItem magicItem, int slot)
 	{
 		if (!magicItem)
 			return true;
@@ -189,17 +187,17 @@ class XRpgPlayer : PlayerPawn
 		return false;
 	}
 
-	bool SetActiveMagicItem(XRpgMagicItem magicItem)
+	bool SetActiveMagicItems(XRpgEquipableItem magicItem, int slot)
 	{
 		if (!magicItem)
 			return false;
 
-		XRpgMagicItem previousItem = ActiveMagicItem;
+		let previousItem = ActiveMagicItems[slot];
 
 		//clear if same item is used twice
-		if (ActiveMagicItem == magicItem)
+		if (ActiveMagicItems[slot] == magicItem)
 		{
-			ActiveMagicItem = null;
+			ActiveMagicItems[slot] = null;
 
 			//Unequip old item
 			previousItem.Unequip();
@@ -207,7 +205,7 @@ class XRpgPlayer : PlayerPawn
 		}
 
 		//Just replace
-		ActiveMagicItem = magicItem;
+		ActiveMagicItems[slot] = magicItem;
 
 		//Unequip old and equip new
 		if (previousItem)
@@ -218,24 +216,55 @@ class XRpgPlayer : PlayerPawn
 		return true;
 	}
 
-	bool IsMagicItemActive(XRpgMagicItem magicItem)
+	bool IsMagicItemActive(XRpgEquipableItem magicItem, int slot)
 	{
 		if (!magicItem)
 			return false;
 
-		return ActiveMagicItem == magicItem;
+		return ActiveMagicItems[slot] == magicItem;
+	}
+
+	virtual bool CanUseArmor(int slot, XRpgArmorItem armorItem)
+	{
+		return true;
+	}
+
+	virtual int MaxArmorValue(int slot)
+	{
+		switch (slot)
+		{
+			case PAPERDOLL_SLOT_HELMET:
+				return 20;
+			case PAPERDOLL_SLOT_BODY:
+				return 20;
+			case PAPERDOLL_SLOT_SHIELD:
+				return 20;
+			case PAPERDOLL_SLOT_NECK:
+				return 20;
+		}
+
+		return 0;
 	}
 
 	void ApplyMovementBonus()
 	{
 		double speedMod = 0;
-		if (ActiveMagicItem && ActiveMagicItem.SpeedBoost != 0)
-			speedMod = ActiveMagicItem.SpeedBoost;
+
+
+		for (int i = 0; i < PAPERDOLL_SLOTS; i++)
+		{
+			let magicItem = MagicArmor(ActiveMagicItems[i]);
+			let armorEquipped = XRpgArmorItem(ActiveMagicItems[i]);
+			if (magicItem && magicItem.speedBoost != 0)
+				speedMod = magicItem.speedBoost;
+			else if (armorEquipped && armorEquipped.speedBoost != 0)
+				speedMod = armorEquipped.speedBoost;
+		}
 
 		A_SetSpeed(1 + speedMod);
 	}
 
-	void ApplyDexArmorBonusStats(PlayerLevelItem statItem, XRpgMagicItem magicItem)
+	void ApplyDexArmorBonusStats(PlayerLevelItem statItem)
 	{
 		if (!statItem)
 			return;
@@ -245,9 +274,22 @@ class XRpgPlayer : PlayerPawn
 		armorMod = Max(armorMod, 0);
 		armorMod = Min(armorMod, MAX_LEVEL_ARMOR);
 
-		let armorItem = MagicArmor(magicItem);
-		if (armorItem)
-			armorMod += armorItem.ArmorBonus;
+		for (int i = 0; i < PAPERDOLL_SLOTS; i++)
+		{
+			let armorMagicItem = MagicArmor(ActiveMagicItems[i]);
+			let armorEquipped = XRpgArmorItem(ActiveMagicItems[i]);
+			if (armorMagicItem)
+			{
+				armorMod += armorMagicItem.ArmorBonus;
+			}
+			else if (armorEquipped)
+			{
+				int armorEquippedMod = Min(armorEquipped.ArmorBonus, MaxArmorValue(i));
+				//console.printf(string.format("ArmorMod: %d ArmorMax: %d", armorEquipped.ArmorBonus, MaxArmorValue(i)));
+
+				armorMod += armorEquippedMod;
+			}
+		}
 
 		let hArmor = HexenArmor(FindInventory("HexenArmor"));
 		if (hArmor)
@@ -260,12 +302,12 @@ class XRpgPlayer : PlayerPawn
 	{
 		let statItem = GetStats();
 		
-		ApplyDexArmorBonusStats(statItem, ActiveMagicItem);
+		ApplyDexArmorBonusStats(statItem);
 	}
 	
 	void UpdateLevelStats(PlayerLevelItem statItem)
 	{
-		ApplyDexArmorBonusStats(statItem, ActiveMagicItem);
+		ApplyDexArmorBonusStats(statItem);
 	}
 
 	int CalcXPNeeded(PlayerLevelItem statItem)
@@ -452,8 +494,13 @@ class XRpgPlayer : PlayerPawn
 		hud = new('PlayerHudController');
 		hud.CursorIcon = CursorIcon;
 
-		accessorySlot = new('AccessorySlotElement');
-		accessorySlot.Init("ARTIBOX", (30,30), false, true, (190, 80), self);
+		int armorXOffset = 15;
+		int armorYOffset = 30;
+		accessorySlots[PAPERDOLL_SLOT_HELMET] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (212 + armorXOffset, 164 + armorYOffset), self, 'XRpgHelmetItem');
+		accessorySlots[PAPERDOLL_SLOT_BODY] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (150 + armorXOffset, 164 + armorYOffset), self, 'XRpgBodyItem');
+		accessorySlots[PAPERDOLL_SLOT_SHIELD] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (181 + armorXOffset, 164 + armorYOffset), self, 'XRpgShieldItem');
+		accessorySlots[PAPERDOLL_SLOT_NECK] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (243 + armorXOffset, 164 + armorYOffset), self, 'XRpgNeckItem');
+		accessorySlots[PAPERDOLL_SLOT_ACCESSORY] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (190, 80), self, 'XRpgMagicItem');
 
 		let statItem = GetStats();
 		GiveLevelSkill(statItem);
@@ -539,25 +586,28 @@ class XRpgPlayer : PlayerPawn
 
 	void DoInventorySlotAction()
 	{
-		if (accessorySlot)
+		for (int i = 0; i<PAPERDOLL_SLOTS; i++)
 		{
-			if (accessorySlot.nextSlotItem)
+			if (accessorySlots[i])
 			{
-				let newItem = XRpgMagicItem(accessorySlot.nextSlotItem);
-				if (newItem)
-					newItem.Use(false);
-				accessorySlot.nextSlotItem = null;
-			}
-			else if (accessorySlot.clearSlot)
-			{
-				//pick up the item
-				hud.selectedItem = activeMagicItem;
-				
-				//setting to the same item clears it
-				SetActiveMagicItem(activeMagicItem);
-			}
+				if (accessorySlots[i].nextSlotItem)
+				{
+					let newItem = XRpgEquipableItem(accessorySlots[i].nextSlotItem);
+					if (newItem)
+						newItem.Use(false);
+					accessorySlots[i].nextSlotItem = null;
+				}
+				else if (accessorySlots[i].clearSlot)
+				{
+					//pick up the item
+					hud.selectedItem = activeMagicItems[i];
+					
+					//setting to the same item clears it
+					SetActiveMagicItems(activeMagicItems[i], i);
+				}
 
-			accessorySlot.clearSlot = false;
+				accessorySlots[i].clearSlot = false;
+			}
 		}
 	}
 
