@@ -217,6 +217,21 @@ class XRpgArmorItem : XRpgAccessorySlotItem
 		xrpgPlayer.ApplyDexArmorBonus();
 		xrpgPlayer.ApplyMovementBonus();
     }
+
+	override bool Use(bool pickup)
+	{
+		if (!Owner)
+			return false;
+
+        let xrpgPlayer = XRpgPlayer(Owner);
+        if (!xrpgPlayer)
+			return false;
+
+		if (!xrpgPlayer.CanUseArmor(PaperDollSlot, self))
+			return false;
+		
+		return super.Use(pickup);
+	}
 }
 
 class XRpgHelmetItem : XRpgArmorItem

@@ -152,7 +152,7 @@ class EttinArmor : XRpgBodyItem
 	}
 }
 
-class MeshBodyArmor : XRpgBodyItem replaces MeshArmor
+class MeshBodyArmor : XRpgBodyItem
 {
 	Default
 	{
@@ -164,7 +164,8 @@ class MeshBodyArmor : XRpgBodyItem replaces MeshArmor
 		Tag "$TAG_MESHARMOR";
         XRpgEquipableItem.EffectMessage "$TXT_MESHARMOR_USE";
 				
-		XRpgEquipableItem.ArmorBonus 20;
+		XRpgEquipableItem.ArmorBonus 10;
+		XRpgArmorItem.IsHeavy true;
 	}
 	States
 	{
@@ -178,6 +179,35 @@ class MeshBodyArmor : XRpgBodyItem replaces MeshArmor
 		Super.PostBeginPlay();
 
         A_SpriteOffset(0, 16);
+    }
+}
+
+class LeatherBodyArmor : XRpgBodyItem
+{
+	Default
+	{
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "LTHRA0";
+		Inventory.PickupSound "misc/p_pkup";
+		
+		Tag "$TAG_LEATHERARMOR";
+        XRpgEquipableItem.EffectMessage "$TXT_LEATHERARMOR_USE";
+				
+		XRpgEquipableItem.ArmorBonus 5;
+	}
+	States
+	{
+	Spawn:
+		LTHR A -1;
+		Stop;
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+        A_SpriteOffset(0, -14);
     }
 }
 	

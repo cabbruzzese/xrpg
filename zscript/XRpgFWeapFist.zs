@@ -1,4 +1,5 @@
 const FIST_CHARGE_MAX = 20;
+const FIST_CHARGE_MIN = 3;
 
 class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 {
@@ -208,16 +209,22 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		if (!xrpgPlayer)
 			return;
 
+		int chargeNum = invoker.ChargeValue;
+
 		//If berserk, all attacks are at least half of max charge
 		bool isBerserk = xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true);
 		if (isBerserk)
-			invoker.ChargeValue = Max(invoker.ChargeValue, invoker.MaxCharge / 2);
+			chargeNum = Max(chargeNum, invoker.MaxCharge / 2);
+
+		//Since uncharged fists are as fast as normal punches, lower charge power for fast punches
+		if (chargeNum <= FIST_CHARGE_MIN)
+			chargenum = 0;
 		
-		double damageMod = 1.0 + (double(invoker.ChargeValue) / 10);
+		double damageMod = 1.0 + (double(chargeNum) / 10);
 
         int damage = random[FighterAtk](15, 35);
 		damage *= damageMod;
-		int power = (invoker.ChargeValue) + 5;
+		int power = (chargeNum) + 5;
 
 		invoker.ChargeValue = 0;
 

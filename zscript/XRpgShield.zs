@@ -14,6 +14,7 @@ const SHIELD_KNOCKBACK = 20;
 const SHIELD_TYPE_ROUND = 0;
 const SHIELD_TYPE_SPIKED = 1;
 const SHIELD_TYPE_KITE = 2;
+const SHIELD_TYPE_METAL = 3;
 
 class MagicShield : XRpgShieldItem
 {
@@ -146,6 +147,26 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
         FSH2 E 4 A_CheckShieldCharged;
         FSH2 DCBA 2;
         Goto Ready;
+	ShieldFrameShieldRoundFire:
+		FSH3 A 1;
+        FSH3 BC 1;
+        FSH3 D 1 A_ShieldBashMelee;
+	ShieldFrameShieldRoundHold:
+		FSH3 E 8 A_UseShield;
+		FSH3 E 4 A_Refire;
+        FSH3 E 4 A_CheckShieldCharged;
+        FSH3 DCBA 2;
+        Goto Ready;
+	ShieldFrameShieldMetalFire:
+		FSH4 A 1;
+        FSH4 BC 1;
+        FSH4 D 1 A_ShieldBashMelee;
+	ShieldFrameShieldMetalHold:
+		FSH4 E 8 A_UseShield;
+		FSH4 E 4 A_Refire;
+        FSH4 E 4 A_CheckShieldCharged;
+        FSH4 DCBA 2;
+        Goto Ready;
     ShieldFrameShieldCharged:
         FSHL FGH 2 BRIGHT A_UseShield(false);
 		FSHL F 2 BRIGHT A_Refire;
@@ -206,6 +227,12 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
 			case SHIELD_TYPE_KITE:
 				A_SetWeapState("ShieldKiteFire");
 				return;
+			case SHIELD_TYPE_ROUND:
+				A_SetWeapState("ShieldRoundFire");
+				return;
+			case SHIELD_TYPE_METAL:
+				A_SetWeapState("ShieldMetalFire");
+				return;
 		}
 
 		//default to fist
@@ -237,6 +264,12 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
 				return;
 			case SHIELD_TYPE_KITE:
 				A_SetWeapState("ShieldKiteHold");
+				return;
+			case SHIELD_TYPE_ROUND:
+				A_SetWeapState("ShieldRoundHold");
+				return;
+			case SHIELD_TYPE_METAL:
+				A_SetWeapState("ShieldMetalHold");
 				return;
 		}
 
@@ -443,7 +476,7 @@ class ShieldFX : Actor
 	}
 }
 
-class FalconLargeShield : MagicShield replaces FalconShield
+class FalconLargeShield : MagicShield
 {
 	Default
 	{
@@ -472,5 +505,87 @@ class FalconLargeShield : MagicShield replaces FalconShield
 		Super.PostBeginPlay();
 
         A_SpriteOffset(0, 12);
+    }
+}
+
+class RoundShield : MagicShield
+{
+	Default
+	{
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "FSH3F0";
+		Inventory.PickupSound "misc/p_pkup";
+		
+		Tag "$TAG_ROUNDSHIELD";
+        XRpgEquipableItem.EffectMessage "$TXT_ROUNDSHIELD_USE";
+				
+		XRpgEquipableItem.ArmorBonus 10;
+		MagicShield.ShieldType SHIELD_TYPE_ROUND;
+	}
+	States
+	{
+	Spawn:
+		FSH3 F -1;
+		Stop;
+	}
+
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {
+        if (!IsActive())
+            return;
+        
+        if (damage > 0 && (damageType =='Fire'))
+        {
+            newdamage = damage * 1.5;
+        }
+    }
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+        A_SpriteOffset(0, -12);
+    }
+}
+
+class SilverSmallShield : MagicShield
+{
+	Default
+	{
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "FSH4F0";
+		Inventory.PickupSound "misc/p_pkup";
+		
+		Tag "$TAG_SILVERSHIELD";
+        XRpgEquipableItem.EffectMessage "$TXT_SILVERSHIELD_USE";
+				
+		XRpgEquipableItem.ArmorBonus 10;
+		MagicShield.ShieldType SHIELD_TYPE_METAL;
+	}
+	States
+	{
+	Spawn:
+		FSH4 F -1;
+		Stop;
+	}
+
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {
+        if (!IsActive())
+            return;
+        
+        if (damage > 0 && (damageType =='Fire'))
+        {
+            newdamage = damage / 2;
+        }
+    }
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+        A_SpriteOffset(0, -12);
     }
 }

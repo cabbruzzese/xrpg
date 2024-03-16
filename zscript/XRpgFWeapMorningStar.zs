@@ -77,6 +77,14 @@ class XRpgFWeapMorningStar : XRpgFighterShieldWeapon replaces EttinMace
 		Goto ShieldFrameShieldKiteFire;
 	ShieldKiteHold:
 		Goto ShieldFrameShieldKiteHold;
+	ShieldRoundFire:
+		Goto ShieldFrameShieldRoundFire;
+	ShieldRoundHold:
+		Goto ShieldFrameShieldRoundHold;
+	ShieldMetalFire:
+		Goto ShieldFrameShieldMetalFire;
+	ShieldMetalHold:
+		Goto ShieldFrameShieldMetalHold;
     ShieldCharged:
 		Goto ShieldFrameShieldCharged;
     ShieldFireFinish:

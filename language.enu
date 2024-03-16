@@ -54,7 +54,7 @@ TXT_ARMOR_SUITHELMET = "O holy knight, a helmet! ...and it's sturdy!";
 TAG_ETTINARMOR = "Ettin Armor.";
 
 TXT_MAGE_NOSHIELD = "Mages are not proficient with shields.";
-TXT_MAGE_NOHEAVY = "Mages cannot wear heavy armor."
+TXT_MAGE_NOHEAVY = "Mages cannot wear heavy armor.";
 
 TAG_FIRERING = "Ring of Flames.";
 TAG_ICERING = "Ring of Cold.";
@@ -71,6 +71,9 @@ TAG_BISHOPGEM = "Dark Bishop's Amulet.";
 TAG_SUITHELMET = "Full Helm.";
 TAG_WRAITHHELM = "Wraith Helmet.";
 TAG_CENTAURSHIELD = "Centaur Shield.";
+TAG_ROUNDSHIELD = "Round Shield.";
+TAG_SILVERSHIELD = "Silver Shield.";
+TAG_LEATHERARMOR = "Leather Armor.";
 
 TXT_MAGICITEMPICKUP = "This item emits a strong magical aura.";
 TXT_ARMORITEMPICKUP = "A piece of armor.";
@@ -87,3 +90,6 @@ TXT_MESHARMOR_USE = "A fine mesh armor.";
 TXT_FALCONSHIELD_USE = "A heavy emblazoned shield.";
 TXT_WARDINGAMULET_USE = "Your skin hardens like rock.";
 TXT_CENTAURSHIELD_USE = "This spiked shield radiates a dark energy.";
+TXT_ROUNDSHIELD_USE = "A wooden round shield.";
+TXT_SILVERSHIELD_USE = "This silver shield is fireproof.";
+TXT_LEATHERARMOR_USE = "Light armor that is easy to move in.";

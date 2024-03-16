@@ -76,5 +76,36 @@ class BossMakerEventHandler : EventHandler
                     break;
             }
 		}
+        else if (e.Replacee is 'FalconShield')
+		{
+			Name spawnType;
+            int magicItemNum = random[MagicItemSpawn](1,3);
+            switch (magicItemNum)
+            {
+                case 1:
+                    e.Replacement = 'FalconLargeShield';
+                    break;
+                case 2:
+                    e.Replacement = 'RoundShield';
+                    break;
+                case 3:
+                    e.Replacement = 'SilverSmallShield';
+                    break;
+            }
+		}
+        else if (e.Replacee is 'MeshArmor')
+        {
+            Name spawnType;
+            int magicItemNum = random[MagicItemSpawn](1,2);
+            switch (magicItemNum)
+            {
+                case 1:
+                    e.Replacement = 'MeshBodyArmor';
+                    break;
+                case 2:
+                    e.Replacement = 'LeatherBodyArmor';
+                    break;
+            }
+        } 
 	}
 }
