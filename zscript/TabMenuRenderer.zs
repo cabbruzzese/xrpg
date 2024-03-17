@@ -1,5 +1,5 @@
-const TAB_INV_START_X = 0;
-const TAB_INV_START_Y = 100;
+const TAB_INV_START_X = 45;
+const TAB_INV_START_Y = 115;
 const TAB_INV_OFFSET_X = 30;
 const TAB_INV_OFFSET_Y = -30;
 const TAB_INV_ROWSIZE = 5;
@@ -38,6 +38,14 @@ class TabMenuRenderer ui
             let element = item.element;
             if (element && item.Icon.IsValid() && item.Listable)
             {
+                if (colCount == TAB_INV_ROWSIZE)
+                {
+                    colCount = 0;
+                    invPosition = (TAB_INV_START_X, invPosition.Y + TAB_INV_OFFSET_Y);
+
+                    DrawInvetoryBar(sbar, invPosition.Y);
+                }
+
                 //check if item is allowed to render
                 if (!item.CanRenderInventory())
                     continue;
@@ -46,16 +54,7 @@ class TabMenuRenderer ui
                 sbar.DrawTexture(item.Icon, element.displayPos, BaseStatusBar.DI_ITEM_CENTER);
 
                 colCount++;
-                if (colCount == TAB_INV_ROWSIZE)
-                {
-                    colCount = 0;
-                    invPosition = (TAB_INV_START_X, invPosition.Y + TAB_INV_OFFSET_Y);
-                    DrawInvetoryBar(sbar, invPosition.Y);
-                }
-                else
-                {
-                    invPosition.X += TAB_INV_OFFSET_X;
-                }
+                invPosition.X += TAB_INV_OFFSET_X;
             }
         }
          

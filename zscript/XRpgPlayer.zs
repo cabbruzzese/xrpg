@@ -522,8 +522,8 @@ class XRpgPlayer : PlayerPawn
 		accessorySlots[PAPERDOLL_SLOT_BODY] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (150 + armorXOffset, 164 + armorYOffset), self, 'XRpgBodyItem');
 		accessorySlots[PAPERDOLL_SLOT_SHIELD] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (181 + armorXOffset, 164 + armorYOffset), self, 'XRpgShieldItem');
 		accessorySlots[PAPERDOLL_SLOT_NECK] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (243 + armorXOffset, 164 + armorYOffset), self, 'XRpgNeckItem');
-		accessorySlots[PAPERDOLL_SLOT_ACCESSORY] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (290, 80), self, 'XRpgMagicItem');
-		trashSlot = TrashItemElement.Create("TRSHA0", (30,30), false, true, (-50, 115), self);
+		accessorySlots[PAPERDOLL_SLOT_ACCESSORY] = EquipmentSlotElement.Create("ACCSLOT", (30,30), false, true, (290, 95), self, 'XRpgMagicItem');
+		trashSlot = TrashItemElement.Create("TRSHA0", (30,30), false, true, (-20, 130), self);
 
 		let statItem = GetStats();
 		GiveLevelSkill(statItem);

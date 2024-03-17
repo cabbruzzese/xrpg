@@ -440,7 +440,7 @@ class XRpgStatusBar : HexenStatusBar
 			return;
 		
 		int miXPos = 240;
-		int miYPos = 100;
+		int miYPos = 130;
 
 		let xrpgPlayer = XRpgPlayer(CPlayer.mo);
 		if (!xrpgPlayer)
