@@ -206,15 +206,6 @@ class XRpgFighterPlayer : XRpgPlayer
 		return false;
 	}
 
-	MagicShield GetShield ()
-	{
-		let item = MagicShield(ActiveMagicItems[PAPERDOLL_SLOT_SHIELD]);
-		if (!item)
-			return null;
-		
-		return item;
-	}
-
 	override int GetRandomManaBonus(PlayerLevelItem statItem)
 	{
 		//mana increases by random up to 1/3 Magic, min 5 (weighted for low end of flat scale)

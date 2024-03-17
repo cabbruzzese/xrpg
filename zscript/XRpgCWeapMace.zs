@@ -1,6 +1,6 @@
 // The Cleric's Mace --------------------------------------------------------
 
-class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
+class XRpgCWeapMace : XRpgClericShieldWeapon replaces CWeapMace
 {
 	Default
 	{
@@ -16,15 +16,19 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 	States
 	{
 	Select:
+	WeaponSelect:
 		CMCE A 1 A_Raise;
 		Loop;
 	Deselect:
+	WeaponDeselect:
 		CMCE A 1 A_Lower;
 		Loop;
 	Ready:
+	WeaponReady:
 		CMCE A 1 A_WeaponReady;
 		Loop;
 	Fire:
+	WeaponFire:
 		CMCE B 2 Offset (60, 20);
 		CMCE B 1 Offset (30, 33);
 		CMCE B 2 Offset (8, 45);
@@ -43,66 +47,22 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 		CMCE A 2 Offset (8, 50);
 		CMCE A 1 Offset (8, 45);
 		Goto Ready;
-	GlowAltFire:
-		CMCE C 2 Offset (120, 85);
-		CMCE C 2 Offset (80, 90);
-		CMCL A 4 Bright Offset (1, 101);
-		CMCL B 4 Bright Offset (1, 101);
-		CMCL C 4 Bright Offset (1, 101);
-	GlowAltHold:
-		CMCL D 4 Bright Offset (1, 101) A_CMaceSwingAttack(true, true);
-		CMCL E 4 Bright Offset (1, 101) A_CMaceSwingAttack(false, true);
-		CMCL F 4 Bright Offset (1, 101) A_CMaceSwingAttack(false, true);
-		CMCL C 2 Offset (-80, 110) A_CheckCMaceSwingFinish;
-	AltGlowFinish:
-		CMCL B 2 Offset (-120, 115);
-		CMCL A 2 Offset (-160, 120);
-		CMCE F 10 Offset (-160, 120);
-		CMCE A 2 Offset (8, 75);
-		CMCE A 1 Offset (8, 65);
-		CMCE A 2 Offset (8, 60);
-		CMCE A 1 Offset (8, 55);
-		CMCE A 2 Offset (8, 50);
-		CMCE A 1 Offset (8, 45);
-		Goto Ready;
-	AltHold:
-		#### # 0 Offset (160, 80) A_CheckCMaceSwingHold;
 	AltFire:
-		CMCE C 2 Offset (160, 80) A_CheckCMaceSwing;
-		CMCE C 2 Offset (120, 85);
-		CMCE C 2 Offset (80, 90);
-		CMCE D 2 Offset (40, 95) A_CMaceSwingAttack(true, false, -14);
-		CMCE D 2 Offset (1, 101) A_CMaceSwingAttack(false, false,  0);
-		CMCE E 2 Offset (-40, 108) A_CMaceSwingAttack(false, false, 14);
-		CMCE E 2 Offset (-120, 115);
-		CMCE F 10 Offset (-160, 120);
-		CMCE A 2 Offset (8, 75);
-		CMCE A 1 Offset (8, 65);
-		CMCE A 2 Offset (8, 60);
-		CMCE A 1 Offset (8, 55);
-		CMCE A 2 Offset (8, 50);
-		CMCE A 1 Offset (8, 45);
-		Goto Ready;
-	}
-
-	action void A_CheckCMaceSwing()
-	{
-		if (A_IsSmite())
-			A_SetWeapState("GlowAltFire");
-	}
-
-	action void A_CheckCMaceSwingFinish()
-	{
-		if (A_IsSmite())
-			A_Refire();
-		else
-			A_SetWeapState("AltGlowFinish");
-	}
-
-	action void A_CheckCMaceSwingHold()
-	{
-		if (A_IsSmite())
-			A_SetWeapState("GlowAltHold");
+		Goto ShieldFrameAltFire;
+    AltHold:
+		Goto ShieldFrameAltHold;
+	ShieldKiteFire:
+		Goto ShieldFrameShieldKiteFire;
+	ShieldKiteHold:
+		Goto ShieldFrameShieldKiteHold;
+	ShieldRoundFire:
+		Goto ShieldFrameShieldRoundFire;
+	ShieldRoundHold:
+		Goto ShieldFrameShieldRoundHold;
+	ShieldMetalFire:
+		Goto ShieldFrameShieldMetalFire;
+	ShieldMetalHold:
+		Goto ShieldFrameShieldMetalHold;
 	}
 	
 	//===========================================================================
@@ -152,73 +112,6 @@ class XRpgCWeapMace : XRpgClericWeapon replaces CWeapMace
 		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', "HammerPuff");
 	}
 	
-
-	action void A_CMaceSwingAttack(bool isMainSwing, bool isSmite, int angleMod = 0)
-	{
-		FTranslatedLineTarget t;
-
-		if (!player)
-			return;
-
-		int damage = random[CWeapMaceSwing](1, 16);
-
-        let xrpgPlayer = XRpgPlayer(player.mo);
-		if (!xrpgPlayer)
-			return;
-
-		class<Actor> puffType = "SmallMacePuffSilent";
-		if (isMainSwing)
-			puffType = "SmallMacePuff";
-
-		if (isSmite)
-		{
-			damage += (xrpgPlayer.GetMagic() * 0.5);
-			puffType = "SmallMacePuffGlowSilent";
-			if (isMainSwing)
-				puffType = "SmallMacePuffGlow";
-		}
-		else
-		{
-			damage += (xrpgPlayer.GetStrength() * 0.5);
-		}
-
-		for (int i = 0; i < 16; i++)
-		{
-			for (int j = 1; j >= -1; j -= 2)
-			{
-				double ang = angle + angleMod + j*i*(45. / 16);
-				double slope = AimLineAttack(ang, 2 * DEFMELEERANGE, t, 0., ALF_CHECK3D);
-				if (t.linetarget)
-				{
-					LineAttack(ang, 2 * DEFMELEERANGE, slope, damage, 'Melee', puffType, true, t);
-					if (t.linetarget != null)
-					{
-						if (t.linetarget.bIsMonster || t.linetarget.player)
-						{
-
-							if (isSmite)
-							{
-
-								AdjustPlayerAngle(t);
-
-								Thrust(1, t.attackAngleFromSource);
-							}
-							else
-							{
-								A_ThrustTarget(t.linetarget, 1, t.attackAngleFromSource);
-							}
-						}
-
-						return;
-					}
-				}
-			}
-		}
-
-		double slope = AimLineAttack (angle + angleMod, DEFMELEERANGE, null, 0., ALF_CHECK3D);
-		LineAttack (angle + angleMod, DEFMELEERANGE, slope, damage, 'Melee', puffType);
-	}
-
 	action void A_CastSmite(Actor lineTarget)
 	{
 		if (!A_IsSmite())

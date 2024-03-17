@@ -728,6 +728,15 @@ class XRpgPlayer : PlayerPawn
         return blueResult && greenResult;
     }
 
+	MagicShield GetShield ()
+	{
+		let item = MagicShield(ActiveMagicItems[PAPERDOLL_SLOT_SHIELD]);
+		if (!item)
+			return null;
+		
+		return item;
+	}
+
 	override void CheatGive (String name, int amount)
 	{
 		let player = self.player;
@@ -782,5 +791,4 @@ class XRpgPlayer : PlayerPawn
 
 		Super.CheatGive(name, amount);
 	}
-
 }

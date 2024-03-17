@@ -1,6 +1,6 @@
 // The Cleric's Mace --------------------------------------------------------
 const FLAIL_MELEE_RANGE = DEFMELEERANGE * 2.25;
-class XRpgCWeapFlail : XRpgClericWeapon
+class XRpgCWeapFlail : XRpgClericShieldWeapon
 {
 	Default
 	{
@@ -20,15 +20,19 @@ class XRpgCWeapFlail : XRpgClericWeapon
 		WMST A -1;
 		Stop;
 	Select:
+	WeaponSelect:
 		CFLA A 1 A_Raise;
 		Loop;
 	Deselect:
+	WeaponDeselect:
 		CFLA A 1 A_Lower;
 		Loop;
 	Ready:
+	WeaponReady:
 		CFLA A 1 A_WeaponReady;
 		Loop;
 	Fire:
+	WeaponFire:
 		CFLA A 2;
         CFLA D 4;
         CFLA E 3;
@@ -38,14 +42,21 @@ class XRpgCWeapFlail : XRpgClericWeapon
         TNT1 A 8 A_ReFire;
 		Goto Ready;
 	AltFire:
-        CFLA B 4;
-        CFLA C 3 A_CFlailSwingAttack(true, 25);
-        CFLA H 3 A_CFlailSwingAttack(false, 0);
-        CFLA I 3 A_CFlailSwingAttack(false, -25);
-        CFLA J 6;
-        TNT1 A 12;
-        TNT1 A 6 A_ReFire;
-		Goto Ready;
+		Goto ShieldFrameAltFire;
+    AltHold:
+		Goto ShieldFrameAltHold;
+	ShieldKiteFire:
+		Goto ShieldFrameShieldKiteFire;
+	ShieldKiteHold:
+		Goto ShieldFrameShieldKiteHold;
+	ShieldRoundFire:
+		Goto ShieldFrameShieldRoundFire;
+	ShieldRoundHold:
+		Goto ShieldFrameShieldRoundHold;
+	ShieldMetalFire:
+		Goto ShieldFrameShieldMetalFire;
+	ShieldMetalHold:
+		Goto ShieldFrameShieldMetalHold;
 	}
 
 	action void A_CFlailAttack()
@@ -128,61 +139,6 @@ class XRpgCWeapFlail : XRpgClericWeapon
 				mo.target = player.mo;
 			}
 		}
-	}
-	
-	action void A_CFlailSwingAttack(bool isMainSwing, int angleMod = 0)
-	{
-		FTranslatedLineTarget t;
-
-		if (!player)
-			return;
-
-		int damage = random[CWeapFlailSwing](15, 35);
-
-        let xrpgPlayer = XRpgPlayer(player.mo);
-		if (!xrpgPlayer)
-			return;
-
-        bool isSmite = A_IsSmite();
-
-		class<Actor> puffType = "SmallMacePuffSilent";
-		if (isMainSwing)
-			puffType = "SmallMacePuff";
-        
-        damage += (xrpgPlayer.GetStrength() * 0.5);
-        if (isSmite)
-        {
-            damage += xrpgPlayer.GetMagic() * 1.5;
-            puffType = "SmallFlailIceSilent";
-            if (isMainSwing)
-			    puffType = "SmallFlailIce";
-        }
-
-		for (int i = 0; i < 16; i++)
-		{
-			for (int j = 1; j >= -1; j -= 2)
-			{
-				double ang = angle + angleMod + j*i*(45. / 16);
-				double slope = AimLineAttack(ang, FLAIL_MELEE_RANGE, t, 0., ALF_CHECK3D);
-				if (t.linetarget)
-				{
-					LineAttack(ang, FLAIL_MELEE_RANGE, slope, damage, 'Melee', puffType, true, t);
-					if (t.linetarget != null)
-					{
-						if (t.linetarget.bIsMonster || t.linetarget.player)
-						{
-                            AdjustPlayerAngle(t);
-                            A_ThrustTarget(t.linetarget, 4, t.attackAngleFromSource);
-						}
-
-						return;
-					}
-				}
-			}
-		}
-
-		double slope = AimLineAttack (angle + angleMod, FLAIL_MELEE_RANGE, null, 0., ALF_CHECK3D);
-		LineAttack (angle + angleMod, FLAIL_MELEE_RANGE, slope, damage, 'Melee', puffType);
 	}
 }
 

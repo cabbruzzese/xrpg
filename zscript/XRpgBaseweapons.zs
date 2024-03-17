@@ -425,6 +425,54 @@ class XRpgClericWeapon : XRpgWeapon
         
         return clericPlayer.IsSpellActive(SPELLTYPE_CLERIC_SMITE, true);
 	}
+
+    action void A_CWeaponMeleeAttack(int damageMin, int damageMax, int angleMod, double strengthMod, double magicMod, int range, class<actor> puffClass, bool isAdjust, int push)
+	{
+		FTranslatedLineTarget t;
+
+		if (!player)
+			return;
+
+		int damage = random[FWeeaponMelee](damageMin, damageMax);
+
+		let xrpgPlayer = XRpgPlayer(player.mo);
+        if (!xrpgPlayer)
+        return;
+
+        if (strengthMod > 0)
+            damage += xrpgPlayer.GetStrength() * strengthMod;
+
+        if (magicMod > 0)
+            damage += xrpgPlayer.GetMagic() * magicMod;
+  
+		for (int i = 0; i < 16; i++)
+		{
+			for (int j = 1; j >= -1; j -= 2)
+			{
+				double ang = angle + j*i*(45. / 32) + angleMod;
+				double slope = AimLineAttack(ang, range, t, 0., ALF_CHECK3D);
+				if (t.linetarget != null)
+				{
+					LineAttack(ang, range, slope, damage, 'Melee', puffClass, true, t);
+					if (t.linetarget != null)
+					{
+                        if (isAdjust)
+						    AdjustPlayerAngle(t);
+                        
+						if (push != 0 && (t.linetarget.bIsMonster || t.linetarget.player))
+						{
+                            A_ThrustTarget(t.linetarget, push, t.attackAngleFromSource);
+						}
+						weaponspecial = false;
+						return;
+					}
+				}
+			}
+		}
+		// didn't find any targets in meleerange
+		double slope = AimLineAttack (angle + angleMod, range, null, 0., ALF_CHECK3D);
+		weaponspecial = (LineAttack (angle + angleMod, range, slope, damage, 'Melee', puffClass, true) == null);
+	}
 }
 
 class XRpgMageWeapon : XRpgWeapon

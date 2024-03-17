@@ -39,6 +39,7 @@ const DEBUG_MODE = 0;
 #include "zscript/UtilityClasses.zs"
 #include "zscript/MonsterDrops.zs"
 #include "zscript/XRpgShield.zs"
+#include "zscript/XRpgShieldWeapon.zs"
 #include "zscript/StatueMonster.zs"
 #include "zscript/XRpgGargoyle.zs"
 #include "zscript/XRpgDecorations.zs"
