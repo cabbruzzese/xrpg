@@ -19,6 +19,7 @@ class TabMenuItem : PowerupGiver
 
     bool listable;
     property Listable:listable;
+    string text;
 
     Default
     {
@@ -36,7 +37,7 @@ class TabMenuItem : PowerupGiver
         if (!element)
         {
             element = new("TabMenuUIElement");
-            element.Init("", (DisplayHeight, DisplayWidth), Selectable, StopPropagation);
+            element.Init("", (DisplayHeight, DisplayWidth), Selectable, StopPropagation, GetTag());
         }
     }
 

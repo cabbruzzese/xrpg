@@ -8,13 +8,15 @@ class TabMenuUIElement
     bool stopPropagation;
 
     string image;
+    string text;
 
-    virtual void Init(string imageStr, vector2 size, bool selectableVal, bool stopPropagationVal)
+    virtual void Init(string imageStr, vector2 size, bool selectableVal, bool stopPropagationVal, string textVal)
     {
         image = imageStr;
         displaySize = size;
         selectable = selectableVal;
         stopPropagation = stopPropagationVal;
+        text = textVal;
     }
 
     virtual bool Clicked()
@@ -41,9 +43,9 @@ class PlayerUIElement : TabMenuUIElement
 {
 	PlayerPawn player;
 
-    void Init(string imageStr, vector2 size, bool selectableVal, bool stopPropagationVal, Vector2 newPos, PlayerPawn playerObj)
+    void Init(string imageStr, vector2 size, bool selectableVal, bool stopPropagationVal, Vector2 newPos, PlayerPawn playerObj, string textVal)
     {
-        super.Init(imageStr, size, selectableVal, stopPropagation);
+        super.Init(imageStr, size, selectableVal, stopPropagation, textVal);
 
         player = playerObj;
         displayPos = newPos;

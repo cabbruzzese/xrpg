@@ -5,6 +5,24 @@ const TAB_INV_OFFSET_Y = -30;
 const TAB_INV_ROWSIZE = 5;
 class TabMenuRenderer ui
 {
+    static void DrawLabel (BaseStatusBar sbar, XRpgPlayer playerObj, HUDFont smallFont)
+    {
+        string label;
+        let hud = playerObj.hud;
+        if (!hud)
+            return;
+
+        Vector2 pos = (150, -200);
+        if (hud.selectedItem)
+        {
+            sbar.DrawString(smallFont, hud.selectedItem.GetTag(), pos, sbar.DI_TEXT_ALIGN_CENTER);
+        }
+        else if (hud.mouseOverItem)
+        {
+            sbar.DrawString(smallFont, hud.mouseOverItem.Text, pos, sbar.DI_TEXT_ALIGN_CENTER);
+        }
+    }
+
     static void DrawCursor(BaseStatusBar sbar, PlayerHudController hud)
     {
         string icon = hud.CursorIcon;
@@ -60,7 +78,7 @@ class TabMenuRenderer ui
          
     }
 
-    static void Draw(BaseStatusBar sbar, PlayerInfo cplayer)
+    static void Draw(BaseStatusBar sbar, PlayerInfo cplayer, HUDFont smallFont)
     {
         if (automapactive)
         {
@@ -71,7 +89,9 @@ class TabMenuRenderer ui
             DrawIventoryItems(sbar, xrpgPlayer);
 
             //Always draw cursor last so it appears on top
-            DrawCursor(sbar, xrpgPlayer.hud);            
+            DrawCursor(sbar, xrpgPlayer.hud);
+
+            DrawLabel(sbar, xrpgPlayer, smallFont);  
         }
     }
 }
@@ -82,6 +102,52 @@ class PlayerHudController
     string cursorIcon;
 
     TabMenuItem selectedItem;
+    TabMenuUIElement mouseOverItem;
+
+    Array<TabMenuUIElement> uiElements;
+
+    void GetMouseOverItem()
+    {
+        mouseOverItem = null;
+
+        let player = players[consoleplayer].mo;
+        let playerObj = XRpgPlayer(player);
+        if (!playerObj)
+            return;
+
+        string label;
+        let hud = playerObj.hud;
+        if (!hud)
+            return;
+
+        let mousePos = hud.mousePos;
+
+        for (int i = 0; i < hud.uiElements.Size(); i++)
+        {
+            let slot = hud.uiElements[i];
+            if (slot && slot.IsInBounds(mousePos))
+            {
+                mouseOverItem = slot;
+            }
+        }
+        
+        if (!mouseOverItem)
+        {
+            for(let i = playerObj.Inv; i != null; i = i.Inv)
+            {
+                let item = TabMenuItem(i);
+                if (!item)
+                    continue;
+                
+                let element = item.element;
+                if (element && element.IsInBounds(mousePos))
+                {
+                    mouseOverItem = element;
+                    break;
+                }
+            }
+        }
+    }
 
     void AdjustMouse (int xval, int yval, Vector2 maxSize)
 	{
@@ -90,12 +156,15 @@ class PlayerHudController
 
 		mousePos.X = Math.Clamp(newX, -maxSize.X, maxSize.X);
 		mousePos.Y = Math.Clamp(newY, -maxSize.Y, maxSize.Y);
+
+        GetMouseOverItem();
 	}
 
     void ResetMouse ()
 	{
 		mousePos = (0,0);
         selectedItem = null;
+        mouseOverItem = null;
 	}
 
     play void MouseClicked(bool rightClick = false)

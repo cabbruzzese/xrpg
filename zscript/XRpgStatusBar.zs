@@ -23,7 +23,7 @@ class XRpgStatusBar : HexenStatusBar
 		fnt = "BIGFONT";
 		mBigFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft, 2, 2);
 		fnt = "SMALLFONT";
-		mSmallFont = HUDFont.Create(fnt, fnt.GetCharWidth("0"), Mono_CellLeft);
+		mSmallFont = HUDFont.Create(fnt, 0, Mono_Off);
 		diparms = InventoryBarState.Create(mIndexFont);
 		diparms_sbar = InventoryBarState.CreateNoBox(mIndexFont, boxsize:(31, 31), arrowoffs:(0,-10));
 		mHealthInterpolator = DynamicValueInterpolator.Create(0, 0.25, 1, 8);
@@ -74,7 +74,7 @@ class XRpgStatusBar : HexenStatusBar
 		DrawSkillStuff();
 		DrawMagicItemStuff(state == HUD_Fullscreen);
 
-		TabMenuRenderer.Draw(self, CPlayer);
+		TabMenuRenderer.Draw(self, CPlayer, mSmallFont);
 	}
 
 	protected void DrawFullScreenStuff ()

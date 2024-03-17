@@ -10,13 +10,13 @@ class EquipmentSlotElement : ItemSlotElement
 {
 	Name equipmentType;
 
-	static EquipmentSlotElement Create(string imageStr, vector2 size, bool selectableVal, bool stopPropagationVal, Vector2 newPos, PlayerPawn playerObj, Name equipmentType)
+	static EquipmentSlotElement Create(string imageStr, string textVal, vector2 size, bool selectableVal, bool stopPropagationVal, Vector2 newPos, PlayerPawn playerObj, Name equipmentType)
 	{
 		let newObject = new ('EquipmentSlotElement');
 		
 		newObject.equipmentType = equipmentType;
 
-		newObject.init(imageStr, size, selectableVal, stopPropagationVal, newPos, playerObj);
+		newObject.init(imageStr, size, selectableVal, stopPropagationVal, newPos, playerObj, textVal);
 
 		return newObject;
 	}
@@ -43,11 +43,11 @@ class TrashItemElement : ItemSlotElement
 {
 	XRpgEquipableItem trashItem;
 
-	static TrashItemElement Create(string imageStr, vector2 size, bool selectableVal, bool stopPropagationVal, Vector2 newPos, PlayerPawn playerObj)
+	static TrashItemElement Create(string imageStr, string textVal, vector2 size, bool selectableVal, bool stopPropagationVal, Vector2 newPos, PlayerPawn playerObj)
 	{
 		let newObject = new ('TrashItemElement');
 		
-		newObject.init(imageStr, size, selectableVal, stopPropagationVal, newPos, playerObj);
+		newObject.init(imageStr, size, selectableVal, stopPropagationVal, newPos, playerObj, textVal);
 
 		return newObject;
 	}
