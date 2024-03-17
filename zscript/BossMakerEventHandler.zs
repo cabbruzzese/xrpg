@@ -106,6 +106,20 @@ class BossMakerEventHandler : EventHandler
                     e.Replacement = 'LeatherBodyArmor';
                     break;
             }
+        }
+        else if (e.Replacee is 'PlatinumHelm')
+        {
+            Name spawnType;
+            int magicItemNum = random[MagicItemSpawn](1,2);
+            switch (magicItemNum)
+            {
+                case 1:
+                    e.Replacement = 'PlatinumHelmet';
+                    break;
+                case 2:
+                    e.Replacement = 'MetalCap';
+                    break;
+            }
         } 
 	}
 }

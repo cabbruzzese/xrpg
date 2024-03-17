@@ -469,6 +469,11 @@ class XRpgStatusBar : HexenStatusBar
 		{
 			DrawImage(trash.image, trash.displayPos, 0);
 		}
+
+		if (xrpgPlayer.isArmorSlowed)
+		{
+			DrawImage("SLOWA0", (miXPos + 50, trash.displayPos.y), 0);
+		}
 	}
 
 	protected void DrawVisor(bool fullscreen)

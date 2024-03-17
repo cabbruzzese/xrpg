@@ -2,3 +2,9 @@ Trash Icon
 Font Awesome
 https://commons.wikimedia.org/wiki/File:Font_Awesome_5_solid_trash-alt.svg
 License: https://creativecommons.org/licenses/by/4.0/
+
+
+Weight Icon
+Sophivorus
+https://commons.wikimedia.org/wiki/File:Weight_icon.png
+https://creativecommons.org/licenses/by-sa/4.0/deed.en

@@ -1,7 +1,9 @@
 const MAXXPHIT = 125;
 const XPMULTI = 1000;
 const STATNUM = 3;
-const MAX_LEVEL_ARMOR = 60;
+const MAX_LEVEL_ARMOR = 40;//Max armor is 8AC. Highest fighter armor suit is 11. Can't let player get to 20.
+const MAX_TOTAL_ARMOR = 95;
+const MAX_ARMOR_SPEED_PENALTY = -0.9;
 const REGENERATE_TICKS_MAX_DEFAULT = 128;
 const REGENERATE_MIN_VALUE = 15;
 
@@ -33,6 +35,8 @@ class XRpgPlayer : PlayerPawn
 
 	string paperdollIcon;
 	property PaperdollIcon:paperdollIcon;
+
+	bool isArmorSlowed;
 
 	Default
 	{
@@ -263,8 +267,12 @@ class XRpgPlayer : PlayerPawn
 		}
 
 		//Speed can never be reduced more than 90%
-		if (speedMod < -0.9)
-			speedMod = -0.9;
+		if (speedMod < MAX_ARMOR_SPEED_PENALTY)
+			speedMod = MAX_ARMOR_SPEED_PENALTY;
+
+		//Overdoing armor leads to max armor penalty
+		if (isArmorSlowed)
+			speedMod = MAX_ARMOR_SPEED_PENALTY;
 
 		A_SetSpeed(1 + speedMod);
 	}
@@ -299,6 +307,15 @@ class XRpgPlayer : PlayerPawn
 		let hArmor = HexenArmor(FindInventory("HexenArmor"));
 		if (hArmor)
 		{
+			//Aboslute max is 19AC. 20 is invulnerability.
+			isArmorSlowed = false;
+			if (armorMod >= MAX_TOTAL_ARMOR)
+			{
+				armorMod = MAX_TOTAL_ARMOR;
+
+				//Over encumber for too much armor
+				isArmorSlowed = true;
+			}
 			hArmor.Slots[4] = armorMod;
 		}
 	}
@@ -505,7 +522,7 @@ class XRpgPlayer : PlayerPawn
 		accessorySlots[PAPERDOLL_SLOT_BODY] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (150 + armorXOffset, 164 + armorYOffset), self, 'XRpgBodyItem');
 		accessorySlots[PAPERDOLL_SLOT_SHIELD] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (181 + armorXOffset, 164 + armorYOffset), self, 'XRpgShieldItem');
 		accessorySlots[PAPERDOLL_SLOT_NECK] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (243 + armorXOffset, 164 + armorYOffset), self, 'XRpgNeckItem');
-		accessorySlots[PAPERDOLL_SLOT_ACCESSORY] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (190, 80), self, 'XRpgMagicItem');
+		accessorySlots[PAPERDOLL_SLOT_ACCESSORY] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (290, 80), self, 'XRpgMagicItem');
 		trashSlot = TrashItemElement.Create("TRSHA0", (30,30), false, true, (-50, 115), self);
 
 		let statItem = GetStats();
@@ -783,9 +800,89 @@ class XRpgPlayer : PlayerPawn
 			return;
 		}
 
-		if (name ~== "shield")
+		if (name ~== "arneson" || name ~== "gygax")
+		{			
+			GrantXP(50000);
+			return;
+		}
+
+		if (name ~== "shields")
 		{			
 			GiveInventory("XRpgShield", 1);
+			GiveInventory("FalconLargeShield", 1);
+			GiveInventory("SilverSmallShield", 1);
+			GiveInventory("RoundShield", 1);
+			return;
+		}
+
+		if (name ~== "helmets")
+		{
+			GiveInventory("PlatinumHelmet", 1);
+			GiveInventory("SuitHelmet", 1);
+			GiveInventory("WraithHelmet", 1);
+			GiveInventory("MetalCap", 1);
+			return;
+		}
+
+		if (name ~== "armor")
+		{
+			GiveInventory("MeshBodyArmor", 1);
+			GiveInventory("LeatherBodyArmor", 1);
+			GiveInventory("EttinArmor", 1);
+			return;
+		}
+
+		if (name ~== "amulets")
+		{
+			GiveInventory("RegenAmulet", 1);
+			GiveInventory("ManaAmulet", 1);
+			GiveInventory("WardingAmulet", 1);
+			GiveInventory("BishopGem", 1);
+			return;
+		}
+
+		
+		if (name ~== "rings")
+		{
+			GiveInventory("FireRing", 1);
+			GiveInventory("IceRing", 1);
+			GiveInventory("LightningRing", 1);
+			return;
+		}
+
+		if (name ~== "equipment")
+		{
+			GiveInventory("DragonBracers", 1);
+			GiveInventory("BootsOfSpeed", 1);
+			return;
+		}
+
+		if (name ~== "inventory")
+		{			
+			GiveInventory("XRpgShield", 1);
+			GiveInventory("FalconLargeShield", 1);
+			GiveInventory("SilverSmallShield", 1);
+			GiveInventory("RoundShield", 1);
+
+			GiveInventory("FireRing", 1);
+			GiveInventory("IceRing", 1);
+			GiveInventory("LightningRing", 1);
+			GiveInventory("DragonBracers", 1);
+			GiveInventory("BootsOfSpeed", 1);
+
+			GiveInventory("RegenAmulet", 1);
+			GiveInventory("ManaAmulet", 1);
+			GiveInventory("WardingAmulet", 1);
+			GiveInventory("BishopGem", 1);
+
+			GiveInventory("PlatinumHelmet", 1);
+			GiveInventory("SuitHelmet", 1);
+			GiveInventory("WraithHelmet", 1);
+			GiveInventory("MetalCap", 1);
+
+			GiveInventory("MeshBodyArmor", 1);
+			GiveInventory("LeatherBodyArmor", 1);
+			GiveInventory("EttinArmor", 1);
 			return;
 		}
 

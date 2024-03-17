@@ -34,6 +34,10 @@ class MagicArmor : XRpgMagicItem
     }
 }
 
+//-----------------------------------
+// Magic Items
+//-----------------------------------
+
 class DragonBracers : MagicArmor
 {
 	Default
@@ -98,34 +102,9 @@ class BootsOfSpeed : MagicArmor replaces ArtiSpeedBoots
     }
 }
 
-class PlatinumHelmet : XRpgHelmetItem replaces PlatinumHelm
-{
-	Default
-	{
-		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.FANCYPICKUPSOUND
-		Inventory.Icon "AR_3A0";
-		Inventory.PickupSound "misc/p_pkup";
-		
-		Tag "$TAG_PLATINUMHELM";
-        XRpgEquipableItem.EffectMessage "$TXT_PLATINUMHELM_USE";
-				
-		XRpgEquipableItem.ArmorBonus 5;
-	}
-	States
-	{
-	Spawn:
-		AR_3 A -1;
-		Loop;
-	}
-
-    override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, 32);
-    }
-}
+//-----------------------------------------
+// Body Armor
+//-----------------------------------------
 
 class EttinArmor : XRpgBodyItem
 {
@@ -210,57 +189,38 @@ class LeatherBodyArmor : XRpgBodyItem
         A_SpriteOffset(0, -14);
     }
 }
-	
-class WardingAmulet : XRpgNeckItem replaces AmuletOfWarding
+
+//--------------------------------------------------
+// Helmets
+//--------------------------------------------------
+class PlatinumHelmet : XRpgHelmetItem
 {
 	Default
 	{
 		Inventory.PickupFlash "PickupFlash";
 		+INVENTORY.FANCYPICKUPSOUND
-		Inventory.Icon "AR_4B0";
+		Inventory.Icon "AR_3A0";
 		Inventory.PickupSound "misc/p_pkup";
 		
-		Tag "$TAG_WARDINGAMULET";
-        XRpgEquipableItem.EffectMessage "$TXT_WARDINGAMULET_USE";
+		Tag "$TAG_PLATINUMHELM";
+        XRpgEquipableItem.EffectMessage "$TXT_PLATINUMHELM_USE";
 				
-		XRpgEquipableItem.ArmorBonus 15;
+		XRpgEquipableItem.ArmorBonus 5;
+		XRpgArmorItem.IsHeavy true;
 	}
 	States
 	{
 	Spawn:
-		AR_4 B -1;
-		Stop;
+		AR_3 A -1;
+		Loop;
 	}
 
-	override void PostBeginPlay()
+    override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
 
-        A_SpriteOffset(0, -1);
+        A_SpriteOffset(0, 32);
     }
-}
-
-class BishopGem : XRpgNeckItem
-{
-	Default
-	{
-		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.FANCYPICKUPSOUND
-		Inventory.Icon "AAMUA0";
-		Inventory.PickupSound "misc/p_pkup";
-		
-		Tag "$TAG_BISHOPGEM";
-        XRpgEquipableItem.EffectMessage "$TXT_ARMOR_BISHOPGEM";
-				
-		XRpgEquipableItem.ArmorBonus 20;
-	}
-	States
-	{
-	Spawn:
-		AAMU ABCD 8;
-		AAMU D -1;
-		Stop;
-	}
 }
 
 class SuitHelmet : XRpgHelmetItem
@@ -302,13 +262,35 @@ class WraithHelmet : XRpgHelmetItem
 		Tag "$TAG_WRAITHHELM";
         XRpgEquipableItem.EffectMessage "$TXT_ARMOR_WRAITHHELM";
 				
-		XRpgEquipableItem.ArmorBonus 5;
+		XRpgEquipableItem.ArmorBonus 10;
 	}
 	States
 	{
 	Spawn:
 		AHLM ABCDA 4;
 		AHLM A -1;
+		Stop;
+	}
+}
+
+class MetalCap : XRpgHelmetItem
+{
+	Default
+	{
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "CAPHA0";
+		Inventory.PickupSound "misc/p_pkup";
+		
+		Tag "$TAG_METALCAP";
+        XRpgEquipableItem.EffectMessage "$TXT_METALCAP_USE";
+				
+		XRpgEquipableItem.ArmorBonus 5;
+	}
+	States
+	{
+	Spawn:
+		CAPH A -1;
 		Stop;
 	}
 }

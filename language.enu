@@ -74,6 +74,7 @@ TAG_CENTAURSHIELD = "Centaur Shield.";
 TAG_ROUNDSHIELD = "Round Shield.";
 TAG_SILVERSHIELD = "Silver Shield.";
 TAG_LEATHERARMOR = "Leather Armor.";
+TAG_METALCAP = "Metal Cap.";
 
 TXT_MAGICITEMPICKUP = "This item emits a strong magical aura.";
 TXT_ARMORITEMPICKUP = "A piece of armor.";
@@ -93,3 +94,4 @@ TXT_CENTAURSHIELD_USE = "This spiked shield radiates a dark energy.";
 TXT_ROUNDSHIELD_USE = "A wooden round shield.";
 TXT_SILVERSHIELD_USE = "This silver shield is fireproof.";
 TXT_LEATHERARMOR_USE = "Light armor that is easy to move in.";
+TXT_METALCAP_USE = "A light metal cap.";

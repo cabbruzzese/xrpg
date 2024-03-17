@@ -100,7 +100,7 @@ class ManaAmulet : MagicAmulet
 		Tag "$TAG_MANAAMULET";
 
 		XRpgEquipableItem.EffectMessage "$TXT_MANAAMULET_USE";
-        MagicAmulet.timerMax 15;
+        MagicAmulet.timerMax 22;
 	}
 	States
 	{
@@ -149,6 +149,7 @@ class ManaAmulet : MagicAmulet
         let xrpgPlayer = XRpgPlayer(Owner);
         if (xrpgPlayer)
         {
+            manaNum++;
             if (manaNum == 1)
                 TryGiveBlueMana(MANA_REGEN_THRESHOLD);
             else
@@ -158,4 +159,56 @@ class ManaAmulet : MagicAmulet
                 manaNum = 0;
         }
     }
+}
+
+class WardingAmulet : XRpgNeckItem replaces AmuletOfWarding
+{
+	Default
+	{
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "AR_4B0";
+		Inventory.PickupSound "misc/p_pkup";
+		
+		Tag "$TAG_WARDINGAMULET";
+        XRpgEquipableItem.EffectMessage "$TXT_WARDINGAMULET_USE";
+				
+		XRpgEquipableItem.ArmorBonus 15;
+	}
+	States
+	{
+	Spawn:
+		AR_4 B -1;
+		Stop;
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+        A_SpriteOffset(0, -1);
+    }
+}
+
+class BishopGem : XRpgNeckItem
+{
+	Default
+	{
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "AAMUA0";
+		Inventory.PickupSound "misc/p_pkup";
+		
+		Tag "$TAG_BISHOPGEM";
+        XRpgEquipableItem.EffectMessage "$TXT_ARMOR_BISHOPGEM";
+				
+		XRpgEquipableItem.ArmorBonus 20;
+	}
+	States
+	{
+	Spawn:
+		AAMU ABCD 8;
+		AAMU D -1;
+		Stop;
+	}
 }
