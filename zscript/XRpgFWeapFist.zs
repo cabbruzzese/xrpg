@@ -155,7 +155,7 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', "PunchPuff", true);
 	}
 	
-    private action bool TryPunch2(double angle, int damage, int power)
+    private action bool TryPunch2(double angle, int damage, int power, bool firstAttack)
 	{
 		Class<Actor> pufftype;
 		FTranslatedLineTarget t;
@@ -164,6 +164,8 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		if (t.linetarget != null)
 		{
             pufftype = "HammerPuff";
+			if (!firstAttack)
+				pufftype = "Punch2Puff";
 
             let xrpgPlayer = XRpgPlayer(player.mo);
 			if (xrpgPlayer != null)
@@ -197,10 +199,10 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 
 		//only swing if never hit
 		if (!invoker.hasAltHit)
-			A_FPunchAttack2(doThrust);
+			A_FPunchAttack2(doThrust, firstAttack);
 	}
 
-    action void A_FPunchAttack2(bool doThrust)
+    action void A_FPunchAttack2(bool doThrust, bool firstAttack = false)
     {
 		if (!player)
 			return;
@@ -236,8 +238,8 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 
 		for (int i = 0; i < 16; i++)
 		{
-			if (TryPunch2(angle + i*(45./16), damage, power) ||
-				TryPunch2(angle - i*(45./16), damage, power))
+			if (TryPunch2(angle + i*(45./16), damage, power, firstAttack) ||
+				TryPunch2(angle - i*(45./16), damage, power, firstAttack))
 			{ // hit something
 				invoker.hasAltHit = true;
 				return;
@@ -247,7 +249,20 @@ class XRpgFWeapFist : XRpgFighterWeapon replaces FWeapFist
 		weaponspecial = 0;
 
 		double slope = AimLineAttack (angle, DEFMELEERANGE, null, 0., ALF_CHECK3D);
-		if (LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', "PunchPuff", true))
+
+		Class<Actor> puffType = "PunchPuff";
+		if (!firstAttack)
+			puffType = "Punch2Puff"; 
+		if (LineAttack (angle, DEFMELEERANGE, slope, damage, 'Melee', puffType, true))
 			invoker.hasAltHit = true;
     }
+}
+
+class Punch2Puff : HammerPuff
+{
+	Default
+	{
+		AttackSound "";
+ 		ActiveSound "";
+	}
 }

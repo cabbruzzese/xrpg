@@ -10,6 +10,7 @@ class XRpgPlayer : PlayerPawn
 	PlayerHudController hud;
 	EquipmentSlotElement accessorySlots[PAPERDOLL_SLOTS];
 	XRpgEquipableItem activeMagicItems[PAPERDOLL_SLOTS];
+	TrashItemElement trashSlot;
 
 	int initStrength;
 	int initDexterity;
@@ -505,6 +506,7 @@ class XRpgPlayer : PlayerPawn
 		accessorySlots[PAPERDOLL_SLOT_SHIELD] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (181 + armorXOffset, 164 + armorYOffset), self, 'XRpgShieldItem');
 		accessorySlots[PAPERDOLL_SLOT_NECK] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (243 + armorXOffset, 164 + armorYOffset), self, 'XRpgNeckItem');
 		accessorySlots[PAPERDOLL_SLOT_ACCESSORY] = EquipmentSlotElement.Create("ARTIBOX", (30,30), false, true, (190, 80), self, 'XRpgMagicItem');
+		trashSlot = TrashItemElement.Create("TRSHA0", (30,30), false, true, (-50, 115), self);
 
 		let statItem = GetStats();
 		GiveLevelSkill(statItem);
@@ -611,6 +613,17 @@ class XRpgPlayer : PlayerPawn
 				}
 
 				accessorySlots[i].clearSlot = false;
+			}
+		}
+
+		if (trashSlot)
+		{
+			if (trashSlot.trashItem)
+			{
+				let trash = trashSlot.trashItem;
+				if (trash)
+					DropInventory(trash);
+				trashSlot.trashItem = null;
 			}
 		}
 	}

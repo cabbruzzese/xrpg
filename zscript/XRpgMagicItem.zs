@@ -39,6 +39,39 @@ class EquipmentSlotElement : ItemSlotElement
 	}
 }
 
+class TrashItemElement : ItemSlotElement
+{
+	XRpgEquipableItem trashItem;
+
+	static TrashItemElement Create(string imageStr, vector2 size, bool selectableVal, bool stopPropagationVal, Vector2 newPos, PlayerPawn playerObj)
+	{
+		let newObject = new ('TrashItemElement');
+		
+		newObject.init(imageStr, size, selectableVal, stopPropagationVal, newPos, playerObj);
+
+		return newObject;
+	}
+
+	override bool Clicked()
+	{
+		let xrpgPlayer = xrpgPlayer(player);
+
+		if (xrpgPlayer)
+		{
+			if (xrpgPlayer.hud.selectedItem)
+			{
+				let trash = XRpgEquipableItem(xrpgPlayer.hud.selectedItem);
+				if (trash)
+					trashItem = trash;
+			}
+
+			return true;
+		}
+
+		return super.Clicked();
+	}
+}
+
 class XRpgEquipableItem : TabMenuItem
 {
 	double speedBoost;

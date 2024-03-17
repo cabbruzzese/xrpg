@@ -463,6 +463,12 @@ class XRpgStatusBar : HexenStatusBar
 					DrawInventoryIcon(item, (slot.displayPos.X, slot.displayPos.Y - ICON_BOX_OFFSET_Y), DI_ITEM_CENTER, boxsize:(28, 28));
 			}
 		}
+
+		let trash = xrpgPlayer.trashSlot;
+		if (trash)
+		{
+			DrawImage(trash.image, trash.displayPos, 0);
+		}
 	}
 
 	protected void DrawVisor(bool fullscreen)

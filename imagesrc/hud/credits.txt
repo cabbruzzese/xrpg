@@ -1,0 +1,4 @@
+Trash Icon
+Font Awesome
+https://commons.wikimedia.org/wiki/File:Font_Awesome_5_solid_trash-alt.svg
+License: https://creativecommons.org/licenses/by/4.0/

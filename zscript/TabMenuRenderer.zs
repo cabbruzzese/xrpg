@@ -149,6 +149,19 @@ class PlayerHudController
                 }
             }
 
+            if (xrpgPlayer.trashSlot)
+            {
+                let trash = xrpgPlayer.trashSlot;
+                if (xrpgPlayer && trash)
+                {
+                    if (trash.IsInBounds(mousePos))
+                    {
+                        if (trash.Clicked())
+                            selectedItem = null;
+                    }
+                }
+            }
+
             selectedItem = null;
         }
     }
