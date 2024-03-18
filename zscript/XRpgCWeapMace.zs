@@ -7,7 +7,7 @@ class XRpgCWeapMace : XRpgClericShieldWeapon replaces CWeapMace
 		+WEAPON.MELEEWEAPON
 		Weapon.SelectionOrder 3500;
 		Weapon.KickBack 150;
-		Weapon.YAdjust -8;
+		//Weapon.YAdjust -8;
 		+BLOODSPLATTER
 		Obituary "$OB_MPCWEAPMACE";
 		Tag "$TAG_CWEAPMACE";

@@ -108,6 +108,11 @@ class PlayerHudController
 
     void GetMouseOverItem()
     {
+        //Do not do mouse over when not in automap. This should be checked in the event handler,
+        // but don't even risk this uncessary processing every UI frame during gameplay
+        if (!automapactive)
+            return;
+
         mouseOverItem = null;
 
         let player = players[consoleplayer].mo;
@@ -169,6 +174,11 @@ class PlayerHudController
 
     play void MouseClicked(bool rightClick = false)
     {
+        //Do not do mouse over when not in automap. This should be checked in the event handler,
+        // but don't even risk this uncessary processing every UI frame during gameplay
+        if (!automapactive)
+            return;
+
         //find if TabMenu UI item is clicked on
         let player = players[consoleplayer].mo;
         let playerObj = PlayerPawn(player);

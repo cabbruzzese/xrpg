@@ -40,10 +40,14 @@ class MagicShield : XRpgShieldItem
 		if (!inflictor)
 			return;
 		
-		let xrpgPlayer = XRpgFighterPlayer(Owner);
+		let xrpgPlayer = XRpgPlayer(Owner);
         if (!xrpgPlayer)
 			return;
 		
+		//Only apply if activated
+		if (!IsActive())
+			return;
+
         if (!IsShieldTimeoutActive())
             return;
 
@@ -76,8 +80,12 @@ class MagicShield : XRpgShieldItem
 
 		if (!Owner)
 			return;
-		let xrpgPlayer = XRpgFighterPlayer(Owner);
+		let xrpgPlayer = XRpgPlayer(Owner);
         if (!xrpgPlayer)
+			return;
+
+		//Only apply if activated
+		if (!IsActive())
 			return;
 
 		if (ShieldTimeout > 0)
@@ -85,9 +93,11 @@ class MagicShield : XRpgShieldItem
 			ShieldTimeout--;
 
 			xrpgPlayer.bDONTTHRUST = true;
+			//console.printf("Don't thrust!");
 		}
 		else
 		{
+			//console.printf("Don't thrust again!");
 			xrpgPlayer.bDONTTHRUST = false;
 		}    
 	}
