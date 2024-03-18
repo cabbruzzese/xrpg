@@ -473,6 +473,14 @@ class XRpgClericWeapon : XRpgWeapon
 		double slope = AimLineAttack (angle + angleMod, range, null, 0., ALF_CHECK3D);
 		weaponspecial = (LineAttack (angle + angleMod, range, slope, damage, 'Melee', puffClass, true) == null);
 	}
+
+    action void A_SwingDecide()
+	{
+		if (random(1,2) == 1)
+		{
+			A_Mirror();
+		}
+	}
 }
 
 class XRpgMageWeapon : XRpgWeapon

@@ -63,6 +63,17 @@ class XRpgCWeapMace : XRpgClericShieldWeapon replaces CWeapMace
 		Goto ShieldFrameShieldMetalFire;
 	ShieldMetalHold:
 		Goto ShieldFrameShieldMetalHold;
+	Swing:
+		TNT1 A 0 A_SwingDecide;
+		CMC2 A 10;
+		CMC2 A 1 A_GruntSound(-1);
+		CMC2 B 2;
+		CMC2 C 2 A_CMaceAttack(1, 60, 25);
+		CMC2 D 2;
+		CMC2 E 2;
+		TNT1 A 15;
+		TNT1 A 0 A_RestoreMirror;
+		Goto Ready;
 	}
 	
 	//===========================================================================
@@ -71,14 +82,14 @@ class XRpgCWeapMace : XRpgClericShieldWeapon replaces CWeapMace
 	//
 	//===========================================================================
 
-	action void A_CMaceAttack()
+	action void A_CMaceAttack(int minDamage = 1, int maxDamage = 40, int push = 0)
 	{
 		FTranslatedLineTarget t;
 
 		if (!player)
 			return;
 
-		int damage = random[CWeapMace](1, 40);
+		int damage = random[CWeapMace](minDamage, maxDamage);
 
         let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
@@ -100,6 +111,9 @@ class XRpgCWeapMace : XRpgClericShieldWeapon replaces CWeapMace
 						//Cast Smite
 						A_CastSmite(t.linetarget);
 
+						if (push != 0 && (t.linetarget.bIsMonster || t.linetarget.player))
+						    A_ThrustTarget(t.linetarget, push, t.attackAngleFromSource);
+						
 						return;
 					}
 				}

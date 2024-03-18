@@ -334,6 +334,8 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
         CSH4 E 4;
         CSH4 DCBA 2;
         Goto Ready;
+	ShieldFrameSwing:
+		TNT1 A 0 A_ForwardSwing;
 	}
 
 	action void A_ForwardToReady()
@@ -348,9 +350,13 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
 	{
 		A_SetWeapState("WeaponDeselect");
 	}
-		action void A_ForwardToFire()
+	action void A_ForwardToFire()
 	{
 		A_SetWeapState("WeaponFire");
+	}
+	action void A_ForwardSwing()
+	{
+		A_SetWeapState("Swing");
 	}
 
 	action void A_CheckShield()
@@ -365,7 +371,7 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
 		let shieldItem = xrpgPlayer.GetShield();
         if (!shieldItem)
         {
-            A_SetWeapState("Ready");
+            A_SetWeapState("Swing");
             return;
         }
 		
@@ -384,7 +390,7 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
 		}
 
 		//default to ready state
-		A_SetWeapState("Ready");
+		A_SetWeapState("Swing");
         return;
     }
 
@@ -400,7 +406,7 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
 		let shieldItem = xrpgPlayer.GetShield();
         if (!shieldItem)
         {
-            A_SetWeapState("Ready");
+            A_SetWeapState("Swing");
             return;
         }
 		
@@ -419,7 +425,7 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
 		}
 
 		//default to fist
-		A_SetWeapState("Ready");
+		A_SetWeapState("Swing");
         return;
     }
 

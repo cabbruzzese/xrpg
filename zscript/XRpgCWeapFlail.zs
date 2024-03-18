@@ -57,16 +57,30 @@ class XRpgCWeapFlail : XRpgClericShieldWeapon
 		Goto ShieldFrameShieldMetalFire;
 	ShieldMetalHold:
 		Goto ShieldFrameShieldMetalHold;
+	Swing:
+		TNT1 A 0 A_SwingDecide;
+		CFL2 A 10;
+		CFL2 A 1 A_GruntSound(-1);
+		CFL2 B 2;
+		CFL2 C 2;
+		CFL2 D 2;
+		CFL2 E 2;
+		CFL2 F 2 A_CFlailAttack(20, 85, 25);
+		CFL2 G 2;
+		CFL2 H 2;
+		TNT1 A 15;
+		TNT1 A 0 A_RestoreMirror;
+		Goto Ready;
 	}
 
-	action void A_CFlailAttack()
+	action void A_CFlailAttack(int minDamage = 1, int maxDamage = 65, int push = 0)
 	{
 		FTranslatedLineTarget t;
 
 		if (!player)
 			return;
 
-		int damage = random[CWeapFlail](30, 90);
+		int damage = random[CWeapFlail](minDamage, maxDamage);
 
         let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer != null)
@@ -100,6 +114,9 @@ class XRpgCWeapFlail : XRpgClericShieldWeapon
                             let hitBackoffPos = puffObj.Pos - (dir * FLAIL_ICE_OFFSET_DIST);
                             A_IceSpellMissileExplode(hitBackoffPos);
                         }
+
+						if (push != 0 && (t.linetarget.bIsMonster || t.linetarget.player))
+                            A_ThrustTarget(t.linetarget, push, t.attackAngleFromSource);
 
 						return;
 					}
