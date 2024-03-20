@@ -201,6 +201,9 @@ class XRpgAccessorySlotItem : XRpgEquipableItem
 
 class XRpgMagicItem : XRpgAccessorySlotItem
 {
+	bool modifyDamageBypass0;
+	property ModifyDamageBypass0: modifyDamageBypass0;
+
 	Default
 	{
 		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";

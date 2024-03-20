@@ -113,10 +113,16 @@ class StunSpell : FighterSpellItem
 		if (IsEffectTimeoutActive())
 			return;
 
-		if (!passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
+		if (!passive && Owner && Owner.Player && Owner.Player.mo)
         {
 			if (!source || !source.bISMONSTER || damageType != "Melee")
 				return;
+
+			//If no damage and not an item that bypasses modify item
+			let magicItem = XRpgMagicItem(xrpgPlayer.ActiveMagicItems[PAPERDOLL_SLOT_ACCESSORY]);
+			if (damage <= 0 && (!magicItem || !magicItem.ModifyDamageBypass0))
+				return; //do not do effect
+
 
 			//Stunning korax makes the game unbeatable
 			if (source is "Korax")
@@ -182,10 +188,15 @@ class PowerSpell : FighterSpellItem
 		if (IsEffectTimeoutActive())
 			return;
 
-		if (!passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
+		if (!passive && Owner && Owner.Player && Owner.Player.mo)
         {
 			if (!source || !source.bISMONSTER || damageType != "Melee")
 				return;
+
+			//If no damage and not an item that bypasses modify item
+			let magicItem = XRpgMagicItem(xrpgPlayer.ActiveMagicItems[PAPERDOLL_SLOT_ACCESSORY]);
+			if (damage <= 0 && (!magicItem || !magicItem.ModifyDamageBypass0))
+				return; //do not do effect
 
 			HitCount++;
 

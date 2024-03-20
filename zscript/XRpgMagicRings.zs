@@ -84,6 +84,8 @@ class DamageMagicItem : XRpgMagicItem
 		DamageMagicItem.damageMin MAGICITEM_DAMAGE_MIN;
 		DamageMagicItem.damageMax MAGICITEM_DAMAGE_MAX;
 		DamageMagicItem.DamageThreshold MAGICITEM_DAMAGE_THRESHOLD;
+
+		XRpgMagicItem.ModifyDamageBypass0 true;
 	}
 
     override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
@@ -134,19 +136,20 @@ class DamageMagicItem : XRpgMagicItem
 			//If damage is a normal type, completely replace this attack with a new one
 			else if (damageType == "Melee" || damageType == "Normal" || damageType == "None")
 			{
+				//Added special damage to 1 less than total (minimum 1)
 				int totalDamage = damage + ringDamage;
 
 				//Damage target with ring damage type and ring as inflictor so we can ignore second damage calculation
-				source.DamageMobj(Owner, self, totalDamage, RingDamageType, 0);
+				source.DamageMobj(Owner, Owner, totalDamage, RingDamageType);
 
-				//Do not give normal damage
+				//Give 1 point of normal damage to allow other effects
 				newdamage = 0;
 			}
 			//If damage is a special type, apply extra damage of ring type
 			else
 			{
 				//Damage target with ring damage type and ring as inflictor so we can ignore second damage calculation
-				source.DamageMobj(Owner, self, ringDamage, RingDamageType, 0);
+				source.DamageMobj(Owner, Owner, ringDamage, RingDamageType);
 			}
 
 			ActorUtils.ThrowSparks(source, SparkType);
