@@ -226,6 +226,9 @@ class MageFrostFlameMissileSmoke : Actor
 }
 class MageFrostFlameMissile : TimedActor
 {
+	bool isDoneImpacting;
+	bool hasExploded;
+
     Default
     {
         Speed 15;
@@ -247,7 +250,7 @@ class MageFrostFlameMissile : TimedActor
 		-NOGRAVITY
 		Health 4;
 
-		TimedActor.TimeLimit 100;
+		TimedActor.TimeLimit 150;
 		TimedActor.DieOnTimer true;
     }
     States
@@ -263,24 +266,39 @@ class MageFrostFlameMissile : TimedActor
         WRBL D 4 Bright A_VolcBallImpact();
         WRBL EFGHI 4 Bright;
         Stop;
+	Disappear:
+		TNT1 A 1;
+		Stop;
     }
 
 	action void A_VolcanoExplode()
 	{
 		A_StopMoving();
 		
-		A_Explode(40, 100);
+		if (!invoker.isDestroyed && !invoker.hasExploded)
+			A_Explode(40, 100);
+
+		invoker.hasExploded = true;
+		A_EndAllBounce();
 	}
 
 	action void A_VolcBallImpact ()
 	{
-		if (pos.Z <= floorz)
+		//If already exploded, this is a replay of death frame, so Disappear
+		if (invoker.hasExploded)
 		{
-			bNoGravity = true;
-			Gravity = 1;
-			AddZ(28);
+			SetStateLabel("Disappear");
+			return;
 		}
-		
+
+		//If timer is out, hide the sprite and stop
+		if (invoker.isDestroyed)
+		{
+			SetStateLabel("Disappear");
+			return;
+		}
+
+		//Explode damage and mark as exploded
 		A_VolcanoExplode();
 	}
 
@@ -288,13 +306,30 @@ class MageFrostFlameMissile : TimedActor
 	action void A_VolcanoImpact()
 	{
 		Health--;
+
+		if (invoker.isDoneImpacting)
+			return;
+
 		if (Health < 1)
 		{
 			SetStateLabel("Death");
+			invoker.isDoneImpacting = true;
+
+			//prevent collision from happening again just in case
+			A_EndAllBounce();
 			return;
 		}
 
 		A_StartSound ("SorcererBallBounce", CHAN_BODY);
+	}
+
+	action void A_EndAllBounce()
+	{
+		invoker.bBOUNCEONFLOORS = false;
+		invoker.bBOUNCEONCEILINGS = false;
+		invoker.bBOUNCEONWALLS = false;
+		invoker.bUSEBOUNCESTATE = false;
+		invoker.bNOGRAVITY = true;
 	}
 }
 

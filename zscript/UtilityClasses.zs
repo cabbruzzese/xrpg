@@ -99,6 +99,7 @@ class TimedActor : StoppableActor
 	bool dieOnTimer;
     property TimeLimit : timeLimit;
 	property DieOnTimer : dieOnTimer;
+	bool isDestroyed;
 
     Default
     {
@@ -111,8 +112,9 @@ class TimedActor : StoppableActor
         Super.Tick();
 
         TimeLimit--;
-        if (TimeLimit < 1)
+        if (TimeLimit < 1 && !isDestroyed)
         {
+			isDestroyed = true;
 			if (DieOnTimer)
 			{
 				A_StopMoving(true);
