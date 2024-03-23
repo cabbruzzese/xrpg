@@ -257,12 +257,16 @@ class XRpgMagePlayer : XRpgPlayer
 
 	override int MaxArmorValue(int slot)
 	{
+		let item = XRpgArmorItem(ActiveMagicItems[slot]);
+		if (item && item.mageArmorOverride > 0)
+			return item.mageArmorOverride;
+
 		switch (slot)
 		{
 			case PAPERDOLL_SLOT_HELMET:
 				return 10;
 			case PAPERDOLL_SLOT_BODY:
-				return 5;
+				return 15;
 			case PAPERDOLL_SLOT_SHIELD:
 				return 0;
 			case PAPERDOLL_SLOT_NECK:
@@ -270,6 +274,18 @@ class XRpgMagePlayer : XRpgPlayer
 		}
 
 		return 0;
+	}
+
+	
+	override int GetArmorValue(XRpgArmorItem armor)
+	{
+		if (!armor)
+			return 0;
+
+		if (armor.mageArmorOverride > 0)
+			return armor.mageArmorOverride;
+		
+		return super.GetArmorValue(armor);
 	}
 }
 

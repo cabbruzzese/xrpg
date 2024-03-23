@@ -138,8 +138,8 @@ class WanderingMonsterItem : Powerup
                 dropClass = "XRpgFWeapMorningStar";
                 dropChance = DROP_WEAP_CHANCE;
 
-                //If a cleric is in game, there's a ~5% chance we drop a flail instead
-                if (ActorUtils.ClericPlayerExists() && random[FlailDrop](1,18) == 1)
+                //If a cleric is in game, there's a 25% chance we drop a flail instead
+                if (ActorUtils.ClericPlayerExists() && random[FlailDrop](1,4) == 1)
                 {
                     dropClass = "XRpgCWeapFlail";
                     dropChance = DROP_ARMOR_CHANCE;

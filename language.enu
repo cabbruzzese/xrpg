@@ -30,6 +30,7 @@ OB_MPFWEAPMSTAR = "%o hed their head bashed in by %k's morning star.";
 OB_MPFWEAPCLEAVER = "%o had their chops busted by %k.";
 OB_MPFWEAPPOLEARM = "%o got skewered by %k's polearm.";
 OB_CWEAPFLAIL = "%o was bashed into the ground by %k.";
+OB_BISHOPGEM = "%o was cursed by a %k's dark amulet.";
 
 TAG_FWEAPRAZOR = "Razor Sword";
 TAG_FWEAPMSTAR = "Morning Star";
@@ -55,6 +56,7 @@ TAG_ETTINARMOR = "Ettin Armor.";
 
 TXT_MAGE_NOSHIELD = "Mages are not proficient with shields.";
 TXT_MAGE_NOHEAVY = "Mages cannot wear heavy armor.";
+TXT_CLERIC_NOPLATE = "Clerics cannot wear plate armor.";
 
 TAG_FIRERING = "Ring of Flames.";
 TAG_ICERING = "Ring of Cold.";
@@ -75,6 +77,10 @@ TAG_ROUNDSHIELD = "Round Shield.";
 TAG_SILVERSHIELD = "Silver Shield.";
 TAG_LEATHERARMOR = "Leather Armor.";
 TAG_METALCAP = "Metal Cap.";
+TAG_MAGICROBES = "Robes of Darkness.";
+TAG_DRAGONSCALE = "Dragon Scale Armor.";
+TAG_PLATEMAIL = "Plate Mail.";
+TAG_WINGEDHELM = "Winged Helmet.";
 
 TXT_MAGICITEMPICKUP = "This item emits a strong magical aura.";
 TXT_ARMORITEMPICKUP = "A piece of armor.";
@@ -87,7 +93,7 @@ TXT_REGENAMULET_USE = "You feel healthier.";
 TXT_MANAAMULET_USE = "Magic energy flows through your veins.";
 TXT_BOOTSOFSPEED_USE = "The world around you seems slower.";
 TXT_PLATINUMHELM_USE = "This helm will keep your head safe.";
-TXT_MESHARMOR_USE = "A fine mesh armor.";
+TXT_MESHARMOR_USE = "A flexible mesh armor.";
 TXT_FALCONSHIELD_USE = "A heavy emblazoned shield.";
 TXT_WARDINGAMULET_USE = "Your skin hardens like rock.";
 TXT_CENTAURSHIELD_USE = "This spiked shield radiates a dark energy.";
@@ -95,3 +101,7 @@ TXT_ROUNDSHIELD_USE = "A wooden round shield.";
 TXT_SILVERSHIELD_USE = "This silver shield is fireproof.";
 TXT_LEATHERARMOR_USE = "Light armor that is easy to move in.";
 TXT_METALCAP_USE = "A light metal cap.";
+TXT_MAGICROBES_USE = "A dark magic of protection flows in these robes.";
+TXT_DRAGONSCALE_USE = "Armor made from the scales of a dragon.";
+TXT_PLATEMAIL_USE = "This heavy plate mail is totally metal.";
+TXT_WINGEDHELM_USE = "Air rushes around you as you don this helmet.";

@@ -275,7 +275,10 @@ class ActorUtils : Actor
         mo.A_ChangeVelocity(vx, vy, vz, CVF_REPLACE);
     }
 
-	static void ThrowSparks(Actor victim, Name sparkType)
+	const THROW_SPARKS_COUNT_MAX = 8;
+	const THROW_SPARKS_COUNT_MIN = 2;
+	const THROW_SPARKS_DIVISOR = 3;
+	static void ThrowSparks(Actor victim, Name sparkType, int totalDamaage = -1)
 	{
 		if (!victim)
 			return;
@@ -283,7 +286,14 @@ class ActorUtils : Actor
 		if (!sparkType)
 			return;
 
-		for (int i = 0; i < 8; i++)
+		if (totalDamaage == 0)
+			return;
+
+		int sparkCount = THROW_SPARKS_COUNT_MAX;
+		if (totalDamaage > 0)
+			sparkCount = Math.Clamp(totalDamaage / THROW_SPARKS_DIVISOR, THROW_SPARKS_COUNT_MIN, THROW_SPARKS_COUNT_MAX);
+
+		for (int i = 0; i < sparkCount; i++)
         {
             ThrowSpark(victim, sparkType);
         }

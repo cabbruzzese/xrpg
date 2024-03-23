@@ -110,10 +110,7 @@ class XRpgShield : MagicShield replaces CentaurShield
 		+INVENTORY.RESTRICTABSOLUTELY
         Inventory.ForbiddenTo "XRpgClericPlayer", "XRpgMagePlayer", "ClericPlayer", "MagePlayer";
 
-		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.FANCYPICKUPSOUND
 		Inventory.Icon "FSHLK0";
-		Inventory.PickupSound "misc/p_pkup";
 		
 		Tag "$TAG_CENTAURSHIELD";
 		Inventory.PickupMessage "$TXT_SHIELDITEM";
@@ -200,10 +197,7 @@ class FalconLargeShield : MagicShield
 {
 	Default
 	{
-		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.FANCYPICKUPSOUND
 		Inventory.Icon "AR_2A0";
-		Inventory.PickupSound "misc/p_pkup";
 		
 		Tag "$TAG_FALCONSHIELD";
         XRpgEquipableItem.EffectMessage "$TXT_FALCONSHIELD_USE";
@@ -232,10 +226,7 @@ class RoundShield : MagicShield
 {
 	Default
 	{
-		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.FANCYPICKUPSOUND
 		Inventory.Icon "FSH3F0";
-		Inventory.PickupSound "misc/p_pkup";
 		
 		Tag "$TAG_ROUNDSHIELD";
         XRpgEquipableItem.EffectMessage "$TXT_ROUNDSHIELD_USE";
@@ -273,10 +264,7 @@ class SilverSmallShield : MagicShield
 {
 	Default
 	{
-		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.FANCYPICKUPSOUND
 		Inventory.Icon "FSH4F0";
-		Inventory.PickupSound "misc/p_pkup";
 		
 		Tag "$TAG_SILVERSHIELD";
         XRpgEquipableItem.EffectMessage "$TXT_SILVERSHIELD_USE";

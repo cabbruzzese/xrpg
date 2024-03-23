@@ -39,9 +39,7 @@ class RegenAmulet : MagicAmulet
 {
     Default
 	{
-		Inventory.PickupFlash "PickupFlash";
 		Inventory.Icon "RAMUA0";
-		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
 		Tag "$TAG_REGENAMULET";
 
@@ -93,9 +91,7 @@ class ManaAmulet : MagicAmulet
 
     Default
 	{
-		Inventory.PickupFlash "PickupFlash";
 		Inventory.Icon "MAMUA0";
-		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
 		Tag "$TAG_MANAAMULET";
 
@@ -161,19 +157,17 @@ class ManaAmulet : MagicAmulet
     }
 }
 
-class WardingAmulet : XRpgNeckItem replaces AmuletOfWarding
+class WardingAmulet : XRpgNeckItem
 {
 	Default
 	{
-		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.FANCYPICKUPSOUND
 		Inventory.Icon "AR_4B0";
-		Inventory.PickupSound "misc/p_pkup";
 		
 		Tag "$TAG_WARDINGAMULET";
         XRpgEquipableItem.EffectMessage "$TXT_WARDINGAMULET_USE";
 				
-		XRpgEquipableItem.ArmorBonus 15;
+		XRpgEquipableItem.ArmorBonus 10;
+		XRpgArmorItem.mageArmorOverride 15;
 	}
 	States
 	{
@@ -190,19 +184,22 @@ class WardingAmulet : XRpgNeckItem replaces AmuletOfWarding
     }
 }
 
+const BISHOPGEM_COOLDOWN_MAX = 20;
 class BishopGem : XRpgNeckItem
 {
+    int fireCooldown;
+
 	Default
 	{
-		Inventory.PickupFlash "PickupFlash";
-		+INVENTORY.FANCYPICKUPSOUND
 		Inventory.Icon "AAMUA0";
-		Inventory.PickupSound "misc/p_pkup";
 		
 		Tag "$TAG_BISHOPGEM";
         XRpgEquipableItem.EffectMessage "$TXT_ARMOR_BISHOPGEM";
 				
-		XRpgEquipableItem.ArmorBonus 20;
+		XRpgEquipableItem.ArmorBonus 10;
+		XRpgArmorItem.mageArmorOverride 20;
+
+        XRpgEquipableItem.MaxCooldown BISHOPGEM_COOLDOWN_MAX;
 	}
 	States
 	{
@@ -211,4 +208,52 @@ class BishopGem : XRpgNeckItem
 		AAMU D -1;
 		Stop;
 	}
+
+    override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {        
+        if (!Owner)
+			return;
+		
+		let xrpgPlayer = XRpgPlayer(Owner);
+        if (!xrpgPlayer)
+			return;
+
+        if (!IsActive())
+            return;
+
+        if (!IsCooldownDone())
+            return;
+
+		if (damage > 0 && Owner && Owner.Player && Owner.Player.mo)
+        {
+			Actor targetMonster;
+			if (inflictor && inflictor.bIsMonster)
+				targetMonster = inflictor;
+			else if (source && source.bIsMonster)
+				targetMonster = source;
+			else if (inflictor && inflictor.target && inflictor.target.bIsMonster)
+				targetMonster = inflictor.target;
+
+			if (!targetMonster)
+				return;
+
+			//Randomly retaliate against attacker
+			if (random[BishopGem](1,4) > 1)
+			{
+				Actor mo = Owner.SpawnMissile(targetMonster, "BishopGemMissile");
+                StartCooldown();
+
+                xrpgPlayer.A_SetBlend("99 65 99", 0.8, 40);
+			}
+        }
+    }
 }
+
+class BishopGemMissile : MageWandDeathMissile
+{
+    Default
+    {
+        Obituary "$OB_BISHOPGEM";
+    }
+}
+

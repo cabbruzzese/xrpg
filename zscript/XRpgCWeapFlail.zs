@@ -65,7 +65,7 @@ class XRpgCWeapFlail : XRpgClericShieldWeapon
 		CFL2 C 2;
 		CFL2 D 2;
 		CFL2 E 2;
-		CFL2 F 2 A_CFlailAttack(20, 85, 25);
+		CFL2 F 2 A_CFlailAttack(20, 70, 25);
 		CFL2 G 2;
 		CFL2 H 2;
 		TNT1 A 15;
@@ -73,7 +73,7 @@ class XRpgCWeapFlail : XRpgClericShieldWeapon
 		Goto Ready;
 	}
 
-	action void A_CFlailAttack(int minDamage = 1, int maxDamage = 65, int push = 0)
+	action void A_CFlailAttack(int minDamage = 1, int maxDamage = 55, int push = 0)
 	{
 		FTranslatedLineTarget t;
 

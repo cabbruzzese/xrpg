@@ -3,7 +3,7 @@ const XPMULTI = 1000;
 const STATNUM = 3;
 const MAX_LEVEL_ARMOR = 40;//Max armor is 8AC. Highest fighter armor suit is 11. Can't let player get to 20.
 const MAX_TOTAL_ARMOR = 95;
-const MAX_ARMOR_SPEED_PENALTY = -0.9;
+const MAX_ARMOR_SPEED_PENALTY = -0.8;
 const REGENERATE_TICKS_MAX_DEFAULT = 128;
 const REGENERATE_MIN_VALUE = 15;
 
@@ -251,6 +251,13 @@ class XRpgPlayer : PlayerPawn
 		return 0;
 	}
 
+	virtual int GetArmorValue(XRpgArmorItem armor)
+	{
+		int armorAmount = Min(armor.ArmorBonus, MaxArmorValue(armor.PaperDollSlot));
+
+		return armorAmount;
+	}
+
 	void ApplyMovementBonus()
 	{
 		double speedMod = 0;
@@ -266,11 +273,11 @@ class XRpgPlayer : PlayerPawn
 				speedMod = armorEquipped.speedBoost;
 		}
 
-		//Speed can never be reduced more than 90%
+		//Speed can never be reduced more than 80%
 		if (speedMod < MAX_ARMOR_SPEED_PENALTY)
 			speedMod = MAX_ARMOR_SPEED_PENALTY;
 
-		//Overdoing armor leads to max armor penalty
+		//Heavy armor leads to max armor penalty
 		if (isArmorSlowed)
 			speedMod = MAX_ARMOR_SPEED_PENALTY;
 
@@ -297,8 +304,7 @@ class XRpgPlayer : PlayerPawn
 			}
 			else if (armorEquipped)
 			{
-				int armorEquippedMod = Min(armorEquipped.ArmorBonus, MaxArmorValue(i));
-				//console.printf(string.format("ArmorMod: %d ArmorMax: %d", armorEquipped.ArmorBonus, MaxArmorValue(i)));
+				int armorEquippedMod = GetArmorValue(armorEquipped);
 
 				armorMod += armorEquippedMod;
 			}
@@ -307,16 +313,22 @@ class XRpgPlayer : PlayerPawn
 		let hArmor = HexenArmor(FindInventory("HexenArmor"));
 		if (hArmor)
 		{
-			//Aboslute max is 19AC. 20 is invulnerability.
 			isArmorSlowed = false;
+
+			//Aboslute max is 19AC. 20 is invulnerability.
 			if (armorMod >= MAX_TOTAL_ARMOR)
-			{
 				armorMod = MAX_TOTAL_ARMOR;
 
-				//Over encumber for too much armor
-				isArmorSlowed = true;
-			}
 			hArmor.Slots[4] = armorMod;
+
+			//Over encumber for too much heavy armor
+			let helmet = XRpgArmorItem(ActiveMagicItems[PAPERDOLL_SLOT_HELMET]);
+			let shield = XRpgArmorItem(ActiveMagicItems[PAPERDOLL_SLOT_SHIELD]);
+			let bodyarmor = XRpgArmorItem(ActiveMagicItems[PAPERDOLL_SLOT_BODY]);
+			if ((helmet && helmet.IsHeavy) &&
+				(shield && shield.IsHeavy) &&
+				(bodyarmor && bodyarmor.IsHeavy))
+				isArmorSlowed = true;
 		}
 	}
 
@@ -330,6 +342,7 @@ class XRpgPlayer : PlayerPawn
 	void UpdateLevelStats(PlayerLevelItem statItem)
 	{
 		ApplyDexArmorBonusStats(statItem);
+		ApplyMovementBonus();
 	}
 
 	int CalcXPNeeded(PlayerLevelItem statItem)
@@ -828,6 +841,7 @@ class XRpgPlayer : PlayerPawn
 			GiveInventory("SuitHelmet", 1);
 			GiveInventory("WraithHelmet", 1);
 			GiveInventory("MetalCap", 1);
+			GiveInventory("WingedHelmet", 1);
 			return;
 		}
 
@@ -836,6 +850,9 @@ class XRpgPlayer : PlayerPawn
 			GiveInventory("MeshBodyArmor", 1);
 			GiveInventory("LeatherBodyArmor", 1);
 			GiveInventory("EttinArmor", 1);
+			GiveInventory("MagicRobes", 1);
+			GiveInventory("DragonScaleArmor", 1);
+			GiveInventory("PlateMail", 1);
 			return;
 		}
 
@@ -886,10 +903,14 @@ class XRpgPlayer : PlayerPawn
 			GiveInventory("SuitHelmet", 1);
 			GiveInventory("WraithHelmet", 1);
 			GiveInventory("MetalCap", 1);
+			GiveInventory("WingedHelmet", 1);
 
 			GiveInventory("MeshBodyArmor", 1);
 			GiveInventory("LeatherBodyArmor", 1);
 			GiveInventory("EttinArmor", 1);
+			GiveInventory("MagicRobes", 1);
+			GiveInventory("DragonScaleArmor", 1);
+			GiveInventory("PlateMail", 1);
 			return;
 		}
 

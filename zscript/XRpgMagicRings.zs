@@ -106,6 +106,7 @@ class DamageMagicItem : XRpgMagicItem
 			//ring damage cannot be over 15% of original damage
 			int damageMaxTotal = Math.Clamp(damageMax, damageMin, damage * 0.15);
 			int ringDamage = random[FireRingDamage](damageMin, damageMaxTotal);
+			int totalRingDamage = 0;
 
 			if (inflictor.bRipper)
 			{
@@ -132,6 +133,7 @@ class DamageMagicItem : XRpgMagicItem
 			if (damageType == RingDamageType)
 			{
 				newdamage = damage + ringDamage;
+				totalRingDamage = newdamage;
 			}
 			//If damage is a normal type, completely replace this attack with a new one
 			else if (damageType == "Melee" || damageType == "Normal" || damageType == "None")
@@ -144,15 +146,19 @@ class DamageMagicItem : XRpgMagicItem
 
 				//Give 1 point of normal damage to allow other effects
 				newdamage = 0;
+
+				totalRingDamage = totalDamage;
 			}
 			//If damage is a special type, apply extra damage of ring type
 			else
 			{
 				//Damage target with ring damage type and ring as inflictor so we can ignore second damage calculation
 				source.DamageMobj(Owner, Owner, ringDamage, RingDamageType);
+
+				totalRingDamage = ringDamage;
 			}
 
-			ActorUtils.ThrowSparks(source, SparkType);
+			ActorUtils.ThrowSparks(source, SparkType, ringDamage);
         }
 	}
 }

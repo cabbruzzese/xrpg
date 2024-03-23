@@ -72,8 +72,13 @@ class TrashItemElement : ItemSlotElement
 	}
 }
 
+const ITEM_DEFAULT_COOLDOWN_MAX = 20;
 class XRpgEquipableItem : TabMenuItem
 {
+	int cooldownTimer;
+	int maxCooldown;
+	property MaxCooldown: maxCooldown;
+
 	double speedBoost;
 	property SpeedBoost: speedBoost;
 
@@ -94,6 +99,8 @@ class XRpgEquipableItem : TabMenuItem
 
 		TabMenuItem.Selectable true;
 		TabMenuItem.Listable true;
+
+		XRpgEquipableItem.MaxCooldown ITEM_DEFAULT_COOLDOWN_MAX;
 	}
 
 	override bool CanRenderInventory()
@@ -184,6 +191,25 @@ class XRpgEquipableItem : TabMenuItem
 		ShowMessage();
 		return false;
 	}
+	
+    override void Tick()
+    {
+        super.Tick();
+
+        cooldownTimer--;
+        if (cooldownTimer < 0)
+            cooldownTimer = 0;
+    }
+
+	void StartCooldown()
+	{
+		cooldownTimer = MaxCooldown;
+	}
+
+	bool IsCooldownDone()
+	{
+		return (cooldownTimer == 0);
+	}
 }
 
 class XRpgAccessorySlotItem : XRpgEquipableItem
@@ -217,10 +243,20 @@ class XRpgMagicItem : XRpgAccessorySlotItem
 class XRpgArmorItem : XRpgAccessorySlotItem
 {
 	bool isHeavy;
-	property IsHeavy:isHeavy;
+	property IsHeavy: isHeavy;
+
+	bool isPlate;
+	property IsPlate: isPlate;
+
+	int mageArmorOverride;
+	property MageArmorOverride: mageArmorOverride;
 	
 	Default
 	{
+		Inventory.PickupFlash "PickupFlash";
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.PickupSound "misc/p_pkup";
+
 		Inventory.PickupMessage "$TXT_ARMORITEMPICKUP";
 
 		XRpgEquipableItem.EffectMessage "$TXT_ARMORITEMPICKUP";

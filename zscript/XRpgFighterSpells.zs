@@ -222,7 +222,7 @@ class PowerSpell : FighterSpellItem
 				newdamage = damage + magicDamage;
 
 				xrpgPlayer.DoBlend("55 CC CC", 0.2, 20);
-				ActorUtils.ThrowSparks(source, "PowerSpark");
+				ActorUtils.ThrowSparks(source, "PowerSpark", newdamage);
 			}
 
 			SetEffectTimeout();

@@ -190,5 +190,19 @@ class XRpgClericPlayer : XRpgPlayer
 
 		return 0;
 	}
+
+	override bool CanUseArmor(int slot, XRpgArmorItem armorItem)
+	{
+		if (!armorItem)
+			return false;
+
+		if (armorItem.IsPlate)
+		{
+			A_Print("$TXT_CLERIC_NOPLATE");
+			return false;
+		}
+
+		return true;
+	}
 }
 		
