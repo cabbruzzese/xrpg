@@ -176,7 +176,7 @@ class PhoenixBracers : MagicArmor
     }
 }
 
-const SHIELDBRACELET_COOLDOWN_MAX = 20;
+const SHIELDBRACELET_COOLDOWN_MAX = 15;
 class ShieldBracelet : MagicArmor
 {
 	Default
