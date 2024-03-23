@@ -232,4 +232,18 @@ class XRpgFighterPlayer : XRpgPlayer
 
 		return 0;
 	}
+
+	override bool CanUseArmor(int slot, XRpgArmorItem armorItem)
+	{
+		if (!armorItem)
+			return false;
+
+		if (armorItem.IsLight)
+		{
+			A_Print("$TXT_FIGHTER_NOLIGHT");
+			return false;
+		}
+
+		return true;
+	}
 }

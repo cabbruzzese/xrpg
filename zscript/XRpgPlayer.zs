@@ -37,6 +37,7 @@ class XRpgPlayer : PlayerPawn
 	property PaperdollIcon:paperdollIcon;
 
 	bool isArmorSlowed;
+	bool isArmorHeavy;
 
 	Default
 	{
@@ -314,6 +315,7 @@ class XRpgPlayer : PlayerPawn
 		if (hArmor)
 		{
 			isArmorSlowed = false;
+			isArmorHeavy = false;
 
 			//Aboslute max is 19AC. 20 is invulnerability.
 			if (armorMod >= MAX_TOTAL_ARMOR)
@@ -329,6 +331,21 @@ class XRpgPlayer : PlayerPawn
 				(shield && shield.IsHeavy) &&
 				(bodyarmor && bodyarmor.IsHeavy))
 				isArmorSlowed = true;
+			
+			//Warn of over encumberance
+			if (bodyarmor && bodyarmor.IsHeavy)
+			{
+				if (shield && shield.IsHeavy)
+					isArmorHeavy = true;
+
+				if (helmet && helmet.IsHeavy)
+					isArmorHeavy = true;
+			}
+			else if (helmet && helmet.IsHeavy)
+			{
+				if (shield && shield.IsHeavy)
+					isArmorHeavy = true;
+			}
 		}
 	}
 
@@ -853,6 +870,7 @@ class XRpgPlayer : PlayerPawn
 			GiveInventory("MagicRobes", 1);
 			GiveInventory("DragonScaleArmor", 1);
 			GiveInventory("PlateMail", 1);
+			GiveInventory("HalfPlate", 1);
 			return;
 		}
 
@@ -911,6 +929,7 @@ class XRpgPlayer : PlayerPawn
 			GiveInventory("MagicRobes", 1);
 			GiveInventory("DragonScaleArmor", 1);
 			GiveInventory("PlateMail", 1);
+			GiveInventory("HalfPlate", 1);
 			return;
 		}
 

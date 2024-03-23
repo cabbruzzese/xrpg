@@ -88,6 +88,10 @@ class DamageMagicItem : XRpgMagicItem
 		XRpgMagicItem.ModifyDamageBypass0 true;
 	}
 
+	virtual void SpecialDamageEffect(int newDamage, Actor damageTarget)
+	{		
+	}
+
     override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
 	{
 		if (!Owner)
@@ -159,6 +163,7 @@ class DamageMagicItem : XRpgMagicItem
 			}
 
 			ActorUtils.ThrowSparks(source, SparkType, ringDamage);
+			SpecialDamageEffect(newDamage, source);
         }
 	}
 }
@@ -280,6 +285,21 @@ class LightningRing : DamageMagicItem
 		
 		Owner.A_SetBlend("77 77 33", 0.8, 40);
 	}
+
+	override void SpecialDamageEffect(int newDamage, Actor damageTarget)
+	{
+		if (!damageTarget || !damageTarget.bIsMonster || damageTarget.Health < 1)
+			return;
+		
+		//If hit is big enough
+		if (newDamage < 2)
+			return;
+
+		//Force pain sound
+		if (random[LightningRingChance](1,2) == 1)
+			damageTarget.Howl();
+	}
+
 
 	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
     {

@@ -248,6 +248,9 @@ class XRpgArmorItem : XRpgAccessorySlotItem
 	bool isPlate;
 	property IsPlate: isPlate;
 
+	bool isLight;
+	property IsLight: isLight;
+
 	int mageArmorOverride;
 	property MageArmorOverride: mageArmorOverride;
 	

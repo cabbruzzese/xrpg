@@ -119,6 +119,7 @@ class XRpgShield : MagicShield replaces CentaurShield
 		XRpgEquipableItem.ArmorBonus 5;
 		MagicShield.CanCharge true;
 		MagicShield.ShieldType SHIELD_TYPE_SPIKED;
+		XRpgArmorItem.IsHeavy true;
 	}
 
 	States
@@ -167,6 +168,9 @@ class XRpgShield : MagicShield replaces CentaurShield
 		
         if (!IsShieldTimeoutActive())
             return;
+
+		if (!IsActive())
+			return;
 
 		if (passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
@@ -286,7 +290,12 @@ class SilverSmallShield : MagicShield
         
         if (damage > 0 && (damageType =='Fire'))
         {
-            newdamage = damage / 2;
+            newdamage = damage * 0.70;
+
+			//if shield up, absorb most fire damage
+			if (IsShieldTimeoutActive())
+            	newdamage = damage / 12;
+
         }
     }
 

@@ -165,6 +165,7 @@ class LeatherBodyArmor : XRpgBodyItem
         XRpgEquipableItem.EffectMessage "$TXT_LEATHERARMOR_USE";
 				
 		XRpgEquipableItem.ArmorBonus 5;
+		XRpgArmorItem.IsLight true;
 	}
 	States
 	{
@@ -194,6 +195,7 @@ class MagicRobes : XRpgBodyItem
 
 		XRpgEquipableItem.ArmorBonus 5;
 		XRpgArmorItem.mageArmorOverride 15;
+		XRpgArmorItem.IsLight true;
 	}
 	States
 	{
@@ -299,6 +301,26 @@ class PlateMail : XRpgBodyItem
 	{
 	Spawn:
 		PLTE A -1;
+		Stop;
+	}
+}
+
+class HalfPlate : XRpgBodyItem
+{
+	Default
+	{
+		Inventory.Icon "PLTHB0";
+		
+		Tag "$TAG_HALFPLATE";
+        XRpgEquipableItem.EffectMessage "$TXT_HALFPLATE_USE";
+				
+		XRpgEquipableItem.ArmorBonus 10;
+		XRpgArmorItem.IsPlate true;
+	}
+	States
+	{
+	Spawn:
+		PLTH A -1;
 		Stop;
 	}
 }
@@ -412,7 +434,7 @@ class WingedHelmet : XRpgHelmetItem
 				
 		XRpgEquipableItem.SpeedBoost 0.15;
 		XRpgEquipableItem.ArmorBonus 5;
-		XRpgArmorItem.IsHeavy true;
+		XRpgArmorItem.IsLight true;
 	}
 	States
 	{

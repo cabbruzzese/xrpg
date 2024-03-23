@@ -74,6 +74,7 @@ gameinfo
 
 	AddEventHandlers = "BossMakerEventHandler"
 	AddEventHandlers = "TabMenuEventHandler"
+	AddEventHandlers = "InventoryEventHandler"
 }
 
 DoomEdNums

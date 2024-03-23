@@ -50,6 +50,7 @@ const DEBUG_MODE = 0;
 #include "zscript/XRpgMagicRings.zs"
 #include "zscript/XRpgMagicArmor.zs"
 #include "zscript/XRpgMagicAmulets.zs"
+#include "zscript/InventoryEventHandler.zs"
 
 #include "zscript/TabMenuEventHandler.zs"
 #include "zscript/TabMenuInventory.zs"

@@ -252,6 +252,12 @@ class XRpgMagePlayer : XRpgPlayer
 			return false;
 		}
 
+		if (armorItem.IsPlate)
+		{
+			A_Print("$TXT_MAGE_NOPLATE");
+			return false;
+		}
+
 		return true;
 	}
 

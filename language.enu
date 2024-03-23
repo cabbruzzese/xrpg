@@ -56,7 +56,9 @@ TAG_ETTINARMOR = "Ettin Armor.";
 
 TXT_MAGE_NOSHIELD = "Mages are not proficient with shields.";
 TXT_MAGE_NOHEAVY = "Mages cannot wear heavy armor.";
+TXT_MAGE_NOPLATE = "Plate armor on a Mage? T'would be easier put a cat into bath water.";
 TXT_CLERIC_NOPLATE = "Clerics cannot wear plate armor.";
+TXT_FIGHTER_NOLIGHT = "Fighters are far too brawny to fit into light armor.";
 
 TAG_FIRERING = "Ring of Flames.";
 TAG_ICERING = "Ring of Cold.";
@@ -81,6 +83,7 @@ TAG_MAGICROBES = "Robes of Darkness.";
 TAG_DRAGONSCALE = "Dragon Scale Armor.";
 TAG_PLATEMAIL = "Plate Mail.";
 TAG_WINGEDHELM = "Winged Helmet.";
+TAG_HALFPLATE = "Barbarian Half Plate.";
 
 TXT_MAGICITEMPICKUP = "This item emits a strong magical aura.";
 TXT_ARMORITEMPICKUP = "A piece of armor.";
@@ -105,3 +108,4 @@ TXT_MAGICROBES_USE = "A dark magic of protection flows in these robes.";
 TXT_DRAGONSCALE_USE = "Armor made from the scales of a dragon.";
 TXT_PLATEMAIL_USE = "This heavy plate mail is totally metal.";
 TXT_WINGEDHELM_USE = "Air rushes around you as you don this helmet.";
+TXT_HALFPLATE_USE = "Barbarian half plate. Keeps your vitals safe whilst impressing fair maidens.";
