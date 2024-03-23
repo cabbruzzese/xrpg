@@ -143,6 +143,11 @@ class PlayerHudController
                 let item = TabMenuItem(i);
                 if (!item)
                     continue;
+
+                //Do not render mouseover if equipped
+                let equippableItem = XRpgEquipableItem(item);
+                if (equippableItem && equippableItem.isEquipped)
+                    continue;
                 
                 let element = item.element;
                 if (element && element.IsInBounds(mousePos))

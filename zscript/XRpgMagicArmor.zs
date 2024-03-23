@@ -31,6 +31,8 @@ class MagicArmor : XRpgMagicItem
 
     override void Unequip()
     {
+		super.Unequip();
+		
         let xrpgPlayer = XRpgPlayer(Owner);
         if (!xrpgPlayer)
 			return;

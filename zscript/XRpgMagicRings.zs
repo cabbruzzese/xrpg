@@ -348,6 +348,8 @@ class ShadowRing : MagicArmor
 
 	override void Unequip()
 	{
+		super.Unequip();
+		
 		let xrpgPlayer = XRpgPlayer(Owner);
 		if (!xrpgPlayer)
 			return;

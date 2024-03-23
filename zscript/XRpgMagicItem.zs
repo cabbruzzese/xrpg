@@ -91,6 +91,8 @@ class XRpgEquipableItem : TabMenuItem
 	int armorBonus;
     property ArmorBonus: armorBonus;
 
+	bool isEquipped;
+
     Default
 	{
 		Inventory.PickupFlash "PickupFlash";
@@ -135,11 +137,13 @@ class XRpgEquipableItem : TabMenuItem
 
 	virtual void Equip()
 	{
+		isEquipped = true;
 		DoEquipBlend();
 	}
 
 	virtual void Unequip()
 	{
+		isEquipped = false;
 	}
 
 	void ShowMessage()
@@ -267,6 +271,8 @@ class XRpgArmorItem : XRpgAccessorySlotItem
 
 	override void Equip()
 	{
+		super.Equip();
+
 		if (!Owner)
 			return;
 
@@ -277,14 +283,14 @@ class XRpgArmorItem : XRpgAccessorySlotItem
 		if (!xrpgPlayer.CanUseArmor(PaperDollSlot, self))
 			return;
 
-		super.Equip();
-
 		xrpgPlayer.ApplyDexArmorBonus();
 		xrpgPlayer.ApplyMovementBonus();
 	}
 
     override void Unequip()
     {
+		super.Unequip();
+
         let xrpgPlayer = XRpgPlayer(Owner);
         if (!xrpgPlayer)
 			return;
