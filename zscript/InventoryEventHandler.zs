@@ -23,7 +23,7 @@ class InventoryEventHandler : EventHandler
 		}
         else if (e.replacee is 'ArtiSpeedBoots')
         {
-            int magicItemNum = random[MagicItemSpawn](1,2);
+            int magicItemNum = random[MagicItemSpawn](1,3);
             switch (magicItemNum)
             {
                 case 1:
@@ -31,6 +31,9 @@ class InventoryEventHandler : EventHandler
                     break;
                 case 2:
                     e.Replacement = 'PhoenixBracers';
+                    break;
+                case 3:
+                    e.Replacement = 'ShadowRing';
                     break;
             }
         }

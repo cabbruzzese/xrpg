@@ -84,7 +84,8 @@ TAG_DRAGONSCALE = "Dragon Scale Armor.";
 TAG_PLATEMAIL = "Plate Mail.";
 TAG_WINGEDHELM = "Winged Helmet.";
 TAG_HALFPLATE = "Barbarian Half Plate.";
-TAG_PHOENIXBRACERS = "Phoenix Bracers";
+TAG_PHOENIXBRACERS = "Phoenix Bracers.";
+TAG_SHADOWRING = "Ring of Shadows.";
 
 TXT_MAGICITEMPICKUP = "This item emits a strong magical aura.";
 TXT_ARMORITEMPICKUP = "A piece of armor.";
@@ -111,3 +112,4 @@ TXT_PLATEMAIL_USE = "This heavy plate mail is totally metal.";
 TXT_WINGEDHELM_USE = "Air rushes around you as you don this helmet.";
 TXT_HALFPLATE_USE = "Barbarian half plate. Keeps your vitals safe whilst impressing fair maidens.";
 TXT_PHOENIXBRACERS_USE = "As the bracers snap in place you feel a burning and then youthful energy.";
+TXT_SHADOWRING_USE = "A black mist forms around you, riddling you with darkness.";

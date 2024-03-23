@@ -39,11 +39,13 @@ class LightningSparks: PowerSpark
 	{
 		Scale 0.25;
 		Mass 1;
+		BounceType "None";
+		+NOGRAVITY;
 	}
 	States
 	{
 	Spawn:
-		MLFX NOPQRSTU 4;
+		MLFX UTSRQPON 2;
 		Stop;
 	Death:
 		Stop;
@@ -53,8 +55,8 @@ class LightningSparks: PowerSpark
 	{
 		Super.PostBeginPlay();
 
-		double randSpeed = random(60, 120) / 10;
-        A_ChangeVelocity(Vel.X, Vel.Y, randSpeed, CVF_REPLACE);
+		double randSpeed = random(-4.0, 4.0);
+        A_ChangeVelocity(Vel.X * 2, Vel.Y * 2, randSpeed, CVF_REPLACE);
     }
 }
 
@@ -86,6 +88,10 @@ class DamageMagicItem : XRpgMagicItem
 		DamageMagicItem.DamageThreshold MAGICITEM_DAMAGE_THRESHOLD;
 
 		XRpgMagicItem.ModifyDamageBypass0 true;
+
+		Inventory.PickupFlash "PickupFlash";
+		Inventory.PickupSound "misc/p_pkup";
+		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
 	}
 
 	virtual void SpecialDamageEffect(int newDamage, Actor damageTarget)
@@ -172,10 +178,7 @@ class FireRing : DamageMagicItem
 {
 	Default
 	{
-		Inventory.PickupFlash "PickupFlash";
 		Inventory.Icon "FRNGA0";
-		Inventory.PickupSound "misc/p_pkup";
-		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
 		Tag "$TAG_FIRERING";
 
 		XRpgEquipableItem.EffectMessage "$TXT_FIRERING_USE";
@@ -217,10 +220,7 @@ class IceRing : DamageMagicItem
 {
 	Default
 	{
-		Inventory.PickupFlash "PickupFlash";
 		Inventory.Icon "IRNGA0";
-		Inventory.PickupSound "misc/p_pkup";
-		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
 		Tag "$TAG_ICERING";
 
 		XRpgEquipableItem.EffectMessage "$TXT_ICERING_USE";
@@ -259,10 +259,7 @@ class LightningRing : DamageMagicItem
 {
 	Default
 	{
-		Inventory.PickupFlash "PickupFlash";
 		Inventory.Icon "LRNGA0";
-		Inventory.PickupSound "misc/p_pkup";
-		Inventory.PickupMessage "$TXT_MAGICITEMPICKUP";
 		Tag "$TAG_LIGHTNINGRING";
 
 		XRpgEquipableItem.EffectMessage "$TXT_LIGHTNINGRING_USE";
@@ -311,4 +308,66 @@ class LightningRing : DamageMagicItem
             newdamage = damage / 2;
         }
     }
+}
+
+class ShadowRing : MagicArmor
+{
+	Default
+	{
+		Inventory.Icon "VRNGA0";
+		Tag "$TAG_SHADOWRING";
+
+		XRpgEquipableItem.EffectMessage "$TXT_SHADOWRING_USE";
+	}
+	States
+	{
+	Spawn:
+		VRNG A -1;
+		Stop;
+	}
+
+    override void DoEquipBlend()
+	{
+		if (!Owner)
+			return;
+		
+		Owner.A_SetBlend("11 11 11", 0.8, 40);
+	}
+
+	override void Equip()
+	{
+		super.Equip();
+
+		let xrpgPlayer = XRpgPlayer(Owner);
+		if (!xrpgPlayer)
+			return;
+
+		let power = Powerup(Spawn ("RingInvisibilityPowerup"));
+		power.CallTryPickup (xrpgPlayer);
+	}
+
+	override void Unequip()
+	{
+		let xrpgPlayer = XRpgPlayer(Owner);
+		if (!xrpgPlayer)
+			return;
+
+		let pItem = xrpgPlayer.FindInventory("RingInvisibilityPowerup");
+		let powerupObj = Powerup(pItem);
+		if (powerupObj)
+			powerupObj.EndEffect();
+
+		if (pItem)
+		{
+			xrpgPlayer.RemoveInventory(pItem);
+		}
+	}
+}
+
+class RingInvisibilityPowerup : PowerShadow
+{
+	Default
+	{
+		Powerup.Duration  0x7FFFFFFF;
+	}
 }

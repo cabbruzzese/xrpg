@@ -864,6 +864,7 @@ class XRpgPlayer : PlayerPawn
 		GiveInventory("FireRing", 1);
 		GiveInventory("IceRing", 1);
 		GiveInventory("LightningRing", 1);
+		GiveInventory("ShadowRing", 1);
 	}
 
 	void CheatGiveInventoryEquipment()
