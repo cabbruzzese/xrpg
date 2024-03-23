@@ -791,6 +791,88 @@ class XRpgPlayer : PlayerPawn
 		return item;
 	}
 
+	void TeleportToStart(bool giveInvul)
+	{
+		//Teleport to start
+		Vector3 dest;
+		int destAngle;
+
+		if (deathmatch)
+		{
+			[dest, destAngle] = level.PickDeathmatchStart();
+		}
+		else
+		{
+			[dest, destAngle] = level.PickPlayerStart(PlayerNumber());
+		}
+		dest.Z = ONFLOORZ;
+		Teleport (dest, destAngle, TELF_SOURCEFOG | TELF_DESTFOG);
+
+		Playerinfo p = player;
+		if (p && p.morphTics && (p.MorphStyle & MRF_UNDOBYCHAOSDEVICE))
+		{ // Teleporting away will undo any morph effects (pig)
+			p.mo.UndoPlayerMorph (p, MRF_UNDOBYCHAOSDEVICE);
+		}
+
+		if (giveInvul)
+		{
+			//Add short term invul
+			let power = Powerup(Spawn ("PowerInvulnerable"));
+			power.EffectTics = 250;
+			power.CallTryPickup (self);
+		}
+	}
+
+	void CheatGiveInventoryShields()
+	{
+		GiveInventory("XRpgShield", 1);
+		GiveInventory("FalconLargeShield", 1);
+		GiveInventory("SilverSmallShield", 1);
+		GiveInventory("RoundShield", 1);
+	}
+
+	void CheatGiveInventoryHelmets()
+	{
+		GiveInventory("PlatinumHelmet", 1);
+		GiveInventory("SuitHelmet", 1);
+		GiveInventory("WraithHelmet", 1);
+		GiveInventory("MetalCap", 1);
+		GiveInventory("WingedHelmet", 1);
+	}
+
+	void CheatGiveInventoryArmor()
+	{
+		GiveInventory("MeshBodyArmor", 1);
+		GiveInventory("LeatherBodyArmor", 1);
+		GiveInventory("EttinArmor", 1);
+		GiveInventory("MagicRobes", 1);
+		GiveInventory("DragonScaleArmor", 1);
+		GiveInventory("PlateMail", 1);
+		GiveInventory("HalfPlate", 1);
+	}
+
+	void CheatGiveInventoryAmulets()
+	{
+		GiveInventory("RegenAmulet", 1);
+		GiveInventory("ManaAmulet", 1);
+		GiveInventory("WardingAmulet", 1);
+		GiveInventory("BishopGem", 1);
+	}
+
+	void CheatGiveInventoryRings()
+	{
+		GiveInventory("FireRing", 1);
+		GiveInventory("IceRing", 1);
+		GiveInventory("LightningRing", 1);
+	}
+
+	void CheatGiveInventoryEquipment()
+	{
+		GiveInventory("DragonBracers", 1);
+		GiveInventory("BootsOfSpeed", 1);
+		GiveInventory("PhoenixBracers", 1);
+	}
+
 	override void CheatGive (String name, int amount)
 	{
 		let player = self.player;
@@ -845,91 +927,49 @@ class XRpgPlayer : PlayerPawn
 
 		if (name ~== "shields")
 		{			
-			GiveInventory("XRpgShield", 1);
-			GiveInventory("FalconLargeShield", 1);
-			GiveInventory("SilverSmallShield", 1);
-			GiveInventory("RoundShield", 1);
+			CheatGiveInventoryShields();
 			return;
 		}
 
 		if (name ~== "helmets")
 		{
-			GiveInventory("PlatinumHelmet", 1);
-			GiveInventory("SuitHelmet", 1);
-			GiveInventory("WraithHelmet", 1);
-			GiveInventory("MetalCap", 1);
-			GiveInventory("WingedHelmet", 1);
+			CheatGiveInventoryHelmets();
 			return;
 		}
 
 		if (name ~== "armor")
 		{
-			GiveInventory("MeshBodyArmor", 1);
-			GiveInventory("LeatherBodyArmor", 1);
-			GiveInventory("EttinArmor", 1);
-			GiveInventory("MagicRobes", 1);
-			GiveInventory("DragonScaleArmor", 1);
-			GiveInventory("PlateMail", 1);
-			GiveInventory("HalfPlate", 1);
+			CheatGiveInventoryArmor();
 			return;
 		}
 
 		if (name ~== "amulets")
 		{
-			GiveInventory("RegenAmulet", 1);
-			GiveInventory("ManaAmulet", 1);
-			GiveInventory("WardingAmulet", 1);
-			GiveInventory("BishopGem", 1);
+			CheatGiveInventoryAmulets();
 			return;
 		}
 
 		
 		if (name ~== "rings")
 		{
-			GiveInventory("FireRing", 1);
-			GiveInventory("IceRing", 1);
-			GiveInventory("LightningRing", 1);
+			CheatGiveInventoryRings();
 			return;
 		}
 
 		if (name ~== "equipment")
 		{
-			GiveInventory("DragonBracers", 1);
-			GiveInventory("BootsOfSpeed", 1);
+			CheatGiveInventoryEquipment();
 			return;
 		}
 
 		if (name ~== "inventory")
 		{			
-			GiveInventory("XRpgShield", 1);
-			GiveInventory("FalconLargeShield", 1);
-			GiveInventory("SilverSmallShield", 1);
-			GiveInventory("RoundShield", 1);
-
-			GiveInventory("FireRing", 1);
-			GiveInventory("IceRing", 1);
-			GiveInventory("LightningRing", 1);
-			GiveInventory("DragonBracers", 1);
-			GiveInventory("BootsOfSpeed", 1);
-
-			GiveInventory("RegenAmulet", 1);
-			GiveInventory("ManaAmulet", 1);
-			GiveInventory("WardingAmulet", 1);
-			GiveInventory("BishopGem", 1);
-
-			GiveInventory("PlatinumHelmet", 1);
-			GiveInventory("SuitHelmet", 1);
-			GiveInventory("WraithHelmet", 1);
-			GiveInventory("MetalCap", 1);
-			GiveInventory("WingedHelmet", 1);
-
-			GiveInventory("MeshBodyArmor", 1);
-			GiveInventory("LeatherBodyArmor", 1);
-			GiveInventory("EttinArmor", 1);
-			GiveInventory("MagicRobes", 1);
-			GiveInventory("DragonScaleArmor", 1);
-			GiveInventory("PlateMail", 1);
-			GiveInventory("HalfPlate", 1);
+			CheatGiveInventoryShields();
+			CheatGiveInventoryHelmets();
+			CheatGiveInventoryArmor();
+			CheatGiveInventoryAmulets();
+			CheatGiveInventoryRings();
+			CheatGiveInventoryEquipment();
 			return;
 		}
 

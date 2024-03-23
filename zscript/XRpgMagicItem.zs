@@ -153,7 +153,7 @@ class XRpgEquipableItem : TabMenuItem
 	virtual bool IsItemActive(XRpgPlayer playerObj)
 	{
 		if (!playerObj)
-			return true;
+			return false;
 		
 		if (playerObj.ActiveMagicItems[paperDollSlot] == self)
 			return true;

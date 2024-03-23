@@ -234,33 +234,6 @@ class DivineSpell : XRpgSpellItem
 		if (xrpgPlayer.Health < xrpgPlayer.MaxHealth * SPELL_CLERIC_DIVINE_HEALPERCENT)
 			xrpgPlayer.A_SetHealth(xrpgPlayer.MaxHealth * SPELL_CLERIC_DIVINE_HEALPERCENT);
 
-		//Teleport to start
-		Vector3 dest;
-		int destAngle;
-
-		if (deathmatch)
-		{
-			[dest, destAngle] = level.PickDeathmatchStart();
-		}
-		else
-		{
-			[dest, destAngle] = level.PickPlayerStart(Owner.PlayerNumber());
-		}
-		dest.Z = ONFLOORZ;
-		Owner.Teleport (dest, destAngle, TELF_SOURCEFOG | TELF_DESTFOG);
-
-		Playerinfo p = Owner.player;
-		if (p && p.morphTics && (p.MorphStyle & MRF_UNDOBYCHAOSDEVICE))
-		{ // Teleporting away will undo any morph effects (pig)
-			p.mo.UndoPlayerMorph (p, MRF_UNDOBYCHAOSDEVICE);
-		}
-
-		//Add short term invul
-		let power = Powerup(Spawn ("PowerInvulnerable"));
-		power.EffectTics = 250;
-		/*power.bAlwaysPickup |= bAlwaysPickup;
-		power.bAdditiveTime |= bAdditiveTime;
-		power.bNoTeleportFreeze |= bNoTeleportFreeze;*/
-		power.CallTryPickup (xrpgPlayer);
+		xrpgPlayer.TeleportToStart(true);
 	}
 }

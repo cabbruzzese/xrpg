@@ -69,7 +69,7 @@ class DragonBracers : MagicArmor
     }
 }
 
-class BootsOfSpeed : MagicArmor replaces ArtiSpeedBoots
+class BootsOfSpeed : MagicArmor
 {
 	Default
 	{
@@ -99,6 +99,78 @@ class BootsOfSpeed : MagicArmor replaces ArtiSpeedBoots
 		Super.PostBeginPlay();
 
         A_SpriteOffset(0, 20);
+    }
+}
+
+const PHOENIXBRACERS_COOLDOWN_MAX = 600;
+const PHOENIXBRACERS_HEALTH_MIN = 20;
+const PHOENIXBRACERS_GIVE_HEALTH = 80;
+class PhoenixBracers : MagicArmor
+{
+	Default
+	{
+		Inventory.Icon "PHXBA0";
+		Tag "$TAG_PHOENIXBRACERS";
+
+        XRpgEquipableItem.EffectMessage "$TXT_PHOENIXBRACERS_USE";
+
+		XRpgEquipableItem.MaxCooldown PHOENIXBRACERS_COOLDOWN_MAX;
+	}
+	States
+	{
+	Spawn:
+		PHXB A -1;
+		Loop;
+	}
+
+    override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+        A_SpriteOffset(0, -8);
+    }
+
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {        
+        if (!Owner)
+			return;
+		
+		let xrpgPlayer = XRpgPlayer(Owner);
+        if (!xrpgPlayer)
+			return;
+
+        if (!IsActive())
+            return;
+
+        if (!IsCooldownDone())
+            return;
+
+		if (damage > 0 && Owner && Owner.Player && Owner.Player.mo)
+        {
+			//reduce all damage if below threshold
+			if (xrpgPlayer.Health < PHOENIXBRACERS_HEALTH_MIN)
+			{
+				newdamage = damage / 4;
+
+				//respawn if dead sometimes
+				if (xrpgPlayer.Health < damage)
+				{
+					if (random[PhoenixBracers](1,100) < 50)
+					{
+						newdamage = 0;
+
+						int healNum = min(PHOENIXBRACERS_GIVE_HEALTH, xrpgPlayer.MaxHealth);
+						xrpgPlayer.A_SetHealth(healNum);
+
+						xrpgPlayer.A_SetBlend("77 66 22", 0.8, 40);
+						xrpgPlayer.TeleportToStart(false);
+
+						StartCooldown();
+					}
+				}
+			}
+
+        }
     }
 }
 
