@@ -872,6 +872,7 @@ class XRpgPlayer : PlayerPawn
 		GiveInventory("DragonBracers", 1);
 		GiveInventory("BootsOfSpeed", 1);
 		GiveInventory("PhoenixBracers", 1);
+		GiveInventory("ShieldBracelet", 1);
 	}
 
 	override void CheatGive (String name, int amount)

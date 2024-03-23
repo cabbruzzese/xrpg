@@ -4,7 +4,7 @@ class InventoryEventHandler : EventHandler
 	{
 		if (e.Replacee is 'ArtiBoostArmor')
 		{
-            int magicItemNum = random[MagicItemSpawn](1,4);
+            int magicItemNum = random[MagicItemSpawn](1,5);
             switch (magicItemNum)
             {
                 case 1:
@@ -18,6 +18,9 @@ class InventoryEventHandler : EventHandler
                     break;
                 case 4:
                     e.replacement = 'LightningRing';
+                    break;
+                case 5:
+                    e.replacement = 'ShieldBracelet';
                     break;
             }
 		}

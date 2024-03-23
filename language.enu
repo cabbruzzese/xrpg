@@ -86,6 +86,7 @@ TAG_WINGEDHELM = "Winged Helmet.";
 TAG_HALFPLATE = "Barbarian Half Plate.";
 TAG_PHOENIXBRACERS = "Phoenix Bracers.";
 TAG_SHADOWRING = "Ring of Shadows.";
+TAG_SHIELDBRACELET = "Bracelet of Mana Shield.";
 
 TXT_MAGICITEMPICKUP = "This item emits a strong magical aura.";
 TXT_ARMORITEMPICKUP = "A piece of armor.";
@@ -113,3 +114,4 @@ TXT_WINGEDHELM_USE = "Air rushes around you as you don this helmet.";
 TXT_HALFPLATE_USE = "Barbarian half plate. Keeps your vitals safe whilst impressing fair maidens.";
 TXT_PHOENIXBRACERS_USE = "As the bracers snap in place you feel a burning and then youthful energy.";
 TXT_SHADOWRING_USE = "A black mist forms around you, riddling you with darkness.";
+TXT_SHIELDBRACELET_USE = "An energy buzzes around you that tugs at your mind.";

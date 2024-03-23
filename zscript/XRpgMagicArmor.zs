@@ -32,7 +32,7 @@ class MagicArmor : XRpgMagicItem
     override void Unequip()
     {
 		super.Unequip();
-		
+
         let xrpgPlayer = XRpgPlayer(Owner);
         if (!xrpgPlayer)
 			return;
@@ -176,6 +176,76 @@ class PhoenixBracers : MagicArmor
     }
 }
 
+const SHIELDBRACELET_COOLDOWN_MAX = 20;
+class ShieldBracelet : MagicArmor
+{
+	Default
+	{
+		Inventory.Icon "MBRCA0";
+		Tag "$TAG_SHIELDBRACELET";
+
+        XRpgEquipableItem.EffectMessage "$TXT_SHIELDBRACELET_USE";
+
+		XRpgEquipableItem.MaxCooldown SHIELDBRACELET_COOLDOWN_MAX;
+	}
+	States
+	{
+	Spawn:
+		MBRC A -1;
+		Loop;
+	}
+
+    override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+        A_SpriteOffset(0, -4);
+    }
+
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {        
+        if (!Owner)
+			return;
+		
+		let xrpgPlayer = XRpgPlayer(Owner);
+        if (!xrpgPlayer)
+			return;
+
+        if (!IsActive())
+            return;
+
+        if (!IsCooldownDone())
+            return;
+
+		if (damage > 0 && Owner && Owner.Player && Owner.Player.mo)
+        {
+			//reduce all damage if below threshold
+			if (random[ShieldBraceletChance](1,10) < 10)
+			{				
+				int cost = Max(damage / 3, 1);
+
+				let ammo1 = Inventory(xrpgPlayer.FindInventory('Mana1'));
+				let ammo2 = Inventory(xrpgPlayer.FindInventory('Mana2'));
+
+				if (ammo1.Amount >= cost && ammo2.Amount >= cost)
+				{
+					newdamage = 0;
+					xrpgPlayer.A_StartSound("BishopBlur", CHAN_BODY);
+
+					//Reduce mana, but never go below 0
+					ammo1.Amount = Max(ammo1.Amount - cost, 0);
+					ammo2.Amount = Max(ammo2.Amount - cost, 0);
+
+					xrpgPlayer.A_SetBlend("44 22 44", 0.8, 40);
+
+					StartCooldown();
+				}
+			}
+
+        }
+    }
+}
+
 //-----------------------------------------
 // Body Armor
 //-----------------------------------------
@@ -307,9 +377,9 @@ class MagicRobes : XRpgBodyItem
 				return;
 
 			//Randomly absorb into mana
-			if (random[BishopGem](1,4) == 1)
+			if (random[BishopGem](1,3) == 1)
 			{
-				newdamage = damage / 4;
+				newdamage = damage / 3;
 
 				int absorb = Math.Clamp(damage / 4, 1, 9);
 
