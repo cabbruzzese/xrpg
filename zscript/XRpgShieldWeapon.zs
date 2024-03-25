@@ -11,6 +11,8 @@ const SHIELD_DAMAGE_MAX = 20;
 const SHIELD_DAMAGE_CLERIC_MAX = 15;
 const SHIELD_STR_MOD = 0.8;
 const SHIELD_KNOCKBACK = 20;
+const TORCH_DAMAGE_MIN = 15;
+const TORCH_DAMAGE_MAX = 40;
 
 const SHIELD_TYPE_ROUND = 0;
 const SHIELD_TYPE_SPIKED = 1;
@@ -89,6 +91,14 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
 		FPCH B 3 Offset (5, 40) A_Refire;
 		FPCH E 1 Offset (0, 150) A_RestoreMirror;
 		Goto Ready;
+	ShieldTorchFire:
+		FTCH A 5;
+		FTCH B 4;
+		FTCH C 4 A_TorchAttack;
+		FTCH D 4;
+		FTCH E 3;
+		TNT1 A 4;
+		Goto Ready;
 	}
 
 	action void A_ForwardToReady()
@@ -140,7 +150,7 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
 				A_SetWeapState("ShieldMetalFire");
 				return;
 			case SHIELD_TYPE_TORCH:
-				A_SetWeapState("Ready");
+				A_SetWeapState("ShieldTorchFire");
 				return;
 		}
 
@@ -181,7 +191,7 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
 				A_SetWeapState("ShieldMetalHold");
 				return;
 			case SHIELD_TYPE_TORCH:
-				A_SetWeapState("Ready");
+				A_SetWeapState("ShieldTorchFire");
 				return;
 		}
 
@@ -189,6 +199,11 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
 		A_SetWeapState("FistFire");
         return;
     }
+
+	action void A_TorchAttack()
+	{
+        A_FWeaponMeleeAttack(TORCH_DAMAGE_MIN, TORCH_DAMAGE_MAX, 0, 0.5, 0.85, 2*DEFMELEERANGE, "TorchPuff", false, 0);
+	}
 
     action void A_OffhandPunchAttack()
 	{
@@ -343,6 +358,14 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
         Goto Ready;
 	ShieldFrameSwing:
 		TNT1 A 0 A_ForwardSwing;
+	ShieldTorchFire:
+		CTCH A 5;
+		CTCH B 4;
+		CTCH C 4 A_TorchAttack;
+		CTCH D 4;
+		CTCH E 3;
+		TNT1 A 4;
+		Goto Ready;
 	}
 
 	action void A_ForwardToReady()
@@ -395,7 +418,7 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
 				A_SetWeapState("ShieldMetalFire");
 				return;
 			case SHIELD_TYPE_TORCH:
-				A_SetWeapState("Ready");
+				A_SetWeapState("ShieldTorchFire");
 				return;
 		}
 
@@ -433,7 +456,7 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
 				A_SetWeapState("ShieldMetalHold");
 				return;
 			case SHIELD_TYPE_TORCH:
-				A_SetWeapState("Ready");
+				A_SetWeapState("ShieldTorchFire");
 				return;
 		}
 
@@ -441,6 +464,11 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
 		A_SetWeapState("Swing");
         return;
     }
+
+	action void A_TorchAttack()
+	{
+        A_CWeaponMeleeAttack(TORCH_DAMAGE_MIN, TORCH_DAMAGE_MAX, 0, 0.5, 0.85, 2*DEFMELEERANGE, "TorchPuff", false, 0);
+	}
 
 	action void A_ShieldBashMelee()
     {
@@ -469,4 +497,28 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
         //console.printf("Charging Shield");
         shield.SetShieldTimeout();
     }
+}
+
+class TorchPuff : Actor
+{
+	Default
+	{
+		+NOBLOCKMAP +NOGRAVITY
+		+PUFFONACTORS
+		+BLOODLESSIMPACT
+		RenderStyle "Translucent";
+		Alpha 0.6;
+		SeeSound "FighterHammerExplode";
+		AttackSound "DemonMissileFire";
+		ActiveSound "DemonMissileFire";
+		VSpeed 1;
+		DamageType "Fire";
+		Scale 0.8;
+	}
+	States
+	{
+	Spawn:
+		DRFX GHIJKL 2;
+		Stop;
+	}
 }

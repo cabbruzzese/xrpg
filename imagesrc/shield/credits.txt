@@ -11,3 +11,7 @@ https://forum.zdoom.org/viewtopic.php?p=810787#p810787
 Shield Blanks
 Neoworm
 https://forum.zdoom.org/viewtopic.php?t=15908&start=345
+
+Torch
+"Torch Simple" (https://skfb.ly/6RWGE) by Psychloor
+ is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).

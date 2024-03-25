@@ -120,6 +120,6 @@ TXT_HALFPLATE_USE = "Barbarian half plate. Keeps your vitals safe whilst impress
 TXT_PHOENIXBRACERS_USE = "As the bracers snap in place you feel a burning and then youthful energy.";
 TXT_SHADOWRING_USE = "A black mist forms around you, riddling you with darkness.";
 TXT_SHIELDBRACELET_USE = "An energy buzzes around you that tugs at your mind.";
-TXT_TORCH_USE = "This should light the way.";
+TXT_TORCH_USE = "A magical torch should light the way.";
 
-TXT_TORCH_PICKUP = "A torch. This year's hottest new item.";
+TXT_TORCH_PICKUP = "A magical torch. This year's hottest new item.";
