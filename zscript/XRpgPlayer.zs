@@ -829,6 +829,7 @@ class XRpgPlayer : PlayerPawn
 		GiveInventory("FalconLargeShield", 1);
 		GiveInventory("SilverSmallShield", 1);
 		GiveInventory("RoundShield", 1);
+		GiveInventory("OffhandTorch", 1);
 	}
 
 	void CheatGiveInventoryHelmets()

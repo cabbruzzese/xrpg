@@ -242,6 +242,11 @@ class XRpgMagePlayer : XRpgPlayer
 
 		if (slot == PAPERDOLL_SLOT_SHIELD)
 		{
+			//Can use torches and specials
+			let shield = MagicShield(armorItem);
+			if (shield && shield.MageCanUse)
+				return true;
+			
 			A_Print("$TXT_MAGE_NOSHIELD");
 			return false;
 		}

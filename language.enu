@@ -52,7 +52,6 @@ TXT_ARMOR_WRAITHHELM = "A horned helm? Somewhere a viking's head is getting cold
 TXT_ARMOR_BISHOPGEM = "What a lovely ornament of death. May it protect me.";
 TXT_ARMOR_ETTINARMOR = "It may look like a barbarian's swimwear, but at least it's armor.";
 TXT_ARMOR_SUITHELMET = "O holy knight, a helmet! ...and it's sturdy!";
-TAG_ETTINARMOR = "Ettin Armor.";
 
 TXT_MAGE_NOSHIELD = "Mages are not proficient with shields.";
 TXT_MAGE_NOHEAVY = "Mages cannot wear heavy armor.";
@@ -63,30 +62,36 @@ TXT_FIGHTER_NOLIGHT = "Fighters are far too brawny to fit into light armor.";
 TAG_FIRERING = "Ring of Flames.";
 TAG_ICERING = "Ring of Cold.";
 TAG_LIGHTNINGRING = "Ring of Shocking.";
+TAG_SHADOWRING = "Ring of Shadows.";
+
 TAG_DRAGONBRACERS = "Dragon Bracers.";
+TAG_PHOENIXBRACERS = "Phoenix Bracers.";
+TAG_SHIELDBRACELET = "Bracelet of Mana Shield.";
+TAG_BOOTSOFSPEED = "Boots of Speed.";
+
 TAG_REGENAMULET = "Amulet of Life.";
 TAG_MANAAMULET = "Amulet of Magic.";
-TAG_BOOTSOFSPEED = "Boots of Speed.";
-TAG_PLATINUMHELM = "Platinum Helm.";
-TAG_MESHARMOR = "Mesh Armor.";
-TAG_FALCONSHIELD = "Falcon Shield.";
 TAG_WARDINGAMULET = "Amulet of Warding.";
 TAG_BISHOPGEM = "Dark Bishop's Amulet.";
-TAG_SUITHELMET = "Full Helm.";
+
+TAG_METALCAP = "Metal Cap.";
+TAG_PLATINUMHELM = "Platinum Helm. (Heavy)";
+TAG_SUITHELMET = "Full Helm. (Heavy, Plate)";
 TAG_WRAITHHELM = "Wraith Helmet.";
-TAG_CENTAURSHIELD = "Centaur Shield.";
+TAG_WINGEDHELM = "Winged Helmet. (Light)";
+
+TAG_ETTINARMOR = "Ettin Armor. (Heavy)";
+TAG_MESHARMOR = "Mesh Armor." (Heavy);
+TAG_HALFPLATE = "Barbarian Half Plate. (Plate)";
+TAG_PLATEMAIL = "Plate Mail. (Heavy, Plate)";
+TAG_LEATHERARMOR = "Leather Armor. (Light)";
+TAG_MAGICROBES = "Robes of Darkness. (Light)";
+TAG_DRAGONSCALE = "Dragon Scale Armor. (Heavy)";
+
+TAG_CENTAURSHIELD = "Centaur Shield. (Heavy)";
+TAG_FALCONSHIELD = "Falcon Shield. (Heavy)";
 TAG_ROUNDSHIELD = "Round Shield.";
 TAG_SILVERSHIELD = "Silver Shield.";
-TAG_LEATHERARMOR = "Leather Armor.";
-TAG_METALCAP = "Metal Cap.";
-TAG_MAGICROBES = "Robes of Darkness.";
-TAG_DRAGONSCALE = "Dragon Scale Armor.";
-TAG_PLATEMAIL = "Plate Mail.";
-TAG_WINGEDHELM = "Winged Helmet.";
-TAG_HALFPLATE = "Barbarian Half Plate.";
-TAG_PHOENIXBRACERS = "Phoenix Bracers.";
-TAG_SHADOWRING = "Ring of Shadows.";
-TAG_SHIELDBRACELET = "Bracelet of Mana Shield.";
 
 TXT_MAGICITEMPICKUP = "This item emits a strong magical aura.";
 TXT_ARMORITEMPICKUP = "A piece of armor.";
@@ -115,3 +120,6 @@ TXT_HALFPLATE_USE = "Barbarian half plate. Keeps your vitals safe whilst impress
 TXT_PHOENIXBRACERS_USE = "As the bracers snap in place you feel a burning and then youthful energy.";
 TXT_SHADOWRING_USE = "A black mist forms around you, riddling you with darkness.";
 TXT_SHIELDBRACELET_USE = "An energy buzzes around you that tugs at your mind.";
+TXT_TORCH_USE = "This should light the way.";
+
+TXT_TORCH_PICKUP = "A torch. This year's hottest new item.";

@@ -4,11 +4,13 @@ class MagicShield : XRpgShieldItem
     int shieldTimeout;
 	bool canCharge;
 	int shieldType;
+	bool mageCanUse;
 
     property ShieldCharge : shieldCharge;
     property ShieldTimeout : shieldTimeout;
 	property CanCharge: canCharge;
 	property ShieldType: shieldType;
+	property MageCanUse:mageCanUse;
 
 	void AddCharge(int amount)
     {
@@ -304,5 +306,68 @@ class SilverSmallShield : MagicShield
 		Super.PostBeginPlay();
 
         A_SpriteOffset(0, -12);
+    }
+}
+
+class OffhandTorch : MagicShield replaces ArtiTorch
+{
+	Default
+	{
+		Inventory.Icon "ARTITRCH";
+		
+		Tag "$TAG_ARTITORCH";
+        XRpgEquipableItem.EffectMessage "$TXT_TORCH_USE";
+		Inventory.PickupMessage "$TXT_TORCH_PICKUP";
+				
+		MagicShield.ShieldType SHIELD_TYPE_TORCH;
+
+		MagicShield.MageCanUse true;
+	}
+	States
+	{
+	Spawn:
+		TRCH ABC 3 Bright;
+		Loop;
+	}
+
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {
+        return;
+    }
+
+	override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
+	{
+		return;
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+        A_SpriteOffset(0, 19);
+    }
+
+	const OFFHANDTORCH_LIGHT_MIN = 100;
+	const OFFHANDTORCH_LIGHT_MAX = 125;
+	const OFFHANDTORCH_LIGHT_NAME = "OffhandTorch";
+
+    override void Equip()
+	{
+		super.Equip();
+
+		if (!Owner)
+			return;
+
+		Owner.A_AttachLight(OFFHANDTORCH_LIGHT_NAME, DynamicLight.RandomFlickerLight, "99 66 11", OFFHANDTORCH_LIGHT_MIN, OFFHANDTORCH_LIGHT_MAX);
+	}
+
+    override void Unequip()
+    {
+		super.Unequip();
+
+        if (!Owner)
+			return;
+
+		Owner.A_RemoveLight(OFFHANDTORCH_LIGHT_NAME);
     }
 }
