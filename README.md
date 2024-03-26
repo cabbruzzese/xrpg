@@ -102,15 +102,40 @@ Increase damage and provide some protection against the elements.
 
 Restores your powers. Some amulets provide protection from poison.
 
-## Armor
+## Magical Equipment
 
-Wear enchanted armors to increase your AC or to gain magical enhancements.
+Provide boost to speed, armor, and other abilities. 
 
+### Light Sources
+
+Carry your torch in your offhand to light up the way. Burn foes with it if you are a melee class. Or find an unusual lantern with mystic powers.
+
+## Equipable Armor
+
+Wear enchanted armors to increase your AC or to gain magical enhancements. Press tab to open the map and view your equipment.
+
+### Armor types
+
+#### Standard
+Can be worn by anyone.
+
+#### Light
+Easy to move in, and light enough for the mage, but cannot be worn by the fighter.
+
+#### Heavy
+Weighs down the character and makes him slower. If you wear 3 heavy items you are encumbererd and unable to run. Wearing 2 heavy items will show a warning.
+
+#### Plate
+Full metal armor only usable by the fighter
+
+### Shields
+The fighter and cleric can now equip a variety of shields, each with different properties.
 
 # Surprises
 
 There are many new surprises in the game. There are new melee weapons for the fighter and cleric, new pickups, and new experiences in the environments. Hopefully this gives players a renewed sense of mystery and wonder and the desire to explore every nook and cranny of the game once again.
 
 # Credits
-
 Hexen is a game made by Raven software. Thanks for this excellent journey of imagination and epic metal.
+
+Sprite credits are listed in the imgagesrc folder next to their assets.
