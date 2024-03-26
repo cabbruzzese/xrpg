@@ -309,25 +309,19 @@ class SilverSmallShield : MagicShield
     }
 }
 
-class OffhandTorch : MagicShield replaces ArtiTorch
+class TorchShield : MagicShield
 {
+	string lightName;
+	int lightMin;
+	int lightMax;
+	bool flickers;
+	property LightName: lightName;
+	property LightMin: lightMin;
+	property LightMax: lightMax;
+
 	Default
 	{
-		Inventory.Icon "ARTITRCH";
-		
-		Tag "$TAG_ARTITORCH";
-        XRpgEquipableItem.EffectMessage "$TXT_TORCH_USE";
-		Inventory.PickupMessage "$TXT_TORCH_PICKUP";
-				
-		MagicShield.ShieldType SHIELD_TYPE_TORCH;
-
 		MagicShield.MageCanUse true;
-	}
-	States
-	{
-	Spawn:
-		TRCH ABC 3 Bright;
-		Loop;
 	}
 
 	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
@@ -340,6 +334,72 @@ class OffhandTorch : MagicShield replaces ArtiTorch
 		return;
 	}
 
+	virtual void DoLightStart()
+	{
+	}
+
+	void DoLightEnd()
+	{
+		if (!Owner)
+			return;
+
+		Owner.A_RemoveLight(LightName);
+	}
+
+    override void Equip()
+	{
+		super.Equip();
+
+		DoLightStart();
+	}
+
+    override void Unequip()
+    {
+		super.Unequip();
+
+		DoLightEnd();
+    }
+
+	override void Travelled()
+	{
+		super.Travelled();
+
+		DoLightStart();
+	}
+
+	override void OwnerDied()
+	{
+		super.OwnerDied();
+
+		DoLightEnd();
+	}
+}
+
+
+class OffhandTorch : TorchShield
+{
+	Default
+	{
+		Inventory.Icon "ARTITRCH";
+		
+		Tag "$TAG_ARTITORCH";
+        XRpgEquipableItem.EffectMessage "$TXT_TORCH_USE";
+		Inventory.PickupMessage "$TXT_TORCH_PICKUP";
+				
+		MagicShield.ShieldType SHIELD_TYPE_TORCH;
+
+		TorchShield.LightName "OffhandTorch";
+		TorchShield.LightMin 100;
+		TorchShield.LightMax 125;
+	}
+
+	States
+	{
+	Spawn:
+		TRCH ABC 3 Bright;
+		Loop;
+	}
+
 	override void PostBeginPlay()
 	{
 		Super.PostBeginPlay();
@@ -347,27 +407,180 @@ class OffhandTorch : MagicShield replaces ArtiTorch
         A_SpriteOffset(0, 19);
     }
 
-	const OFFHANDTORCH_LIGHT_MIN = 100;
-	const OFFHANDTORCH_LIGHT_MAX = 125;
-	const OFFHANDTORCH_LIGHT_NAME = "OffhandTorch";
-
-    override void Equip()
+	override void DoLightStart()
 	{
-		super.Equip();
-
 		if (!Owner)
 			return;
 
-		Owner.A_AttachLight(OFFHANDTORCH_LIGHT_NAME, DynamicLight.RandomFlickerLight, "99 66 11", OFFHANDTORCH_LIGHT_MIN, OFFHANDTORCH_LIGHT_MAX);
-	}
-
-    override void Unequip()
-    {
-		super.Unequip();
-
-        if (!Owner)
+		if (!IsActive())
 			return;
 
-		Owner.A_RemoveLight(OFFHANDTORCH_LIGHT_NAME);
+		Owner.A_AttachLight(LightName, DynamicLight.RandomFlickerLight, "99 66 11", LightMin, LightMax);
+	}
+}
+
+class SoulLantern : TorchShield
+{
+	Default
+	{
+		Inventory.Icon "LNTRE0";
+		
+		Tag "$TAG_LANTERN";
+        XRpgEquipableItem.EffectMessage "$TXT_LANTERN_USE";
+		Inventory.PickupMessage "$TXT_LANTERN_PICKUP";
+				
+		MagicShield.ShieldType SHIELD_TYPE_LANTERN;
+
+		TorchShield.LightName "OffhandTorch";
+		TorchShield.LightMin 200;
+		TorchShield.LightMax 225;
+
+		Scale 0.60;
+
+		XRpgEquipableItem.MaxCooldown 35;
+	}
+
+	States
+	{
+	Spawn:
+		LNTR ABCD 3 Bright;
+		Loop;
+	}
+
+	override void DoLightStart()
+	{
+		if (!Owner)
+			return;
+
+		if (!IsActive())
+			return;
+
+		Owner.A_AttachLight(LightName, DynamicLight.RandomFlickerLight, "05 15 99", LightMin, LightMax, DYNAMICLIGHT.LF_SPOT, (0, -30, 15), 0, 15, 30, 91);
+	}
+
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+    {
+        if (!IsActive())
+            return;
+
+		if (!source || !source.bIsMonster)
+			return;
+
+		if (!ActorUtils.IsUnliving(source))
+			return;
+        
+        if (damage > 0)
+        {
+			//Half damage form undead and constructs
+            newdamage = damage / 2;
+        }
     }
+
+	override void Tick()
+	{
+		super.Tick();
+
+		if (!Owner)
+			return;
+		if (!IsActive())
+			return;
+
+		if (IsCooldownDone())
+		{
+			Owner.SpawnPlayerMissile('SoulLanternMissile');
+			StartCooldown();
+		}
+	}
+}
+
+class SoulLanternMissile : Actor
+{
+    Default
+    {
+        Speed 120;
+        Radius 12;
+        Height 8;
+        Damage 0;
+		Projectile;
+        +CANNOTPUSH +NODAMAGETHRUST
+		+NOSHIELDREFLECT
+		-ACTIVATEPCROSS
+		-ACTIVATEIMPACT
+		RenderStyle "None";
+    }
+    States
+    {
+    Spawn:
+        TNT1 A 5;
+        Loop;
+    Death:
+        TNT1 A 1;
+        Stop;
+    }
+
+	override int  SpecialMissileHit (Actor victim)
+	{
+		if (target && victim && victim == target)
+			return 1;
+
+		if (!victim || !target)
+			return 1;
+
+		if (!victim.bIsMonster || victim.Health < 0)
+			return 1;
+
+		if (!ActorUtils.IsUnliving(victim))
+			return 1;
+
+		let xrpgPlayer = XRpgPlayer(target);
+		if (!xrpgPlayer)
+			return 0;
+		
+		let mo = xrpgPlayer.A_FireVerticalMissile('SoulLanternSoulRelease', 0, 0, 8, 0, 0, false);
+		if (mo)
+		{
+			mo.SetOrigin(victim.Pos, false);
+		}
+		return 0;
+	}
+}
+
+class SoulLanternSoulRelease : FastProjectile
+{
+    Default
+    {
+        Speed 1;
+        Radius 4;
+        Height 4;
+        Damage 2;
+        Projectile;
+        +RIPPER
+        +CANNOTPUSH +NODAMAGETHRUST
+        +SPAWNSOUNDSOURCE
+		+BLOODLESSIMPACT
+		DeathSound "SpiritDie";
+        Obituary "$OB_LANTERNGHOST";
+		DamageType "Holy";
+
+		Health 0;
+
+		Scale 0.8;
+    }
+    States
+    {
+    Spawn:
+		SPIR D 2 Bright;
+	Death:
+		TNT1 A 0 A_DamageDone;
+		SPIR D 4 Bright;
+		SPIR E 6 Bright A_Scream;
+		SPIR FGHI 6 Bright;
+		Stop;
+    }
+
+	action void A_DamageDone()
+	{
+		bRipper = false;
+		SetDamage(0);
+	}
 }

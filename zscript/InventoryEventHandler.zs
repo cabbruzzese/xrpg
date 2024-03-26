@@ -40,6 +40,20 @@ class InventoryEventHandler : EventHandler
                     break;
             }
         }
+        else if (e.replacee is 'ArtiTorch')
+        {
+            int magicItemNum = random[MagicItemSpawn](1,3);
+            switch (magicItemNum)
+            {
+                case 1:
+                case 2:
+                    e.Replacement = 'OffhandTorch';
+                    break;
+                case 3:
+                    e.Replacement = 'SoulLantern';
+                    break;
+            }
+        }
         else if (e.replacee is 'AmuletOfWarding')
         {
             int magicItemNum = random[MagicItemSpawn](1,3);

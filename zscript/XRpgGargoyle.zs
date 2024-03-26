@@ -331,6 +331,8 @@ class StatueFireDemon : WonderingMonsterBase
 		ActiveSound "FireDemonActive";
 		Obituary "$OB_FIREDEMON";
 		Tag "$FN_FIREDEMON";
+
+		BaseMonster.IsConstruct true;
 	}
 
 	States

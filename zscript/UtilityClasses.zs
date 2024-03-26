@@ -231,6 +231,14 @@ class PowerSpark : Actor
 	}
 }
 
+class BaseMonster : Actor
+{
+	bool isUndead;
+	bool isConstruct;
+	property IsUndead: isUndead;
+	property IsConstruct: isConstruct;
+}
+
 class ActorUtils : Actor
 {
 	static void CopyStyles(Actor copySource, Actor copyTarget, bool copyAngle = false)
@@ -320,4 +328,41 @@ class ActorUtils : Actor
 		return(!tester.TestMobjLocation() || tester.height > (tester.ceilingz - tester.floorz) || !tester.CheckMove(tester.Pos.XY));
 	}
 
+	static bool IsUndead(Actor targetObj)
+	{
+		if (!targetObj)
+			return false;
+
+		if (!targetObj.bIsMonster)
+			return false;
+
+		if (targetObj is 'Wraith' || targetObj is 'XRpgUndead')
+			return true;
+		
+		let baseObj = BaseMonster(targetObj);
+		if (baseObj && baseObj.IsUndead)
+			return true;
+
+		return false;
+	}
+
+	static bool IsConstruct(Actor targetObj)
+	{
+		if (!targetObj)
+			return false;
+		
+		if (!targetObj.bIsMonster)
+			return false;
+
+		let baseObj = BaseMonster(targetObj);
+		if (baseObj && baseObj.IsConstruct)
+			return true;
+
+		return false;
+	}
+	
+	static bool IsUnliving(Actor targetObj)
+	{
+		return (IsUndead(targetObj) || IsConstruct(targetObj));
+	}
 }

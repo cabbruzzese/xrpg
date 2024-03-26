@@ -1,4 +1,4 @@
-class WonderingMonsterBase : Actor
+class WonderingMonsterBase : BaseMonster
 {
     int defaultLeaderFlag;
     int defaultBossFlag;

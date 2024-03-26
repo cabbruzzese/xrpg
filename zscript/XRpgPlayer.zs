@@ -712,10 +712,10 @@ class XRpgPlayer : PlayerPawn
 		A_SetHealth(MaxHealth);
 	}
 
-	action void A_FireVerticalMissile(Class<Actor> missileTypeName, int xSpread = 0, int ySpread = 0, int zSpeed = -90, int xMod = 0, int yMod = 0)
+	action Actor A_FireVerticalMissile(Class<Actor> missileTypeName, int xSpread = 0, int ySpread = 0, int zSpeed = -90, int xMod = 0, int yMod = 0, bool checkSpawn = true)
 	{
 		Actor mo = SpawnPlayerMissile(missileTypeName);
-		if (!mo) return;
+		if (!mo) return null;
 
 		double offsetX = 0;
 		double offsetY = 0;
@@ -732,7 +732,11 @@ class XRpgPlayer : PlayerPawn
 		mo.Vel.X = MinVel; // Force collision detection
         mo.Vel.Y = MinVel; // Force collision detection
 		mo.Vel.Z = zSpeed;
-		mo.CheckMissileSpawn (radius);
+
+		if (checkSpawn)
+			mo.CheckMissileSpawn (radius);
+
+		return mo;
 	}
 
 	int GetMana(class<Inventory> type)
@@ -830,6 +834,7 @@ class XRpgPlayer : PlayerPawn
 		GiveInventory("SilverSmallShield", 1);
 		GiveInventory("RoundShield", 1);
 		GiveInventory("OffhandTorch", 1);
+		GiveInventory("SoulLantern", 1);
 	}
 
 	void CheatGiveInventoryHelmets()

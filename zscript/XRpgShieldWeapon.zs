@@ -19,6 +19,7 @@ const SHIELD_TYPE_SPIKED = 1;
 const SHIELD_TYPE_KITE = 2;
 const SHIELD_TYPE_METAL = 3;
 const SHIELD_TYPE_TORCH = 4;
+const SHIELD_TYPE_LANTERN = 5;
 class XRpgFighterShieldWeapon : XRpgFighterWeapon
 {
 	States
@@ -152,6 +153,9 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
 			case SHIELD_TYPE_TORCH:
 				A_SetWeapState("ShieldTorchFire");
 				return;
+			case SHIELD_TYPE_LANTERN:
+				A_SetWeapState("Ready");
+				return;
 		}
 
 		//default to fist
@@ -192,6 +196,9 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
 				return;
 			case SHIELD_TYPE_TORCH:
 				A_SetWeapState("ShieldTorchFire");
+				return;
+			case SHIELD_TYPE_LANTERN:
+				A_SetWeapState("Ready");
 				return;
 		}
 
@@ -420,6 +427,9 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
 			case SHIELD_TYPE_TORCH:
 				A_SetWeapState("ShieldTorchFire");
 				return;
+			case SHIELD_TYPE_LANTERN:
+				A_SetWeapState("Ready");
+				return;
 		}
 
 		//default to ready state
@@ -457,6 +467,9 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
 				return;
 			case SHIELD_TYPE_TORCH:
 				A_SetWeapState("ShieldTorchFire");
+				return;
+			case SHIELD_TYPE_LANTERN:
+				A_SetWeapState("Ready");
 				return;
 		}
 

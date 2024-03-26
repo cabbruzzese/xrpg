@@ -151,10 +151,13 @@ class XRpgSuitOfArmor : Actor replaces ZSuitOfArmor
 }
 
 
-const MEADSTEIN_HEALTH = 50;
-const MEADSTEIN_MANA = 25;
 class MeadStein : Inventory replaces TableShit1
 {
+	int healAmount;
+	int manaAmount;
+	property HealAmount: healAmount;
+	property ManaAmount: manaAmount;
+
 	Default
 	{
 		+INVENTORY.ISHEALTH
@@ -168,6 +171,9 @@ class MeadStein : Inventory replaces TableShit1
 		Inventory.MaxAmount 0;
 		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$TXT_MEADSTEIN";
+
+		MeadStein.HealAmount 50;
+		MeadStein.ManaAmount 25;
 	}
 	States
 	{
@@ -192,7 +198,7 @@ class MeadStein : Inventory replaces TableShit1
 		if (!player)
 			return false;
 		
-		if (player.GiveBody(MEADSTEIN_HEALTH, MaxAmount))
+		if (player.GiveBody(HealAmount, MaxAmount))
 			return true;
 
 		return false;
@@ -210,7 +216,7 @@ class MeadStein : Inventory replaces TableShit1
 		if (ammo.Amount >= ammo.MaxAmount)
 			return false;
 
-		ammo.Amount = Min(ammo.Amount + MEADSTEIN_MANA, ammo.MaxAmount);
+		ammo.Amount = Min(ammo.Amount + ManaAmount, ammo.MaxAmount);
 		return true;
 	}
 
@@ -238,5 +244,22 @@ class MeadStein : Inventory replaces TableShit1
 		bool ammoSuccess = ApplyAmmo(xrpgPlayer);
 
 		return healthSuccess || ammoSuccess;
+	}
+}
+
+class AleStein : MeadStein replaces TableShit2
+{
+	Default
+	{
+		Inventory.PickupMessage "$TXT_ALESTEIN";
+
+		MeadStein.HealAmount 80;
+		MeadStein.ManaAmount 50;
+	}
+	States
+	{
+	Spawn:
+		TST2 A -1;
+		Stop;
 	}
 }
