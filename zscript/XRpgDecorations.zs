@@ -148,9 +148,18 @@ class XRpgBarrel : ExplodableJunk replaces ZBarrel
 
 		int itemNum = random[BarrelExplode](1,100);
 
-		if (itemNum > 98)
+		if (itemNum > 95)
 		{
-			spawnItem = "ArtiBoostArmor";
+			int artiNum = random[BarrelExplode](1,10);
+
+			if (artiNum == 10)
+				spawnItem = "ArtiDarkServant";
+			else if (artiNum >= 7)
+				spawnItem = "ArtiTeleport";
+			else if (artiNum >= 4)
+				spawnItem = "ArtiTeleportOther";
+			else
+				spawnItem = "ArtiHealingRadius";
 		}
 		else
 		{

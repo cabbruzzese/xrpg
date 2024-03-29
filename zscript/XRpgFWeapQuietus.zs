@@ -75,7 +75,7 @@ class XRpgQuietusDrop : Actor replaces QuietusDrop
 
 // The Fighter's Sword (Quietus) --------------------------------------------
 const SWORD_RANGE = 2 * DEFMELEERANGE;
-const SWORD_SLASH_MANA = 5;
+const SWORD_SLASH_MANA = 8;
 
 class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 {
@@ -86,8 +86,8 @@ class XRpgFWeapQuietus : XRpgFighterWeapon replaces FWeapQuietus
 		+WEAPON.PRIMARY_USES_BOTH;
 		+WEAPON.NOAUTOAIM; //Slash and step mover projectiles do not need aim assist
 		+Inventory.NoAttenPickupSound
-		Weapon.AmmoUse1 14;
-		Weapon.AmmoUse2 14;
+		Weapon.AmmoUse1 18;
+		Weapon.AmmoUse2 18;
 		Weapon.AmmoGive1 20;
 		Weapon.AmmoGive2 20;
 		Weapon.KickBack 150;

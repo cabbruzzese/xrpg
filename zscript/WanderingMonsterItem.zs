@@ -4,9 +4,9 @@ const BOSSTYPE_CHANCE_LEADER = 2;
 
 const BOSSTYPE_LEADER_SUB_NUM = 7;
 
-const DROP_AMMO_CHANCE = 72;
-const DROP_AMMO_CHANCE_BIG = 128;
-const DROP_HEALTH_CHANCE = 144;
+const DROP_AMMO_CHANCE = 32;
+const DROP_AMMO_CHANCE_BIG = 72;
+const DROP_HEALTH_CHANCE = 128;
 
 const LIGHTNINGBOSS_TELEPORT_DIST = 256;
 const LIGHTNINGBOSS_TELEPORT_FAIL_MAX = 20;
@@ -595,10 +595,11 @@ class WanderingMonsterItem : Powerup
                 }
                 break;
             case WML_BLOOD:
-                if (damageTarget && damageTarget.Health > 0)
+                if (damageTarget && damageTarget.Health > 0 && Owner && Owner.Health > 0)
                 {
                     //Heal
-                    Owner.A_SetHealth(Owner.Health + (damage * 2));
+                    int healAmount = damage * 3;
+                    Owner.GiveBody(healAmount);
                     Owner.A_StartSound("WraithAttack", CHAN_BODY);
                 }
                 break;
