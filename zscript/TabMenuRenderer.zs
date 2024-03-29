@@ -1,8 +1,8 @@
-const TAB_INV_START_X = 45;
+const TAB_INV_START_X = 25;
 const TAB_INV_START_Y = 115;
 const TAB_INV_OFFSET_X = 30;
 const TAB_INV_OFFSET_Y = -30;
-const TAB_INV_ROWSIZE = 5;
+const TAB_INV_ROWSIZE = 8;
 class TabMenuRenderer ui
 {
     static void DrawLabel (BaseStatusBar sbar, XRpgPlayer playerObj, HUDFont smallFont)

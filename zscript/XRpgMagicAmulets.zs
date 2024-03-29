@@ -257,3 +257,53 @@ class BishopGemMissile : MageWandDeathMissile
     }
 }
 
+const FEATHERAMULET_Z_MAX = -40;
+class FeatherAmulet : XRpgNeckItem
+{
+	Default
+	{
+		Inventory.Icon "FAMUB0";
+		Tag "$TAG_FEATHERAMULET";
+
+        XRpgEquipableItem.EffectMessage "$TXT_FEATHERAMULET_USE";
+
+		XRpgEquipableItem.MaxCooldown 100;
+	}
+	States
+	{
+	Spawn:
+		FAMU A -1;
+		Stop;
+	}
+
+	override void DoEquipBlend()
+	{
+		if (!Owner)
+			return;
+		
+		Owner.A_SetBlend("99 99 99", 0.8, 40);
+	}
+
+	override void Tick()
+	{
+		super.Tick();
+
+		if (!Owner)
+			return;
+		
+		if (!IsActive() || !IsCooldownDone())
+			return;
+		
+		let xrpgPlayer = xrpgPlayer(Owner);
+		if (!xrpgPlayer)
+			return;
+
+		if (!xrpgPlayer.player.onGround && xrpgPlayer.Vel.z < FEATHERAMULET_Z_MAX)
+		{
+			xrpgPlayer.A_SetBlend("99 99 99", 0.8, 40);
+			xrpgPlayer.TeleportToStart(false);
+
+			StartCooldown();
+		}
+	}
+}

@@ -46,17 +46,19 @@ class InventoryEventHandler : EventHandler
             switch (magicItemNum)
             {
                 case 1:
-                case 2:
                     e.Replacement = 'OffhandTorch';
                     break;
-                case 3:
+                case 2:
                     e.Replacement = 'SoulLantern';
+                    break;
+                case 3:
+                    e.replacement = 'BootsOfFireWalking';
                     break;
             }
         }
         else if (e.replacee is 'AmuletOfWarding')
         {
-            int magicItemNum = random[MagicItemSpawn](1,3);
+            int magicItemNum = random[MagicItemSpawn](1,4);
             switch (magicItemNum)
             {
                 case 1:
@@ -68,6 +70,9 @@ class InventoryEventHandler : EventHandler
                 case 3:
                     e.replacement = 'ManaAmulet';
                     break;
+                case 4:
+                    e.replacement = 'FeatherAmulet';
+                    break;              
             }
         }
         else if (e.Replacee is 'FalconShield')

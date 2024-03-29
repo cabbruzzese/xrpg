@@ -439,8 +439,9 @@ class XRpgStatusBar : HexenStatusBar
 		if (!automapactive)
 			return;
 		
-		int miXPos = 240;
+		int miXPos = 295;
 		int miYPos = 130;
+		int miXPosOffset = 45;
 
 		let xrpgPlayer = XRpgPlayer(CPlayer.mo);
 		if (!xrpgPlayer)
@@ -472,11 +473,11 @@ class XRpgStatusBar : HexenStatusBar
 
 		if (xrpgPlayer.isArmorSlowed)
 		{
-			DrawImage("SLOWA0", (miXPos + 50, trash.displayPos.y), 0);
+			DrawImage("SLOWA0", (miXPos + miXPosOffset, trash.displayPos.y), 0);
 		}
 		else if (xrpgPlayer.isArmorHeavy)
 		{
-			DrawImage("SLOWB0", (miXPos + 50, trash.displayPos.y), 0);
+			DrawImage("SLOWB0", (miXPos + miXPosOffset, trash.displayPos.y), 0);
 		}
 	}
 

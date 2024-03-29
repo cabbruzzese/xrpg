@@ -552,7 +552,7 @@ class XRpgPlayer : PlayerPawn
 		accessorySlots[PAPERDOLL_SLOT_BODY] = EquipmentSlotElement.Create("ARTIBOX", "Body Armor", (30,30), false, true, (150 + armorXOffset, 164 + armorYOffset), self, 'XRpgBodyItem');
 		accessorySlots[PAPERDOLL_SLOT_SHIELD] = EquipmentSlotElement.Create("ARTIBOX", "Shield", (30,30), false, true, (181 + armorXOffset, 164 + armorYOffset), self, 'XRpgShieldItem');
 		accessorySlots[PAPERDOLL_SLOT_NECK] = EquipmentSlotElement.Create("ARTIBOX", "Necklace", (30,30), false, true, (243 + armorXOffset, 164 + armorYOffset), self, 'XRpgNeckItem');
-		accessorySlots[PAPERDOLL_SLOT_ACCESSORY] = EquipmentSlotElement.Create("ACCSLOT", "Accessory",(30,30), false, true, (290, 95), self, 'XRpgMagicItem');
+		accessorySlots[PAPERDOLL_SLOT_ACCESSORY] = EquipmentSlotElement.Create("ACCSLOT", "Accessory",(30,30), false, true, (340, 95), self, 'XRpgMagicItem');
 		trashSlot = TrashItemElement.Create("TRSHA0", "Drop Item", (30,30), false, true, (-20, 130), self);
 
 		hud.uiElements.Push(accessorySlots[PAPERDOLL_SLOT_HELMET]);
@@ -863,6 +863,7 @@ class XRpgPlayer : PlayerPawn
 		GiveInventory("ManaAmulet", 1);
 		GiveInventory("WardingAmulet", 1);
 		GiveInventory("BishopGem", 1);
+		GiveInventory("FeatherAmulet", 1);
 	}
 
 	void CheatGiveInventoryRings()
@@ -879,6 +880,7 @@ class XRpgPlayer : PlayerPawn
 		GiveInventory("BootsOfSpeed", 1);
 		GiveInventory("PhoenixBracers", 1);
 		GiveInventory("ShieldBracelet", 1);
+		GiveInventory("BootsOfFireWalking", 1);
 	}
 
 	override void CheatGive (String name, int amount)

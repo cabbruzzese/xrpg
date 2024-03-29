@@ -246,6 +246,95 @@ class ShieldBracelet : MagicArmor
     }
 }
 
+class BootsOfFireWalking : MagicArmor
+{
+	Default
+	{
+		Inventory.Icon "BFWKA0";
+		Tag "$TAG_BOOTSOFFIREWALKING";
+
+        XRpgEquipableItem.EffectMessage "$TXT_BOOTSOFFIREWALKING_USE";
+	}
+	States
+	{
+	Spawn:
+		BFWK A -1;
+		Stop;
+	}
+
+	override void DoEquipBlend()
+	{
+		if (!Owner)
+			return;
+		
+		Owner.A_SetBlend("44 01 01", 0.8, 40);
+	}
+
+    override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+        A_SpriteOffset(0, -9);
+    }
+
+	override void Equip()
+	{
+		super.Equip();
+
+		let xrpgPlayer = XRpgPlayer(Owner);
+		if (!xrpgPlayer)
+			return;
+
+		let power = Powerup(Spawn ("PowerLavaBoots"));
+		power.CallTryPickup (xrpgPlayer);
+	}
+
+	override void Unequip()
+	{
+		super.Unequip();
+		
+		let xrpgPlayer = XRpgPlayer(Owner);
+		if (!xrpgPlayer)
+			return;
+
+		let pItem = xrpgPlayer.FindInventory("PowerLavaBoots");
+		let powerupObj = Powerup(pItem);
+		if (powerupObj)
+			powerupObj.EndEffect();
+
+		if (pItem)
+		{
+			xrpgPlayer.RemoveInventory(pItem);
+		}
+	}
+}
+
+class PowerLavaBoots : PowerIronFeet
+{
+	Default
+	{
+		Powerup.Duration  0x7FFFFFFF;
+		Powerup.Mode "Full";
+		Powerup.Color "0 0 0", 0.0;
+	}
+	
+	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
+	{
+		//Lava floors do fire damage and do not have a source
+		if (source)
+			return;
+
+        if (damage > 0 && (damageType =='Fire'))
+        {
+            newdamage = 0;
+        }		
+	}
+
+	override void DoEffect ()
+	{
+	}	
+}
+
 //-----------------------------------------
 // Body Armor
 //-----------------------------------------

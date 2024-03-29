@@ -266,7 +266,6 @@ class LightningRing : DamageMagicItem
 
 		DamageMagicItem.SparkType "LightningSparks";
 		DamageMagicItem.RingDamageType "Electric";
-		DamageMagicItem.damageMax 30;
 	}
 	States
 	{

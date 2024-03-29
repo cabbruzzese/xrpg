@@ -70,11 +70,13 @@ TAG_DRAGONBRACERS = "Dragon Bracers.";
 TAG_PHOENIXBRACERS = "Phoenix Bracers.";
 TAG_SHIELDBRACELET = "Bracelet of Mana Shield.";
 TAG_BOOTSOFSPEED = "Boots of Speed.";
+TAG_BOOTSOFFIREWALKING = "Boots of Fire Walking.";
 
 TAG_REGENAMULET = "Amulet of Life.";
 TAG_MANAAMULET = "Amulet of Magic.";
 TAG_WARDINGAMULET = "Amulet of Warding.";
 TAG_BISHOPGEM = "Dark Bishop's Amulet.";
+TAG_FEATHERAMULET = "Feather Amulet.";
 
 TAG_METALCAP = "Metal Cap.";
 TAG_PLATINUMHELM = "Platinum Helm. (Heavy)";
@@ -125,6 +127,9 @@ TXT_SHADOWRING_USE = "A black mist forms around you, riddling you with darkness.
 TXT_SHIELDBRACELET_USE = "An energy buzzes around you that tugs at your mind.";
 TXT_TORCH_USE = "A magical torch should light the way.";
 TXT_LANTERN_USE = "This lantern sheds an otherwordly light.";
+TXT_BOOTSOFFIREWALKING_USE = "Your feet feel cool.";
+TXT_FEATHERAMULET_USE = "A soft wind begins to blow.";
 
 TXT_TORCH_PICKUP = "A magical torch. This year's hottest new item.";
 TXT_LANTERN_PICKUP = "What an unusual lantern.";
+
