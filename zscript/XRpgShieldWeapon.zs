@@ -135,7 +135,6 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
             return;
         }
 		
-		// console.printf(string.format("Shield Type: %d", shieldItem.ShieldType));
 		switch (shieldItem.ShieldType)
 		{
 			case SHIELD_TYPE_SPIKED:
@@ -179,7 +178,6 @@ class XRpgFighterShieldWeapon : XRpgFighterWeapon
             return;
         }
 		
-		// console.printf(string.format("Shield Type Hold: %d", shieldItem.ShieldType));
 		switch (shieldItem.ShieldType)
 		{
 			case SHIELD_TYPE_SPIKED:
@@ -412,7 +410,6 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
             return;
         }
 		
-		// console.printf(string.format("Shield Type: %d", shieldItem.ShieldType));
 		switch (shieldItem.ShieldType)
 		{
 			case SHIELD_TYPE_KITE:
@@ -453,7 +450,6 @@ class XRpgClericShieldWeapon : XRpgClericWeapon
             return;
         }
 		
-		// console.printf(string.format("Shield Type Hold: %d", shieldItem.ShieldType));
 		switch (shieldItem.ShieldType)
 		{
 			case SHIELD_TYPE_KITE:

@@ -554,11 +554,6 @@ class WanderingMonsterItem : Powerup
                     newdamage = damage * BOSS_DAMAGE_VULNERABILITY;
                 break;
         }
-        // if (source) 
-        // {
-        //     string dmgMsg = String.Format("Damage is %d", newdamage);
-        //     console.printf(dmgMsg);
-        // }
     }
 
    void DoBossCauseDamage(int damage, Name damageType, Actor damageTarget)

@@ -47,4 +47,20 @@ class BossMakerEventHandler : EventHandler
             }
         }
     }
+
+    override void WorldThingDamaged (WorldEvent e)
+    {
+        if (!e || !e.DamageSource || !e.Thing)
+            return;
+        
+        XRpgPlayer xrpgPlayer = XRpgPlayer(e.DamageSource);
+        if (!xrpgPlayer)
+            return;
+        
+        ExpSquishItem xpItem = ExpSquishItem(xrpgPlayer.FindInventory('ExpSquishItem'));
+        if (xpItem)
+        {
+            xpItem.DamageToXP(e.Thing, e.Damage, e.DamageType);
+        }
+    }
 }

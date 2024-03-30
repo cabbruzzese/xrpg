@@ -53,8 +53,6 @@ class TabMenuEventHandler : EventHandler
         //Get mouse position and ignore inputs while automap is active
         if (automapactive)
         {
-            //console.printf(String.Format("Event key: %d", e.KeyScan));
-
             //Automap resets cursor position and does not not block inputs so map can close
             if (Bindings.GetBinding(e.KeyScan) ~== "togglemap")
             {

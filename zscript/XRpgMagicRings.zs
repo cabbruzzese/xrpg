@@ -211,8 +211,6 @@ class FireRing : DamageMagicItem
         {
             newdamage = damage / 2;
         }
-
-		//console.printf(damageType);
     }
 }
 

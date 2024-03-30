@@ -59,38 +59,27 @@ class ExpSquishItem : Powerup
 
 	//===========================================================================
 	//
-	// ModifyDamage
+	// DamageToXP
 	//
 	//===========================================================================
-
-	override void ModifyDamage(int damage, Name damageType, out int newdamage, bool passive, Actor inflictor, Actor source, int flags)
+	void DamageToXP(Actor xpSource, int damage, Name damageType)
 	{
-		if (!passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
+		if (damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
             let xrpgPlayer = XRpgPlayer(Owner.Player.mo);
             if (xrpgPlayer)
             {
-                xrpgPlayer.DoXPHit(source, damage, damageType);
+                xrpgPlayer.DoXPHit(xpSource, damage, damageType);
             }
-
-			// if (source) 
-			// {
-			// 	let modifiedDamage = source.GetModifiedDamage(damagetype, damage, passive, inflictor, source, flags);
-
-			// 	string dmgMsg = String.Format("XP is %d and modified is %d", newdamage, modifiedDamage);
-			// 	console.printf(dmgMsg);
-			// }
         }
 	}
 
 	override void EndEffect()
 	{
-		//console.printf("item ended!");
 	}
 
 	override void OnDestroy()
 	{
-		//console.printf("Destroy item!");
 	}
 
 	override void OwnerDied() {}
@@ -139,8 +128,6 @@ class SummonExpSquishItem : Powerup
 				int numPlayers = GetPlayerCount();
 				if (numPlayers < 1)
 					return;
-
-				//Console.Printf(String.Format("Number of players: %d", numPlayers));
 
 				int newXp = damage / numPlayers;
 

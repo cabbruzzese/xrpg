@@ -518,8 +518,6 @@ class XRpgPlayer : PlayerPawn
 
 		let statItem = GetStats();
         GiveXP(statItem, xp);
-
-		//console.printf(String.Format("XP Given: %d", xp));
 	}
 
 	const MANA_MAX_MOD = 10; 
