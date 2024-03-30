@@ -256,6 +256,7 @@ class XRpgMWeapBloodscourge : XRpgMageWeapon replaces MWeapBloodscourge
 		A_FireMissileSpell("MageWandLightningMissile", blueManaUse, greenManaUse, 7);
 
 		A_StartSound("ThunderCrash", CHAN_BODY);
+		Light_ForceLightning(1);
 	}
 
 	const SUMMONBAT_DIST = 160.0;

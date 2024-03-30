@@ -107,6 +107,7 @@ class XRpgMWeapWand : XRpgMageWeapon replaces MWeapWand
         A_FireMissileSpell("MageWandLightningMissile", blueManaUse, greenManaUse);
 
         A_StartSound("ThunderCrash", CHAN_BODY);
+        Light_ForceLightning(1);
     }
 
     action void A_FireBloodSpell(int blueManaUse, int greenManaUse)
@@ -385,6 +386,7 @@ class MageWandLightningMissile : FastProjectile
         +RIPPER
         +CANNOTPUSH +NODAMAGETHRUST
         +SPAWNSOUNDSOURCE
+        +BLOODLESSIMPACT
         MissileType "MageWandLightningSmoke";
         Obituary "$OB_MPMWEAPWAND";
         Scale 0.2;
@@ -395,10 +397,10 @@ class MageWandLightningMissile : FastProjectile
     States
     {
     Spawn:
-        MLF2 Q 2 Bright;
-        MLF2 Q 1 Bright A_WandLightiningSplit;
+        MLF2 Q 2 Bright Light("YellowSunBigFade3");
+        MLF2 Q 1 Bright Light("YellowSunBigFade3") A_WandLightiningSplit;
     Death:
-        MLF2 PON 1 Bright;
+        MLF2 PON 1 Bright Light("YellowSunBigFade3");
         Stop;
     }
 
