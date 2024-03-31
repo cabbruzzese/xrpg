@@ -398,12 +398,15 @@ class XRpgPlayer : PlayerPawn
 		A_Print(lvlMsg);
 	}
 	
+	const LEVEL_HEALTH_MIN = 5;
+	const LEVEL_HEALTH_MAX = 30;
+	const LEVEL_HEALTH_MOD = 0.25;
 	void GainLevelHealth(PlayerLevelItem statItem)
 	{
-		//health increases by random up to half Strength, min 5 (weighted for low end of flat scale)
-		int halfStrength = statItem.Strength / 2;
-		int healthBonus = random[LvlHealth](1, halfStrength);
-		healthBonus = Max(healthBonus, 5);
+		//health increases by random up to 1/4th Strength, up to 30, min 5 (weighted for low end of flat scale)
+		int topStr = statItem.Strength * LEVEL_HEALTH_MAX;
+		int healthBonus = random[LvlHealth](1, topStr);
+		healthBonus = Math.Clamp(healthBonus, LEVEL_HEALTH_MIN, LEVEL_HEALTH_MAX);
 
 		int newHealth = MaxHealth + healthBonus;
 		MaxHealth = newHealth;
