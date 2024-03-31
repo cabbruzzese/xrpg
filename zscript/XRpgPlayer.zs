@@ -13,6 +13,7 @@ class XRpgPlayer : PlayerPawn
 	EquipmentSlotElement accessorySlots[PAPERDOLL_SLOTS];
 	XRpgEquipableItem activeMagicItems[PAPERDOLL_SLOTS];
 	TrashItemElement trashSlot;
+	PlayerLevelItem statItemPointer;
 
 	int initStrength;
 	int initDexterity;
@@ -21,6 +22,7 @@ class XRpgPlayer : PlayerPawn
 	XRpgSpellItem activeSpell2;
 	int regenerateTicks;
 	int regenerateTicksMax;
+	bool hasUnmorphed;
 
 	property InitStrength : initStrength;
 	property InitDexterity : initDexterity;
@@ -593,6 +595,9 @@ class XRpgPlayer : PlayerPawn
 
 	PlayerLevelItem GetStats()
 	{
+		if (statItemPointer)
+			return statItemPointer;
+		
 		let lvlItem = PlayerLevelItem(FindInventory("PlayerLevelItem"));
 		if (lvlItem == null)
 		{
@@ -603,6 +608,7 @@ class XRpgPlayer : PlayerPawn
 			lvlItem.MaxHealth = MaxHealth;
 		}
 
+		statItemPointer = lvlItem;
 		return lvlItem;
 	}
 
@@ -696,6 +702,9 @@ class XRpgPlayer : PlayerPawn
 				Regenerate(statItem);
 			}
 		}
+
+		if (hasUnmorphed)
+			FinishPostUnmorph();
 
 		//Update inventory if change is pending
 		DoInventorySlotAction();
@@ -827,6 +836,46 @@ class XRpgPlayer : PlayerPawn
 			power.CallTryPickup (self);
 		}
 	}
+
+	//Save needed info before morph
+	override void PreMorph(Actor mo, bool current)
+	{
+		//Ignore if we are the pig
+		if (current)
+			return;
+
+		let statItem = GetStats();
+		statItem.saveHealth = health;
+	}
+
+	//Restore old state
+	override void PostUnmorph(Actor mo, bool current)
+	{
+		//Ignore if we are the pig (backwards for unmorph)
+		if (!current)
+			return;
+		
+		let statItem = GetStats();
+
+		A_SetHealth(statItem.saveHealth);
+
+		hasUnmorphed = true;
+
+		for (int i = 0; i < PAPERDOLL_SLOTS; i++)
+		{
+			if (activeMagicItems[i])
+				activeMagicItems[i].OwnerUnmorphed();
+		}
+	}
+
+	void FinishPostUnmorph()
+	{
+		hasUnmorphed = false;
+
+		let statItem = GetStats();
+		UpdateLevelStats(statItem);
+	}
+
 
 	void CheatGiveInventoryShields()
 	{

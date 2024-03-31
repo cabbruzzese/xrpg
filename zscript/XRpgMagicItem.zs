@@ -146,6 +146,11 @@ class XRpgEquipableItem : TabMenuItem
 		isEquipped = false;
 	}
 
+	virtual void OwnerUnmorphed()
+	{
+		Equip();
+	}
+
 	void ShowMessage()
 	{
 		if (!Owner)

@@ -7,6 +7,7 @@ class PlayerLevelItem : Inventory
 	int dexterity;
 	int magic;
 	int maxHealth;
+	int saveHealth;
 
 	property ExpLevel : expLevel;
 	property Exp : exp;
