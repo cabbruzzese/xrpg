@@ -403,8 +403,8 @@ class XRpgPlayer : PlayerPawn
 	const LEVEL_HEALTH_MOD = 0.25;
 	void GainLevelHealth(PlayerLevelItem statItem)
 	{
-		//health increases by random up to 1/4th Strength, up to 30, min 5 (weighted for low end of flat scale)
-		int topStr = statItem.Strength * LEVEL_HEALTH_MAX;
+		//health increases by random up to 1/4th Strength | max 30, min 5 (weighted for low end of flat scale)
+		int topStr = statItem.Strength * LEVEL_HEALTH_MOD;
 		int healthBonus = random[LvlHealth](1, topStr);
 		healthBonus = Math.Clamp(healthBonus, LEVEL_HEALTH_MIN, LEVEL_HEALTH_MAX);
 
@@ -921,6 +921,12 @@ class XRpgPlayer : PlayerPawn
 				GiveInventory("LightningSpell", 1);
 				GiveInventory("BloodSpell", 1);
 			}
+			return;
+		}
+
+		if (name ~== "blackmoor" || name ~== "tonisborg")
+		{			
+			GrantXP(1000);
 			return;
 		}
 
