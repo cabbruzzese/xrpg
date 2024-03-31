@@ -416,7 +416,10 @@ class WanderingMonsterItem : Powerup
             bool traceFail = Owner.LineTrace(vecAngle, vecLen, newPitch);
 
             Owner.SetOrigin(newPos, false);
-            newPos.z = Owner.CurSector.NextLowestFloorAt(Owner.pos.x, Owner.pos.y, Owner.pos.z, Owner.pos.z, FFCF_NOPORTALS);
+            
+            //move to floor if not flying
+            if (!Owner.bNoGravity)
+                newPos.z = Owner.CurSector.NextLowestFloorAt(Owner.pos.x, Owner.pos.y, Owner.pos.z, Owner.pos.z, FFCF_NOPORTALS);
 
             Owner.SetZ(newPos.z);
 
