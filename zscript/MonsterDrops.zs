@@ -150,58 +150,29 @@ class XRpgSuitOfArmor : Actor replaces ZSuitOfArmor
 	}
 }
 
-
-class MeadStein : Inventory replaces TableShit1
+class BeverageItem : HealthPickup
 {
-	int healAmount;
 	int manaAmount;
-	property HealAmount: healAmount;
 	property ManaAmount: manaAmount;
+
+	int drunkAmount;
+	property DrunkAmount: drunkAmount;
 
 	Default
 	{
-		+INVENTORY.ISHEALTH
 		-FLOATBOB
-		+INVENTORY.FANCYPICKUPSOUND
-		+INVENTORY.AUTOACTIVATE
-		+INVENTORY.UNDROPPABLE
-		+INVENTORY.UNTOSSABLE
+		+COUNTITEM
 		Inventory.PickupFlash "PickupFlash";
-		Inventory.Amount 1;
-		Inventory.MaxAmount 0;
+		+INVENTORY.FANCYPICKUPSOUND
+		Inventory.Icon "TST1A0";
 		Inventory.PickupSound "misc/p_pkup";
 		Inventory.PickupMessage "$TXT_MEADSTEIN";
+		Tag "$TAG_MEAD";
+		HealthPickup.Autouse 0;
 
-		MeadStein.HealAmount 50;
-		MeadStein.ManaAmount 25;
-	}
-	States
-	{
-	Spawn:
-		TST1 A -1;
-		Stop;
-	}
-
-	override bool TryPickup (in out Actor other)
-	{
-		bool success = ApplyMead(other);
-
-		if (!success)
-			return false;
-		
-		GoAwayAndDie();
-		return true;
-	}
-	
-	bool ApplyHealth(XRpgPlayer player)
-	{
-		if (!player)
-			return false;
-		
-		if (player.GiveBody(HealAmount, MaxAmount))
-			return true;
-
-		return false;
+		Health 50;
+		BeverageItem.ManaAmount 25;
+		BeverageItem.DrunkAmount 50;
 	}
 	
 	bool ApplyAnyAmmo(XRpgPlayer player, Name ammoType)
@@ -231,30 +202,134 @@ class MeadStein : Inventory replaces TableShit1
 		return (blueSuccess || greenSuccess);
 	}
 	
-	bool ApplyMead (Actor other)
+	override bool Use(bool pickup)
 	{
-		if (!other)
+		if (!Owner || pickup)
 			return false;
 		
-		let xrpgPlayer = XRpgPlayer(other);
+		let xrpgPlayer = XRpgPlayer(Owner);
 		if (!xrpgPlayer)
 			return false;
 
-		bool healthSuccess = ApplyHealth(xrpgPlayer);
+		bool healthSuccess = super.use(pickup);
 		bool ammoSuccess = ApplyAmmo(xrpgPlayer);
+
+		if (healthSuccess || ammoSuccess)
+		{
+			if (DrunkAmount > 0)
+			{
+				owner.GiveInventory("DrunkPowerup", 1);
+			}
+		}
 
 		return healthSuccess || ammoSuccess;
 	}
 }
 
-class AleStein : MeadStein replaces TableShit2
+const DRUNK_TICK_MAX = 90;
+const DRUNK_TIME_MAX = 3500;
+const DRUNK_INTENSITY_MAX = 0.9;
+const DRUNK_BLEND_TICS = 20;
+const DRUNK_SPEED_MAX = 0.8;
+const DRUNK_SPEED_MIN = 0.3;
+const DRUNK_STUMBLE_THRESHOLD = 110;
+const DRUNK_STUMBLE_SPEED = 6;
+class DrunkPowerup : PowerSpeed
+{
+	int colorCounter;
+
+	Default
+	{
+		+INVENTORY.AdditiveTime;
+		Powerup.Duration -20;
+		-INVENTORY.NOTELEPORTFREEZE;
+		Inventory.Icon "TST1A0";
+
+		Speed DRUNK_SPEED_MAX;
+	}
+
+	override void Tick ()
+	{
+		super.Tick();
+
+		if (!Owner)
+			return;
+	
+		colorCounter++;
+		double intensity = double(EffectTics) / double(DRUNK_TIME_MAX);
+		intensity = Min(DRUNK_INTENSITY_MAX, intensity);
+
+		if (colorCounter > DRUNK_TICK_MAX)
+		{
+			colorCounter = 0;
+		}
+		else if (colorCounter > 60)
+		{
+			Owner.A_SetBlend("44 44 22", intensity, DRUNK_BLEND_TICS);
+		}
+		else if (colorCounter > 30)
+		{
+			Owner.A_SetBlend("22 44 44", intensity, DRUNK_BLEND_TICS);
+		}
+		else
+		{
+			Owner.A_SetBlend("44 22 44", intensity, DRUNK_BLEND_TICS);
+		}
+
+		if (colorCounter % 15 == 0)
+		{
+			double speedRand = frandom(DRUNK_SPEED_MIN, DRUNK_SPEED_MAX);
+			Speed = speedRand;
+
+			if (EffectTics > DRUNK_STUMBLE_THRESHOLD)
+			{
+				//let playerObj = PlayerPawn(Owner);
+				if (Owner && Owner.player.cmd.forwardmove && owner.player.onGround)
+				{
+					double sway = frandom[sway](-DRUNK_STUMBLE_SPEED, DRUNK_STUMBLE_SPEED); //Randomize the movement sway
+					sway *= intensity;
+					Owner.Thrust(sway,Owner.angle-90); //Thrust the player left or right
+				}
+			}
+		}
+		else if (colorCounter % 25 == 0)
+		{
+			Speed = DRUNK_SPEED_MAX;
+		}
+	}
+}
+
+class MeadStein : BeverageItem replaces TableShit1
 {
 	Default
 	{
-		Inventory.PickupMessage "$TXT_ALESTEIN";
+		Inventory.Icon "TST1A0";
+		Inventory.PickupMessage "$TXT_MEADSTEIN";
+		Tag "$TAG_MEAD";
 
-		MeadStein.HealAmount 80;
-		MeadStein.ManaAmount 50;
+		Health 50;
+		BeverageItem.ManaAmount 25;
+		BeverageItem.DrunkAmount 50;
+	}
+	States
+	{
+	Spawn:
+		TST1 A -1;
+		Stop;
+	}
+}
+
+class AleStein : BeverageItem replaces TableShit2
+{
+	Default
+	{
+		Inventory.Icon "TST2A0";
+		Inventory.PickupMessage "$TXT_ALESTEIN";
+		Tag "$TAG_ALE";
+
+		Health 80;
+		BeverageItem.ManaAmount 50;
+		BeverageItem.DrunkAmount 80;
 	}
 	States
 	{

@@ -41,6 +41,9 @@ TAG_CWEAPFLAIL = "Flail";
 
 FN_UNDEAD = "Undead Corpse";
 
+TAG_MEAD = "Mead Stein.";
+TAG_ALE = "Ale Stein.";
+
 TXT_MEADSTEIN = "Delicious Mead! Cheers!";
 TXT_ALESTEIN = "Refreshing Ale. Makes you feel in higher spirits.";
 TXT_SHIELDITEM = "This shield is in good condition.";
@@ -116,7 +119,7 @@ TXT_CENTAURSHIELD_USE = "This spiked shield radiates a dark energy.";
 TXT_ROUNDSHIELD_USE = "A wooden round shield.";
 TXT_SILVERSHIELD_USE = "This silver shield is fireproof.";
 TXT_LEATHERARMOR_USE = "Light armor that is easy to move in.";
-TXT_METALCAP_USE = "A light metal cap.";
+TXT_METALCAP_USE = "A small metal cap.";
 TXT_MAGICROBES_USE = "A dark magic of protection flows in these robes.";
 TXT_DRAGONSCALE_USE = "Armor made from the scales of a dragon.";
 TXT_PLATEMAIL_USE = "This heavy plate mail is totally metal.";
