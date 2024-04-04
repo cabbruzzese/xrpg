@@ -210,6 +210,10 @@ class FireRing : DamageMagicItem
         if (damage > 0 && (damageType =='Fire'))
         {
             newdamage = damage / 2;
+
+			//Never go below 1 if not shield up
+			if (damage > 0 && newdamage == 0)
+				newdamage = 1;
         }
     }
 }
@@ -249,6 +253,10 @@ class IceRing : DamageMagicItem
         if (damage > 0 && (damageType =='Ice'))
         {
             newdamage = damage / 2;
+
+			//Never go below 1 if not shield up
+			if (damage > 0 && newdamage == 0)
+				newdamage = 1;
         }
     }
 }
@@ -303,6 +311,11 @@ class LightningRing : DamageMagicItem
         if (damage > 0 && (damageType =='Electric'))
         {
             newdamage = damage / 2;
+
+			//Never go below 1 if not shield up
+			if (damage > 0 && newdamage == 0)
+				newdamage = 1;
+
         }
     }
 }

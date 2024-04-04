@@ -297,6 +297,12 @@ class SilverSmallShield : MagicShield
 			//if shield up, absorb most fire damage
 			if (IsShieldTimeoutActive())
             	newdamage = damage / 12;
+			else
+			{
+				//Never go below 1 if not shield up
+				if (damage > 0 && newdamage == 0)
+					newdamage = 1;
+			}
 
         }
     }

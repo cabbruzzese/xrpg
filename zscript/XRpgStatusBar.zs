@@ -334,7 +334,7 @@ class XRpgStatusBar : HexenStatusBar
 		DrawString(mSmallFont, statText3, (xPosStats, yPos + yStep), DI_TEXT_ALIGN_RIGHT);
 	}
 
-	protected void DrawMultiSlotSpell(XRpgSpellItem spellItem, int yOffset, string gemIcon, bool alwaysDrawBox = true)
+	protected void DrawMultiSlotSpell(XRpgSpellItem spellItem, int yOffset, string gemIcon, bool alwaysDrawBox = true, float alphaMod = 1.0)
 	{
 		if (automapactive)
 			return;
@@ -344,7 +344,7 @@ class XRpgStatusBar : HexenStatusBar
 
 		if (spellItem)
 		{
-			DrawInventoryIcon(spellItem, (13, 109 + yOffset), DI_ITEM_CENTER, boxsize:(28, 28));
+			DrawInventoryIcon(spellItem, (13, 109 + yOffset), DI_ITEM_CENTER, alphaMod, boxsize:(28, 28));
 
 			if (spellItem.TimerVal > 0 || spellItem.DrawInactive)
 			{
@@ -357,13 +357,16 @@ class XRpgStatusBar : HexenStatusBar
 					timerGems = 10 * percentTimer;
 				}
 
-				//draw at least one
-				if (spellItem.TimerVal > 0 && timerGems < 1)
-					timerGems = 1;
-
-				for (int i = 0; i < timerGems; i++)
+				if (gemIcon && gemicon != "")
 				{
-					DrawImage(gemIcon, (45 + (TIMERGEM_OFFSET_X * i), 124 + yOffset), 0, HX_SHADOW);
+					//draw at least one
+					if (spellItem.TimerVal > 0 && timerGems < 1)
+						timerGems = 1;
+
+					for (int i = 0; i < timerGems; i++)
+					{
+						DrawImage(gemIcon, (45 + (TIMERGEM_OFFSET_X * i), 124 + yOffset), 0, HX_SHADOW);
+					}
 				}
 
 				if (spellItem.UseCrystals)
@@ -403,8 +406,17 @@ class XRpgStatusBar : HexenStatusBar
 		let fighterPlayer = XRpgFighterPlayer(CPlayer.mo);
 		if (fighterPlayer)
 		{
-			DrawMultiSlotSpell(fighterPlayer.ActiveSpell, 0, "INVGEMR2", false);
-			DrawMultiSlotSpell(fighterPlayer.ActiveSpell2, -30, "INVGEMR2", false);
+			//Draw slot 2 on bottom for fighters
+			DrawMultiSlotSpell(fighterPlayer.ActiveSpell, -30, "INVGEMR2", false);
+			DrawMultiSlotSpell(fighterPlayer.ActiveSpell2, 0, "INVGEMR2", false);
+
+			//Draw fading status icon for stuns
+			if (fighterPlayer.statusSpell && fighterPlayer.statusSpell.TimerVal > 0)
+			{
+				float alphaMod = float(fighterPlayer.statusSpell.TimerVal) / float(fighterPlayer.statusSpell.MaxTimer / STUNSPELL_EFFECTTIMER_MOD);
+				if (alphaMod > 0.3)
+					DrawMultiSlotSpell(fighterPlayer.statusSpell, -60, "", false, alphaMod);
+			}
 		}
 	}
 

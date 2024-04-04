@@ -1,3 +1,4 @@
+const SPELLITEM_DEFAULT_EFFECT_TIMEOUT = 8;
 class XRpgSpellItem : PowerupGiver
 {
     int spellType;
@@ -254,7 +255,7 @@ class XRpgSpellItem : PowerupGiver
 		return EffectTimeout > 0;
 	}
 
-	void SetEffectTimeout(int ammount = 8)
+	void SetEffectTimeout(int ammount = SPELLITEM_DEFAULT_EFFECT_TIMEOUT)
 	{
 		EffectTimeout = ammount;
 	}

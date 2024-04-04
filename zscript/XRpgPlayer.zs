@@ -20,6 +20,7 @@ class XRpgPlayer : PlayerPawn
 	int initMagic;
 	XRpgSpellItem activeSpell;
 	XRpgSpellItem activeSpell2;
+	XRpgSpellItem statusSpell;
 	int regenerateTicks;
 	int regenerateTicksMax;
 	bool hasUnmorphed;

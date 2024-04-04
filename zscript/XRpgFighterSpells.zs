@@ -71,9 +71,15 @@ class BerserkSpell : FighterSpellItem
 				xrpgPlayer.DoBlend("99 00 00", 0.6, 120);
 				Use(true);
 
-				//Restore health if low
-				int healthBoost = xrpgPlayer.GetMagic();
-				xrpgPlayer.Heal(healthBoost);
+				if (xrpgPlayer.health < (xrpgPlayer.MaxHealth / 2))
+				{
+					int healthBoost = xrpgPlayer.GetMagic() * 0.5;
+					
+					//only heal 25% if greater than 1/4th health
+					if (xrpgPlayer.health > (xrpgPlayer.MaxHealth / 4))
+						healthBoost *= 0.25;
+					xrpgPlayer.Heal(healthBoost);
+				}
 			}
 
 			SetEffectTimeout();
@@ -81,6 +87,7 @@ class BerserkSpell : FighterSpellItem
 	}
 }
 
+const STUNSPELL_EFFECTTIMER_MOD = 4;
 class StunSpell : FighterSpellItem
 {
 	Default
@@ -123,7 +130,6 @@ class StunSpell : FighterSpellItem
 			if (damage <= 0 && (!magicItem || !magicItem.ModifyDamageBypass0))
 				return; //do not do effect
 
-
 			//Stunning korax makes the game unbeatable
 			if (source is "Korax")
 				return;
@@ -133,6 +139,11 @@ class StunSpell : FighterSpellItem
 			if (chance < magicMin)
 			{
 				DoStunHit(xrpgPlayer, source);
+				xrpgPlayer.statusSpell = self;
+
+				//If they survive the hit, display an icon
+				if (source.Health - damage > 0)
+					timerVal = MaxTimer / STUNSPELL_EFFECTTIMER_MOD;
 			}
 
 			SetEffectTimeout();

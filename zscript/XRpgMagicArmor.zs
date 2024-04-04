@@ -512,6 +512,10 @@ class DragonScaleArmor : XRpgBodyItem
         if (damage > 0 && (damageType =='Fire'))
         {
             newdamage = damage / 2;
+
+			//Never go below 1
+			if (damage > 0 && newdamage == 0)
+				newdamage = 1;
         }
     }
 }
