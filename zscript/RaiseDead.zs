@@ -20,7 +20,7 @@ class RaiseDeadItem : Inventory
 			return false;
 		
 		//Don't summon dying wraiths
-		if (Owner is "Wraith" || Owner is "XRpgUndead")
+		if (Owner is 'Wraith' || Owner is 'XRpgUndead')
 			return false;
 
 		Actor mo = Spawn(self.SummonType, Owner.Pos, ALLOW_REPLACE);

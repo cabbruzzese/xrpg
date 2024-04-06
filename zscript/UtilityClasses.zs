@@ -135,7 +135,7 @@ class StoppableActor : OffsetSpriteActor
 		if (victim.bDONTTHRUST)
 			return;
 
-		if (victim.bIsMonster || (victim is "PlayerPawn"))
+		if (victim.bIsMonster || (victim is 'PlayerPawn'))
 		{
 			victim.thrust(power, angle);
 		}
@@ -301,7 +301,7 @@ class ActorUtils : Actor
     {
         for (int i = 0; i < MaxPlayers; i++)
         {
-            if (players[i].mo && players[i].mo is "XRpgClericPlayer")
+            if (players[i].mo && players[i].mo is 'XRpgClericPlayer')
             {
                 return true;
             }

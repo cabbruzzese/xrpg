@@ -1,2 +1,2 @@
 STARTUPTITLE = "Hexen RPG"
-LOAD = "import/ChainmailEttin.wad"
+LOAD = "import/ChainmailEttin.wad", "import/DeathKnight.wad", "import/DarkGargoyle.wad", "import/ShadowBeast.wad"

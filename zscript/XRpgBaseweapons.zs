@@ -707,7 +707,7 @@ class StunStars : Bridge
             let newPos = target.Pos + (0,0, zo);
             SetOrigin(newPos, true);
 
-            if (target is "Centaur" && target.Health > 0 && target.bInvulnerable)
+            if ((target is 'Centaur' || target is 'SkeletonMiniBoss')  && target.Health > 0 && target.bInvulnerable)
             {
                 target.bInvulnerable = false;
             }

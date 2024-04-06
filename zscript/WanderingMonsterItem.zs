@@ -146,7 +146,7 @@ class WanderingMonsterItem : Powerup
                 }
             }
         }
-        else if (Owner is "Centaur")
+        else if (Owner is 'Centaur' || Owner is 'SkeletonMiniBoss')
         {
             if (random[CentaurDrop](1,2) == 2)
             {
