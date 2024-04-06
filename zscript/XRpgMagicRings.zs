@@ -114,7 +114,7 @@ class DamageMagicItem : XRpgMagicItem
 		if (!passive && damage > 0 && Owner && Owner.Player && Owner.Player.mo)
         {
 			//ring damage cannot be over 15% of original damage
-			int damageMaxTotal = Math.Clamp(damageMax, damageMin, damage * 0.15);
+			int damageMaxTotal = clamp(damageMax, damageMin, damage * 0.15);
 			int ringDamage = random[FireRingDamage](damageMin, damageMaxTotal);
 			int totalRingDamage = 0;
 

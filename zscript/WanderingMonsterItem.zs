@@ -126,7 +126,7 @@ class WanderingMonsterItem : Powerup
         class<Actor> dropClass;
         int dropChance;
 
-        if (Owner is "Ettin")
+        if (Owner is "Ettin" || Owner is "EttinMiniBoss")
         {
             if (random[CentaurDrop](1,2) == 2)
             {
@@ -207,30 +207,6 @@ class WanderingMonsterItem : Powerup
         }
     }
 
-    int GetPlayerLevel(int playerNum)
-    {
-        let xrpgPlayer = XRpgPlayer(players[playerNum].mo);		
-		if (!xrpgPlayer)
-			return 1;
-
-        let statItem = xrpgPlayer.GetStats();
-        return statItem.ExpLevel;
-    }
-
-    int GetMaxPlayerLevel()
-    {
-        int maxLevel = 1;
-        for (int i = 0; i < MaxPlayers; i++)
-        {
-            int playerLevel = GetPlayerLevel(i);
-
-            if (playerLevel > maxLevel)
-                maxLevel = playerLevel;
-        }
-    
-		return maxLevel;
-    }
-
     void SetNormal()
     {
         Owner.A_SetScale(1);
@@ -252,12 +228,19 @@ class WanderingMonsterItem : Powerup
         {
             sizeCount++;
 
-            let newRadius = Owner.radius * (bruteScale / 2);
-            let newHeight = owner.height * bruteScale;
+            let sizeBruteScale = bruteScale;
+            //Don't grow minibosses too large
+            if (Owner.bFrightening)
+            {
+                sizeBruteScale = clamp(sizeBruteScale * 0.85, 1.2, 1.6);
+            }
+
+            let newRadius = Owner.radius * (sizeBruteScale / 2);
+            let newHeight = owner.height * sizeBruteScale;
 
             if (Owner.A_SetSize(newRadius, newHeight, true))
             {
-		        Owner.A_SetScale(bruteScale);
+		        Owner.A_SetScale(sizeBruteScale);
                 Owner.A_SetHealth(Owner.Health * (bruteScale * 1.5));
                 return;
             }
@@ -326,6 +309,7 @@ class WanderingMonsterItem : Powerup
 
         if (props.BossFlag & WMF_BRUTE)
             SetBrute();
+
         if (props.BossFlag & WMF_SPECTRE)
             SetSpectre();
         if (props.BossFlag & WMF_LEADER)
@@ -334,7 +318,7 @@ class WanderingMonsterItem : Powerup
 
     void SetBossMonster()
     {
-        int playerLevel = GetMaxPlayerLevel();
+        int playerLevel = ActorUtils.GetMaxPlayerLevel();
         LeaderProps props;
 
         if (Owner is "WonderingMonsterBase")
@@ -345,12 +329,13 @@ class WanderingMonsterItem : Powerup
         }
         else
         {
+            //Minibosses can be brutes but cannot be spectres or leaders
             int bruteChance = min(BOSSTYPE_CHANCE_BRUTE + playerLevel, BOSSTYPE_CHANCE_MAX);
             if (random[WMFBrute](0, 100) < bruteChance)
                 props.BossFlag |= WMF_BRUTE;
 
             int leaderChance = min(BOSSTYPE_CHANCE_LEADER + playerLevel, BOSSTYPE_CHANCE_MAX);
-            if (random[WMFLeader](1,100) < leaderChance && !(Owner is "MonsterSummonWraith"))
+            if (random[WMFLeader](1,100) < leaderChance && !(Owner is "MonsterSummonWraith") && !(Owner.bFrightening))
             {
                 props.BossFlag |= WMF_LEADER;
                 
@@ -374,7 +359,7 @@ class WanderingMonsterItem : Powerup
 
             //Don't make Leader types invisible
             int spectreChance = min(BOSSTYPE_CHANCE_SPECTRE + playerLevel, BOSSTYPE_CHANCE_MAX);
-            if (!(props.BossFlag & WMF_LEADER) && random[WMFSpectre](1,100) < spectreChance)
+            if (!(props.BossFlag & WMF_LEADER) && random[WMFSpectre](1,100) < spectreChance && !(Owner.bFrightening))
                 props.BossFlag |= WMF_SPECTRE;
         }
 

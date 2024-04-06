@@ -470,7 +470,7 @@ class MagicRobes : XRpgBodyItem
 			{
 				newdamage = damage / 3;
 
-				int absorb = Math.Clamp(damage / 4, 1, 9);
+				int absorb = clamp(damage / 4, 1, 9);
 
 				xrpgPlayer.GiveInventory("Mana1", absorb);
 				xrpgPlayer.GiveInventory("Mana2", absorb);

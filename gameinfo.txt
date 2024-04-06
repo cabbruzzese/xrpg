@@ -1,0 +1,2 @@
+STARTUPTITLE = "Hexen RPG"
+LOAD = "import/ChainmailEttin.wad"

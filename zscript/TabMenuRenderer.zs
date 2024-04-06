@@ -164,8 +164,8 @@ class PlayerHudController
 		int newX = mousePos.X + xval;
 		int newY = mousePos.Y + yval;
 
-		mousePos.X = Math.Clamp(newX, -maxSize.X, maxSize.X);
-		mousePos.Y = Math.Clamp(newY, -maxSize.Y, maxSize.Y);
+		mousePos.X = clamp(newX, -maxSize.X, maxSize.X);
+		mousePos.Y = clamp(newY, -maxSize.Y, maxSize.Y);
 
         GetMouseOverItem();
 	}

@@ -63,4 +63,28 @@ class BossMakerEventHandler : EventHandler
             xpItem.DamageToXP(e.Thing, e.Damage, e.DamageType);
         }
     }
+
+    bool ShouldDoMonsterReplacement()
+    {
+        int playerLevel = ActorUtils.GetMaxPlayerLevel();
+            
+        int chance = clamp(playerLevel / 2, 1, 30);
+        if (random(1,100) <= chance)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    override void CheckReplacement(ReplaceEvent e)
+    {
+        if (e.Replacee is 'Ettin')
+		{
+            if (ShouldDoMonsterReplacement())
+            {
+                e.replacement = 'EttinMiniBoss';
+            }
+		}
+    }
 }

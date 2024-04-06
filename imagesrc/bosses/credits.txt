@@ -1,0 +1,35 @@
+CHAINMAIL ETTIN
+Submitted: MagicWazard
+Decorate: MagicWazard
+Sounds: Raven Software
+Sprites: Raven Software
+Sprite Edit: Neoworm
+Idea Base: Community sprite edit
+https://www.realm667.com/en/repository-18489/beastiary-mainmenu-136-69621/heretic-hexen-style-mainmenu-137-49102#credits-12
+
+DARK GARGOYLE
+Submitted: Virtue
+Decorate: Virtue
+Sounds: Raven Software, Id Software
+Sprites: Raven Software, Id Software
+Sprite Edit: Virtue
+Idea Base: A stronger gargoyle
+https://www.realm667.com/en/repository-18489/beastiary-mainmenu-136-69621/heretic-hexen-style-mainmenu-137-49102#credits-12
+
+DEATH KNIGHT
+Submitted: Tormentor667
+Code: Eriance, Ghastly (ZScript conversion)
+GLDefs: Ghastly
+Sounds: Raven Software, Eriance
+Sprites: Raven Software
+Sprite Edit: Eriance
+Idea Base: Heretic Undead Warrior
+https://www.realm667.com/en/repository-18489/beastiary-mainmenu-136-69621/heretic-hexen-style-mainmenu-137-49102#credits-12
+
+SHADOW BEAST
+Decorate: Tormentor667
+GLDefs: Ghastly_dragon
+Sprites: Raven Software
+Sprite Edit: Rolls, Tormentor667
+Sounds: Croteam
+https://www.realm667.com/en/repository-18489/beastiary-mainmenu-136-69621/heretic-hexen-style-mainmenu-137-49102?start=30#credits-25

@@ -1,13 +1,3 @@
-class Math
-{
-	static int Clamp(int val, int min, int max)
-	{
-		int returnVal = max(min, val);
-		return min(max, returnval);
-	}
-
-}
-
 const ACTORLISTMAX = 128;
 class ActorList
 {
@@ -299,7 +289,7 @@ class ActorUtils : Actor
 
 		int sparkCount = THROW_SPARKS_COUNT_MAX;
 		if (totalDamaage > 0)
-			sparkCount = Math.Clamp(totalDamaage / THROW_SPARKS_DIVISOR, THROW_SPARKS_COUNT_MIN, THROW_SPARKS_COUNT_MAX);
+			sparkCount = clamp(totalDamaage / THROW_SPARKS_DIVISOR, THROW_SPARKS_COUNT_MIN, THROW_SPARKS_COUNT_MAX);
 
 		for (int i = 0; i < sparkCount; i++)
         {
@@ -365,4 +355,28 @@ class ActorUtils : Actor
 	{
 		return (IsUndead(targetObj) || IsConstruct(targetObj));
 	}
+	
+    static int GetPlayerLevel(int playerNum)
+    {
+        let xrpgPlayer = XRpgPlayer(players[playerNum].mo);		
+		if (!xrpgPlayer)
+			return 1;
+
+        let statItem = xrpgPlayer.GetStats();
+        return statItem.ExpLevel;
+    }
+
+	static int GetMaxPlayerLevel()
+    {
+        int maxLevel = 1;
+        for (int i = 0; i < MaxPlayers; i++)
+        {
+            int playerLevel = GetPlayerLevel(i);
+
+            if (playerLevel > maxLevel)
+                maxLevel = playerLevel;
+        }
+    
+		return maxLevel;
+    }
 }

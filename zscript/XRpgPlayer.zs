@@ -409,7 +409,7 @@ class XRpgPlayer : PlayerPawn
 		//health increases by random up to 1/4th Strength | max 30, min 5 (weighted for low end of flat scale)
 		int topStr = statItem.Strength * LEVEL_HEALTH_MOD;
 		int healthBonus = random[LvlHealth](1, topStr);
-		healthBonus = Math.Clamp(healthBonus, LEVEL_HEALTH_MIN, LEVEL_HEALTH_MAX);
+		healthBonus = clamp(healthBonus, LEVEL_HEALTH_MIN, LEVEL_HEALTH_MAX);
 
 		int newHealth = MaxHealth + healthBonus;
 		MaxHealth = newHealth;
