@@ -107,12 +107,12 @@ class XRpgStatusBar : HexenStatusBar
 		
 		Ammo ammo1, ammo2;
 		[ammo1, ammo2] = GetCurrentAmmo();
-		if ((ammo1 is "Mana1") || (ammo2 is "Mana1")) DrawImage("MANABRT1", (-17, -30), DI_ITEM_OFFSETS);
+		if ((ammo1 is 'Mana1') || (ammo2 is 'Mana1')) DrawImage("MANABRT1", (-17, -30), DI_ITEM_OFFSETS);
 		else DrawImage("MANADIM1", (-17, -30), DI_ITEM_OFFSETS);
-		if ((ammo1 is "Mana2") || (ammo2 is "Mana2")) DrawImage("MANABRT2", (-17, -15), DI_ITEM_OFFSETS);
+		if ((ammo1 is 'Mana2') || (ammo2 is 'Mana2')) DrawImage("MANABRT2", (-17, -15), DI_ITEM_OFFSETS);
 		else DrawImage("MANADIM2", (-17, -15), DI_ITEM_OFFSETS);
-		DrawString(mHUDFont, FormatNumber(GetAmount("Mana1"), 3), (-21, -30), DI_TEXT_ALIGN_RIGHT);
-		DrawString(mHUDFont, FormatNumber(GetAmount("Mana2"), 3), (-21, -15), DI_TEXT_ALIGN_RIGHT);
+		DrawString(mHUDFont, FormatNumber(GetAmount('Mana1'), 3), (-21, -30), DI_TEXT_ALIGN_RIGHT);
+		DrawString(mHUDFont, FormatNumber(GetAmount('Mana2'), 3), (-21, -15), DI_TEXT_ALIGN_RIGHT);
 		
 		if (isInventoryBarVisible())
 		{
@@ -125,12 +125,12 @@ class XRpgStatusBar : HexenStatusBar
 		DrawImage("H2BAR", (0, 134), DI_ITEM_OFFSETS);
 		
 		String Gem, Chain;
-		if (CPlayer.mo is "ClericPlayer")
+		if (CPlayer.mo is 'ClericPlayer')
 			{
 				Gem = "LIFEGMC2";
 				Chain = "CHAIN2";
 			}
-		else if (CPlayer.mo is "MagePlayer")
+		else if (CPlayer.mo is 'MagePlayer')
 			{
 				Gem = "LIFEGMM2";
 				Chain = "CHAIN3";
@@ -187,7 +187,7 @@ class XRpgStatusBar : HexenStatusBar
 				Ammo ammo1, ammo2;
 				[ammo1, ammo2] = GetCurrentAmmo();
 				
-				if (ammo1 != null && !(ammo1 is "Mana1") && !(ammo1 is "Mana2"))
+				if (ammo1 != null && !(ammo1 is 'Mana1') && !(ammo1 is 'Mana2'))
 				{
 					DrawImage("HAMOBACK", (77, 164), DI_ITEM_OFFSETS);
 					if (ammo2 != null)
@@ -206,9 +206,9 @@ class XRpgStatusBar : HexenStatusBar
 				else
 				{
 					int amt1, maxamt1, amt2, maxamt2;
-					[amt1, maxamt1] = GetAmount("Mana1");
-					[amt2, maxamt2] = GetAmount("Mana2");
-					if ((ammo1 is "Mana1") || (ammo2 is "Mana1")) 
+					[amt1, maxamt1] = GetAmount('Mana1');
+					[amt2, maxamt2] = GetAmount('Mana2');
+					if ((ammo1 is 'Mana1') || (ammo2 is 'Mana1')) 
 					{
 						DrawImage("MANABRT1", (77, 164), DI_ITEM_OFFSETS);
 						DrawBar("MANAVL1", "", amt1, maxamt1, (94, 164), 1, SHADER_VERT, DI_ITEM_OFFSETS);
@@ -218,7 +218,7 @@ class XRpgStatusBar : HexenStatusBar
 						DrawImage("MANADIM1", (77, 164), DI_ITEM_OFFSETS);
 						DrawBar("MANAVL1D", "", amt1, maxamt1, (94, 164), 1, SHADER_VERT, DI_ITEM_OFFSETS);
 					}
-					if ((ammo1 is "Mana2") || (ammo2 is "Mana2")) 
+					if ((ammo1 is 'Mana2') || (ammo2 is 'Mana2')) 
 					{
 						DrawImage("MANABRT2", (110, 164), DI_ITEM_OFFSETS);
 						DrawBar("MANAVL2", "", amt2, maxamt2, (102, 164), 1, SHADER_VERT, DI_ITEM_OFFSETS);
@@ -231,7 +231,7 @@ class XRpgStatusBar : HexenStatusBar
 					DrawString(mIndexFont, FormatNumber(amt1, 3), ( 92, 181), DI_TEXT_ALIGN_RIGHT);
 					DrawString(mIndexFont, FormatNumber(amt2, 3), (124, 181), DI_TEXT_ALIGN_RIGHT);
 				}
-				if (CPlayer.mo is "XRpgClericPlayer")
+				if (CPlayer.mo is 'XRpgClericPlayer')
 				{
 					DrawImage("WPSLOT1", (190, 162), DI_ITEM_OFFSETS);
 					if (CheckInventory("XRpgCWeapWraithverge")) DrawImage("WPFULL1", (190, 162), DI_ITEM_OFFSETS);
@@ -243,7 +243,7 @@ class XRpgStatusBar : HexenStatusBar
 						if (pieces & 4) DrawImage("WPIECEC3", (225, 162), DI_ITEM_OFFSETS);
 					}
 				}
-				else if (CPlayer.mo is "XRpgMagePlayer")
+				else if (CPlayer.mo is 'XRpgMagePlayer')
 				{
 					DrawImage("WPSLOT2", (190, 162), DI_ITEM_OFFSETS);
 					if (CheckInventory("XRpgMWeapBloodscourge")) DrawImage("WPFULL2", (190, 162), DI_ITEM_OFFSETS);
@@ -276,7 +276,7 @@ class XRpgStatusBar : HexenStatusBar
 			Vector2 keypos = (46, 164);
 			for(let i = CPlayer.mo.Inv; i != null; i = i.Inv)
 			{
-				if (i is "Key" && i.Icon.IsValid())
+				if (i is 'Key' && i.Icon.IsValid())
 				{
 					DrawTexture(i.Icon, keypos, DI_ITEM_OFFSETS);
 					keypos.X += 20;
