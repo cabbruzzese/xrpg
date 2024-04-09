@@ -94,6 +94,7 @@ TAG_PLATEMAIL = "Plate Mail. (Heavy, Plate)";
 TAG_LEATHERARMOR = "Leather Armor. (Light)";
 TAG_MAGICROBES = "Robes of Darkness. (Light)";
 TAG_DRAGONSCALE = "Dragon Scale Armor. (Heavy)";
+TAG_CHAINSHIRT = "Chain Shirt.";
 
 TAG_CENTAURSHIELD = "Centaur Shield. (Heavy)";
 TAG_FALCONSHIELD = "Falcon Shield. (Heavy)";
@@ -132,6 +133,7 @@ TXT_TORCH_USE = "A magical torch should light the way.";
 TXT_LANTERN_USE = "This lantern sheds an otherwordly light.";
 TXT_BOOTSOFFIREWALKING_USE = "Your feet feel cool.";
 TXT_FEATHERAMULET_USE = "A soft wind begins to blow.";
+TXT_CHAINSHIRT_USE = "Chain armor does its job to the letter.";
 
 TXT_TORCH_PICKUP = "A magical torch. This year's hottest new item.";
 TXT_LANTERN_PICKUP = "What an unusual lantern.";

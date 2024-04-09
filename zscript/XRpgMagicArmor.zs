@@ -55,6 +55,7 @@ class DragonBracers : MagicArmor
 
         XRpgEquipableItem.EffectMessage "$TXT_DRAGONBRACERS_USE";
 		XRpgEquipableItem.ArmorBonus 10;
+		XRpgEquipableItem.SpawnOffsetY 32;
 	}
 	States
 	{
@@ -62,13 +63,6 @@ class DragonBracers : MagicArmor
 		BRAC D 4 Bright;
 		Loop;
 	}
-
-    override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, 32);
-    }
 }
 
 class BootsOfSpeed : MagicArmor
@@ -80,6 +74,7 @@ class BootsOfSpeed : MagicArmor
 
         XRpgEquipableItem.EffectMessage "$TXT_BOOTSOFSPEED_USE";
 		XRpgEquipableItem.SpeedBoost 0.3;
+		XRpgEquipableItem.SpawnOffsetY 20;
 	}
 	States
 	{
@@ -95,13 +90,6 @@ class BootsOfSpeed : MagicArmor
 		
 		Owner.A_SetBlend("99 99 55", 0.8, 40);
 	}
-
-    override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, 20);
-    }
 }
 
 const PHOENIXBRACERS_COOLDOWN_MAX = 600;
@@ -117,6 +105,7 @@ class PhoenixBracers : MagicArmor
         XRpgEquipableItem.EffectMessage "$TXT_PHOENIXBRACERS_USE";
 
 		XRpgEquipableItem.MaxCooldown PHOENIXBRACERS_COOLDOWN_MAX;
+		XRpgEquipableItem.SpawnOffsetY -8;
 	}
 	States
 	{
@@ -124,13 +113,6 @@ class PhoenixBracers : MagicArmor
 		PHXB A -1;
 		Loop;
 	}
-
-    override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, -8);
-    }
 
 	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
     {        
@@ -187,6 +169,7 @@ class ShieldBracelet : MagicArmor
         XRpgEquipableItem.EffectMessage "$TXT_SHIELDBRACELET_USE";
 
 		XRpgEquipableItem.MaxCooldown SHIELDBRACELET_COOLDOWN_MAX;
+		XRpgEquipableItem.SpawnOffsetY -4;
 	}
 	States
 	{
@@ -194,13 +177,6 @@ class ShieldBracelet : MagicArmor
 		MBRC A -1;
 		Loop;
 	}
-
-    override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, -4);
-    }
 
 	override void AbsorbDamage (int damage, Name damageType, out int newdamage, Actor inflictor, Actor source, int flags)
     {        
@@ -254,6 +230,7 @@ class BootsOfFireWalking : MagicArmor
 		Tag "$TAG_BOOTSOFFIREWALKING";
 
         XRpgEquipableItem.EffectMessage "$TXT_BOOTSOFFIREWALKING_USE";
+		XRpgEquipableItem.SpawnOffsetY -9;
 	}
 	States
 	{
@@ -269,13 +246,6 @@ class BootsOfFireWalking : MagicArmor
 		
 		Owner.A_SetBlend("44 01 01", 0.8, 40);
 	}
-
-    override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, -9);
-    }
 
 	override void Equip()
 	{
@@ -372,6 +342,7 @@ class MeshBodyArmor : XRpgBodyItem
 				
 		XRpgEquipableItem.ArmorBonus 10;
 		XRpgArmorItem.IsHeavy true;
+		XRpgEquipableItem.SpawnOffsetY 16;
 	}
 	States
 	{
@@ -379,13 +350,6 @@ class MeshBodyArmor : XRpgBodyItem
 		AR_1 A -1;
 		Stop;
 	}
-
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, 16);
-    }
 }
 
 class LeatherBodyArmor : XRpgBodyItem
@@ -399,6 +363,7 @@ class LeatherBodyArmor : XRpgBodyItem
 				
 		XRpgEquipableItem.ArmorBonus 5;
 		XRpgArmorItem.IsLight true;
+		XRpgEquipableItem.SpawnOffsetY -14;
 	}
 	States
 	{
@@ -406,13 +371,6 @@ class LeatherBodyArmor : XRpgBodyItem
 		LTHR A -1;
 		Stop;
 	}
-
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, -14);
-    }
 }
 
 class MagicRobes : XRpgBodyItem
@@ -562,6 +520,27 @@ class HalfPlate : XRpgBodyItem
 	}
 }
 
+class ChainShirt : XRpgBodyItem
+{
+	Default
+	{
+		Inventory.Icon "CHAIA0";
+		
+		Tag "$TAG_CHAINSHIRT";
+        XRpgEquipableItem.EffectMessage "$TXT_CHAINSHIRT_USE";
+				
+		XRpgEquipableItem.ArmorBonus 10;
+		XRpgArmorItem.mageArmorOverride 5;
+		XRpgEquipableItem.SpawnOffsetY -15;
+	}
+	States
+	{
+	Spawn:
+		CHAI A -1;
+		Stop;
+	}
+}
+
 //--------------------------------------------------
 // Helmets
 //--------------------------------------------------
@@ -576,6 +555,7 @@ class PlatinumHelmet : XRpgHelmetItem
 				
 		XRpgEquipableItem.ArmorBonus 5;
 		XRpgArmorItem.IsHeavy true;
+		XRpgEquipableItem.SpawnOffsetY 32;
 	}
 	States
 	{
@@ -583,13 +563,6 @@ class PlatinumHelmet : XRpgHelmetItem
 		AR_3 A -1;
 		Loop;
 	}
-
-    override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, 32);
-    }
 }
 
 class SuitHelmet : XRpgHelmetItem
@@ -672,6 +645,7 @@ class WingedHelmet : XRpgHelmetItem
 		XRpgEquipableItem.SpeedBoost 0.15;
 		XRpgEquipableItem.ArmorBonus 5;
 		XRpgArmorItem.IsLight true;
+		XRpgEquipableItem.SpawnOffsetY -8;
 	}
 	States
 	{
@@ -679,11 +653,4 @@ class WingedHelmet : XRpgHelmetItem
 		CAPW A -1;
 		Loop;
 	}
-
-    override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, -8);
-    }
 }

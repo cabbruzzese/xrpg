@@ -168,6 +168,7 @@ class WardingAmulet : XRpgNeckItem
 				
 		XRpgEquipableItem.ArmorBonus 10;
 		XRpgArmorItem.mageArmorOverride 15;
+		XRpgEquipableItem.SpawnOffsetY -1;
 	}
 	States
 	{
@@ -175,13 +176,6 @@ class WardingAmulet : XRpgNeckItem
 		AR_4 B -1;
 		Stop;
 	}
-
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, -1);
-    }
 }
 
 const BISHOPGEM_COOLDOWN_MAX = 20;

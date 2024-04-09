@@ -93,6 +93,9 @@ class XRpgEquipableItem : TabMenuItem
 
 	bool isEquipped;
 
+	int spawnOffsetY;
+	property SpawnOffsetY: spawnOffsetY;
+
     Default
 	{
 		Inventory.PickupFlash "PickupFlash";
@@ -219,6 +222,14 @@ class XRpgEquipableItem : TabMenuItem
 	{
 		return (cooldownTimer == 0);
 	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+		if (SpawnOffsetY)
+        	A_SpriteOffset(0, SpawnOffsetY);
+    }
 }
 
 class XRpgAccessorySlotItem : XRpgEquipableItem

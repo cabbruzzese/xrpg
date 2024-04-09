@@ -1,6 +1,5 @@
 const BOSSTYPE_CHANCE_BRUTE = 10;
 const BOSSTYPE_CHANCE_SPECTRE = 4;
-const BOSSTYPE_CHANCE_LEADER = 2;
 
 const BOSSTYPE_LEADER_SUB_NUM = 7;
 
@@ -12,6 +11,7 @@ const LIGHTNINGBOSS_TELEPORT_DIST = 256;
 const LIGHTNINGBOSS_TELEPORT_FAIL_MAX = 20;
 
 const BOSSTYPE_CHANCE_MAX = 75;
+const LEADER_MAX_CHANCE = 25; //<-- less elemental monsters since minibosses were added
 
 const BOSS_DAMAGE_RESIST = 4;
 const BOSS_DAMAGE_VULNERABILITY = 2;
@@ -126,11 +126,14 @@ class WanderingMonsterItem : Powerup
         class<Actor> dropClass;
         int dropChance;
 
-        if (Owner is "Ettin" || Owner is "EttinMiniBoss")
+        if (Owner is 'Ettin' || Owner is 'EttinMiniBoss')
         {
             if (random[CentaurDrop](1,2) == 2)
             {
-                dropClass = "EttinArmor";
+                dropClass = 'EttinArmor';
+                if (Owner is 'EttinMiniBoss')
+                    dropClass = 'ChainShirt';
+                
                 dropChance = DROP_ARMOR_CHANCE;
             }
             else
@@ -159,12 +162,12 @@ class WanderingMonsterItem : Powerup
                 dropChance = DROP_SHIELD_CHANCE;
             }
         }
-        else if (Owner is "Wraith")
+        else if (Owner is 'Wraith')
         {
             dropClass = "WraithHelmet";
             dropChance = DROP_ARMOR_CHANCE;
         }
-        else if (Owner is "Bishop")
+        else if (Owner is 'Bishop')
         {
             dropClass = "BishopGem";
             dropChance = DROP_ARMOR_CHANCE;
@@ -321,7 +324,7 @@ class WanderingMonsterItem : Powerup
         int playerLevel = ActorUtils.GetMaxPlayerLevel();
         LeaderProps props;
 
-        if (Owner is "WonderingMonsterBase")
+        if (Owner is 'WonderingMonsterBase')
         {
             let wonderingMonster = WonderingMonsterBase(Owner);
             props.LeaderFlag = wonderingMonster.DefaultLeaderFlag;
@@ -334,8 +337,8 @@ class WanderingMonsterItem : Powerup
             if (random[WMFBrute](0, 100) < bruteChance)
                 props.BossFlag |= WMF_BRUTE;
 
-            int leaderChance = min(BOSSTYPE_CHANCE_LEADER + playerLevel, BOSSTYPE_CHANCE_MAX);
-            if (random[WMFLeader](1,100) < leaderChance && !(Owner is "MonsterSummonWraith") && !(Owner.bFrightening))
+            int leaderChance = min(playerLevel / 2, LEADER_MAX_CHANCE);
+            if (random[WMFLeader](1,100) < leaderChance && !(Owner is 'MonsterSummonWraith') && !(Owner.bFrightening))
             {
                 props.BossFlag |= WMF_LEADER;
                 

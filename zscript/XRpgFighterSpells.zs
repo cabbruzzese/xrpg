@@ -131,7 +131,7 @@ class StunSpell : FighterSpellItem
 				return; //do not do effect
 
 			//Stunning korax makes the game unbeatable
-			if (source is "Korax")
+			if (source is 'Korax')
 				return;
 
 			let chance = random[FSpellStun](1, 200);

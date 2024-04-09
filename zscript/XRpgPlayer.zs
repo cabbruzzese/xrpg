@@ -906,6 +906,7 @@ class XRpgPlayer : PlayerPawn
 		GiveInventory("DragonScaleArmor", 1);
 		GiveInventory("PlateMail", 1);
 		GiveInventory("HalfPlate", 1);
+		GiveInventory("ChainShirt", 1);
 	}
 
 	void CheatGiveInventoryAmulets()
@@ -945,13 +946,13 @@ class XRpgPlayer : PlayerPawn
 
 		if (name ~== "spells")
 		{
-			if (self is "XRpgFighterPlayer")
+			if (self is 'XRpgFighterPlayer')
 			{
 				GiveInventory("BerserkSpell", 1);
 				GiveInventory("StunSpell", 1);
 				GiveInventory("PowerSpell", 1);
 			}
-			else if (self is "XRpgClericPlayer")
+			else if (self is 'XRpgClericPlayer')
 			{
 				GiveInventory("SmiteSpell", 1);
 				GiveInventory("HealSpell", 1);
@@ -959,7 +960,7 @@ class XRpgPlayer : PlayerPawn
 				GiveInventory("WrathSpell", 1);
 				GiveInventory("DivineSpell", 1);
 			}
-			else if (self is "XRpgMagePlayer")
+			else if (self is 'XRpgMagePlayer')
 			{
 				GiveInventory("FireSpell", 1);
 				GiveInventory("IceSpell", 1);

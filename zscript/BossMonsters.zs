@@ -41,7 +41,7 @@ class EttinMiniBoss : Ettin
             Goto See;
         Missile: //this tends to miss flying targets, so use this attack at your discretion!  Added "OFFSETPITCH" to compensate somewhat.
             CETN EF 6 A_FaceTarget;
-            CETN G 8 A_SpawnProjectile('EttinMaceProjectile2', 40);
+            CETN G 8 A_FireEttinFlail;
             Goto See;
         Death:
             CETN IJ 4;
@@ -66,6 +66,40 @@ class EttinMiniBoss : Ettin
             CETN ] 5 A_FreezeDeath;
             CETN ] 1 A_FreezeDeathChunks;
             Wait;
+    }
+
+    action void A_FireEttinFlail()
+    {
+        A_SpawnProjectile('EttinMaceProjectile2', 40);
+        A_SpawnProjectile('EttinMaceProjectile2Chain', 40);
+        A_SpawnProjectile('EttinMaceProjectile2Chain2', 40);
+        A_SpawnProjectile('EttinMaceProjectile2Chain3', 40);
+    }
+}
+
+class EttinMaceProjectile2Chain : EttinMaceProjectile2
+{
+    Default
+    {
+        Damage 0;
+        Speed 11;
+        Scale 0.5;
+    }
+}
+
+class EttinMaceProjectile2Chain2 : EttinMaceProjectile2Chain
+{
+    Default
+    {
+        Speed 8;
+    }
+}
+
+class EttinMaceProjectile2Chain3 : EttinMaceProjectile2Chain
+{
+    Default
+    {
+        Speed 5;
     }
 }
 

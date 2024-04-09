@@ -212,6 +212,7 @@ class FalconLargeShield : MagicShield
 		XRpgEquipableItem.SpeedBoost -0.25;
 		XRpgArmorItem.IsHeavy true;
 		MagicShield.ShieldType SHIELD_TYPE_KITE;
+		XRpgEquipableItem.SpawnOffsetY 12;
 	}
 	States
 	{
@@ -219,13 +220,6 @@ class FalconLargeShield : MagicShield
 		AR_2 A -1;
 		Stop;
 	}
-
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, 12);
-    }
 }
 
 class RoundShield : MagicShield
@@ -239,6 +233,7 @@ class RoundShield : MagicShield
 				
 		XRpgEquipableItem.ArmorBonus 10;
 		MagicShield.ShieldType SHIELD_TYPE_ROUND;
+		XRpgEquipableItem.SpawnOffsetY 12;
 	}
 	States
 	{
@@ -257,13 +252,6 @@ class RoundShield : MagicShield
             newdamage = damage * 1.5;
         }
     }
-
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, -12);
-    }
 }
 
 class SilverSmallShield : MagicShield
@@ -277,6 +265,7 @@ class SilverSmallShield : MagicShield
 				
 		XRpgEquipableItem.ArmorBonus 10;
 		MagicShield.ShieldType SHIELD_TYPE_METAL;
+		XRpgEquipableItem.SpawnOffsetY -12;
 	}
 	States
 	{
@@ -305,13 +294,6 @@ class SilverSmallShield : MagicShield
 			}
 
         }
-    }
-
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, -12);
     }
 }
 
@@ -397,6 +379,7 @@ class OffhandTorch : TorchShield
 		TorchShield.LightName "OffhandTorch";
 		TorchShield.LightMin 100;
 		TorchShield.LightMax 125;
+		XRpgEquipableItem.SpawnOffsetY 19;
 	}
 
 	States
@@ -405,13 +388,6 @@ class OffhandTorch : TorchShield
 		TRCH ABC 3 Bright;
 		Loop;
 	}
-
-	override void PostBeginPlay()
-	{
-		Super.PostBeginPlay();
-
-        A_SpriteOffset(0, 19);
-    }
 
 	override void DoLightStart()
 	{
@@ -512,6 +488,7 @@ class SoulLanternMissile : Actor
 		+NOSHIELDREFLECT
 		-ACTIVATEPCROSS
 		-ACTIVATEIMPACT
+		+DONTSPLASH
 		RenderStyle "None";
     }
     States
