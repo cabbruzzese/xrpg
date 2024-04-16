@@ -64,11 +64,11 @@ class BossMakerEventHandler : EventHandler
         }
     }
 
-    bool IsMonsterReplacementChance()
+    bool IsMonsterReplacementChance(float chanceMod = 0.5)
     {
         int playerLevel = ActorUtils.GetMaxPlayerLevel();
             
-        int chance = clamp(playerLevel / 2, 1, 30);
+        int chance = clamp(playerLevel * chanceMod, 1, 30);
         if (random(1,100) <= chance)
         {
             return true;
@@ -81,27 +81,27 @@ class BossMakerEventHandler : EventHandler
     {
         if (e.Replacee is 'Ettin')
 		{
-            if (IsMonsterReplacementChance())
+            if (IsMonsterReplacementChance(1))
                 e.replacement = 'EttinMiniBoss';
 		}
         else if (e.Replacee is 'CentaurLeader')
         {
-            if (IsMonsterReplacementChance())
+            if (IsMonsterReplacementChance(0.5))
                 e.replacement = 'DeathknightMiniBoss';
         }
         else if (e.Replacee is 'Centaur')
         {
-            if (IsMonsterReplacementChance())
+            if (IsMonsterReplacementChance(0.75))
                 e.replacement = 'SkeletonMiniBoss';
         }
         else if (e.Replacee is 'FireDemon')
         {
-            if (IsMonsterReplacementChance())
+            if (IsMonsterReplacementChance(1))
                 e.replacement = 'AfritsMiniBoss';
         }
         else if (e.Replacee is 'Demon')
         {
-            if (IsMonsterReplacementChance())
+            if (IsMonsterReplacementChance(0.75))
                 e.replacement = 'DemonMiniBoss';
         }
     }

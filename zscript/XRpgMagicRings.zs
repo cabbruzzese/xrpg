@@ -144,6 +144,8 @@ class DamageMagicItem : XRpgMagicItem
 			{
 				newdamage = damage + ringDamage;
 				totalRingDamage = newdamage;
+
+				//console.printf("Damage same type boost: " .. ringDamage .. " orig damage: " .. damage .. " new damage: " .. newDamage);
 			}
 			//If damage is a normal type, completely replace this attack with a new one
 			else if (damageType == "Melee" || damageType == "Normal" || damageType == "None")
@@ -158,6 +160,8 @@ class DamageMagicItem : XRpgMagicItem
 				newdamage = 0;
 
 				totalRingDamage = totalDamage;
+
+				//console.printf("Normal damage boost: " .. ringDamage .. " orig damage: " .. damage .. " new damage: " .. newDamage);
 			}
 			//If damage is a special type, apply extra damage of ring type
 			else
@@ -166,6 +170,8 @@ class DamageMagicItem : XRpgMagicItem
 				source.DamageMobj(Owner, Owner, ringDamage, RingDamageType);
 
 				totalRingDamage = ringDamage;
+
+				//console.printf("Special type damage boost: " .. ringDamage .. " orig damage: " .. damage);
 			}
 
 			ActorUtils.ThrowSparks(source, SparkType, ringDamage);
