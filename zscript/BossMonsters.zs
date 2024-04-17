@@ -16,11 +16,7 @@ class EttinMiniBoss : Ettin
         +FRIGHTENING
         
         MaxTargetRange 210;
-        SeeSound "EttinSight";
         AttackSound "EttinSwing";//changed from default; it's now just a "swing" sound, with a melee impact sound declared in the melee function
-        PainSound "EttinPain";
-        DeathSound "EttinDeath";
-        ActiveSound "EttinActive";
         HowlSound "PuppyBeat";
         Obituary "%o was beat down by an Ettin.";
     }
@@ -288,7 +284,58 @@ class DeathknightMiniBoss : SkeletonMiniBoss
     }
 }
 
-Class DKbolt2 : DKbolt
+Class RedPuff2 : Actor
+{
+  Default
+  {
+    Radius 0;
+    Height 1;
+    Speed 0;
+    RENDERSTYLE "Add";
+    ALPHA 0.85;
+    PROJECTILE;
+    +ClientSideOnly
+  }
+
+  States
+  {
+  Spawn:
+    TNT1 A 3 Bright;
+    RPUF ABCDE 3 Bright;
+    Stop;
+  }
+}
+
+Class DKboltBase : Actor
+{
+  Default
+  {
+    Radius 8;
+    Height 8;
+    Speed 15;
+    Damage 8;
+    RENDERSTYLE "Add";
+    ALPHA 0.80;
+    DamageType "Fire";
+    SeeSound "Weapons/boltfi";
+    DeathSound "weapons/firex4";
+    PROJECTILE;
+    +THRUGHOST
+  }
+
+  States
+  {
+  Spawn:
+    BOLT A 1 Bright A_BishopMissileWeave();
+    BOLT A 0 A_SpawnItem("RedPuff2",0,0);
+    loop;
+  Death:
+    HBAL EFHI 2 Bright;
+    stop;
+  }
+}
+
+Class DKbolt2 : DKboltBase
 {
   Default
   {
@@ -337,17 +384,16 @@ class AfritsMiniBoss : HereticImp
         Loop;
     Melee:
         WATC DE 4 BRIGHT A_FaceTarget;
-        WATC F 4 BRIGHT A_CustomMeleeAttack(random[ImpMeAttack](7,14), "ethit1");
-        WATC "[\]" 4 BRIGHT A_FaceTarget;
-        WATC ] 0 BRIGHT A_CustomMeleeAttack(random[ImpMeAttack](7,14), "ethit1");
+        WATC F 4 BRIGHT A_CustomMeleeAttack(random[ImpMeAttack](7,14), "SerpentMeleeHit");
+        WATC "[^]" 4 BRIGHT A_FaceTarget;
+        WATC "]" 0 BRIGHT A_CustomMeleeAttack(random[ImpMeAttack](7,14), "SerpentMeleeHit");
         Goto See;
     Missile:
         WATC E 0 BRIGHT A_jump(120,"beastball");
-        
         WATC DE 4 BRIGHT A_FaceTarget;
         WATC F 4 BRIGHT A_CustomComboAttack("HereticImpBall3", 28, 14);
-        WATC "[\]" 4 BRIGHT A_FaceTarget;
-        WATC ] 0 BRIGHT A_CustomComboAttack("HereticImpBall3", 28, -14);
+        WATC "[^]" 4 BRIGHT A_FaceTarget;
+        WATC "]" 0 BRIGHT A_CustomComboAttack("HereticImpBall3", 28, -14);
         WATC DE 4 BRIGHT A_FaceTarget;
         WATC F 4 BRIGHT A_CustomComboAttack("HereticImpBall3", 28, 14);
         Goto See;

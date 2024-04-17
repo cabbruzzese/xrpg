@@ -139,3 +139,5 @@ There are many new surprises in the game. There are new melee weapons for the fi
 Hexen is a game made by Raven software. Thanks for this excellent journey of imagination and epic metal.
 
 Sprite credits are listed in the imgagesrc folder next to their assets.
+
+Resources for additional minibosses by MagicWazard, Neoworm, Virtue, Tormentor667, Eriance, Ghastly, Croteam. See details in imagesrc folder.

@@ -1,0 +1,19 @@
+/* minibosses */
+monster/dknsit = "sound/minibosses/deathknight/dsdknsit.ogg"
+monster/dknpai = "sound/minibosses/deathknight/dsdknpai.ogg"
+monster/dkndth = "sound/minibosses/deathknight/dsdkndth.ogg"
+monster/dknswg = "sound/minibosses/deathknight/dsdknswg.ogg"
+monster/dknact = "sound/minibosses/deathknight/dsdknact.ogg"
+monster/dknhit = "sound/minibosses/deathknight/dsdknhit.ogg"
+
+shadowbeast/sight =     "sound/minibosses/ShadowBeast/BDMSIT1.ogg"
+shadowbeast/pain =      "sound/minibosses/ShadowBeast/BDMPAN1.ogg"
+shadowbeast/death =     "sound/minibosses/ShadowBeast/BDMDTH1.ogg"
+shadowbeast/pr1sight =  "sound/minibosses/ShadowBeast/BDPS1.ogg"
+shadowbeast/pr1death =  "sound/minibosses/ShadowBeast/BDPD1.ogg"
+shadowbeast/pr2death =  "sound/minibosses/ShadowBeast/BDPD2.ogg"
+$random shadowbeast/active { shadowbeast/idle2 shadowbeast/idle1 }
+
+EttinSwing = PUNCHMIS
+EttinHit = HMHIT1A
+mace/bounce = "sound/minibosses/ChainmailEttin/BOUNCE.ogg"
