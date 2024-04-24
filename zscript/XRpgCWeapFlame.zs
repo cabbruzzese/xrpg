@@ -192,9 +192,11 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 		Weapon weapon = player.ReadyWeapon;
 		if (weapon != null)
 		{
-			if (!weapon.CheckAmmo(Weapon.PrimaryFire, false, true))
+			if (!weapon.CheckAmmo(Weapon.PrimaryFire, false, true, 8))
 				return;
-				
+
+			//Deplete ammo twice (workaround for weird bugs in alt fire ammo consumption)				
+			weapon.DepleteAmmo (false);
 			weapon.DepleteAmmo (false);
 		}
 
