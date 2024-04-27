@@ -61,7 +61,7 @@ class XRpgFWeapPolearm : XRpgFighterWeapon
         FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3) A_Refire;
         Goto Ready;
 	AltHold:
-        FPOL G 2 Offset (1, POLEARM_LOWER_INCREMENT_Y * 3) A_CheckBerserk(true);
+        FPOL G 2 Offset (1, POLEARM_LOWER_INCREMENT_Y * 3) A_CheckBerserkHold(true);
         FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2.5);
         FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
         FPOL G 4 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1.5);
@@ -76,6 +76,17 @@ class XRpgFWeapPolearm : XRpgFighterWeapon
         FPOL G 2 Offset (1, POLEARM_LOWER_INCREMENT_Y * 2.5);
         FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2) A_ChargeForward(5);
         FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1.5) A_ChargeForward(7);
+        FPOL G 6 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1) A_FWeaponMeleeAttack(1, 100, 0, 1.0, 0.0, int(3.2 * double(DEFMELEERANGE)), "AxePuff", true, true);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1.5);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2.5);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 3)A_Refire;
+        Goto Ready;
+	BerserkAltHold:
+        FPOL G 2 Offset (1, POLEARM_LOWER_INCREMENT_Y * 3);
+        FPOL G 2 Offset (1, POLEARM_LOWER_INCREMENT_Y * 2.5);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);
+        FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1.5);
         FPOL G 6 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1) A_FWeaponMeleeAttack(1, 100, 0, 1.0, 0.0, int(3.2 * double(DEFMELEERANGE)), "AxePuff", true, true);
         FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 1.5);
         FPOL G 2 Offset (0, POLEARM_LOWER_INCREMENT_Y * 2);

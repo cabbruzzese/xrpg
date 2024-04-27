@@ -266,26 +266,27 @@ class XRpgPlayer : PlayerPawn
 	{
 		double speedMod = 0;
 
+		//Heavy armor leads to max armor penalty
+		if (isArmorSlowed)
+			speedMod = MAX_ARMOR_SPEED_PENALTY;
 
 		for (int i = 0; i < PAPERDOLL_SLOTS; i++)
 		{
 			let magicItem = MagicArmor(ActiveMagicItems[i]);
 			let armorEquipped = XRpgArmorItem(ActiveMagicItems[i]);
 			if (magicItem && magicItem.speedBoost != 0)
-				speedMod = magicItem.speedBoost;
+				speedMod += magicItem.speedBoost;
 			else if (armorEquipped && armorEquipped.speedBoost != 0)
-				speedMod = armorEquipped.speedBoost;
+				speedMod += armorEquipped.speedBoost;
 		}
 
 		//Speed can never be reduced more than 80%
 		if (speedMod < MAX_ARMOR_SPEED_PENALTY)
 			speedMod = MAX_ARMOR_SPEED_PENALTY;
 
-		//Heavy armor leads to max armor penalty
-		if (isArmorSlowed)
-			speedMod = MAX_ARMOR_SPEED_PENALTY;
-
 		A_SetSpeed(1 + speedMod);
+
+		//console.printf("Speed mod is " .. speedMod .. " speed is " .. self.speed);
 	}
 
 	void ApplyDexArmorBonusStats(PlayerLevelItem statItem)

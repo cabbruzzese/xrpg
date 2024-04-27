@@ -308,6 +308,22 @@ class XRpgFighterWeapon : XRpgWeapon
 		}
 	}
 
+    action void A_CheckBerserkHold(bool isAltFire)
+	{
+		let xrpgPlayer = XRpgPlayer(player.mo);
+		if (!xrpgPlayer)
+			return;
+
+		if (xrpgPlayer.IsSpellActive(SPELLTYPE_FIGHTER_BERSERK, true))
+		{
+			if (isAltFire)
+				A_SetWeapState("BerserkAltHold");
+            // No weapons use berserk hold yet
+			// else
+			// 	A_SetWeapState("BerserkHold");
+		}
+	}
+
     action void A_FWeaponMelee(int damageMin, int damageMax, int angleMod = 0, double strengthMod = 1.0, double magicMod = 0.0)
 	{
         if (!player)
