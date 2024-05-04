@@ -72,6 +72,41 @@ class TrashItemElement : ItemSlotElement
 	}
 }
 
+class HideInventoryElement : ItemSlotElement
+{
+	string activeImage;
+	string inactiveImage;
+
+	static HideInventoryElement Create(string imageStr, string activeImageStr, string textVal, vector2 size, bool selectableVal, bool stopPropagationVal, Vector2 newPos, PlayerPawn playerObj)
+	{
+		let newObject = new ('HideInventoryElement');
+
+		newObject.inactiveImage = imageStr;
+		newObject.activeImage = activeImageStr;
+
+		newObject.init(imageStr, size, selectableVal, stopPropagationVal, newPos, playerObj, textVal);
+
+		return newObject;
+	}
+
+	override bool Clicked()
+	{
+		let xrpgPlayer = xrpgPlayer(player);
+
+		if (xrpgPlayer)
+		{
+			xrpgPlayer.hud.isMenuHidden = !xrpgPlayer.hud.isMenuHidden;
+
+			if (xrpgPlayer.hud.isMenuHidden)
+				image = activeImage;
+			else
+				image = inactiveImage;
+		}
+
+		return super.Clicked();
+	}
+}
+
 const ITEM_DEFAULT_COOLDOWN_MAX = 20;
 class XRpgEquipableItem : TabMenuItem
 {

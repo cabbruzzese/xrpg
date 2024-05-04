@@ -483,6 +483,12 @@ class XRpgStatusBar : HexenStatusBar
 			DrawImage(trash.image, trash.displayPos, 0);
 		}
 
+		let hideSlot = xrpgPlayer.hideSlot;
+		if (hideSlot)
+		{
+			DrawImage(hideSlot.image, hideSlot.displayPos, 0);
+		}
+
 		if (xrpgPlayer.isArmorSlowed)
 		{
 			DrawImage("SLOWA0", (miXPos + miXPosOffset, trash.displayPos.y), 0);

@@ -41,8 +41,12 @@ class TabMenuRenderer ui
             sbar.DrawImage(TABMENU_SLOT_ICON_DEFAULT, newPos, BaseStatusBar.DI_ITEM_CENTER);
         }
     }
-    static void DrawIventoryItems(BaseStatusBar sbar, PlayerPawn playerObj)
+    
+    static void DrawIventoryItems(BaseStatusBar sbar, PlayerPawn playerObj, PlayerHudController hud)
     {
+        if (hud && hud.isMenuHidden)
+            return;
+
         Vector2 invPosition = (TAB_INV_START_X, TAB_INV_START_Y);
         int colCount = 0;
 
@@ -86,7 +90,7 @@ class TabMenuRenderer ui
             if (!xrpgPlayer || !xrpgPlayer.hud)
                 return;            
 
-            DrawIventoryItems(sbar, xrpgPlayer);
+            DrawIventoryItems(sbar, xrpgPlayer, xrpgPlayer.hud);
 
             //Always draw cursor last so it appears on top
             DrawCursor(sbar, xrpgPlayer.hud);
@@ -103,6 +107,8 @@ class PlayerHudController
 
     TabMenuItem selectedItem;
     TabMenuUIElement mouseOverItem;
+
+    bool isMenuHidden;
 
     Array<TabMenuUIElement> uiElements;
 
@@ -190,35 +196,41 @@ class PlayerHudController
         if (!playerObj)
             return;
         
+        let xrpgPlayer = XRpgPlayer(playerObj);
+        if (!xrpgPlayer)
+            return;
+        
         //let arrayItems = TabMenuItem.GetItems(playerObj);
         bool itemFound;
 
-        for (let i = playerObj.inv; i != null; i = i.inv)
+        if (!xrpgPlayer.hud.isMenuHidden)
         {
-            TabMenuItem item = TabMenuItem(i);
-
-            if (!item)
-                continue;
-
-            let element = item.element;
-
-            if (element && element.IsInBounds(mousePos) && item.selectable)
+            for (let i = playerObj.inv; i != null; i = i.inv)
             {
-                itemFound = true;
+                TabMenuItem item = TabMenuItem(i);
 
-                if (element.Clicked() && item.CanRenderInventoryPlay())
+                if (!item)
+                    continue;
+
+                let element = item.element;
+
+                if (element && element.IsInBounds(mousePos) && item.selectable)
                 {
-                    selectedItem = item;
+                    itemFound = true;
 
-                    if (selectedItem && selectedItem.StopPropagation)
-                        break;
+                    if (element.Clicked() && item.CanRenderInventoryPlay())
+                    {
+                        selectedItem = item;
+
+                        if (selectedItem && selectedItem.StopPropagation)
+                            break;
+                    }
                 }
             }
         }
+        
         if (!itemFound)
         {
-            let xrpgPlayer = XRpgPlayer(playerObj);
-
             for (int i = 0; i < PAPERDOLL_SLOTS; i++)
             {
                 let slot = xrpgPlayer.accessorySlots[i];
@@ -240,6 +252,19 @@ class PlayerHudController
                     if (trash.IsInBounds(mousePos))
                     {
                         if (trash.Clicked())
+                            selectedItem = null;
+                    }
+                }
+            }
+
+            if (xrpgPlayer.hideSlot)
+            {
+                let hideSlot = xrpgPlayer.hideSlot;
+                if (xrpgPlayer && hideSlot)
+                {
+                    if (hideSlot.IsInBounds(mousePos))
+                    {
+                        if (hideSlot.Clicked())
                             selectedItem = null;
                     }
                 }

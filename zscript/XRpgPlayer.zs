@@ -13,6 +13,7 @@ class XRpgPlayer : PlayerPawn
 	EquipmentSlotElement accessorySlots[PAPERDOLL_SLOTS];
 	XRpgEquipableItem activeMagicItems[PAPERDOLL_SLOTS];
 	TrashItemElement trashSlot;
+	HideInventoryElement hideSlot;
 	PlayerLevelItem statItemPointer;
 
 	int initStrength;
@@ -544,10 +545,8 @@ class XRpgPlayer : PlayerPawn
 		GiveStartingManaByType(statItem, "Mana2");
 	}
 
-	override void PostBeginPlay()
+	void CreateUIElements()
 	{
-		Super.PostBeginPlay();
-
 		hud = new('PlayerHudController');
 		hud.CursorIcon = CursorIcon;
 
@@ -559,13 +558,23 @@ class XRpgPlayer : PlayerPawn
 		accessorySlots[PAPERDOLL_SLOT_NECK] = EquipmentSlotElement.Create("ARTIBOX", "Necklace", (30,30), false, true, (243 + armorXOffset, 164 + armorYOffset), self, 'XRpgNeckItem');
 		accessorySlots[PAPERDOLL_SLOT_ACCESSORY] = EquipmentSlotElement.Create("ACCSLOT", "Accessory",(30,30), false, true, (340, 95), self, 'XRpgMagicItem');
 		trashSlot = TrashItemElement.Create("TRSHA0", "Drop Item", (30,30), false, true, (-20, 130), self);
+		hideSlot = HideInventoryElement.Create("VIEWA0", "HIDEA0", "Toggle Inventory", (30,30), false, true, (-20, 90), self);
 
+		hud.uiElements.Clear();
 		hud.uiElements.Push(accessorySlots[PAPERDOLL_SLOT_HELMET]);
 		hud.uiElements.Push(accessorySlots[PAPERDOLL_SLOT_BODY]);
 		hud.uiElements.Push(accessorySlots[PAPERDOLL_SLOT_SHIELD]);
 		hud.uiElements.Push(accessorySlots[PAPERDOLL_SLOT_NECK]);
 		hud.uiElements.Push(accessorySlots[PAPERDOLL_SLOT_ACCESSORY]);
 		hud.uiElements.Push(trashSlot);
+		hud.uiElements.Push(hideSlot);
+	}
+
+	override void PostBeginPlay()
+	{
+		Super.PostBeginPlay();
+
+		CreateUIElements();
 
 		let statItem = GetStats();
 		GiveLevelSkill(statItem);
@@ -1039,6 +1048,13 @@ class XRpgPlayer : PlayerPawn
 			CheatGiveInventoryAmulets();
 			CheatGiveInventoryRings();
 			CheatGiveInventoryEquipment();
+			return;
+		}
+
+		// Recreate all hud elements in case of issue
+		if (name ~== "HudElements")
+		{
+			CreateUIElements();
 			return;
 		}
 

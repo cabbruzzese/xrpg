@@ -270,7 +270,6 @@ class DeathknightMiniBoss : SkeletonMiniBoss
     States
     {
     Missile:
-        DKNT T 0 Bright A_SetReflectiveInvulnerable();
         DKNT T 9 Bright A_FaceTarget();
         DKNT T 3 Bright A_FaceTarget();
         DKNT U 3 Bright A_SpawnProjectile("DKbolt2",44,-4,0,0);
@@ -279,7 +278,6 @@ class DeathknightMiniBoss : SkeletonMiniBoss
         DKNT T 3 Bright A_FaceTarget();
         DKNT U 2 Bright A_SpawnProjectile("DKbolt2",44,-4,0,0);
         DKNT T 6 Bright;
-        DKNT U 0 Bright A_UnSetReflectiveInvulnerable();
         Goto See;
     }
 }
