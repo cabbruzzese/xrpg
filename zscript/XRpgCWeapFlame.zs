@@ -6,6 +6,9 @@ const FLAME_VILE_OFFSET = 48;
 const FLAME_VILE_RANGE = 1536;
 const CFLAME_CHARGE_MIN = 8;
 const CFLAME_CHARGE_MAX = 30;
+const CFLAME_PUNCH_MANA = 2;
+const CFLAME_FIRE_MANA = 4;
+
 
 class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 {
@@ -13,7 +16,7 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 	{
 		+NOGRAVITY +WEAPON.AMMO_OPTIONAL
 		Weapon.SelectionOrder 1000;
-		Weapon.AmmoUse 4;
+		Weapon.AmmoUse CFLAME_FIRE_MANA;
 		Weapon.AmmoGive 25;
 		Weapon.KickBack 150;
 		Weapon.YAdjust 10;
@@ -35,23 +38,29 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 	Deselect:
 		CFLM A 1 A_Lower;
 		Loop;
+	ReadyNoAmmo:
+		CFL3 AAAAAAAAAAAA 1 A_WeaponReady;
 	Ready:
+		CFLM A 0 ChooseNoAmmoFrames("Ready", 0, CFLAME_FIRE_MANA);
 		CFLM AAAABBBBCCCC 1 A_WeaponReady;
 		Loop;
 	Fire:
+		CLFM H 0 ChooseNoAmmoFrames("Fire", 0, CFLAME_FIRE_MANA);
 		CFLM H 2 Offset (0, 40);
 		CFLM I 2 Offset (0, 50);
-		CFLM J 4 Bright Offset (0, 36) A_CFlamePunch(true);
+		CFLM J 4 Bright Offset (0, 36) A_CFlamePunch(true, true);
 		CFLM J 4 Offset (0, 36) A_Refire;
 		Goto Ready;
 	Hold:
+		CLFM K 0 ChooseNoAmmoFrames("Hold", 0, CFLAME_FIRE_MANA);
 		CFLM K 2 Offset (0, 40);
 		CFLM L 2 Offset (0, 50);
-		CFLM M 4 Bright Offset (0, 36) A_CFlamePunch(false);
+		CFLM M 4 Bright Offset (0, 36) A_CFlamePunch(false, true);
+		CLFM K 0 ChooseNoAmmoFrames("HoldMiddle", 0, CFLAME_PUNCH_MANA);
 		CFLM K 6 Offset (0, 40);
 		CFLM H 2 Offset (0, 40);
 		CFLM I 2 Offset (0, 50);
-		CFLM J 4 Bright Offset (0, 36) A_CFlamePunch(false);
+		CFLM J 4 Bright Offset (0, 36) A_CFlamePunch(false, true);
 		CFLM H 6 Offset (0, 40);
 		CFLM H 1 Offset (0, 40)A_Refire;
 		Goto Ready;
@@ -63,8 +72,10 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 		CFLM G 2;
 		Goto Ready;
 	AltFire:
+		CLFM A 0 ChooseNoAmmoFrames("AltFire", 0, CFLAME_FIRE_MANA);
 		CFLM A 2 Offset (0, 40);
 	AltHold:
+		CLFM A 0 ChooseNoAmmoFrames("AltHold", 0, CFLAME_FIRE_MANA);
 		CFLM D 2 A_ChargeUp;
 		CFLM D 1 A_CFlameVileScan();
 		CFLM D 1 A_ReFire;
@@ -74,9 +85,49 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 		CFLM G 2 Offset (0, 40);
 		CFLM G 2;
 		Goto Ready;
+	FireNoAmmo:
+		CFL3 H 2 Offset (0, 40);
+		CFL3 I 2 Offset (0, 50);
+		CFL3 J 4 Bright Offset (0, 36) A_CFlamePunch(true, false);
+		CFL3 J 4 Offset (0, 36) A_Refire;
+		Goto Ready;
+	HoldNoAmmo:
+		CFL3 K 2 Offset (0, 40);
+		CFL3 L 2 Offset (0, 50);
+		CFL3 M 4 Bright Offset (0, 36) A_CFlamePunch(false, false);
+	HoldMiddleNoAmmo:
+		CFL3 K 6 Offset (0, 40);
+		CFL3 H 2 Offset (0, 40);
+		CFL3 I 2 Offset (0, 50);
+		CFL3 J 4 Bright Offset (0, 36) A_CFlamePunch(false, false);
+		CFL3 H 6 Offset (0, 40);
+		CFL3 H 1 Offset (0, 40)A_Refire;
+		Goto Ready;
 	}
 
-	action void A_CFlamePunch(bool isThrustPunch)
+	action void ChooseNoAmmoFrames(string frameName, int blueMana = 0, int greenMana = 0)
+	{
+		// Make no change if we have ammo
+		if (A_CheckAllMana(blueMana, greenMana))
+			return;
+
+		// If out of ammo, change frames
+		if (frameName == "Ready")
+			A_SetWeapState("ReadyNoAmmo");
+		else if (frameName == "Hold")
+			A_SetWeapState("HoldNoAmmo");
+		else if (frameName == "HoldMiddle")
+			A_SetWeapState("HoldMiddleNoAmmo");
+		else if (frameName == "Fire")
+			A_SetWeapState("FireNoAmmo");
+		//Don't allow shooting without ammo
+		else if (frameName == "AltFire")
+			A_SetWeapState("ReadyNoAmmo");
+		else if (frameName == "AltHold")
+			A_SetWeapState("ReadyNoAmmo");
+	}
+
+	action void A_CFlamePunch(bool isThrustPunch, bool canPower)
 	{
 		FTranslatedLineTarget t;
 
@@ -89,7 +140,14 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 	        A_GruntSound(-1);
 		}
 
-		int damage = random[CWeapFlame](1, 40);
+		//Minimum mana for fire hands if 4, even if punches subtract 2
+		bool isPowered = (canPower && A_CheckAllMana(0, CFLAME_FIRE_MANA));
+
+		//If has mana, damage is greater
+		int damageMax = 18;
+		if (isPowered)
+			damageMax = 40;
+		int damage = random[CWeapFlame](1, damageMax);
 
 		let xrpgPlayer = XRpgPlayer(player.mo);
 		if (xrpgPlayer)
@@ -101,7 +159,14 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 			puffType = "BurnyFlamePuff";
 
 			if (xrpgPlayer)
-				damage += xrpgPlayer.GetMagic() * 2;
+			{
+				int magicDamage = xrpgPlayer.GetMagic();
+				damage += magicDamage;
+
+				//If powered, double magic bonus
+				if (isPowered)
+					damage += magicDamage;
+			}
 		}
 
 		for (int i = 0; i < 16; i++)
@@ -112,10 +177,18 @@ class XRpgCWeapFlame : XRpgClericWeapon replaces CWeapFlame
 				double slope = AimLineAttack(ang, 2 * DEFMELEERANGE, t, 0., ALF_CHECK3D);
 				if (t.linetarget)
 				{
-					LineAttack(ang, 2 * DEFMELEERANGE, slope, damage, 'Fire', puffType, true, t);
+					Name damageType = 'Normal';
+					if (isPowered)
+						damageType = 'Fire';
+					
+					LineAttack(ang, 2 * DEFMELEERANGE, slope, damage, damageType, puffType, true, t);
 					if (t.linetarget != null)
 					{
 						AdjustPlayerAngle(t);
+
+						//On a hit, spend mana if this hit a valid target
+						if (isPowered && t.linetarget.Health > 0)
+							A_DepleteAllMana(0, CFLAME_PUNCH_MANA);
 
 						return;
 					}
