@@ -399,5 +399,17 @@ class HolySpirit2 : HolySpirit
 	Default
 	{
 		DamageType "Holy";
+		-SEEFRIENDLYMONSTERS;
+	}
+
+	override int DoSpecialDamage (Actor victim, int damage, Name damagetype)
+	{
+		if (!victim || damage <= 0)
+			return damage;
+		
+		if (victim.bIsMonster && victim.bFriendly)
+			return 0;
+		
+		return damage;
 	}
 }
