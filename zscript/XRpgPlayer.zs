@@ -521,6 +521,9 @@ class XRpgPlayer : PlayerPawn
 
         if (!xpSource.bISMONSTER)
             return;
+		
+		if (Health <= 0)
+			return;
 
         int xp = Min(damage, MAXXPHIT);
 
