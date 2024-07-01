@@ -99,7 +99,7 @@ class BossMakerEventHandler : EventHandler
             if (IsMonsterReplacementChance(1))
                 e.replacement = 'AfritsMiniBoss';
         }
-        else if (e.Replacee is 'Demon1')
+        else if (e.Replacee is 'Demon1' || e.Replacee is 'Demon2')
         {
             if (IsMonsterReplacementChance(0.75))
                 e.replacement = 'DemonMiniBoss';

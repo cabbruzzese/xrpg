@@ -19,6 +19,7 @@ const BOSS_DAMAGE_VULNERABILITY = 2;
 const DROP_WEAP_CHANCE = 16;
 const DROP_SHIELD_CHANCE = 12;
 const DROP_ARMOR_CHANCE = 24;
+const DROP_SPECIAL_CHANCE = 72;
 
 enum EWanderingMonsterFlags
 {
@@ -145,7 +146,7 @@ class WanderingMonsterItem : Powerup
                 if (ActorUtils.ClericPlayerExists() && Owner is 'EttinMiniBoss')
                 {
                     dropClass = "XRpgCWeapFlail";
-                    dropChance = DROP_ARMOR_CHANCE;
+                    dropChance = DROP_SPECIAL_CHANCE;
                 }
             }
         }
