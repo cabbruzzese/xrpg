@@ -1,0 +1,151 @@
+# Credits
+The below sprites are used in this mod. Some are mashups and others are used similar to their original version. 
+
+Include these credits in any derivative projects to properly credit originals. Reuse is not considered an approval, endorsement, or any kind of warranty or guarantee of fitness.
+
+Most content is derived from the original game owned by Raven.
+
+These credits are also placed next to their source in the source code.
+
+## Armor pickups sprites
+armors_preview_2.png
+Credit: Neoworm 
+https://forum.zdoom.org/viewtopic.php?t=15908&hilit=shield
+Additional credit to Blue Shadow for amulet sprites
+Credit to Raven and Blizzard for original sprite templates
+
+## Magic Robes Armor pickup sprite
+Robes
+Credit to Raven for original sprite templates
+
+## Cleaver weapon sprites (mashup)
+Axe credits
+---------------------
+Submitted: TheMightyHeracross
+Decorate: TheMightyHeracross, Blue Shadow
+ACS: Blue Shadow
+Sounds: Rogue, 3D Realms
+Sprites: Mike12, scalliano
+Sprite Edit: idgamer
+Idea Base: scalliano's axe zombie
+https://www.realm667.com/index.php/en/armory-mainmenu-157/doom-style-mainmenu-158/1609-axe#credits
+
+
+## Cleric hand sprite mashups
+Thompson I for Conan sprites
+
+## Cleric flail weapon and pickup sprites
+Neoworm for Flail sprites
+
+## Drop Item Icon
+Trash Icon
+Font Awesome
+https://commons.wikimedia.org/wiki/File:Font_Awesome_5_solid_trash-alt.svg
+License: https://creativecommons.org/licenses/by/4.0/
+
+## Encumbered Icon
+Weight Icon
+Sophivorus
+https://commons.wikimedia.org/wiki/File:Weight_icon.png
+https://creativecommons.org/licenses/by-sa/4.0/deed.en
+
+## View Inventory Icon
+View Icon (eye)
+<a href="https://www.flaticon.com/free-icons/eye" title="eye icons">Eye icons created by Kiranshastry - Flaticon</a>
+
+## Hide Inventory Icon
+Hide Icon (Slashed eye)
+<a href="https://www.flaticon.com/free-icons/password" title="password icons">Password icons created by th studio - Flaticon</a>
+
+
+## Ring sprites
+Rings:
+Submitted: Blue Shadow
+Decorate: Blue Shadow
+GLDefs: Blue Shadow
+Sprites: Raven Software
+Sprite Edit: Blue Shadow
+Idea Base: Castlevania Lament of Innocence's resistance rings
+https://www.realm667.com/en/repository-18489/item-store-mainmenu-169-61042/powerups-a-artifacts-mainmenu-170-4162?start=30#preview-17
+
+
+## Invisibility Ring sprite mashup
+Invisibilty Sphere/Ring
+Credits:
+Code: Rifleman
+GLDefs: Rifleman
+Sprites: Doom/Hexen/Strife
+Sprite Edit: Rifleman
+https://www.realm667.com/en/repository-18489/item-store-mainmenu-169-61042/powerups-a-artifacts-mainmenu-170-4162?start=30
+
+## Ettin miniboss monster
+CHAINMAIL ETTIN
+Submitted: MagicWazard
+Decorate: MagicWazard
+Sounds: Raven Software
+Sprites: Raven Software
+Sprite Edit: Neoworm
+Idea Base: Community sprite edit
+https://www.realm667.com/en/repository-18489/beastiary-mainmenu-136-69621/heretic-hexen-style-mainmenu-137-49102#credits-12
+
+## Afrits miniboss monster
+DARK GARGOYLE
+Submitted: Virtue
+Decorate: Virtue
+Sounds: Raven Software, Id Software
+Sprites: Raven Software, Id Software
+Sprite Edit: Virtue
+Idea Base: A stronger gargoyle
+https://www.realm667.com/en/repository-18489/beastiary-mainmenu-136-69621/heretic-hexen-style-mainmenu-137-49102#credits-12
+
+## Centaur and Slaughtar miniboss monster
+DEATH KNIGHT
+Submitted: Tormentor667
+Code: Eriance, Ghastly (ZScript conversion)
+GLDefs: Ghastly
+Sounds: Raven Software, Eriance
+Sprites: Raven Software
+Sprite Edit: Eriance
+Idea Base: Heretic Undead Warrior
+https://www.realm667.com/en/repository-18489/beastiary-mainmenu-136-69621/heretic-hexen-style-mainmenu-137-49102#credits-12
+
+## Serpent (demon1) miniboss monster
+SHADOW BEAST
+Decorate: Tormentor667
+GLDefs: Ghastly_dragon
+Sprites: Raven Software
+Sprite Edit: Rolls, Tormentor667
+Sounds: Croteam
+https://www.realm667.com/en/repository-18489/beastiary-mainmenu-136-69621/heretic-hexen-style-mainmenu-137-49102?start=30#credits-25
+
+## Halbred weapon frames
+"Viking Halberd" (https://skfb.ly/GCAq) by carl.skanoy is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+## Falcon Shield weapon frames
+Falcon Shield
+"Shield" (https://skfb.ly/6trKr) by ArtLeaving is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+## Silver Shield weapon frames
+Metal Round Shield
+"Fantasy Neon Shield (Weekly Challange)" (https://skfb.ly/oxxo7) by Kovax3D is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+## Shield offhand weapon frames
+Cleric Shield
+Renegado
+https://forum.zdoom.org/viewtopic.php?p=810787#p810787
+
+## Shield offhand weapon frames
+Neoworm
+https://forum.zdoom.org/viewtopic.php?t=15908&start=345
+
+## Torch offhand weapon frames
+"Torch Simple" (https://skfb.ly/6RWGE) by Psychloor
+ is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+## Lantern pickup sprite
+Neoworm
+https://forum.zdoom.org/viewtopic.php?p=1151708#p1151708
+
+## Undead monsters
+Spritesheet by Rolls3d
+https://forum.zdoom.org/viewtopic.php?f=19&t=20773&start=120#p893402
