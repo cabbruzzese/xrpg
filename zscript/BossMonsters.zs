@@ -168,7 +168,7 @@ class EttinMaceProjectile2 : Actor
     }
 }
 
-class SkeletonMiniBoss : Actor
+class SkeletonMiniBoss : Centaur
 {
     Default
     {
@@ -184,12 +184,15 @@ class SkeletonMiniBoss : Actor
         PainSound "monster/dknpai";
         DeathSound "monster/dkndth";
         ActiveSound "monster/dknact";
+        HowlSound "monster/dknpai";
         MONSTER;
         +FLOORCLIP
         +NOTARGET
         +NORADIUSDMG
         +BOSS
         +DEFLECT
+
+        DamageFactor "Electric", 3;
 
         // FRIGHTENING will be used as miniboss flag
         +FRIGHTENING
