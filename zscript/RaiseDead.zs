@@ -23,6 +23,10 @@ class RaiseDeadItem : Inventory
 		if (Owner is 'Wraith' || Owner is 'XRpgUndead')
 			return false;
 
+		//Don't raise actual monster corpses
+		if (!Owner.bIsMonster)
+			return false;
+
 		Actor mo = Spawn(self.SummonType, Owner.Pos, ALLOW_REPLACE);
 		Spawn("MinotaurSmoke", Owner.Pos, ALLOW_REPLACE);
 		Owner.A_StartSound(mo.ActiveSound, CHAN_VOICE);

@@ -230,6 +230,10 @@ class SkeletonMiniBoss : Centaur
         DKNT T 0 A_UnSetReflectiveInvulnerable();
         DKNT P 0 A_Jump(16, "See");
         Goto See2;
+    Ice:
+        DKNT H 5 Bright A_GenericFreezeDeath();
+        DKNT H 1 Bright A_FreezeDeathChunks();
+        wait;
     Death:
         DKNT I 8 Bright;
         DKNT J 8 Bright A_Scream();
