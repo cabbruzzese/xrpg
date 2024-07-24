@@ -56,6 +56,7 @@ class XRpgSummonWraith : MonsterSummonWraith
 
         +NOICEDEATH
         +FRIENDLY
+		+NOFEAR
         Translation "Ice";
         RenderStyle "Translucent";
         Alpha 0.6;

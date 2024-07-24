@@ -19,6 +19,7 @@ class XRpgSummonBat : Actor
 		Monster;
 		+NOGRAVITY +DROPOFF +FLOAT
 		+FLOORCLIP +TELESTOMP
+		+NOFEAR
 
         +NOICEDEATH
         +FRIENDLY

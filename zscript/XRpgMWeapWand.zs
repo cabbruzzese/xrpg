@@ -450,6 +450,7 @@ class MageWandBloodMissile : Actor
         Damage 10;
         +SPAWNSOUNDSOURCE
         +SEEKERMISSILE
+        +DONTREFLECT
         Projectile;
         Obituary "$OB_MPMWEAPWAND";
 

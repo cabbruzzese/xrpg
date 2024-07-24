@@ -293,6 +293,7 @@ class GhostarangMissile : Actor
 		{
 			target.bNoIceDeath = true;
         	target.bFriendly = true;
+			target.bNoFear = true;
 			target.A_SetTranslation("SpiritSkin");
 			target.A_SetRenderStyle(1.0, STYLE_Translucent);
             //target.SetShade("555555");
