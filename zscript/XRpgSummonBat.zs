@@ -54,7 +54,7 @@ class XRpgSummonBat : Actor
 	Melee:
 		ABAT A 4 Bright A_FaceTarget;
 		ABAT B 4 Bright;
-		ABAT G 4 Bright A_CustomMeleeAttack(damage, "", "", "Blood", true);
+		ABAT G 4 Bright A_CustomMeleeAttack(random[BatBites](1,3), "", "", "none", true);
 		Goto See;
 	Death:
     XDeath:
