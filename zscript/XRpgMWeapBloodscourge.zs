@@ -500,14 +500,14 @@ class MageStaffPoisonMissile : StoppableActor
 	}
 }
 
-class MageStaffWaterMissile : Actor
+class MageStaffWaterMissile : TimedActor
 {
     Default
     {
         Speed 45;
         Radius 8;
         Height 8;
-        Damage 2;
+        Damage 3;
 		Projectile;
         +SPAWNSOUNDSOURCE
         Obituary "$OB_MPMWEAPBLOODSCOURGE";
@@ -523,6 +523,9 @@ class MageStaffWaterMissile : Actor
 
 		Health 2;
 		DamageType "Water";
+
+		TimedActor.TimeLimit 150;
+		TimedActor.DieOnTimer true;
     }
     States
     {
